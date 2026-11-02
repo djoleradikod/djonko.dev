@@ -3,6 +3,7 @@
 //  - Content Security Policy violations and console errors
 //  - broken images and media on the page
 //  - page weight budget: HTML + CSS + JS transferred on first load
+//  - phone width (360 px): no sideways scrolling of the whole page
 // Usage: npm run audit            (after npm run build)
 //        AUDIT_ALL_DARK=1 npm run audit   to check dark mode on every page
 import { createServer } from 'node:http';
@@ -69,7 +70,24 @@ for (const path of pages) {
     for (const v of result) problems.push(`${path} [${scheme}] a11y ${v.id}: ${v.help} -> ${v.nodes.join(' | ')}`);
     for (const e of errors.filter((e) => !/youtube|vimeo|cloudflareinsights|plausible/.test(e))) problems.push(`${path} [${scheme}] console: ${e}`);
     for (const b of broken) problems.push(`${path} [${scheme}] broken image: ${b}`);
-    if (scheme === 'light') weights.push([path, Math.round(bytes / 1024)]);
+    if (scheme === 'light') {
+      weights.push([path, Math.round(bytes / 1024)]);
+      // Phone width: the page itself must not scroll sideways. Wide tables and code may scroll
+      // inside their own box; anything else that sticks out is reported by its selector.
+      await page.setViewportSize({ width: 360, height: 800 }); // a little under 375, to leave room for wider fonts on other systems
+      await page.waitForTimeout(50);
+      const wide = await page.evaluate(() => {
+        const W = document.documentElement.clientWidth;
+        if (document.documentElement.scrollWidth <= W + 1) return [];
+        const scrolls = (el) => { for (let e = el.parentElement; e; e = e.parentElement) { const o = getComputedStyle(e).overflowX; if (o === 'auto' || o === 'scroll' || o === 'hidden') return true; } return false; };
+        const name = (el) => el.tagName.toLowerCase() + (el.id ? '#' + el.id : '') + (el.classList.length ? '.' + [...el.classList].slice(0, 2).join('.') : '');
+        // An element sticks out if its box does, or if its text overflows its box (a long unbroken word).
+        const right = (el) => { const r = el.getBoundingClientRect(); return Math.max(r.right, getComputedStyle(el).overflowX === 'visible' ? r.left + el.scrollWidth : 0); };
+        return [...document.querySelectorAll('main *')].filter((el) => right(el) > W + 1 && !scrolls(el))
+          .filter((el, _, all) => !all.includes(el.parentElement)).slice(0, 3).map((el) => `${name(el)} (${Math.round(right(el))} px)`);
+      });
+      for (const w of wide) problems.push(`${path} [360 px] wider than the screen: ${w}`);
+    }
     await ctx.close();
   }
 }
@@ -82,4 +100,4 @@ console.log(`Audited ${pages.length} pages (dark mode on ${process.env.AUDIT_ALL
 console.log(`Heaviest first loads (HTML+CSS+JS, uncompressed): ${weights.slice(0, 5).map(([p, kb]) => `${p} ${kb} KB`).join(', ')}`);
 for (const [p, kb] of over) problems.push(`${p} page weight ${kb} KB is over the ${BUDGET_KB} KB budget`);
 if (problems.length) { console.log(`\n${problems.length} problem(s):\n` + problems.map((p) => '  ' + p).join('\n')); process.exit(1); }
-console.log('No accessibility, CSP, console, image or weight problems.');
+console.log('No accessibility, CSP, console, image, weight or phone-width problems.');
