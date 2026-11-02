@@ -11,6 +11,9 @@ updates:
     ignore:
       - dependency-name: '*'
         update-types: ['version-update:semver-major']
+      # 0.x packages break on minor versions; Satori changes how share images render.
+      - dependency-name: 'satori'
+        update-types: ['version-update:semver-minor']
     groups:
       astro:
         patterns: ['astro', '@astrojs/*']

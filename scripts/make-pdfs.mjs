@@ -25,7 +25,14 @@ const server = createServer((req, res) => {
 }).listen(0);
 const base = `http://127.0.0.1:${server.address().port}`;
 
-const browser = await chromium.launch();
+// Use Playwright's own browser; if it is not installed for this exact version, fall back to
+// CHROMIUM_PATH or a system Chromium, so a Playwright update does not break local runs.
+const browser = await chromium.launch().catch(async (e) => {
+  const { existsSync } = await import('node:fs');
+  const path = [process.env.CHROMIUM_PATH, '/opt/pw-browsers/chromium', '/usr/bin/chromium'].find((p) => p && existsSync(p));
+  if (!path) throw e;
+  return chromium.launch({ executablePath: path });
+});
 for (const job of JOBS) {
   const page = await browser.newPage({ colorScheme: 'light' });
   await page.goto(base + job.path, { waitUntil: 'networkidle' });
