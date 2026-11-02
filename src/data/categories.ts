@@ -7,6 +7,8 @@ export const CATEGORIES = [
     blurb: 'Certificates, passwords, backups, hosts and housekeeping, and where each task lives now.' },
   { id: 'licensing', title: 'Licensing and entitlements', short: 'Licensing',
     blurb: 'From license keys to license files: registration, reporting, grace periods and errors.' },
+  { id: 'value', title: 'Value and cost optimisation', short: 'Value and cost',
+    blurb: 'Licence counting, memory tiering, vSAN capacity, right-sizing and reclamation: getting more work from the cores and hardware you pay for.' },
   { id: 'troubleshooting', title: 'Troubleshooting playbooks', short: 'Troubleshooting',
     blurb: 'Following a problem from first symptom to resolution, with logs, methods and worked examples.' },
   { id: 'integrations', title: 'Integrations and observability', short: 'Integrations',

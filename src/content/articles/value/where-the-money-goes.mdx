@@ -1,0 +1,66 @@
+---
+title: "Where the money goes in a VCF 9 estate, and which levers move it"
+description: "VCF 9 is licensed per physical core, with vSAN capacity counted in raw TiB. Most savings come from carrying fewer cores and less raw disk for the same work. This note maps each cost to the lever that changes it and to the note that covers the lever."
+category: value
+order: 1
+versions: ["5.x", "9.0", "9.1"]
+level: Overview
+pubDate: 2026-11-02
+kbs: [313548]
+sources:
+  - title: "Counting cores for VMware Cloud Foundation and vSphere Foundation"
+    url: "https://knowledge.broadcom.com/external/article/313548/counting-cores-for-vmware-cloud-foundati.html"
+    by: "Broadcom KB"
+  - title: "Licensing in VMware Cloud Foundation 9.0"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/24/licensing-in-vmware-cloud-foundation-9-0/"
+    by: "VMware Cloud Foundation blog"
+  - title: "VMware software solution product guide (VCF 5 and VVF 8 licensing tables)"
+    url: "https://lenovopress.lenovo.com/lp1265-vmware-software-solution-product-guide"
+    by: "Lenovo Press"
+  - title: "Eliminating toil"
+    url: "https://sre.google/sre-book/eliminating-toil/"
+    by: "Google SRE book"
+---
+
+<InShort>
+A VCF 9 subscription is priced per **physical core**, with at least 16 cores counted for every CPU, and it includes **1 TiB of raw vSAN capacity per core** (<KB id={313548} />). Memory is not licensed. Neither is the number of VMs. That gives the cost model its shape: anything that lets the same workloads run on fewer cores, or on less raw disk, reduces the subscription. Anything that reduces the hours spent keeping the platform running reduces the other large cost, which is people. The notes in this section take one lever each, explain the mechanism, and work an example with the assumptions written down.
+</InShort>
+
+<Compare rows={[
+  ["Unit of licence", "Per core from the 2024 subscription change, with a 16-core minimum per CPU. Earlier 5.x estates often held per-CPU or per-component keys.", "Per core, 16-core minimum per CPU, delivered as one licence file"],
+  ["vSAN included", "1 TiB per VCF core, 0.25 TiB per VVF core", "The same entitlement, pooled across vCenters"],
+  ["Cheaper memory", "Memory tiering was a tech preview in vSphere 8.0 U3", "NVMe memory tiering is supported from 9.0"],
+  ["Space reduction", "OSA deduplication per disk group. ESA compression only.", "ESA global deduplication: limited availability in 9.0, generally available in 9.1"],
+  ["Right-sizing and reclamation", "Aria Operations, licensed as part of VCF", "VCF Operations, mandatory and already deployed"],
+]} />
+
+## The cost lines and what moves them
+
+The table below lists the recurring costs of a VCF estate in rough order of size for a typical on-premises deployment. The order is a generalisation. Your own split depends on hardware prices, staff costs and contract terms, so measure it before deciding where to start.
+
+| Cost | What drives it | Lever | Covered in |
+|---|---|---|---|
+| Core subscription | Physical cores, with the 16-per-CPU floor | CPU choice, consolidation, fewer hosts | [Counting cores](/vcf/library/value/core-counting-and-cpu-choice/), [consolidation](/vcf/library/value/consolidation-and-headroom/) |
+| vSAN add-on capacity | Raw TiB claimed by vSAN above the entitlement | Protection scheme, compression, deduplication | [vSAN entitlement](/vcf/library/value/vsan-entitlement/), [space efficiency](/vcf/library/value/vsan-esa-space-efficiency/) |
+| Memory hardware | DRAM per host | NVMe memory tiering | [Memory tiering](/vcf/library/value/nvme-memory-tiering/) |
+| Wasted allocation | Oversized and idle VMs holding capacity | Right-sizing and reclamation | [Right-sizing](/vcf/library/value/rightsizing-with-vcf-operations/), [reclamation](/vcf/library/value/reclaiming-idle-capacity/) |
+| Separate tools | Monitoring, logging, self-service bought outside VCF | Use what the VCF licence already includes | [What VCF includes](/vcf/library/value/using-what-vcf-includes/) |
+| Administration hours | Manual lifecycle, certificates, passwords | Fleet management automation | [Admin effort](/vcf/library/value/cutting-admin-effort/) |
+
+## Why fewer cores is the main lever
+
+Because the licence counts cores and not memory, VMs or storage performance, the subscription grows with the number of hosts you need. Most clusters are sized by whichever resource runs out first. In many virtualised estates that resource is memory, not CPU, which means cores are bought and licensed to carry DIMMs. Memory tiering, right-sizing and reclamation all attack that pattern from different directions. Each one lowers the memory or CPU you need to provision, and the saving only reaches the licence bill when it lets you remove or not buy a host.
+
+The second point follows from the first. A saving that stays inside an existing cluster, such as reclaiming 200 GB of memory from idle VMs, has no licence value until it changes a purchase. Record reclaimed capacity against the next growth request or hardware refresh, so the saving turns into hosts not bought.
+
+## Where administration time goes
+
+The Google SRE book defines toil as work that is manual, repetitive, automatable and grows with the size of the service. Certificate replacement, password rotation, per-component patching and licence key management were all toil in 5.x. VCF 9 moves most of them into VCF Operations fleet management, where they can be scheduled or automated. The [admin effort note](/vcf/library/value/cutting-admin-effort/) lists what changed and how to measure the time it gives back.
+
+## How to use this section
+
+Start with [building the cost case](/vcf/library/value/building-the-cost-case/) if you need to justify a change to someone else. It sets out the method used in every worked example here: state the baseline from measured data, write each assumption down, and show the result for a pessimistic value as well as the expected one. The worked examples in these notes are constructed to show the arithmetic. None of them describe a real customer.
+
+<Callout title="Prices">
+These notes do not quote Broadcom list prices. Per-core prices vary by contract, term, region and partner, and they change. The examples count cores and TiB, which convert to money once you apply your own quote.
+</Callout>

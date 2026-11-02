@@ -1,0 +1,74 @@
+---
+title: "Cutting administration effort: the toil VCF 9 automates and how to measure it"
+description: "Certificate renewals, password rotation, per-component patching and licence keys were recurring manual work in VCF 5.x. VCF 9 moves most of it into VCF Operations fleet management. What changed, what still needs a person, and how to show the time saved."
+category: value
+order: 10
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: []
+sources:
+  - title: "Why VCF 9.0 improves IT operations and management"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/02/06/why-vcf-9-0-improves-it-operations-and-management/"
+    by: "VMware Cloud Foundation blog"
+  - title: "Eliminating toil"
+    url: "https://sre.google/sre-book/eliminating-toil/"
+    by: "Google SRE book"
+  - title: "Licensing in VMware Cloud Foundation 9.0"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/24/licensing-in-vmware-cloud-foundation-9-0/"
+    by: "VMware Cloud Foundation blog"
+  - title: "Advanced memory tiering enhancements in VCF 9.1 (configuration profiles)"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/07/advanced-memory-tiering-enhancements-in-vmware-cloud-foundation-9-1/"
+    by: "VMware Cloud Foundation blog"
+---
+
+<InShort>
+The SRE book defines **toil** as work that is manual, repetitive, automatable, has no lasting value and grows with the size of the estate. In VCF 5.x a large share of platform administration fitted that definition: replacing certificates component by component, rotating passwords by hand, patching each management product through its own tool, and managing licence keys. VCF 9 brings most of it into **VCF Operations**: fleet lifecycle from one screen, certificate auto-renewal through a CA, password expiry alerts and updates, a single licence file, and diagnostic findings that match the estate against known issues. The time this frees is a real saving, but only if you measure it before and after.
+</InShort>
+
+<Compare rows={[
+  ["Certificates", "Replaced per component through SDDC Manager or by hand", "Monitored across the fleet, with auto-renewal through a Microsoft or OpenSSL CA"],
+  ["Passwords", "Rotated through SDDC Manager or per product", "Expiry alerts and updates from VCF Operations fleet management"],
+  ["Management component lifecycle", "SDDC Manager for the core, Aria Suite Lifecycle for the Aria products", "One lifecycle view in VCF Operations, from an online or offline depot"],
+  ["Licensing", "Keys per component", "One licence file assigned to vCenter"],
+  ["Known-issue checks", "Manual reading of KBs and advisories", "Diagnostic findings for security advisories and known KB issues"],
+]} />
+
+## Where the hours go
+
+Toil grows with the estate, which is why it matters for cost. Ten vCenters with certificates that expire on different dates generate ten pieces of work a cycle. The SRE book's guidance is to measure toil, keep it under a fixed share of each engineer's time, and spend the rest on engineering that removes more of it. The same approach works for a platform team.
+
+The tasks below are the usual recurring work in a VCF estate. The 9.x column shows what changes, and the last column shows what still needs a person.
+
+| Task | What VCF 9 does | Still needs a person for |
+|---|---|---|
+| Certificate renewal | Tracks expiry and renews through an integrated CA | The CA integration, and components outside VCF |
+| Password rotation | Alerts on expiry and updates centrally | Break-glass procedures and vaulting |
+| Patching management components | Lifecycle from one screen | Change approval and validation |
+| Licence management | One file, reported every 180 days | Registration and the reporting cycle |
+| Known-issue checks | Findings matched to the estate | Deciding what to fix and when |
+| Host configuration | Configuration profiles and vLCM images | Defining the standard |
+
+Memory tiering in 9.1 is a small example of the same pattern. Broadcom moved its set-up into one configuration profile setting with automatic partitioning and no host reboot, and reports configuration time cut by more than half.
+
+## Measuring it
+
+Vendor claims about effort saved come without a baseline you can check. Your own figures are more useful and more convincing. For each recurring task, record:
+
+1. How often it happens per year across the estate.
+2. The hands-on time per occurrence, from change records or the team's estimate.
+3. The number of people involved.
+
+Annual hours for a task are frequency × time × people. Repeat the measurement after the task moves to fleet management. Report the difference in hours, and say what the team did with them. Hours that went into automation, design work or reducing incident load are the argument for the next round of improvement.
+
+Change records are the best source for the "before" figures because they already exist. If the team does not record hands-on time, start now. A month of honest records is worth more than a year of estimates.
+
+## What does not get easier
+
+Automation moves effort, it does not remove all of it. CA integration, depot connectivity, the 180-day licence reporting cycle and the fleet management components themselves are new things to run. The site's notes on [certificates in 9.x](/vcf/library/day-2/certificates-in-9/), [passwords and service accounts](/vcf/library/day-2/passwords-service-accounts/) and [health checks](/vcf/library/day-2/health-checks-sos/) cover what each one needs. Count that time on the other side of the ledger.
+
+## Pitfalls
+
+- **Claiming savings from features not yet configured.** Auto-renewal saves time only once the CA integration works. Measure after the change, not after the upgrade.
+- **Automating a broken process.** If certificate replacements fail because of naming or trust problems, automation fails faster. Fix the underlying cause first.
+- **Losing the knowledge.** When fleet management does the work, fewer people remember how to do it by hand. Keep a tested manual runbook for the day the automation cannot run.

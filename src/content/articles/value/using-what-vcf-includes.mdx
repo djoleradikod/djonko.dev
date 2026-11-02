@@ -1,0 +1,76 @@
+---
+title: "Using what the VCF licence already includes before buying more"
+description: "A VCF 9 core licence covers log management, network flow analysis, cost and capacity analytics, self-service automation, Kubernetes and workload migration. Mapping those against tools bought separately is often the quickest saving available, and the one most often missed."
+category: value
+order: 4
+versions: ["5.x", "9.0", "9.1"]
+level: Overview
+pubDate: 2026-11-02
+kbs: [401492]
+sources:
+  - title: "VMware vSphere Foundation and VMware Cloud Foundation feature comparison (9.1)"
+    url: "https://www.vmware.com/docs/vmware-vsphere-foundation-feature-comparison"
+    by: "VMware"
+  - title: "VMware Cloud Foundation 9 FAQ"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-0-general-faqs"
+    by: "VMware"
+  - title: "Licensing in VMware Cloud Foundation 9.0"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/24/licensing-in-vmware-cloud-foundation-9-0/"
+    by: "VMware Cloud Foundation blog"
+  - title: "NSX load balancer entitlement change in VCF 9"
+    url: "https://knowledge.broadcom.com/external/article/401492/"
+    by: "Broadcom KB"
+  - title: "VMware software solution product guide (VCF 5 components)"
+    url: "https://lenovopress.lenovo.com/lp1265-vmware-software-solution-product-guide"
+    by: "Lenovo Press"
+---
+
+<InShort>
+The VCF 9 licence covers more than vSphere, vSAN and NSX. **VCF Operations** (including log management, network flow analysis, capacity, cost and fleet management), **VCF Automation**, the **vSphere Kubernetes Service** and **HCX** are all part of the core entitlement. Many estates still pay separately for a logging platform, a monitoring tool, a migration tool or a Kubernetes distribution that overlaps with them. Before the next renewal of any of those, check whether the included component does the job well enough. Some things that used to be included are not: from 9.0, general-purpose load balancing needs Avi (<KB id={401492} />).
+</InShort>
+
+<Compare rows={[
+  ["Operations, logs, network insight", "Aria Operations, Aria Operations for Logs and for Networks, each deployed and upgraded through Aria Suite Lifecycle", "Capabilities of VCF Operations, deployed and upgraded by fleet management"],
+  ["Self-service", "Aria Automation", "VCF Automation"],
+  ["Kubernetes", "Tanzu Kubernetes Grid", "vSphere Kubernetes Service"],
+  ["NSX load balancer", "Usable for any traffic", "Infrastructure and Supervisor layer 4 only. Application load balancing needs Avi."],
+]} />
+
+## What the core licence covers
+
+The table summarises the 9.1 feature comparison and FAQ. Check the current Software Product Description for your contract, because entitlements change between releases.
+
+| Capability | VCF | VVF | Often bought separately as |
+|---|---|---|---|
+| Log management | Included | Included | Central syslog or log analytics |
+| Network flow analysis | Included | Not included | Flow and topology tools |
+| Capacity, right-sizing, cost | Included | Cost included. Check capacity features. | Capacity planning, showback |
+| Self-service automation | Included | Not included | Service catalogue, provisioning scripts |
+| Kubernetes (VKS) | Included | Included | Kubernetes distribution subscriptions |
+| Workload migration (HCX) | Included | Not stated | Migration tools and services |
+| ESA snapshots for operational recovery | Included | Not stated | Short-term snapshot tools (not a backup) |
+
+Separately licensed, even with VCF: Avi Load Balancer, vDefend Firewall, VMware Live Recovery, Private AI Foundation, and vSAN capacity above the entitlement.
+
+## How to find the overlap
+
+1. List every infrastructure tool with a renewal in the next 18 months, with its cost and the jobs it does.
+2. For each job, name the VCF component that covers it and the gaps: retention periods, integrations, reporting, compliance evidence and the skills of the team running it.
+3. Run the included component alongside the existing tool for one cycle of the work it supports, such as one month of capacity reporting or one migration wave.
+4. Decide on evidence from that trial. Record what the included component cannot do, and whether that gap matters.
+
+The trial step is the one teams skip. A log platform that also feeds a security operations team, for example, may have retention and search requirements that VCF Operations log management was not built for. In that case the saving may be partial: send infrastructure logs to VCF Operations and keep the external platform for the security feed at a smaller ingest volume.
+
+## Included is not the same as free to run
+
+Every included component runs on management capacity: cores, memory and vSAN storage in the management domain, plus the time to configure and patch it. In 9.x fleet management handles the patching, which removes most of the lifecycle effort Aria Suite Lifecycle needed in 5.x, but the compute cost remains. Count it when you compare. A component that replaces a SaaS tool may still cost less, but the comparison should include the hosts it runs on.
+
+<Callout type="warn" title="Load balancing after an upgrade">
+Estates that used the NSX load balancer for application traffic in 5.x need a plan before moving to 9.x entitlements. The KB limits the included load balancer to VCF infrastructure components and layer 4 for vSphere Supervisor. General-purpose and layer 7 load balancing moves to Avi, which is licensed separately.
+</Callout>
+
+## Pitfalls
+
+- **Assuming VVF includes everything VCF does.** Network flow analysis, VCF Automation and NSX networking are VCF capabilities. Check the comparison before moving a cluster to VVF to save on cores.
+- **Deploying everything because it is included.** Each component adds management footprint and something else to patch. Deploy the ones that replace a cost or close a gap.
+- **Treating snapshots as backups.** ESA snapshots help with operational recovery. They live on the same cluster and do not replace an independent backup.

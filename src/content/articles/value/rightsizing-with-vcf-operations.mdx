@@ -1,0 +1,61 @@
+---
+title: "Right-sizing VMs with VCF Operations: how the recommendation is made and how to act on it"
+description: "VCF Operations projects each VM's CPU and memory demand and flags oversized and undersized VMs. Knowing how the projection works, what the caps are and which workloads it misreads is what turns the report into hosts you do not need to buy."
+category: value
+order: 7
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: []
+sources:
+  - title: "VMware Cloud Foundation helps you optimally size VMs"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/08/12/vmware-cloud-foundation-helps-you-optimally-size-vms-and-keep-your-infrastructure-and-workloads-running-smoothly/"
+    by: "VMware Cloud Foundation blog"
+  - title: "Aria Operations metrics for vSphere world objects (reclaim and rightsize metrics)"
+    url: "https://docs.vmware.com/en/VMware-Aria-Operations/8.18/Using-Operations/GUID-ACF48F67-B877-45DB-910C-4BFADC86F794.html"
+    by: "VMware"
+  - title: "Performance best practices for vSphere 9.0 (vCPU and memory sizing)"
+    url: "https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
+    by: "VMware"
+---
+
+<InShort>
+VCF Operations marks a VM as **oversized** or **undersized** when its projected CPU or memory demand is well away from what it has been given. The recommendation comes from a demand projection that weights recent history more heavily and treats sustained and periodic peaks differently from momentary ones. A single recommendation never removes more than half of a resource or adds more than double. The feature existed in Aria Operations for VCF 5.x. What changes in 9.x is that VCF Operations is mandatory, so every VCF 9 estate already has the data. Right-sizing saves licence cost only when the reclaimed allocation lets you avoid or remove hosts.
+</InShort>
+
+<Compare rows={[
+  ["Tool", "Aria Operations, if deployed", "VCF Operations, always deployed"],
+  ["Where", "Optimize > Rightsize", "Capacity > Optimize > Rightsize, plus scheduled actions in Automation Central"],
+  ["Inputs", "CPU demand, memory utilisation", "The same, with the same projection engine"],
+]} />
+
+## How the recommendation is made
+
+The engine works from two metrics. **CPU demand** is what the VM would use without contention, so ready time and co-stop do not inflate it. **Memory utilisation** includes guest swapping and paging, so a VM that is short of memory shows it. History is weighted with exponential decay, and the projection extends a year ahead. Broadcom recommends at least six months of history before acting.
+
+The recommended size is the peak projected demand over a window that defaults to 60 days: the 30-day "time remaining" warning plus 30 days. The policy's risk level sets which part of the projection is used. Conservative uses the upper bound. Aggressive uses the midpoint between the upper and lower bounds.
+
+Two caps apply. An oversized recommendation never cuts more than **50%**, and an undersized one never adds more than **100%**. A VM given 16 vCPUs that needs 4 will be recommended 8 the first time, and reach 4 only over two cycles. That is deliberate, and it is a good reason to schedule right-sizing as a recurring task rather than a one-off project.
+
+## Demand or allocation
+
+The default capacity model is **demand**: clusters are judged by what VMs use. Under it, reclaiming vCPUs from an oversized VM frees no CPU capacity, because the VM was not using it. The saving appears when the cluster is sized by **allocation**, which uses configured resources and overcommit ratios such as 8 vCPUs per core. Some organisations plan growth by allocation even when Operations reports by demand, usually because application owners request VM sizes from a catalogue. Know which model your capacity plan uses, because it decides whether right-sizing frees hosts.
+
+Memory is different. Oversized memory is held by the VM whether it uses it or not, unless the host reclaims it under pressure. Cutting it frees capacity under both models, and in memory-bound clusters that is where host savings come from.
+
+## A process that works
+
+1. Run the out-of-the-box oversized and undersized reports and schedule them monthly.
+2. Exclude workloads whose demand the engine cannot see: databases and Java applications that manage their own memory, and anything sized for a known event that has not happened yet. Record the reason for each exclusion.
+3. Agree changes with the VM owner. Fix undersized VMs first: it improves performance and builds the trust you need for the reductions.
+4. Apply changes in a change window, using scheduled actions. Hot-add enabled VMs can grow without a reboot. Reductions need one.
+5. Record the CPU and memory reclaimed against the next capacity request, so the saving is visible when a host purchase is avoided.
+
+Oversized VMs are also slower in some cases. The vSphere performance guide notes that unused vCPUs still add scheduling overhead, and that a VM wider than one NUMA node sees higher average memory latency. Right-sizing is a performance task as well as a cost task, and presenting it that way helps with owners.
+
+## Pitfalls
+
+- **Acting on a month of data.** Quarter-end and year-end peaks will not be in it. Wait for the history the engine needs.
+- **Right-sizing without changing the request process.** If new VMs are still built from oversized templates, the waste returns. Review the catalogue sizes at the same time.
+- **Counting freed vCPUs as savings in a demand-based plan.** They free nothing under that model. Report memory and allocation savings separately.
+- **Software licensed per vCPU in the guest.** Reducing vCPUs can lower third-party licence costs, which may be worth more than the infrastructure saving. Check the licence terms before changing database VMs.
