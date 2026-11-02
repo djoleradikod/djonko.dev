@@ -94,12 +94,12 @@ A domain is unchanged in meaning: one vCenter, with NSX either dedicated or shar
 **Day-2 tasks moved up a layer.** Certificates, passwords, backup configuration, DNS and NTP settings for an instance, and workload domain creation all start in VCF Operations now. Host commissioning, network pools, cluster creation and edge clusters moved into vCenter. The <a href="/vcf/library/day-2/where-did-that-button-go/">Day-2 task map</a> lists them all.
 
 <Callout type="field">
-When a 9.x ticket or design question is vague, the first thing to settle is which layer it is about. "Certificates are failing" means something very different for a fleet management component, such as VCF Operations or the identity broker, than it does for an instance's core infrastructure, such as vCenter, NSX or ESX. Different services own them, and they log to different places.
+When a 9.x ticket or design question is vague, the first thing to settle is which layer it is about. "Certificates are failing" means something different for a fleet management component, such as VCF Operations or the identity broker, than it does for an instance's core infrastructure, such as vCenter, NSX or ESX. Different services own them, and they log to different places.
 </Callout>
 
 ## Design questions to settle early
 
-- **How many fleets?** Usually one. A second fleet makes sense for hard separation, such as sovereignty, a separate operator team or a separate licence entitlement. It does not make sense just for a second site.
+- **How many fleets?** Usually one. A second fleet makes sense for hard separation, such as sovereignty, a separate operator team or a separate licence entitlement. A second site alone is not a reason for one.
 - **How many instances?** An instance is a failure and lifecycle boundary with its own SDDC Manager. Separate sites or regions often justify a second instance. Separate business units usually justify a workload domain instead.
 - **Where will the first instance live?** It carries the fleet services, so put it on the most resilient site you have.
 - **What identity scope?** Fleet-wide SSO is the simplest. Cross-instance or single-instance scopes limit the blast radius but add brokers to run. See <a href="/vcf/library/architecture/identity-broker/">Identity in VCF 9</a>.

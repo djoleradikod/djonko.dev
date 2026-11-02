@@ -60,7 +60,7 @@ The **License Server Health** view in VCF Operations is the first place to look.
 ## Replacing or removing one
 
 - **Replace:** deploy a new License Server, register it and transfer licenses. VCF Operations restores assignment data to it. Remove licenses from the old one first (<KB id={441175} />).
-- **Don't just delete the VM.** A License Server deleted from vCenter without decommissioning in the console leaves an orphaned registration (<KB id={444094} />).
+- **Don't delete the VM on its own.** A License Server deleted from vCenter without decommissioning in the console leaves an orphaned registration (<KB id={444094} />).
 
 <Callout type="field">
 On upgrade projects, the most common License Server problem is that it was never deployed, because the upgrade was done out of order. "One or more vCenter instances are not connected to a license server" is the tell (<KB id={440471} />). See [licensing through upgrades](/vcf/library/licensing/licensing-through-upgrades/).

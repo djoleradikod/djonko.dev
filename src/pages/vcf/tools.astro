@@ -7,6 +7,7 @@ import { fmtDate } from '../../lib/posts';
 const makers = Object.keys(MAKERS).filter((m) => TOOLS.some((t) => t.maker === m)) as Maker[];
 const lastChecked = TOOLS.map((t) => t.checked).sort().at(-1)!;
 const kbUrl = (n: number) => `https://knowledge.broadcom.com/external/article/${n}`;
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const host = (u: string) => new URL(u).host.replace(/^www\./, '');
 const ld = {
   '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Tools for VCF 9.x',
@@ -16,11 +17,12 @@ const ld = {
 };
 ---
 <Base title="Tools for VCF 9.x" description={`${TOOLS.length} publicly available tools for planning, deploying, upgrading, diagnosing and automating VMware Cloud Foundation 9.x, grouped by job, each linked to its publisher.`} jsonLd={ld}>
+  <div data-pagefind-body>
   <p class="eyebrow"><a href="/vcf/" style="color:inherit;text-decoration:none">VCF notes</a></p>
   <h1>Tools for VCF 9.x</h1>
   <p class="lede">{TOOLS.length} publicly available tools, grouped by the job they do. Each entry says who publishes it, what support covers it, and what to know before running it, and links to the publisher's own page. Nothing is mirrored here, so the link always leads to the current version.</p>
 
-  <details class="drawer">
+  <details class="drawer" data-pagefind-ignore>
     <summary>What the maker labels mean</summary>
     <div class="body">
       <ul>
@@ -30,6 +32,7 @@ const ld = {
     </div>
   </details>
 
+  <div data-pagefind-ignore>
   <p><label for="tq" class="small muted" style="display:block;margin-bottom:4px">Filter by name or words</label>
     <input type="search" id="tq" placeholder="For example 'certificate', 'offline depot' or 'read-only'" /></p>
   <div class="pill-row" id="tj" role="group" aria-label="Filter by job">
@@ -41,6 +44,7 @@ const ld = {
     {makers.map((m) => <button class="pill" aria-pressed="false" data-v={m}>{MAKERS[m].label}</button>)}
   </div>
   <p class="small muted" id="tc" aria-live="polite"></p>
+  </div>
 
   {JOBS.map((j) => {
     const items = TOOLS.filter((t) => t.job === j.id);
@@ -53,8 +57,8 @@ const ld = {
             <article class="tool" data-job={t.job} data-maker={t.maker}
               data-s={[t.name, t.publisher, t.what, t.know ?? '', ...(t.kbs ?? []).map(String)].join(' ').toLowerCase()}>
               <header>
-                <h3>{t.name}</h3>
-                <div class="tool-meta">
+                <h3 id={slug(t.name)}>{t.name}</h3>
+                <div class="tool-meta" data-pagefind-ignore>
                   <span class={`badge mk-${t.maker}`} title={MAKERS[t.maker].note}>{MAKERS[t.maker].label}</span>
                   {t.versions.length > 0 ? <VersionBadges versions={t.versions} /> : <span class="badge level">Versions not stated</span>}
                 </div>
@@ -75,6 +79,7 @@ const ld = {
   })}
   <p id="tnone" class="muted" hidden>No tools match. Clear the filter or pick another job.</p>
 
+  </div>
   <p class="small muted">Missing a tool, or a link that has moved? <a href="/contact/">Send a correction</a>. To be listed, a tool must be publicly available and apply to VCF 9.x.</p>
 
   <script is:inline>

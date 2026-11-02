@@ -93,7 +93,7 @@ Is anything else running on the same domain, host or component: a precheck, a ba
 - **DNS:** forward and reverse, lowercase, from the component that failed.
 - **NTP:** drift causes token errors such as "JWT token is expired" (<KB id={409353} />).
 - **Disk:** on SDDC Manager, vCenter, VCF Operations and the runtime.
-- **Reachability:** from the address that actually makes the call. In 9.1 that is often a runtime node.
+- **Reachability:** from the address that makes the call. In 9.1 that is often a runtime node.
 
 The DNS part is quick to script. This read-only check runs from any Linux shell, including SDDC Manager. It flags a missing forward or reverse record, a reverse record that points at a different name, and mixed-case names.
 

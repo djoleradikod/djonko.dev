@@ -8,6 +8,7 @@ const themeOf: Record<string, string> = {
 };
 ---
 <Base title="KB index" description={`${KB_INDEX.length} public Broadcom KBs for VCF 9, with topics, searchable.`}>
+  <div data-pagefind-body>
   <p class="eyebrow"><a href="/vcf/" style="color:inherit;text-decoration:none">VCF notes</a> / <a href="/vcf/resources/" style="color:inherit;text-decoration:none">Resources</a></p>
   <h1>KB index</h1>
   <p class="lede">{KB_INDEX.length} public Broadcom knowledge base articles that come up again and again with VCF 9. Each one has a one-line topic written for this index. Every number links to the KB.</p>
@@ -40,4 +41,5 @@ const themeOf: Record<string, string> = {
     g.addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; t = b.dataset.t; g.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); apply(); });
     apply();
   </script>
+  </div>
 </Base>
