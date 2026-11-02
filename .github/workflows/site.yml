@@ -59,6 +59,22 @@ jobs:
           path: dist
           retention-days: 7
 
+  # Weekly, and on demand: every external link in the site (sources, KBs, the tools catalogue) still resolves.
+  # Kept out of PR checks because third-party sites fail for reasons unrelated to the change.
+  external-links:
+    needs: build
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+      - uses: actions/download-artifact@v4
+        with: { name: dist, path: dist }
+      - name: Check external links
+        run: node scripts/check-external.mjs
+
   deploy-hetzner:
     needs: build
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && vars.DEPLOY_HETZNER == 'true'

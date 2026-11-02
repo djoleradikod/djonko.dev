@@ -18,7 +18,8 @@
     "pdfs": "node scripts/make-pdfs.mjs",
     "lint:style": "node scripts/style-lint.mjs",
     "check:privacy": "node scripts/privacy-scan.mjs",
-    "check:links": "node scripts/check-content.mjs"
+    "check:links": "node scripts/check-content.mjs",
+    "check:external": "node scripts/check-external.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.14",

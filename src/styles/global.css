@@ -323,3 +323,23 @@ a.badge:hover { border-color: var(--ink-3); color: var(--ink); }
 }
 .mermaid-fig .edgeLabel, .mermaid-fig .edgeLabel p, .mermaid-fig .labelBkg { color: var(--ink) !important; background-color: var(--surface) !important; fill: var(--ink); }
 .mermaid-fig .edgeLabel rect { fill: var(--surface) !important; opacity: 1 !important; }
+
+/* Tools catalogue (/vcf/tools/) */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+[hidden] { display: none !important; }
+.tool-group { margin: 32px 0 8px; }
+.tool-group > h2 { margin-bottom: 4px; }
+.tools { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
+.tool { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; }
+.tool h3 { margin: 0 0 6px; font-size: 1.05rem; }
+.tool p { margin: 0; font-size: 0.95rem; }
+.tool .pub { margin-top: 4px; }
+.tool-meta { display: flex; flex-wrap: wrap; gap: 4px; }
+.tool .know { font-size: 0.9rem; color: var(--ink-2); border-left: 3px solid var(--line); padding-left: 10px; }
+.tool-links { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin-top: auto; padding-top: 6px; font-size: 0.9rem; }
+.tool-links .btn { padding: 6px 12px; font-size: 0.9rem; }
+.badge.mk-broadcom { color: var(--v9); border-color: color-mix(in srgb, var(--v9) 35%, transparent); background: var(--v9-soft); }
+.badge.mk-fling { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 35%, transparent); background: var(--warn-soft); }
+.badge.mk-opensource { color: var(--accent-ink); border-color: color-mix(in srgb, var(--accent) 35%, transparent); background: var(--accent-soft); }
+.badge.mk-community { color: var(--v5); border-color: color-mix(in srgb, var(--v5) 35%, transparent); background: var(--v5-soft); }
+.badge.mk-vendor, .badge.mk-commercial { color: var(--ink-2); }

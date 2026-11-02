@@ -2,11 +2,12 @@
 import Base from '../../../layouts/Base.astro';
 import { KB_INDEX } from '../../../data/kb';
 ---
-<Base title="Resources" description="KB index, triage cheat sheet and a 5.x to 9.x glossary.">
+<Base title="Resources" description="Tools catalogue, KB index, triage cheat sheet and a 5.x to 9.x glossary.">
   <p class="eyebrow"><a href="/vcf/" style="color:inherit;text-decoration:none">VCF notes</a></p>
   <h1>Resources</h1>
   <p class="lede">Reference material to keep open next to the console.</p>
   <div class="grid">
+    <a class="card" href="/vcf/tools/"><h3>Tools for VCF 9.x</h3><p>Official, Fling and community tools, grouped by job, with support status and what to know before running each one.</p></a>
     <a class="card" href="/vcf/resources/kb-index/"><h3>KB index</h3><p>{KB_INDEX.length} public Broadcom KBs for VCF 9, each with a one-line topic. Searchable and filterable.</p></a>
     <a class="card" href="/vcf/resources/triage-cheat-sheet/"><h3>Triage cheat sheet</h3><p>One page: which layer owns the problem, where its logs are, what its errors look like, and how to retry.</p></a>
     <a class="card" href="/vcf/resources/glossary/"><h3>5.x to 9.x glossary</h3><p>Old names, new names, and what changed underneath.</p></a>
