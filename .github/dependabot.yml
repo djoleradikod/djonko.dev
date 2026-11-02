@@ -6,6 +6,11 @@ updates:
     directory: /
     schedule: { interval: weekly, day: monday }
     open-pull-requests-limit: 5
+    # Major versions (Astro, Mermaid, Satori) change APIs and output. They are upgraded on purpose,
+    # in their own branch with a full visual check, not through weekly PRs.
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
     groups:
       astro:
         patterns: ['astro', '@astrojs/*']
