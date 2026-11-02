@@ -70,7 +70,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with: { name: dist, path: dist }
       - name: Check external links
         run: node scripts/check-external.mjs
@@ -82,7 +82,7 @@ jobs:
     environment: production
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with: { name: dist, path: dist }
       - name: SSH key
         run: |
@@ -101,7 +101,7 @@ jobs:
     runs-on: ubuntu-24.04
     environment: production
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with: { name: dist, path: dist }
       - uses: cloudflare/wrangler-action@v3
         with:
@@ -116,7 +116,7 @@ jobs:
     environment: production
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with: { name: dist, path: dist }
       - run: sudo apt-get install -y -q lftp
       - name: Upload over SFTP
