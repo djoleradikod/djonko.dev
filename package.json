@@ -30,7 +30,7 @@
     "astro": "^5.18.2",
     "mermaid": "^11.17.2",
     "pagefind": "^1.6.0",
-    "satori": "^0.18.4"
+    "satori": "^0.63.2"
   },
   "devDependencies": {
     "axe-core": "^4.14.0",
