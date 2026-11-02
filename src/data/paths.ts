@@ -49,4 +49,13 @@ export const PATHS: ReadingPath[] = [
       'labs/offline-depot-in-a-lab', 'labs/nested-lab-automation', 'labs/break-fix-exercises', 'labs/scripted-health-checks',
     ],
   },
+  {
+    id: 'cut-costs', title: 'Cutting the cost of a VCF 9 estate', who: 'Platform owners and whoever signs the renewal',
+    blurb: 'Where the money goes, how cores and vSAN capacity are counted, what the licence already includes, then the levers in order of effort: right-size, reclaim, consolidate, add memory tiering, and write the case.',
+    steps: [
+      'value/where-the-money-goes', 'value/core-counting-and-cpu-choice', 'value/vsan-entitlement', 'value/using-what-vcf-includes',
+      'value/rightsizing-with-vcf-operations', 'value/reclaiming-idle-capacity', 'value/consolidation-and-headroom',
+      'value/nvme-memory-tiering', 'value/building-the-cost-case',
+    ],
+  },
 ];
