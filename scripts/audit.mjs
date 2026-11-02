@@ -34,7 +34,14 @@ pages.sort();
 const darkSample = new Set(['/', '/vcf/', '/blog/', '/projects/', '/contact/', pages.find((p) => p.startsWith('/vcf/library/troubleshooting/') && p.split('/').length > 5)]);
 const BUDGET_KB = Number(process.env.AUDIT_BUDGET_KB ?? 350);
 
-const browser = await chromium.launch();
+// Use Playwright's own browser; if it is not installed for this exact version, fall back to
+// CHROMIUM_PATH or a system Chromium, so a Playwright update does not break local runs.
+const browser = await chromium.launch().catch(async (e) => {
+  const { existsSync } = await import('node:fs');
+  const path = [process.env.CHROMIUM_PATH, '/opt/pw-browsers/chromium', '/usr/bin/chromium'].find((p) => p && existsSync(p));
+  if (!path) throw e;
+  return chromium.launch({ executablePath: path });
+});
 const problems = [];
 const weights = [];
 for (const path of pages) {
