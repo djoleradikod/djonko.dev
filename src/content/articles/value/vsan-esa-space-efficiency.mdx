@@ -1,0 +1,81 @@
+---
+title: "vSAN ESA space efficiency: protection schemes, compression and global deduplication"
+description: "How much raw capacity a TiB of VM data needs on vSAN ESA depends on the protection scheme the host count allows, compression, deduplication and whether deleted blocks are returned. What each one does in 9.0 and 9.1, and how it differs from OSA in 5.x."
+category: value
+order: 6
+versions: ["5.x", "9.0", "9.1"]
+level: Deep dive
+pubDate: 2026-11-02
+kbs: [384397]
+sources:
+  - title: "vSAN ESA space efficiency (VCF 9.1)"
+    url: "https://www.vmware.com/docs/vmw-vsan-space-efficiency"
+    by: "VMware"
+  - title: "vSAN compression and global deduplication in VCF 9.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/07/vsan-compression-and-global-deduplication-in-vcf-9-1/"
+    by: "VMware Cloud Foundation blog"
+  - title: "Global deduplication in vSAN ESA for VCF 9.0"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/19/global-deduplication-in-vsan-esa-for-vmware-cloud-foundation-9-0/"
+    by: "VMware Cloud Foundation blog"
+  - title: "vSAN 8.0 ESA and compression by default"
+    url: "https://www.yellow-bricks.com/2022/10/24/vsan-8-0-esa-and-compression-by-default/"
+    by: "Duncan Epping"
+---
+
+<InShort>
+On vSAN ESA, the raw capacity behind each TiB of VM data is set by four things. The **protection scheme** (1.5 times for RAID-5 2+1 or RAID-6 4+2, twice for mirroring). **Compression**, which is on by default and in 9.1 uses ZSTD. **Global deduplication**, which works across the whole cluster and is generally available from 9.1. And **TRIM/UNMAP**, which returns space the guest has freed. OSA in 5.x deduplicated within one disk group at a time and in the write path. ESA deduplicates across the cluster after the data has cooled. None of the reduction ratios are guaranteed, and Broadcom advises estimating them conservatively.
+</InShort>
+
+<Compare rows={[
+  ["Deduplication", "OSA: per disk group, inline during destage. ESA: none.", "ESA: cluster-wide, post-process. 9.0 limited availability, 9.1 generally available."],
+  ["Compression", "OSA: on destage. ESA: inline, set by storage policy.", "ESA: inline, cluster-wide, on by default. 9.1 moves from LZ4 to ZSTD."],
+  ["Protection choice", "Adaptive RAID-5: 2+1 below six hosts, 4+1 from six", "9.1 Auto-RAID: RAID-5 2+1 for three to five hosts, RAID-6 4+2 from six"],
+]} />
+
+## Protection overhead
+
+| Cluster | 9.1 Auto-RAID | Raw per TiB of data |
+|---|---|---|
+| 3 to 5 hosts | RAID-5 (2+1) | 1.5 |
+| 6 or more hosts | RAID-6 (4+2) | 1.5 |
+| 2-node | Mirror | 2.0 |
+| Stretched, 3 or more hosts per site | Site mirror plus RAID-5 or RAID-6 | 3.0 |
+
+Before 9.1, adaptive RAID-5 used 4+1 at 1.25 times from six hosts. Under 9.1 Auto-RAID, six-host and larger clusters use RAID-6, which tolerates two failures at 1.5 times. If a 9.0 capacity plan assumed 1.25 times, check which scheme the cluster uses after the upgrade before you plan growth. The difference is 20% more raw capacity for the same data.
+
+Stretched clusters are the expensive case at three times the data. Check that every workload placed on one needs site-level availability. Workloads that do not can sit on a single-site cluster at half the raw cost.
+
+## Compression
+
+ESA compresses on the host that receives the write, before the data crosses the network. Each 4 KB block is stored in 512-byte sectors, so it can shrink to anywhere from seven-eighths to one-eighth of its size. Data that is already compressed, such as media files, compressed backups or encrypted guest volumes, gains little.
+
+In vSAN 8 ESA, compression was a storage policy rule: on by default, and switched off for new writes with the "No space efficiency" option (<KB id={384397} />). The 9.1 space efficiency guide describes compression as a cluster-wide feature that is on by default and cannot be turned off in the UI. 9.1 also changes the algorithm from LZ4 to ZSTD. Existing data keeps the old algorithm until it is rewritten, and an upgraded cluster needs a disk format update from the health service before new writes use ZSTD.
+
+## Global deduplication
+
+ESA deduplication hashes 4 KB blocks across the whole cluster after they have been written and have cooled, using spare CPU. It stays out of the write path, which is the main difference from OSA, where deduplication ran during destaging and could add latency on slower devices. It also grows with the cluster instead of being split by disk group.
+
+| | 9.0 | 9.1 |
+|---|---|---|
+| Availability | Limited, by qualification request | General |
+| Cluster size | 3 to 16 hosts | 3 to 64 hosts |
+| Stretched and 2-node | Not supported | Not supported |
+| vSAN data-at-rest encryption | Not supported | Supported |
+
+The savings depend on how similar the data is. Many VMs built from the same template, VDI pools and repeated database copies deduplicate well. Unique or encrypted data does not. Use vSAN data-at-rest encryption, not VM encryption, where encryption is required: VM encryption makes identical blocks look different and removes the deduplication saving.
+
+Turning deduplication off pauses the background process. Data already deduplicated stays that way, so there is no sudden capacity jump when you disable it.
+
+## Effective capacity, not raw
+
+The 9.1 capacity view reports **effective** capacity, with protection overhead and reserves already applied. Broadcom's guide gives the relationship for a single-site cluster: an overall reduction ratio of 2:1 yields effective capacity roughly equal to raw, and 4:1 yields about twice raw. Stretched clusters get about half of that. The guide's own example is a 10-host cluster with about 394 TB raw showing about 203 TB effective. Use the vSAN capacity view for these figures. The datastore view in the vSphere Client does not include them.
+
+## Returning freed space
+
+When a guest deletes files, the blocks stay allocated on vSAN unless the guest sends TRIM or UNMAP. Guest TRIM/UNMAP is on by default in recent releases and can be checked in the cluster advanced options. It needs virtual hardware version 11 for Windows or 13 for Linux. After enabling it at cluster level, each VM needs a full power-off and power-on, not a guest reboot. Backup snapshots can stop UNMAP reaching the base disk, so check that space returns after the backup window as well.
+
+## Pitfalls
+
+- **Promising a ratio before measuring it.** Size purchases on a measured ratio or on 1:1. See the [vSAN entitlement](/vcf/library/value/vsan-entitlement/) example for how far the answer moves.
+- **Reading compression and deduplication separately.** The guide recommends watching the overall data reduction ratio.
+- **Multi-rack deduplication without redundant uplinks.** Deduplication adds east-west traffic. Broadcom prefers single-rack clusters or redundant spine and leaf paths.

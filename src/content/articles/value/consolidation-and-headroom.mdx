@@ -1,0 +1,76 @@
+---
+title: "Consolidation: fewer, fuller clusters without losing failover headroom"
+description: "Every cluster carries its own failover reserve, and every VCF instance carries its own management stack. Merging small clusters, choosing the capacity model deliberately and separating compute from storage growth reduce the hosts you license without removing the headroom you need."
+category: value
+order: 9
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: []
+sources:
+  - title: "Configure admission control (vSphere availability)"
+    url: "https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-availability/GUID-C4059DB9-D673-45CB-918C-68C87FEB060A.html"
+    by: "VMware"
+  - title: "VMware Cloud Foundation helps you optimally size VMs (capacity models)"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/08/12/vmware-cloud-foundation-helps-you-optimally-size-vms-and-keep-your-infrastructure-and-workloads-running-smoothly/"
+    by: "VMware Cloud Foundation blog"
+  - title: "vSAN storage clusters in VCF 9.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/12/vsan-storage-clusters-in-vcf-9-1/"
+    by: "VMware Cloud Foundation blog"
+  - title: "Performance best practices for vSphere 9.0 (power management)"
+    url: "https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
+    by: "VMware"
+---
+
+<InShort>
+A cluster that must survive a host failure keeps a host's worth of capacity in reserve, and that reserve is licensed like any other core. Two four-host clusters hold two hosts in reserve. One seven-host cluster running the same work holds one. Merging small clusters, where nothing forces them apart, is one of the simplest ways to remove a host. In 9.x two further levers apply: 9.1 lets compute-only clusters mount remote vSAN storage, so compute and storage can grow separately, and fewer VCF instances means fewer management stacks to run.
+</InShort>
+
+<Compare rows={[
+  ["Failover reserve", "Per cluster, through HA admission control", "The same"],
+  ["Storage and compute growth", "Tied together in HCI clusters. vSAN Max (5.2) for disaggregated storage.", "9.1 storage clusters, mountable by compute-only and HCI clusters of either vSAN architecture"],
+  ["Management overhead per site", "SDDC Manager, vCenter and NSX per instance, plus the Aria stack", "The same per instance, with VCF Operations and Automation shared across the fleet"],
+]} />
+
+## The reserve is per cluster
+
+HA admission control holds back capacity so that VMs from a failed host can restart elsewhere. With the cluster resource percentage policy you set that reserve directly. With one host failure to tolerate, the reserve is roughly one host's share of the cluster, which is a quarter of a four-host cluster and an eighth of an eight-host one.
+
+### Worked example: merging two clusters
+
+This example is constructed. Two clusters of four hosts each, every host with two 16-core CPUs. Each is designed for one host failure, so each runs on three hosts' worth of capacity.
+
+| | Two clusters | One merged cluster |
+|---|---|---|
+| Hosts | 4 + 4 = 8 | 7 |
+| Usable hosts with one failure | 3 + 3 = 6 | 6 |
+| Licensed cores | 256 | 224 |
+
+The merged cluster delivers the same usable capacity with one host fewer, 32 cores less to license. The calculation holds only if nothing requires the two clusters to stay separate. Check for:
+
+- **Separation required by someone else's licence.** Some database and operating system vendors license by the hosts a VM could run on. Moving those VMs into a larger cluster can raise that cost by more than the host saved.
+- **Compliance boundaries.** Payment card or classified workloads may need their own cluster by policy.
+- **Hardware mismatch.** Different CPU generations need EVC, and vSAN clusters need compatible devices and the same architecture.
+- **Failure tolerance.** A larger cluster loses the same single host, but a cluster-wide problem now affects more workloads. Consider whether one larger failure domain is acceptable.
+
+## Choose the capacity model deliberately
+
+VCF Operations can plan capacity by **demand**, from measured use, or by **allocation**, from configured sizes and overcommit ratios such as 8 vCPUs per core. Demand-based planning usually fits more work on each host. Allocation-based planning is easier to explain to application owners and protects against everyone using their full allocation at once. Neither is wrong, but the ratio you choose sets the host count. A cluster planned at 4 vCPUs per core needs twice the cores of one planned at 8 for the same VMs. Pick the ratio from measured CPU ready time and contention at current density, then raise it in steps while watching those figures.
+
+## Grow storage and compute separately
+
+In an HCI cluster, more storage means more disks in the same hosts, and when the hosts are full it means more hosts, each with cores to license. The 9.1 storage cluster model lets compute-only and HCI clusters mount remote vSAN datastores of either architecture. A cluster that needs capacity but not CPU can take it from a storage cluster. Check how storage cluster hosts are licensed under your agreement before relying on this, since the comparison depends on it.
+
+## Fewer management stacks
+
+Each VCF instance carries its own management domain with SDDC Manager, vCenter and NSX. VCF Operations and VCF Automation are shared across a fleet. Every instance therefore costs management hosts, cores and patching effort before it runs a single workload. Before creating a new instance for a new site or team, check whether a workload domain in an existing instance meets the need. The [VCF 9 mental model](/vcf/library/architecture/vcf9-mental-model/) explains the fleet, instance and domain boundaries.
+
+## Power
+
+The default host power policy is Balanced, which saves energy at little performance cost for most workloads. The vSphere performance guide recommends setting the BIOS to OS-controlled power management so ESX can use the processor's power states. Distributed Power Management can power off hosts that are not needed and bring them back as load rises. It reduces energy cost, not licence cost, because the powered-off hosts remain licensed.
+
+## Pitfalls
+
+- **Removing the reserve to hit a target.** A cluster with no failover headroom turns the next host failure into an outage. Show the reserve in the business case rather than hiding it.
+- **Consolidating before right-sizing.** Merge after [right-sizing](/vcf/library/value/rightsizing-with-vcf-operations/) and [reclamation](/vcf/library/value/reclaiming-idle-capacity/), or you will plan the merged cluster around waste.
+- **Forgetting maintenance.** Patching takes a host out of service. A cluster sized exactly for one failure cannot tolerate a failure during patching.

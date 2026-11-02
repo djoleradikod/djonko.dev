@@ -1,0 +1,84 @@
+---
+title: "The vSAN entitlement: 1 TiB per core, counted raw and pooled"
+description: "Each VCF core brings 1 TiB of vSAN capacity, each VVF core 0.25 TiB. The count is raw capacity claimed by vSAN, pooled across clusters. Protection overhead, data reduction and drive sizes decide whether you buy add-on TiB."
+category: value
+order: 3
+versions: ["5.x", "9.0", "9.1"]
+level: Deep dive
+pubDate: 2026-11-02
+kbs: [313548]
+sources:
+  - title: "Counting cores for VMware Cloud Foundation and vSphere Foundation (vSAN TiB rules)"
+    url: "https://knowledge.broadcom.com/external/article/313548/counting-cores-for-vmware-cloud-foundati.html"
+    by: "Broadcom KB"
+  - title: "Licensing in VMware Cloud Foundation 9.0 (auto-pooling)"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/24/licensing-in-vmware-cloud-foundation-9-0/"
+    by: "VMware Cloud Foundation blog"
+  - title: "VMware software solution product guide (raw capacity, cache excluded, TB to TiB)"
+    url: "https://lenovopress.lenovo.com/lp1265-vmware-software-solution-product-guide"
+    by: "Lenovo Press"
+  - title: "vSAN ESA space efficiency (VCF 9.1)"
+    url: "https://www.vmware.com/docs/vmw-vsan-space-efficiency"
+    by: "VMware"
+  - title: "Global deduplication in vSAN ESA for VCF 9.0"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/19/global-deduplication-in-vsan-esa-for-vmware-cloud-foundation-9-0/"
+    by: "VMware Cloud Foundation blog"
+---
+
+<InShort>
+VCF includes **1 TiB of vSAN per licensed core** and VVF includes **0.25 TiB per core**, rounded up to a whole TiB (<KB id={313548} />). The figure is compared with the **raw** capacity that vSAN claims on every host, not the usable datastore size shown in the vSphere Client. OSA cache devices are not counted. Entitlement from every core pools into one figure that can be spent on any cluster. You buy add-on TiB only when raw claimed capacity across the estate exceeds that pool, so every TiB you avoid installing is a TiB you might avoid licensing.
+</InShort>
+
+<Compare rows={[
+  ["Entitlement", "1 TiB per VCF core, 0.25 TiB per VVF core (VVF from vSphere 8.0 U2b)", "The same rates"],
+  ["Where it is tracked", "Licence keys per vSAN cluster", "One licence file. Capacity pools across vCenters in the same VCF Operations instance."],
+  ["Raw reduction tools", "OSA deduplication and compression per disk group. ESA compression.", "ESA compression, plus global deduplication (9.0 limited availability, 9.1 generally available)"],
+]} />
+
+## What counts and what does not
+
+The KB defines the measure as the total raw physical storage, in TiB, contributed by every host in every vSAN cluster. Three consequences follow.
+
+**Protection overhead is licensed.** A VM with 1 TiB of data on a RAID-1 policy consumes 2 TiB of raw capacity, but the licence counts the raw devices, not the consumption. What matters is how much raw capacity you install to hold the data at the protection level you need.
+
+**Drive size matters.** You license what vSAN claims, so a host with a half-empty 15.36 TB device counts all of it. Choosing drive sizes and counts to land close to the design requirement avoids paying for capacity nobody will use.
+
+**Units are TiB.** Drive vendors sell in TB (10<sup>12</sup> bytes). One TB is about 0.909 TiB, so a 7.68 TB device contributes about 6.98 TiB.
+
+## Pooling across clusters
+
+The 9.0 licence file combines all subscriptions of the same product into one pool, and the KB states that vSAN entitlement can be spread across clusters in a different ratio from the cores. A compute-heavy cluster with little or no vSAN storage still contributes 1 TiB per core to the pool. That surplus can cover a storage-heavy cluster elsewhere in the estate. Look at the entitlement across the whole estate before you buy add-on capacity for one cluster.
+
+## Worked example: does this cluster need add-on TiB?
+
+This example is constructed. A six-host VCF 9.1 cluster has two 16-core CPUs per host, so 192 licensed cores and **192 TiB** of entitlement. It must hold **120 TiB** of VM data after thin provisioning.
+
+The assumptions:
+
+- vSAN ESA on six hosts uses RAID-6 (4+2) under 9.1 Auto-RAID, which stores 1.5 TiB raw for each TiB of data.
+- About 30% of raw capacity stays free for rebuilds, growth and policy changes. This is a planning assumption, not a Broadcom figure. Use the vSAN sizer for your own design.
+- Data reduction (compression plus deduplication) is shown at three values, because Broadcom does not publish typical ratios and advises conservative estimates.
+
+| Data reduction | Raw needed | VCF add-on | VVF add-on |
+|---|---|---|---|
+| None (1.0:1) | 257.1 TiB | 66 TiB | 210 TiB |
+| 1.5:1 | 171.4 TiB | none | 124 TiB |
+| 2.0:1 | 128.6 TiB | none | 81 TiB |
+
+Raw needed is 120 ÷ reduction × 1.5 ÷ 0.7. At 1.5:1 that is 80 × 1.5 ÷ 0.7 = 171.4 TiB. VCF add-on is raw needed minus 192 TiB, rounded up. VVF add-on is raw needed minus 48 TiB (0.25 × 192).
+
+Now apply drive sizes. At 1.5:1 each host needs 171.4 ÷ 6 = 28.6 TiB. Four 7.68 TB drives give 27.9 TiB per host, which is short. Five give 34.9 TiB per host, or 209.5 TiB in total, which is 17.5 TiB over the entitlement. Nine 3.84 TB drives give 31.4 TiB per host and 188.6 TiB in total, which fits under 192 TiB with room to spare. The same design can need add-on capacity or not, depending on the drive size chosen.
+
+<Callout title="Reading the example">
+Reduction ratios are the biggest uncertainty here. Size the first purchase on 1.0:1 or a ratio you have measured on the same kind of data, and treat any higher ratio as headroom you earn later. On an existing ESA cluster, the vSAN capacity view reports the overall data reduction ratio.
+</Callout>
+
+## VVF is a different calculation
+
+At 0.25 TiB per core, VVF entitlement rarely covers an all-flash HCI cluster. In the example, VVF needs between 81 and 210 TiB of add-on capacity for the same hardware. When comparing VCF and VVF quotes, include add-on vSAN capacity at the expected raw figure. A lower per-core price can be outweighed by the TiB you have to add.
+
+## Pitfalls
+
+- **Using the datastore capacity figure.** The vSphere Client shows usable capacity. The licence counts raw. The KB recommends the counting script, not a manual reading from the UI.
+- **Assuming deduplication lowers the licence directly.** It lowers the raw capacity you need to install. The licence follows the installed raw capacity, so the saving arrives at purchase time, not after you enable a feature on hardware already bought.
+- **Forgetting pooled surplus.** An add-on purchase for one cluster may be unnecessary if another cluster has unused entitlement.

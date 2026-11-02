@@ -1,0 +1,78 @@
+---
+title: "Counting cores: the 16-core floor, CPU choice and host count"
+description: "Every CPU is licensed for at least 16 cores, disabled cores still count, and one host's worth of cores is always held back for failover. Together these rules decide which server build carries a workload on the fewest licensed cores."
+category: value
+order: 2
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [313548]
+sources:
+  - title: "Counting cores for VMware Cloud Foundation and vSphere Foundation"
+    url: "https://knowledge.broadcom.com/external/article/313548/counting-cores-for-vmware-cloud-foundati.html"
+    by: "Broadcom KB"
+  - title: "VMware Cloud Foundation 9 FAQ (VCF Edge minimums)"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-0-general-faqs"
+    by: "VMware"
+  - title: "VMware 72-core minimum vs 16-core CPU floor"
+    url: "https://licenseware.io/major-update-for-vmware-customers-min-licensing-requirement-increases-from-16-to-72-cores/"
+    by: "Licenseware"
+  - title: "VCF 9 licensing explained: core counting and the vSAN TiB entitlement"
+    url: "https://drpranayjha.com/vcf-9-licensing-consumption-model/"
+    by: "Pranay Jha"
+---
+
+<InShort>
+VCF and VVF count **physical cores** on every licensed host, with a minimum of **16 per CPU**. A host with two 8-core CPUs is licensed for 32 cores, not 16. Cores disabled in the BIOS still count, so turning them off saves nothing (<KB id={313548} />). Hyper-threads are not counted. The cheapest build for a workload is the one that needs the fewest licensed cores **after** you set aside a host for failover, and that is rarely the smallest CPU or the largest one.
+</InShort>
+
+<Compare rows={[
+  ["Counting unit", "Per core under the 2024 subscriptions. Older estates: per CPU, or per component.", "Per core, reported from VCF Operations"],
+  ["Minimum per CPU", "16 cores", "16 cores. VCF Edge has its own rules (8 cores per CPU minimum, per the 9.x FAQ)."],
+  ["How you check", "PowerCLI counting script from <a href='https://knowledge.broadcom.com/external/article/313548' target='_blank' rel='noopener'>KB 313548</a>", "The same script before purchase. VCF Operations licence usage after."],
+]} />
+
+## The three rules that decide the count
+
+**The floor.** Any CPU with fewer than 16 cores is billed as 16. Single-socket 12-core hosts and dual-socket 8-core hosts pay for cores they do not have. Edge sites and small branch clusters are where this shows up most, because they tend to use small CPUs.
+
+**Disabled cores count.** The KB is explicit that the counting script needs all cores enabled, and that licensing is based on the physical cores present. Buying a 32-core CPU and disabling half of it to save licence cost does not work.
+
+**Failover capacity is licensed too.** A cluster designed to survive one host failure carries one host's worth of cores that does no work in normal running. The larger each host, the larger that reserve. With three hosts it is a third of the cluster. With eight hosts it is an eighth.
+
+## Worked example: same workload, five server builds
+
+This example is constructed. The workload needs **120 physical cores** of capacity with one host failed (N+1). It assumes every CPU option delivers the same work per core, which is not true in practice: compare per-core benchmark results for the actual CPU models before you use this method on a real purchase.
+
+| Host build | Cores per host | Hosts (N+1) | Licensed cores |
+|---|---|---|---|
+| 2 × 12-core | 24 (licensed 32) | 6 | 192 |
+| 2 × 16-core | 32 | 5 | 160 |
+| 2 × 20-core | 40 | 4 | 160 |
+| 2 × 24-core | 48 | 4 | 192 |
+| 2 × 32-core | 64 | 3 | 192 |
+
+The host count is the number needed to reach 120 cores, rounded up, plus one. For 2 × 20-core hosts that is 120 ÷ 40 = 3, plus one spare, so 4 hosts and 160 cores.
+
+Three things stand out. The 12-core build pays for 48 cores that do not exist, a third more than its physical count. The 32-core build reaches the target with the fewest hosts but holds 64 cores in reserve, so it licenses as many cores as the 12-core build. The 20-core build lands in the middle and needs the fewest licensed cores and fewest hosts at the same time. Change the target to 100 cores and the answer moves, which is why the calculation belongs in every hardware decision and not in a rule of thumb.
+
+## What else changes the answer
+
+- **Memory per host.** If the cluster runs out of memory before CPU, the core count is set by how much memory each host can hold. [NVMe memory tiering](/vcf/library/value/nvme-memory-tiering/) changes that limit.
+- **vSAN entitlement.** Fewer licensed cores also means less included vSAN capacity, at 1 TiB per VCF core. Check the result against the [vSAN entitlement](/vcf/library/value/vsan-entitlement/) before you settle on a build.
+- **vSAN protection.** From 9.1, vSAN ESA picks RAID-5 (2+1) for three to five hosts and RAID-6 (4+2) from six hosts. Both cost 1.5 times the data in raw capacity. Before 9.1, six or more hosts could use RAID-5 (4+1) at 1.25 times. See [space efficiency](/vcf/library/value/vsan-esa-space-efficiency/).
+- **Failure domains.** A design that needs to survive a host in maintenance and a host failure at the same time needs N+2, which favours more, smaller hosts.
+
+## Order minimums
+
+In April 2025 the trade press reported a 72-core minimum per order line, citing a distributor memo. Broadcom's published documentation, including the counting KB, states only the 16-core per CPU rule, and a Broadcom spokesperson told the German publication iX that the 16-core minimum had not changed. Treat any minimum order quantity as a commercial term and confirm it with your reseller for the specific quote.
+
+<Callout type="warn">
+Run the counting script against the real hosts before renewal. Estates that grew by adding hosts with whatever CPU was available often contain a few small-CPU hosts that are billed at the 16-core floor. Replacing or retiring them can reduce the count without touching the workloads.
+</Callout>
+
+## Pitfalls
+
+- **Counting logical processors.** Logical processor counts include hyper-threads and double the real figure on most hosts. Count physical cores with the script or from the host hardware summary.
+- **Ignoring the failover host in the business case.** A plan that removes two hosts from a five-host cluster also removes the ability to patch one host while tolerating a failure.
+- **Comparing CPUs on core count alone.** Two CPUs with the same core count can differ widely in throughput per core. Licence cost per unit of work is the number to compare.

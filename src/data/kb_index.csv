@@ -339,3 +339,9 @@ kb,topic,decks,url
 456430,NSX VCF SSO Access Denied (9.1.1),Meet the fleet,https://knowledge.broadcom.com/external/article/456430
 456790,15-minute backups keep VCFA prechecks queued,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/456790
 457245,Identity broker precheck needs the 9.1.1 runtime,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/457245
+313548,Counting cores and vSAN TiB for VCF and VVF licensing,Value and cost,https://knowledge.broadcom.com/external/article/313548
+401492,NSX load balancer entitlement change in VCF 9 (Avi for general load balancing),Value and cost,https://knowledge.broadcom.com/external/article/401492
+449016,NVMe memory tiering activation thresholds and monitoring,Value and cost,https://knowledge.broadcom.com/external/article/449016
+448305,VMs that do not use memory tiering: VM settings and guest page activity,Value and cost,https://knowledge.broadcom.com/external/article/448305
+445643,Identifying and reviewing idle VMs for reclamation,Value and cost,https://knowledge.broadcom.com/external/article/445643
+384397,Disabling compression on a vSAN ESA cluster (storage policy),Value and cost,https://knowledge.broadcom.com/external/article/384397

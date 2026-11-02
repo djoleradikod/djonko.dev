@@ -24,6 +24,14 @@
   "url": "https://knowledge.broadcom.com/external/article/313533"
  },
  {
+  "kb": 313548,
+  "topic": "Counting cores and vSAN TiB for VCF and VVF licensing",
+  "decks": [
+   "Value and cost"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/313548"
+ },
+ {
   "kb": 313551,
   "topic": "Ops vSphere Client plugin refresh on certificate renewal",
   "decks": [
@@ -226,6 +234,14 @@
   "url": "https://knowledge.broadcom.com/external/article/382440"
  },
  {
+  "kb": 384397,
+  "topic": "Disabling compression on a vSAN ESA cluster (storage policy)",
+  "decks": [
+   "Value and cost"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/384397"
+ },
+ {
   "kb": 385107,
   "topic": "vCert tool",
   "decks": [
@@ -257,6 +273,14 @@
    "How it all connects"
   ],
   "url": "https://knowledge.broadcom.com/external/article/395813"
+ },
+ {
+  "kb": 401492,
+  "topic": "NSX load balancer entitlement change in VCF 9 (Avi for general load balancing)",
+  "decks": [
+   "Value and cost"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/401492"
  },
  {
   "kb": 401658,
@@ -2014,6 +2038,14 @@
   "url": "https://knowledge.broadcom.com/external/article/445504"
  },
  {
+  "kb": 445643,
+  "topic": "Identifying and reviewing idle VMs for reclamation",
+  "decks": [
+   "Value and cost"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/445643"
+ },
+ {
   "kb": 445767,
   "topic": "Third-party plugin (Cisco Intersight) after cert change",
   "decks": [
@@ -2214,6 +2246,14 @@
   "url": "https://knowledge.broadcom.com/external/article/448068"
  },
  {
+  "kb": 448305,
+  "topic": "VMs that do not use memory tiering: VM settings and guest page activity",
+  "decks": [
+   "Value and cost"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/448305"
+ },
+ {
   "kb": 448518,
   "topic": "Licenses expire: 180-day update missed",
   "decks": [
@@ -2295,6 +2335,14 @@
    "How it all connects"
   ],
   "url": "https://knowledge.broadcom.com/external/article/449013"
+ },
+ {
+  "kb": 449016,
+  "topic": "NVMe memory tiering activation thresholds and monitoring",
+  "decks": [
+   "Value and cost"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/449016"
  },
  {
   "kb": 449075,
