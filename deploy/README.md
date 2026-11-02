@@ -194,7 +194,7 @@ Workers & Pages, Create, Pages, **Connect to Git**, choose `djoleradikod/djonko.
 | Environment variables, Production | `SITE_URL` = `https://djonko-dev.pages.dev` (until launch) |
 | Environment variables, Preview | none. Preview builds take their own address from `CF_PAGES_URL`. |
 
-Node comes from `.node-version` (20). Under Settings, Build, keep the build system at version 3.
+Node comes from `.node-version` (22). Under Settings, Build, keep the build system at version 3.
 
 Under Settings, Build, **Branch control**: production deployments on for `main`; preview deployments for
 **Custom branches**, include `*`, exclude `dependabot/*`. Dependabot pull requests are checked by the GitHub

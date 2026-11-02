@@ -49,7 +49,7 @@ jobs:
         run: npm run build
       - name: Accessibility, CSP and page-weight audit
         run: |
-          npx --yes playwright@1 install --with-deps chromium
+          npx playwright install --with-deps chromium   # version pinned in package.json
           npm run audit
       - name: Validate the Caddy config
         run: docker run --rm -v "$PWD/deploy/hetzner/Caddyfile:/etc/caddy/Caddyfile:ro" caddy:2 caddy validate --adapter caddyfile --config /etc/caddy/Caddyfile
