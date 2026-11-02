@@ -4,6 +4,7 @@ import sitemap from '@astrojs/sitemap';
 import { createReadStream, existsSync, statSync } from 'node:fs';
 import { join, normalize, extname } from 'node:path';
 import remarkMermaid from './src/lib/remark-mermaid.mjs';
+import rehypeTableWrap from './src/lib/rehype-table-wrap.mjs';
 
 // Pages that should not appear in the sitemap.
 const HIDDEN = /\/(404|search|cv|guide)\/?$/;
@@ -35,6 +36,7 @@ export default defineConfig({
   integrations: [mdx(), sitemap({ filter: (page) => !HIDDEN.test(new URL(page).pathname) }), devMedia],
   markdown: {
     remarkPlugins: [remarkMermaid],
+    rehypePlugins: [rehypeTableWrap],
     syntaxHighlight: { type: 'shiki', excludeLangs: ['mermaid'] },
     shikiConfig: { themes: { light: 'github-light-high-contrast', dark: 'github-dark-high-contrast' } },
   },
