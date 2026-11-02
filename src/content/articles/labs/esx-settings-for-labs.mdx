@@ -1,0 +1,60 @@
+---
+title: "ESX settings for labs: the workarounds that make VCF 9 run on lab hardware"
+description: "Consumer CPUs, consumer NICs and nested vSAN need a handful of advanced settings to behave. These are well documented by the community, useful for labs, and must never leak into production builds."
+category: labs
+order: 6
+versions: ["9.0", "9.1"]
+level: Deep dive
+pubDate: 2026-11-02
+kbs: []
+sources:
+  - title: "VCF 9.1: comprehensive ESX configuration workarounds for lab deployments"
+    url: "https://williamlam.com/2026/05/vcf-9-1-comprehensive-esx-configuration-workarounds-for-lab-deployments.html"
+    by: "William Lam"
+  - title: "NVMe tiering with nested virtualization in VCF 9.0"
+    url: "https://williamlam.com/2025/06/nvme-tiering-with-nested-virtualization-in-vcf-9-0.html"
+    by: "William Lam"
+  - title: "VMware Cloud Foundation homelab hardware options"
+    url: "https://williamlam.com/2024/12/vmware-cloud-foundation-vcf-homelab-hardware-options.html"
+    by: "William Lam"
+---
+
+<InShort>
+Lab hardware is rarely on the compatibility guide, so VCF 9 needs help to run on it. The common adjustments fall into four groups: **CPU** (entropy and NVMe tiering behaviour on consumer AMD processors), **NICs** (hardware offloads on some consumer 10 GbE cards), **nested vSAN** (SCSI reservations, unmap pass-through, device monitoring and swap) and **vSAN compression** on CPU-constrained hosts. Each is an advanced setting with a documented reason. Use them in labs only, and keep a list so they never appear in a production build.
+</InShort>
+
+<Compare v5Label="Lab" v9Label="Production" title="Where these belong" rows={[
+  ["Hardware", "Consumer CPUs, mini PCs, mixed vendors", "Hardware on the compatibility guide"],
+  ["Advanced settings", "Accepted, with notes", "Only under a KB or support direction"],
+  ["vSAN", "Often nested, on top of physical vSAN", "Physical devices on the compatibility guide"],
+]} />
+
+## The settings, by group
+
+| Group | Setting | Why |
+|---|---|---|
+| vSAN compression | `/VSAN/Vsan2ZdomCompZstd = 0` | Uses LZ4 instead of Zstd on CPU-constrained hosts |
+| Nested vSAN on physical vSAN | `/VSAN/FakeSCSIReservations = 1` | Required for nested vSAN on vSAN |
+| Nested vSAN space | `/VSAN/GuestUnmap = 1` | Passes TRIM and UNMAP down to the physical vSAN |
+| Nested vSAN tuning | `/LSOM/VSANDeviceMonitoring = 0`, `/LSOM/lsomSlowDeviceUnmount = 0`, `/VSAN/SwapThickProvisionDisabled = 1` | Device monitoring and swap suited to virtual disks. Not needed with the nested ESX appliance. |
+| NVMe tiering for nested ESX | VM setting `sched.mem.enableNestedTiering = true` | Lets the physical host tier the nested VM's memory |
+| Consumer NIC offloads | `/Net/TcpipDefLROEnabled = 0`, `/Net/UseHwTSO = 0` | Avoids performance loss on some 10 GbE cards |
+| Consumer AMD CPUs | entropy source and APIC virtualisation settings | Avoids high CPU from slow entropy and VMs failing to start with NVMe tiering |
+
+The full list, with the exact procedures for each processor family and the edge deployment workaround, is in the source article. Read it for your hardware rather than copying settings blind.
+
+```bash
+# Example: apply and verify one advanced setting on a lab host
+esxcli system settings advanced set -o /VSAN/GuestUnmap -i 1
+esxcli system settings advanced list -o /VSAN/GuestUnmap
+```
+
+<Callout type="field">
+Keep lab-only settings in one script with a header that says "LAB ONLY", and never in a host profile or a configuration template shared with production. The day someone copies a lab kickstart into a customer build is the day these settings become a support case.
+</Callout>
+
+## Pitfalls
+
+- **Applying everything at once.** Apply only what your hardware needs, and note why.
+- **Benchmarking a nested lab.** These settings make it work, not fast.
+- **Carrying settings across releases.** Some are fixed or unnecessary in later builds. Re-check after each upgrade.

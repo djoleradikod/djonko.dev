@@ -1,0 +1,62 @@
+---
+title: "Go or no-go: change windows, checkpoints and honest rollback plans for VCF upgrades"
+description: "VCF upgrades are rarely reversible with one click, so the real control is deciding not to proceed. Clear go or no-go criteria at each phase, agreed before the window, make that decision quick and unemotional."
+category: leadership
+order: 5
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [440630, 450430]
+sources:
+  - title: "Upgrading to VCF 9.1.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+Most VCF components roll forward, not back. The recovery for a failed step is usually "fix and retry", and for some components "restore from backup or snapshot". So the most important rollback decision is made **before** each phase: is the platform healthy enough to start? Write the criteria down, agree them with the change owner, and check them at each gate in the official upgrade order (<KB id={440630} />). Define for each phase what "stop and hold" looks like, because a safe pause is often better than either finishing or rolling back.
+</InShort>
+
+<Compare rows={[
+  ["Phases", "SDDC Manager, then NSX, vCenter, hosts per domain", "VCF Operations first, then add-ons, SDDC Manager, management services, identity, Automation, then the core per domain"],
+  ["Rollback reality", "Snapshot SDDC Manager, restore others from backup", "The same, plus a documented snapshot procedure for VCF Operations (<a href='https://knowledge.broadcom.com/external/article/450430' target='_blank' rel='noopener'>KB 450430</a>)"],
+  ["Safe pause points", "Between domains", "Between phases and between domains. Mixed versions are supported within limits."],
+]} />
+
+## Gate criteria (before each phase)
+
+```text
+[ ] Health check clean: no stale locks, no disconnected accounts, no critical alerts
+[ ] Backups taken and verified for every component touched in this phase
+[ ] Snapshots taken where the procedure allows them, with a removal time
+[ ] Prechecks passed, or every warning explained and accepted in writing
+[ ] Binaries present for this phase
+[ ] Named people available: platform, network, identity, and a decision owner
+[ ] Time left in the window exceeds the phase's measured duration plus margin
+```
+
+## During the window
+
+- **One operation at a time.** No parallel prechecks or patches on the same scope.
+- **A running log** with timestamps: started, finished, warnings, decisions.
+- **A clear stop rule**: if a phase fails twice with the same cause, hold and investigate rather than retrying again.
+
+## Rollback, honestly
+
+| Component | Realistic recovery |
+|---|---|
+| SDDC Manager | Restore from snapshot or file backup |
+| VCF Operations | Snapshot taken with the cluster offline, as documented |
+| vCenter | File-based backup restore |
+| NSX | Backup restore |
+| Hosts | Usually roll forward. Remediate again with the right image. |
+
+<Callout type="field">
+Agree the go or no-go criteria in the planning meeting, not in the window. At 2 a.m., a pre-agreed checklist turns a tense judgment call into a quick, shared decision.
+</Callout>
+
+## Pitfalls
+
+- **Snapshots left running** for days after the window.
+- **Starting a phase without enough time** to finish it.
+- **"We'll roll back if needed"** without saying how, for each component.

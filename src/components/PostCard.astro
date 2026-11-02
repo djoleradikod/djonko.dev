@@ -1,0 +1,13 @@
+---
+import { Image } from 'astro:assets';
+import { type Post, postUrl, fmtDate, readingTime } from '../lib/posts';
+interface Props { p: Post }
+const { p } = Astro.props;
+---
+<a class="card" href={postUrl(p)}>
+  {p.data.cover && <div class="thumb"><Image src={p.data.cover} alt="" widths={[400, 800]} sizes="(min-width: 900px) 360px, 100vw" loading="lazy" /></div>}
+  <span class="kicker">{p.data.kind}</span>
+  <h3>{p.data.title}</h3>
+  <p>{p.data.description}</p>
+  <div class="meta"><span class="small muted">{fmtDate(p.data.pubDate)} · {readingTime(p.body)} min read</span></div>
+</a>

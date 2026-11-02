@@ -1,0 +1,7 @@
+---
+import { kbInfo } from '../data/kb';
+interface Props { id: number; label?: string }
+const { id, label } = Astro.props;
+const k = kbInfo(id);
+---
+<a class="kb" href={k.url} target="_blank" rel="noopener" title={k.topic || `Broadcom KB ${id}`}>{label ?? `KB ${id}`}</a>

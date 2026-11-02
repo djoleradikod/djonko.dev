@@ -1,0 +1,81 @@
+---
+title: "Connected or disconnected: choosing a reporting mode and registering VCF Operations"
+description: "Both modes end with the same license file. Connected mode moves it over HTTPS every day; disconnected mode moves it by hand at least every 180 days. 9.1 adds a verification and confirmation exchange for the License Server. Here are both flows, side by side, with what goes wrong."
+category: licensing
+order: 3
+versions: ["9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [431546, 404593, 435664, 416864, 404155, 432201, 436542]
+sources:
+  - title: "Register VCF Operations in connected mode (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/register-vcf-operations/register-vcf-operation-in.html"
+    by: "Broadcom TechDocs"
+  - title: "Register VCF Operations in disconnected mode (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations/register-vcf-operations-in-disconnected-mode.html"
+    by: "Broadcom TechDocs"
+  - title: "Automating VCF 9.0 Operations license registration and import for air-gapped environments"
+    url: "https://williamlam.com/2025/09/automating-vcf-9-0-operations-license-registration-import-for-air-gapped-environments.html"
+    by: "William Lam"
+---
+
+<InShort>
+The docs call it the **reporting mode**, and there are only two. **Connected**: VCF Operations reaches the console over HTTPS, registers with an activation code, and sends usage daily. In 9.1 it also refreshes licenses automatically every 24 hours. **Disconnected**: you carry a registration file to the console and a license file back, then repeat the usage cycle by hand at least every 180 days. 9.1 adds a **verification file** and a **confirmation file**, which is valid for only three hours. You can switch modes later in either direction. Air-gapped sites need one VCF Operations per isolated environment (<KB id={404155} />).
+</InShort>
+
+<Compare v5Label="Connected" v9Label="Disconnected" title="The two modes" rows={[
+  ["Network", "Outbound TCP 443 to vcf.broadcom.com and eapi.broadcom.com from every VCF Operations node", "None from VCF Operations. A browser on a connected PC reaches the console."],
+  ["Registration", "Activation code from the console", "Registration file out, license file back. 9.1 adds verification and confirmation files."],
+  ["Usage reporting", "Automatic, daily", "By hand: generate usage file, upload, download a new license file, import"],
+  ["License refresh", "9.0: click Update Licenses within 180 days. 9.1: automated every 24 hours by default.", "Every usage cycle, at least every 180 days"],
+  ["Best for", "Most estates. It is the recommended mode.", "Dark sites, regulated environments, labs without internet"],
+]} />
+
+## Connected registration in 9.1
+
+1. Prerequisites: the License Server is deployed, the vCenter adapter is running, and internet access or a proxy is set in **Global Settings > Network Settings**.
+2. **Manage > Licensing > Licenses & Registration > Register & License VCF Operations**, then choose **Connected**.
+3. Start on the console card, sign in, choose the **Site ID**, name the instance and **generate the activation code**.
+4. Paste the code into VCF Operations and **Activate**.
+5. On the console, add licenses for each License Server: at least one primary, split capacity if needed.
+6. Assign a primary license to each vCenter. Leave updates on **Automated**.
+
+In 9.0 the flow is similar from **License Management > Registration**, without the License Server steps.
+
+## Disconnected registration in 9.1
+
+<Diagram viewBox="0 0 760 250" label="Disconnected registration exchange in 9.1" caption="Five files cross the air gap. The confirmation file expires three hours after it is generated, so do steps 3 and 4 in one sitting.">
+  <rect class="box accent" x="20" y="20" width="200" height="210" rx="10"/>
+  <text class="t" x="120" y="48" text-anchor="middle">VCF Operations</text>
+  <rect class="box plain" x="540" y="20" width="200" height="210" rx="10"/>
+  <text class="t" x="640" y="48" text-anchor="middle">Business Services console</text>
+  <line class="wire accent" x1="220" y1="80" x2="538" y2="80" marker-end="url(#arra)"/>
+  <text class="s" x="380" y="72" text-anchor="middle">1. registration file</text>
+  <line class="wire" x1="538" y1="115" x2="222" y2="115" marker-end="url(#arr)"/>
+  <text class="s" x="380" y="107" text-anchor="middle">2. verification file</text>
+  <line class="wire accent" x1="220" y1="150" x2="538" y2="150" marker-end="url(#arra)"/>
+  <text class="s" x="380" y="142" text-anchor="middle">3. confirmation file (valid 3 hours)</text>
+  <line class="wire" x1="538" y1="185" x2="222" y2="185" marker-end="url(#arr)"/>
+  <text class="s" x="380" y="177" text-anchor="middle">4. license file</text>
+  <line class="wire dash" x1="220" y1="215" x2="538" y2="215" marker-end="url(#arr)"/>
+  <text class="s" x="380" y="208" text-anchor="middle">then every ≤180 days: usage file, new license file</text>
+</Diagram>
+
+In 9.0 there is no verification or confirmation step: registration file out, license file back, import, done.
+
+## When registration fails
+
+- **Check reachability from every node**, not just the primary: `curl -v telnet://vcf.broadcom.com:443` and the same for `eapi.broadcom.com` (<KB id={431546} />, <KB id={404593} />).
+- **A 407** means proxy credentials. **A 401 `invalid_client`** means the activation code expired or is wrong: generate a new one (<KB id={435664} />).
+- **Greyed-out registration options** usually mean you are not logged in as the local `admin` (<KB id={416864} />).
+- **If the network can't be fixed quickly**, register in disconnected mode now and switch later. Disconnected mode needs no activation code (<KB id={432201} />).
+
+<Callout type="field">
+For disconnected customers, automate the usage cycle. William Lam's scripts and PowerShell module use the VCF Operations and console APIs to generate and import files. A scheduled reminder at 150 days, with a named owner, is the minimum.
+</Callout>
+
+## Pitfalls
+
+- **Reusing a registration file from another instance.** It fails. Each instance generates its own.
+- **Replacing VCF Operations in a dark site** without removing the old adapters and appliance first. Follow the replacement procedure (<KB id={436542} />).
+- **Assuming one VCF Operations can license several dark sites.** Central licensing across disconnected sites is not supported.

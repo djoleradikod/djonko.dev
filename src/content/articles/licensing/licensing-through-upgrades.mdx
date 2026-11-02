@@ -1,0 +1,58 @@
+---
+title: "Licensing through upgrades: 5.2 keys to 9.0, and 9.0 to the 9.1 License Server"
+description: "Licensing is the part of a VCF upgrade that fails quietly, weeks later, when an evaluation period ends. The order is short: VCF Operations first, register it, then vCenter, and in 9.1 the License Server before anything else depends on it."
+category: licensing
+order: 7
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [406836, 452764, 438533, 418555, 440630, 440471, 440863, 442133, 453149]
+sources:
+  - title: "High-level licensing workflow (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/licensing-overview/v9-licensing-overview.html"
+    by: "Broadcom TechDocs"
+  - title: "Pre-version 9 licenses and mixed-version support (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/licensing-overview/pre-version-9-licenses-and-support.html"
+    by: "Broadcom TechDocs"
+  - title: "Transfer your licenses after you upgrade VCF Operations (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/transfer-your-licenses-after-you-upgrade-vcf-operations.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+From **5.2**, nothing converts: the subscription already carries 9.x licenses alongside 8.x keys (<KB id={452764} />). Upgrade or deploy VCF Operations 9, **register it**, then upgrade vCenter. An upgraded vCenter runs in evaluation for 90 days and needs a 9.x primary license before then. 8.x hosts under a 9.x vCenter keep their keys for now. From **9.0 to 9.1**, upgrade VCF Operations first, deploy the **License Server** with management services, and let licenses **transfer**: automatically in connected mode, by file exchange in disconnected mode. Upgrade out of order and you get vCenters "not connected to a license server" and hosts in evaluation (<KB id={440471} />, <KB id={442133} />).
+</InShort>
+
+<Compare v5Label="5.2 to 9.0" v9Label="9.0 to 9.1" title="Two different licensing upgrades" rows={[
+  ["Starting point", "25-character keys, per component or solution key (<a href='https://knowledge.broadcom.com/external/article/406836' target='_blank' rel='noopener'>KB 406836</a>)", "License file held by VCF Operations"],
+  ["First step", "Upgrade Aria Operations to VCF Operations 9, or deploy it", "Upgrade VCF Operations with its upgrade package"],
+  ["New component", "VCF Operations becomes the licensing authority", "License Server, deployed with management services"],
+  ["License movement", "Register, add licenses, assign to vCenter", "Transfer: automatic if connected, file exchange if disconnected"],
+  ["Grace", "vCenter 9 runs in evaluation for 90 days", "Duplicate licenses can show until the transfer completes"],
+]} />
+
+## 5.2 to 9.0, step by step
+
+1. **VCF Operations 9.0** in place: upgraded from Aria Operations or newly deployed. It runs in evaluation for up to 90 days.
+2. **Register it** with the console, connected or disconnected. "VCF Operations is not registered" after the upgrade is the reminder (<KB id={438533} />).
+3. **Upgrade vCenter.** It enters a 90-day evaluation and must receive a 9.x primary license with enough capacity.
+4. **Assign the license** to the upgraded vCenter.
+5. **Leave 8.x hosts alone** until they are upgraded. They keep v8 keys with the same features. A 9.0 management domain can manage 5.x and 9.0 workload domains.
+6. **Clean up** old keys on the Pre-Version 9 tab once the infrastructure they covered is gone (<KB id={418555} />).
+
+## 9.0 to 9.1, step by step
+
+1. **Upgrade VCF Operations first.** Don't use the legacy fleet management appliance for this step (<KB id={440630} />).
+2. **Deploy management services and the License Server.** The License Server needs DNS A and PTR records in lowercase.
+3. **Transfer licenses.** In connected mode it is automatic. In disconnected mode, run the registration, verification, confirmation and license file exchange. Don't make assignments while it runs.
+4. **Then upgrade vCenter and ESX.** An ESX upgrade precheck saying the vCenter "is not licensed by a licensing server" means step 1 or 2 was skipped (<KB id={440863} />).
+
+<Callout type="field">
+Put a licensing checkpoint in the runbook between "VCF Operations upgraded" and "vCenter upgraded": registered, License Server healthy (9.1), licenses visible and assignable. It takes ten minutes and prevents the ticket that arrives 89 days later.
+</Callout>
+
+## Pitfalls
+
+- **Treating evaluation as success.** Everything works for 90 days. Then it doesn't.
+- **Upgrading vCenter before VCF Operations** in the 9.1 path. Hosts come back with evaluation licenses.
+- **Past-due banners on a fresh 9.1** can mean the License Server was never deployed, not that you missed a report (<KB id={453149} />).

@@ -1,0 +1,53 @@
+---
+title: "NSX compute manager registration in VCF 9: service accounts, OIDC and the error codes"
+description: "NSX registers each vCenter as a compute manager with a mandatory service account and vCenter as OIDC provider. When the connection goes Down, the error code usually names the cause: a changed certificate, a replaced root CA, an expired service account password, or a stale extension."
+category: integrations
+order: 6
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [317794, 451125, 446711, 431963, 413178, 433425, 426389, 433085, 451344]
+sources:
+  - title: "NSX 9.1 API: ComputeManager schema"
+    url: "https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/schemas_ComputeManager.html"
+    by: "Broadcom Developer"
+  - title: "NSX compute manager connection status down (master KB)"
+    url: "https://knowledge.broadcom.com/external/article/317794/nsx-compute-manager-connection-status-do.html"
+    by: "Broadcom KB"
+---
+
+<InShort>
+From 9.0 a compute manager **service account is mandatory**: NSX creates `nsxt_<id>` in vCenter and renews its password every 90 days. vCenter is also the **OIDC provider** for NSX by default. So the registration depends on a valid vCenter certificate chain, a service account NSX can renew, and the right privileges for the user who registered it. When the status is **Down**, click it: the message and code map to a KB (<KB id={317794} />). The most common in 9.x: **7058** after a vCenter root CA change (edit, save, confirm the thumbprint) (<KB id={451125} />), **90011** for OIDC trust (<KB id={431963} />), and expired service account passwords (<KB id={413178} />).
+</InShort>
+
+<Compare rows={[
+  ["Service account", "Optional", "Mandatory. Password auto-renewed every 90 days."],
+  ["OIDC", "Optional, needed for Supervisor", "vCenter is the OIDC provider by default"],
+  ["Credential type", "Username and password", "SAML token login. Username and password marked deprecated in the API schema."],
+  ["Several NSX per vCenter", "Not supported", "Supported with the multi-NSX option"],
+]} />
+
+## Error codes worth knowing
+
+| Code or message | Cause and fix |
+|---|---|
+| 7058 "trusted root certificate cannot be found" | vCenter root CA replaced. Edit the compute manager, save with no changes, confirm the new thumbprint (<KB id={451125} />). |
+| "The certificate for the Compute Manager has expired or is invalid" | Thumbprint mismatch. Fix vCenter's certificate, then edit and accept (<KB id={446711} />). |
+| 90011 "Failed to enable trust ... OIDC endpoint" | Two certificate entries for the same vCenter in NSX trust. Update the thumbprint through the API (<KB id={431963} />). |
+| "Invalid credentials provided or extension not valid" | The `nsxt_` service account password expired. **Resolve** with vCenter admin credentials (<KB id={413178} />). |
+| "Registered with Errors", service account creation denied | The registering user lacks `LicenseService.Administrators` (<KB id={433425} />). |
+| "already registered with other NSX manager" | A stale extension from a decommissioned NSX. Unregister both NSX extension keys in the MOB, then re-add (<KB id={426389} />). |
+| 7061 | Registering with a federated identity provider user. Use a local vCenter account (<KB id={433085} />). |
+| 7059 when registering vCenter 9 into NSX 4.2 | Not supported for new registrations. Use NSX 9.0.2 or later (<KB id={451344} />). |
+
+Logs on NSX Manager: `/var/log/cm-inventory/cm-inventory.log` for registration and trust, and `/var/log/syslog` for service account events.
+
+<Callout type="field">
+When planning a vCenter certificate or CA change, list every system that pins vCenter's certificate: NSX compute managers, VCF Operations accounts, VCF Automation cloud accounts, vSphere Client plugins and backup tools. Re-trust them in that order straight after the change.
+</Callout>
+
+## Pitfalls
+
+- **Re-registering instead of editing.** Edit and confirm the thumbprint first. Re-registration can create duplicates.
+- **Registering with an SSO-federated personal account.** Use a dedicated local account.
+- **Ignoring "Registered with Errors".** vLCM features on NSX hosts depend on a clean registration.

@@ -1,0 +1,69 @@
+---
+title: "Backups: SDDC Manager SFTP in 5.x, fleet-level and instance-level in 9.x"
+description: "Backups used to mean one SFTP target in SDDC Manager plus vCenter's own file-based backup. In 9.x there are more components, two configuration places, a new runtime to protect, and a few formatting rules that silently break the job."
+category: day-2
+order: 4
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [417255, 450561, 456790, 439473, 447314, 442696, 436904, 450430]
+sources:
+  - title: "VCF 9.1: automating VCF backup scheduling with the Fleet LCM API"
+    url: "https://williamlam.com/2026/07/vcf-9-1-automating-vcf-backup-scheduling-with-the-fleet-lcm-api.html"
+    by: "William Lam"
+  - title: "10 VCF 9 enhancements simplifying your Day-2 operations (backup configuration)"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/"
+    by: "VMware Cloud Foundation blog"
+  - title: "Modernizing infrastructure: VCF 9.0.x to 9.1 upgrade guide (backup methods)"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/07/28/modernizing-infrastructure-vmware-cloud-foundation-9-0-x-to-9-1-upgrade-guide/"
+    by: "VMware Cloud Foundation blog"
+---
+
+<InShort>
+In 5.x, SDDC Manager backed itself up to SFTP and configured NSX backups. vCenter used its own file-based backup, and Aria products were backed up separately. In 9.x, backup configuration lives in VCF Operations at two levels. **Fleet-level** settings cover management components: VCF Operations, VCF Automation, the identity broker and, in 9.1, the management services runtime. **Instance-level** settings cover SDDC Manager and the domains. In 9.1, fleet lifecycle schedules the management component backups per instance to SFTP, with a host key thumbprint and an encryption passphrase. The services runtime is new, important, and easy to forget.
+</InShort>
+
+<Compare rows={[
+  ["Where configured", "SDDC Manager: Administration > Backup", "VCF Operations. 9.0: Fleet Management > Lifecycle > Settings, plus Inventory > VCF Instance > Manage VCF Instance Settings > Backup Settings. 9.1: Build > Lifecycle > VCF Management > Backup and Restore."],
+  ["Target", "SFTP", "SFTP, with a SHA-256 host key thumbprint and an encryption passphrase (9.1)"],
+  ["What is covered", "SDDC Manager and NSX. vCenter separately.", "Management components including the services runtime (9.1), SDDC Manager and NSX. vCenter still uses its native file-based backup."],
+  ["Automation", "SDDC Manager API", "Fleet lifecycle API in 9.1 (backupConfigSpec)"],
+  ["Monitoring", "SDDC Manager task status", "VCF Operations management services dashboard, including backup failures (<a href='https://knowledge.broadcom.com/external/article/417255' target='_blank' rel='noopener'>KB 417255</a>)"],
+]} />
+
+## What to back up, and how
+
+| Component | Method |
+|---|---|
+| SDDC Manager | SFTP file-based backup, configured per instance |
+| NSX Manager | Configured through SDDC Manager. Mind the retention-setting issue in <KB id={442696} />. |
+| vCenter | Native file-based backup from the VAMI |
+| VCF Operations | SFTP through fleet lifecycle, plus image-based backup |
+| Services runtime and management services (9.1) | Fleet lifecycle schedule, per instance, to SFTP |
+| VCF Automation, identity broker | Fleet-level backup settings |
+
+## Rules that silently break backups
+
+- **SFTP user in UPN form.** `user@domain`, not `domain\user`. The backslash breaks the job, and in 9.1 it fails the fleet lifecycle upgrade too (<KB id={450561} />).
+- **Standard SFTP port.** Non-standard ports have failed host key validation in 9.1.
+- **Frequency.** Fifteen-minute incrementals look safe, but they queue other lifecycle tasks such as VCF Automation prechecks. Every four hours is a better default during change windows (<KB id={456790} />).
+- **Locks.** A hung backup can leave a lock that blocks password remediation and host operations (<KB id={439473} />, <KB id={447314} />).
+
+## Restores need practice
+
+A backup no one has restored is a hope, not a control. Two restores are worth practising in a lab:
+
+- **SDDC Manager** from SFTP onto a fresh appliance.
+- **9.1 log management** onto a rebuilt runtime, which needs a documented post-restore step to resume ingestion (<KB id={436904} />).
+
+Before upgrades, VCF Operations has its own snapshot ritual: take the cluster offline, snapshot every node, bring it online, then upgrade (<KB id={450430} />).
+
+<Callout type="field">
+Add "last successful backup per component" to the weekly operations report, as one line per component with a date. It costs five minutes, and it is the first question in any recovery.
+</Callout>
+
+## Pitfalls
+
+- **Backing up the old list.** The 9.1 services runtime holds fleet lifecycle, the depot and, possibly, the identity broker. Confirm it appears in the backup configuration and that a recent backup exists.
+- **Losing the passphrase.** Encrypted backups without the passphrase are useless. Store it in the vault with an owner.
+- **Using snapshots as backups.** They aren't.

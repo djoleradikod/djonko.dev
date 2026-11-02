@@ -1,0 +1,68 @@
+---
+title: "vSAN in 9.x: ESA as the default, OSA still supported"
+description: "ESA is where every new vSAN feature lands, but OSA is not being pushed out of 9.x. The real questions are hardware, migration path and which 9.x features you actually need."
+category: architecture
+order: 7
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: []
+sources:
+  - title: "Upgrading VCF 5.2 to 9.0: the top 10 questions answered (vSAN OSA)"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/"
+    by: "VMware Cloud Foundation blog"
+  - title: "What's new in storage with VMware Cloud Foundation 9.0"
+    url: "https://www.starwindsoftware.com/blog/whats-new-in-storage-with-vmware-cloud-foundation-9-0/"
+    by: "StarWind"
+  - title: "vSphere and VCF 9 core storage: what's new"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/19/vsphere-and-vcf-9-core-storage-whats-new/"
+    by: "VMware Cloud Foundation blog"
+  - title: "vSAN storage clusters in VCF 9.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/12/vsan-storage-clusters-in-vcf-9-1/"
+    by: "VMware Cloud Foundation blog"
+  - title: "VCF 5.2 release notes (vSAN Max, ESA stretched clusters)"
+    url: "https://docs.vmware.com/en/VMware-Cloud-Foundation/5.2/rn/vmware-cloud-foundation-52-release-notes/index.html"
+    by: "VMware"
+  - title: "What's new for vSAN with VCF 9.1 (podcast with Pete Koehler)"
+    url: "https://www.yellow-bricks.com/2026/05/11/118-whats-new-for-vsan-with-vcf-9-1-featuring-pete-koehler/"
+    by: "Duncan Epping"
+---
+
+<InShort>
+VCF 5.x introduced the Express Storage Architecture (ESA). 5.2 added vSAN Max and ESA stretched clusters. In 9.x, ESA is the default for new clusters and the base for every new capability: global deduplication, vSAN-to-vSAN snapshot replication, and storage clusters, which are the renamed vSAN Max. The Original Storage Architecture (OSA) is **not deprecated** in 9.0, and Broadcom says plainly that you can keep using qualifying OSA hardware through the upgrade. Decide on ESA by hardware and features, not by fear that OSA is about to disappear.
+</InShort>
+
+<Compare rows={[
+  ["Default for new clusters", "OSA in most estates. ESA available from 5.1 on qualifying hardware.", "ESA"],
+  ["OSA", "Fully supported", "Still supported. Not deprecated in 9.0."],
+  ["Disaggregated storage", "vSAN Max (5.2), built on ESA", "vSAN storage clusters. In 9.1, clusters can mount remote vSAN datastores of either architecture."],
+  ["Stretched clusters", "OSA, plus ESA stretched on ReadyNodes from 5.2", "ESA and OSA. Site maintenance mode, with OSA through RPQ."],
+  ["Space efficiency", "OSA deduplication and compression per disk group", "ESA global deduplication, introduced as limited availability in 9.0"],
+  ["Data protection", "External tools", "ESA snapshot-based replication between clusters through VMware Live Recovery"],
+  ["Principal storage alternatives", "VMFS on FC and NFS v3 for converted management domains (5.2)", "VMFS on FC and NFS v3 for greenfield management domains as well"],
+]} />
+
+## How to decide
+
+**Start with hardware.** ESA has much stricter requirements than OSA: NVMe-based ReadyNodes and fast networking. Existing OSA hosts often do not qualify. If they don't, the decision is already made for this hardware generation. Upgrade to 9.x on OSA and plan ESA with the next hardware refresh.
+
+**Then ask which 9.x features you need.** The features worth paying for are ESA-only: global deduplication, cluster-to-cluster snapshot replication with short recovery points, and the newer storage cluster capabilities. If none of them matter to the customer this year, OSA on supported hardware is a defensible design.
+
+**Then plan the move.** 9.1 makes migration much easier. OSA clusters, ESA clusters and compute-only vSphere clusters can now mount remote vSAN datastores of either architecture. You can mount a new ESA storage cluster from the old OSA cluster, vMotion or Storage vMotion the workloads across, and decommission the OSA cluster without a big-bang cut-over. The VCF blog describes both the HCI-to-HCI and the HCI-to-disaggregated patterns.
+
+## Related 9.x storage changes that affect designs
+
+- **vVols are deprecated.** Removal is planned in a later 9.x release. Do not design new vVols dependencies, and plan to move vVols workloads to VMFS or vSAN.
+- **NPIV is removed** in 9.0. Some storage features are also cut back: Storage DRS I/O load balancing and the per-datastore Storage I/O Control components are gone. Space-based balancing and SPBM limits remain.
+- **4Kn NVMe** devices are supported on ESA but not on OSA.
+- **NFS** gains space reclamation through the VAAI plugin and Kerberos encryption for NFS 4.1.
+
+<Callout type="field">
+In upgrade assessments, the vSAN question that matters is rarely ESA or OSA. It is whether every host, controller and firmware combination is on the 9.x compatibility list. Run the hardware check first. The architecture conversation is quick once you know what the hardware supports.
+</Callout>
+
+## Pitfalls
+
+- **Assuming 9.x forces ESA.** It does not. Upgrading on OSA is a supported path.
+- **Turning on limited-availability features in production.** Global deduplication was limited availability in 9.0, gated by approval and not supported on stretched clusters. Check its current status in the release notes before designing around it.
+- **Missing vVols during discovery.** A vVols datastore found late in an upgrade project becomes a migration project of its own. Inventory storage types on day one of the assessment.

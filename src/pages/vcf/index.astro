@@ -1,0 +1,66 @@
+---
+import Base from '../../layouts/Base.astro';
+import VersionBadges from '../../components/VersionBadges.astro';
+import { CATEGORIES } from '../../data/categories';
+import { SITE } from '../../data/site';
+import { allArticles, urlOf } from '../../lib/articles';
+const items = await allArticles();
+const latest = [...items].sort((a, b) => +(b.data.updated ?? b.data.pubDate) - +(a.data.updated ?? a.data.pubDate)).slice(0, 6);
+const startHere = [
+  'architecture/vcf9-mental-model', 'architecture/what-moved-from-sddc-manager', 'day-2/where-did-that-button-go',
+  'upgrades/planning-52-to-90', 'licensing/keys-to-license-files', 'troubleshooting/seven-step-triage',
+].map((id) => items.find((a) => a.id === id)).filter(Boolean);
+---
+<Base title={SITE.vcfName} description={SITE.vcfTagline}>
+  <section class="hero">
+    <p class="eyebrow">{SITE.vcfName}</p>
+    <h1>Field notes for running VMware Cloud Foundation, 5.x and 9.x</h1>
+    <p class="lede">Short, dense notes on how VCF is built, upgraded, licensed, operated and fixed. Every note says plainly what changed between 5.x and 9.x, links the Broadcom KBs that matter, and credits its sources.</p>
+  </section>
+
+  {startHere.length > 0 && (
+    <section>
+      <div class="section-head"><h2>Coming from VCF 5.x? Start here</h2></div>
+      <div class="grid">
+        {startHere.map((a) => (
+          <a class="card" href={urlOf(a!)}>
+            <h3>{a!.data.title}</h3>
+            <p>{a!.data.description}</p>
+            <div class="meta"><VersionBadges versions={a!.data.versions} /></div>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section>
+    <div class="section-head"><h2>Library</h2><a class="small" href="/vcf/library/">All {items.length} notes</a></div>
+    <div class="grid">
+      {CATEGORIES.map((c) => (
+        <a class="card" href={`/vcf/library/${c.id}/`}>
+          <h3>{c.title}</h3>
+          <p>{c.blurb}</p>
+          <div class="meta"><span class="badge">{items.filter((a) => a.data.category === c.id).length} notes</span></div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Reference</h2><a class="small" href="/vcf/resources/">All resources</a></div>
+    <div class="grid">
+      <a class="card" href="/vcf/resources/triage-cheat-sheet/"><h3>Triage cheat sheet</h3><p>One printable page: which layer owns the problem, where its logs are, what its errors look like, and how to retry.</p></a>
+      <a class="card" href="/vcf/resources/kb-index/"><h3>KB index</h3><p>The public Broadcom KBs these notes rely on, each with a one-line topic. Searchable and filterable.</p></a>
+      <a class="card" href="/vcf/resources/glossary/"><h3>5.x to 9.x glossary</h3><p>Old names, new names, and what changed underneath.</p></a>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Recently updated</h2></div>
+    <ul class="list">
+      {latest.map((a) => (
+        <li><a href={urlOf(a)}><span class="t">{a.data.title}</span><VersionBadges versions={a.data.versions} /><span class="d">{a.data.description}</span></a></li>
+      ))}
+    </ul>
+  </section>
+</Base>

@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+import { personLd } from '../lib/schema';
+const ld = { '@context': 'https://schema.org', '@type': 'ProfilePage', mainEntity: personLd(Astro.site) };
+---
+<Base title="About" description="Who I am, what I work on, and the working principles behind the notes, the workshops and the tools." jsonLd={ld}>
+  <div class="prose">
+    <p class="eyebrow">About</p>
+    <h1>{SITE.author} · {SITE.role}</h1>
+    <p class="lede">I work on VMware Cloud Foundation every day: designing estates, planning and running upgrades, and finding out why something that worked yesterday does not work today. This site is the part of that work I can publish.</p>
+
+    <h2>What I work on</h2>
+    <ul>
+      <li><strong>Architecture and design reviews.</strong> The VCF 9 fleet, instance and domain model, identity, the management services, and how an existing 5.x estate maps onto it.</li>
+      <li><strong>Upgrades.</strong> Readiness assessments, target build selection, sequencing, and runbooks with explicit go/no-go and rollback points, for 5.2 to 9.0 and 9.1.</li>
+      <li><strong>Day-2 operations.</strong> Certificates, passwords, backups, licensing and lifecycle, run as routine work rather than as incidents.</li>
+      <li><strong>Escalations.</strong> The tickets that have already been through two teams. Most of my time on these goes into establishing what is true, not into the fix.</li>
+      <li><strong>Enablement.</strong> Workshops, lunch-and-learns and written material that leave a team able to run the platform without me.</li>
+    </ul>
+
+    <h2>How I work</h2>
+    <p>These principles are not original. Most of them will be familiar to anyone who has read the Google SRE books or run production systems for long enough. They are written down here because they shape every note on this site, and because writing them down is how a team agrees to them.</p>
+
+    <h3>Establish what is true before deciding what to do</h3>
+    <p>A failed task has an ID, a time and a log line. A design question has requirements and constraints. Collecting those first is slower for the first ten minutes and faster for the rest of the day. Every note links the documentation, KBs and release notes it relies on, and says plainly when a statement comes from field experience instead.</p>
+
+    <h3>Prefer a method to memory</h3>
+    <p>Most VCF failures trace back to a short list of causes: name resolution, time, certificates, credentials, disk space, or an operation run out of order. A fixed triage sequence finds them more reliably than recall does, and unlike recall it can be taught. The <a href="/vcf/library/troubleshooting/seven-step-triage/">seven-step triage</a> is the method I use and teach.</p>
+
+    <h3>Make changes small, ordered and reversible</h3>
+    <p>Upgrades fail in planning more often than in execution. Each step should have a precondition that can be checked, a backup taken immediately before it, and a known way back. If a step has no way back, that is a decision to make in daylight, not at two in the morning.</p>
+
+    <h3>Write for the person on call</h3>
+    <p>A runbook is read by someone tired, under time pressure, and possibly new to the system. That reader needs the order of operations, the expected result of each step, and what to do when the result is different. Background goes at the end or in a separate document.</p>
+
+    <h3>Review incidents without blame</h3>
+    <p>When something goes wrong, the useful questions are what the system allowed and what the people involved knew at the time. A review that ends with a named culprit produces caution. A review that ends with two or three specific changes, each with an owner, produces a better platform.</p>
+
+    <h3>Leave the system better documented than you found it</h3>
+    <p>Every engagement should leave something behind that outlasts it: a runbook, a decision record, a checklist, an index of the KBs that mattered. The <a href="/vcf/resources/kb-index/">KB index</a> on this site started that way.</p>
+
+    <h2>About this site</h2>
+    <p>The site has three parts. The <a href="/vcf/">VCF notes</a> are short reference pieces, each answering one question and setting the 5.x and 9.x answers side by side. The <a href="/blog/">blog</a> holds longer write-ups and worked examples. <a href="/projects/">Projects</a> lists open tools for VCF Operations, each with its permissions and compatibility stated up front. The <a href="/talks/">workshop series</a> covers the same ground for a live audience.</p>
+
+    <h2>Contact</h2>
+    <p>For work enquiries, talk invitations or corrections, see the <a href="/contact/">contact page</a>. Corrections are especially welcome. A note that is wrong is worse than no note.</p>
+
+    <h2>The small print</h2>
+    <p>{SITE.disclaimer} {SITE.affiliation} Examples use the fictional <code>rainpole.io</code> domain and documentation address ranges such as <code>198.51.100.0/24</code>. No customer data, case details or internal material appears on this site.</p>
+  </div>
+</Base>

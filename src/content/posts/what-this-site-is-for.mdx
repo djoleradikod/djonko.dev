@@ -1,0 +1,32 @@
+---
+title: "What this site is for"
+description: "A tour of the site: the VCF field notes, the workshop series, and the open tools for VCF Operations, with the rules each project follows."
+pubDate: 2026-11-02
+tags: ["Site news", "VCF Operations"]
+---
+
+This site brings together three strands of my work on VMware Cloud Foundation: the reference notes I keep for myself and my teams, the enablement I run, and a set of open tools for VCF Operations. Each has its own home, and they link to each other.
+
+## VCF field notes
+
+The [VCF notes](/vcf/) are the core of the site. They are short, dense answers to the questions that come up when teams move from VCF 5.x to 9.x: where a task went, what changed underneath, which KB covers the failure, and what order things must happen in. Every note puts the 5.x and 9.x answers side by side, links the public Broadcom KBs that back it up, and credits the engineers and community writers who published the detail first.
+
+There are eight areas: [architecture](/vcf/library/architecture/), [upgrades](/vcf/library/upgrades/), [day-2 operations](/vcf/library/day-2/), [licensing](/vcf/library/licensing/), [troubleshooting](/vcf/library/troubleshooting/), [integrations](/vcf/library/integrations/), [labs, tooling and automation](/vcf/library/labs/) and [technical leadership](/vcf/library/leadership/). The [resources](/vcf/resources/) section adds a printable triage cheat sheet, a KB index and a 5.x to 9.x glossary.
+
+## Talks and workshops
+
+The [workshop series](/talks/) covers the same ground for a live audience, in five modules that each stand on their own. The notes and the talks share one source, so a fix to one reaches the other.
+
+## Tools for VCF Operations
+
+The [projects](/projects/) section will hold scripts, agents and management packs that help people manage and understand VCF environments through VCF Operations. Each tool gets a landing page here, and its code, issues and releases live on GitHub. Every project follows the same rules:
+
+- **Naming.** Tools are called "*Tool* for VCF Operations". They are independent work, not affiliated with Broadcom, and say so on the page and in the README.
+- **Baseline.** VCF Operations 9.1.1 or later. Each tool page carries a compatibility table that lists exactly what it was tested against.
+- **The right build method.** Management packs are built with either MP Builder or the Python integration SDK, chosen per tool and stated on its page.
+- **Least privilege.** Each page documents the minimum read-only role the tool needs. No tool will ever require admin credentials.
+- **One licence** across every repository.
+
+<Callout type="note">
+Everything here is personal work, written in my own words from public sources and field experience. It is not official vendor guidance. Confirm against current Broadcom documentation before changing production.
+</Callout>

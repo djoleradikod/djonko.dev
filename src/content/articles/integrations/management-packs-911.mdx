@@ -1,0 +1,62 @@
+---
+title: "Management packs in 9.1 and 9.1.1: what must be upgraded, what was removed"
+description: "VCF Operations 9.1.1 updated dependencies for security fixes, and sixteen management packs stop collecting until they are upgraded. 9.1 also removed content packs inside VCF Operations, the standalone MP Builder and direct vCenter authentication. A checklist for platform owners."
+category: integrations
+order: 7
+versions: ["9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [454432, 454434, 437447]
+sources:
+  - title: "Management packs not collecting data after upgrade to 9.1.1"
+    url: "https://knowledge.broadcom.com/external/article/454432/management-packs-not-collecting-data-aft.html"
+    by: "Broadcom KB"
+  - title: "VCF 9.1 product support notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html"
+    by: "Broadcom TechDocs"
+  - title: "VCF Operations 9.1.1 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+Before upgrading VCF Operations to **9.1.1**, list your installed management packs. Sixteen of them, including the database packs, ServiceNow, SNMP and network devices, Kubernetes, HCX, Protection and Recovery, Live Recovery and both Avi packs, **stop collecting until upgraded to 9.1.1** (<KB id={454432} />). The upgrade precheck flags them. Packs built with MP Builder must be re-saved and re-installed from the in-product builder (<KB id={454434} />). And from 9.1: no Logs content packs inside VCF Operations, no standalone MP Builder appliance, and no direct vCenter authentication for VCF Operations.
+</InShort>
+
+<Compare rows={[
+  ["Install location", "Integrations > Repository, PAK files", "The same, from the Solutions Catalog"],
+  ["Upgrade coupling", "Packs mostly independent of product patches", "9.1.1 requires 16 packs to be upgraded with it"],
+  ["Logs content", "Content packs in Aria Operations for Logs", "9.1: no content packs in VCF Operations. Third-party content must be converted to management packs."],
+  ["Custom packs", "Standalone MP Builder appliance", "In-product builder only"],
+]} />
+
+## Packs that must move to 9.1.1
+
+| Group | Packs |
+|---|---|
+| Databases | Microsoft SQL Server, MongoDB, MySQL, PostgreSQL, Oracle |
+| Platforms and tools | ServiceNow, Network Devices, SNMP, Orchestrator, Kubernetes, Aggregator |
+| VMware products | VCF Operations HCX, Protection and Recovery, VMware Live Recovery cloud |
+| Load balancing | Avi LB Observability, Avi LB Operations |
+
+## A sequence that avoids gaps
+
+1. **Inventory**: export the list from Integrations > Repository, with versions.
+2. **Download** the 9.1.1 versions from the Solutions Catalog before the window.
+3. **Upgrade VCF Operations**, then the packs straight away in the same window.
+4. **Rebuild custom packs** made with MP Builder in the in-product builder, then re-install.
+5. **Check** each account returns to Collecting and Data receiving.
+
+## HCX on 9.0
+
+No HCX management pack supported VCF Operations 9.0.x, and pack 5.4.0 is incompatible with it (<KB id={437447} />). On 9.1.1, use the VCF Operations HCX pack listed above.
+
+<Callout type="field">
+Treat management packs as part of the platform bill of materials, with an owner per pack. The 9.1.1 change caught teams who had no list of what was installed, and therefore no idea which dashboards had gone quiet.
+</Callout>
+
+## Pitfalls
+
+- **Upgrading VCF Operations alone** and finding empty dashboards the next morning.
+- **Forgetting partner packs** that aren't on the list but have their own compatibility notes.
+- **Keeping the standalone MP Builder** in the estate. It is no longer maintained.

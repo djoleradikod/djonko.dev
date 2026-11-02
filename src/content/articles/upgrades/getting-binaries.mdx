@@ -1,0 +1,76 @@
+---
+title: "Getting binaries: from the 5.x depot to the 9.1 software depot and activation code"
+description: "Downloads fail more upgrades than people admit. The mechanism changed three times between 5.2 and 9.1: credentials, then tokens, then activation codes, and the traffic now leaves from new addresses."
+category: upgrades
+order: 5
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [443647, 420374, 440282, 443166, 441349, 447995, 441340, 446454, 442857, 442978, 447542, 442735, 444267, 448839, 447589, 424728, 447248]
+sources:
+  - title: "VCF 5.2 release notes (offline depot, authenticated proxy)"
+    url: "https://docs.vmware.com/en/VMware-Cloud-Foundation/5.2/rn/vmware-cloud-foundation-52-release-notes/index.html"
+    by: "VMware"
+  - title: "Upgrade SDDC Manager to 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/apply-cloud-foundation-5-2-update-bundle.html"
+    by: "Broadcom TechDocs"
+  - title: "Before you upgrade to VCF 9.1: what you need to have ready"
+    url: "https://www.wwt.com/blog/before-you-upgrade-to-vcf-91-what-you-need-to-have-ready"
+    by: "WWT"
+---
+
+<InShort>
+In 5.x, SDDC Manager pulled bundles from the online depot, or from an offline depot staged with the Bundle Transfer Utility. 9.0 introduced the **VCF Download Tool**, and depot access moved to download tokens. In 9.1, depot access for the installer and SDDC Manager uses an **activation code**, obtained by registering a Software Depot ID. Binaries for management components live in the **software depot service** on the runtime, and its downloads leave from the runtime's addresses. Three things go wrong: the entitlement (wrong code or site), the path (firewall, proxy or TLS inspection), and the order (binaries that only appear after an earlier upgrade).
+</InShort>
+
+<Compare rows={[
+  ["Online depot authentication", "Support portal credentials, later download tokens", "9.0: download token. 9.1: activation code from registering a Software Depot ID (<a href='https://knowledge.broadcom.com/external/article/443647' target='_blank' rel='noopener'>KB 443647</a>)."],
+  ["Offline and dark sites", "Bundle Transfer Utility (OBTU). 5.2 adds an offline depot SDDC Manager can point at.", "VCF Download Tool. OBTU is not supported for SDDC Manager 9.x."],
+  ["Where binaries live", "SDDC Manager's bundle store", "SDDC Manager for core bundles. The software depot service for management components (9.1)."],
+  ["Who downloads", "SDDC Manager", "SDDC Manager, the VCF Installer and, in 9.1, depot-service pods on the runtime"],
+  ["Proxy handling", "SDDC Manager proxy, authenticated from 5.2", "Per component. The 9.1 software depot proxy and CA are set with a utility script."],
+]} />
+
+## Entitlement problems
+
+- **Wrong mechanism.** After upgrading SDDC Manager to 9.1, re-point Depot Settings to an activation code. Download tokens are no longer used for depot authentication (<KB id={443647} />).
+- **Wrong site.** A 403 while a manual `curl` works often means the token or activation code belongs to a Site ID without the 9.1 entitlement (<KB id={441349} />). Generic 403 handling is covered in <KB id={420374} />.
+- **Two different activation codes.** The depot activation code is not the licence registration code. See <a href="/vcf/library/licensing/two-activation-codes/">The download activation code is not your licence</a>.
+
+## Path problems
+
+- **Egress from new addresses.** In 9.1, depot downloads leave from the runtime node addresses, not from SDDC Manager. A firewall rule written for SDDC Manager produces a 403 or a timeout from the depot (<KB id={443166} />). The KB lists the allow-list targets and the response codes a working path should return.
+- **Proxies.** The 9.1 software depot takes its proxy settings and the proxy's CA through a utility script on the runtime (<KB id={447542} />, <KB id={442978} />).
+- **TLS inspection.** SSL-inspecting proxies break the trust chain. SDDC Manager reports PKIX errors (<KB id={442735} />), and the installer reports `certificate_unknown(46)` (<KB id={444267} />). Exempt the depot hosts from inspection, or import the proxy CA where the product supports it.
+
+## Order problems
+
+- **9.1 binaries do not appear in VCF Operations 9.0.** Upgrade VCF Operations, then SDDC Manager, then configure the new depot (<KB id={440282} />).
+- **Install as well as upgrade.** The new 9.1 components are installs. Download the INSTALL type for the runtime, fleet and SDDC lifecycle, depot, Salt, telemetry, License Server and identity broker.
+
+## Dark sites with the VCF Download Tool
+
+```bash
+# 9.1 example: management services components for an offline depot
+./vcf-download-tool binaries download \
+  --sku VCF --vcf-version 9.1.0.0 \
+  --component VCF_FLEET_LCM,VCF_SDDC_LCM,VSP,DEPOT_SERVICE \
+  --type INSTALL \
+  --depot-download-activation-code-file ./activation-code.txt \
+  --depot-store /data/vcf-depot        # the depot ROOT, not a subfolder
+```
+
+- Use Download Tool **9.1 or later** for 9.1. Earlier versions do not know the new component IDs (<KB id={441340} />).
+- `--depot-store` must be the depot root (<KB id={446454} />).
+- `ESX_HOST` only appears under `--type UPGRADE` (<KB id={442857} />).
+- Keep the offline depot's metadata fresh. Stale metadata (<KB id={447589} />) and a vSAN HCL older than 90 days (<KB id={424728} />) both fail checks. The installer must also trust the offline depot's certificate (<KB id={448839} />).
+
+<Callout type="field">
+Before the upgrade window, download every bundle the plan needs and confirm it shows as available. Do not count on downloading during the window. Then clean up superseded bundles on SDDC Manager, because a full disk is the next failure (<KB id={447248} />).
+</Callout>
+
+## Pitfalls
+
+- **Reusing a 9.0 runbook for 9.1 downloads.** The mechanism, the addresses and the tool version all changed.
+- **Allow-listing hostnames on a proxy, but not the source addresses on the firewall.** Both are needed.
+- **Copying only part of an offline depot.** Copy the depot root unchanged, including its metadata files.

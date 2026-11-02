@@ -1,0 +1,72 @@
+---
+title: "Consolidated and standard architecture, then and now"
+description: "The 5.x choice between consolidated and standard architecture still exists in spirit. In 9.x it sits alongside a second choice: Simple or HA for each management component. Here is how to size the smallest footprint you can defend."
+category: architecture
+order: 6
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [397782]
+sources:
+  - title: "Clarifying minimum required ESX hosts for VCF deployments"
+    url: "https://williamlam.com/2026/06/clarifying-minimum-required-esx-hosts-for-vcf-deployments.html"
+    by: "William Lam"
+  - title: "Flexible combinations with VCF fleet deployment models"
+    url: "https://williamlam.com/2025/10/flexible-combinations-with-vcf-fleet-deployment-models.html"
+    by: "William Lam"
+  - title: "Upgrading VCF 5.2 to 9.0: the top 10 questions answered"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/"
+    by: "VMware Cloud Foundation blog"
+  - title: "VCF 9.0 deployment pathways"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/07/03/vcf-9-0-deployment-pathways/"
+    by: "VMware Cloud Foundation blog"
+  - title: "Fleet deployment models (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-operations-deployment-models.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+In 5.x, **consolidated** meant running workloads in the management domain, separated by resource pools. **Standard** meant a dedicated management domain plus workload domains. Both patterns still exist in 9.x. The bigger footprint decision now is the deployment model of each management component, Simple or HA, because that decides how many hosts the management cluster needs. The short rule from the field: with NSX in HA, plan for four hosts. With NSX Simple, three hosts on vSAN or two on external storage is the documented floor.
+</InShort>
+
+<Compare rows={[
+  ["Consolidated", "Workloads share the management domain, separated by resource pools. Typical minimum was four vSAN hosts.", "Still possible. Broadcom recommends four hosts for a new consolidated deployment, three for converged vSAN and two with external storage."],
+  ["Standard", "A management domain plus one or more VI workload domains", "The same, inside a VCF instance. Additional instances can join the same fleet."],
+  ["Management footprint", "SDDC Manager, vCenter, NSX (three managers), plus optional Aria", "SDDC Manager, vCenter, NSX, VCF Operations, fleet management or the services runtime, cloud proxy, and VCF Automation as Day-0 or Day-N"],
+  ["Availability knob", "Mostly fixed. NSX was always a three-node cluster.", "Simple or HA for VCF Operations, VCF Automation and NSX, chosen per component through the JSON method"],
+  ["Principal storage for management", "vSAN. 5.2 added VMFS on FC and NFS v3 for converted management domains.", "vSAN, or VMFS on FC and NFS v3 for greenfield management domains"],
+]} />
+
+## Where the host count comes from
+
+The number that drives the minimum is NSX Manager. In HA it is three nodes with anti-affinity, so you need at least three hosts to place them and a fourth to stay compliant during maintenance or a failure. That is why the HA minimum is four hosts, whatever the storage. NSX Simple, a single manager supported since 9.0, removes that constraint. That is how the documented three-host vSAN and two-host external storage minimums become possible (William Lam explains the reasoning in detail).
+
+VCF Operations and VCF Automation also change size with the model. In HA, VCF Operations moves to the Medium size with primary, replica and data nodes and a load balancer FQDN, and VCF Automation needs more addresses in its pool. Size the management cluster from the sizing guides (<KB id={397782} />), not from the minimum host count.
+
+## Choosing a pattern
+
+<Diagram viewBox="0 0 820 260" label="Decision flow: production needs HA management components and four or more management hosts. Small sites or labs can use Simple models with three vSAN hosts or two hosts on external storage. Consolidated suits small estates; standard suits separate lifecycle or tenancy needs." caption="A starting point for the conversation, not a substitute for the sizing guides.">
+  <rect class="box accent" x="20" y="20" width="220" height="56" rx="8" /><text class="t" x="36" y="44">Production?</text><text class="s" x="36" y="64">Uptime targets, audits</text>
+  <rect class="box v9" x="300" y="20" width="240" height="56" rx="8" /><text class="t" x="316" y="44">HA for Ops, NSX, VCFA</text><text class="s" x="316" y="64">4+ management hosts</text>
+  <rect class="box" x="300" y="110" width="240" height="56" rx="8" /><text class="t" x="316" y="134">Simple models</text><text class="s" x="316" y="154">3 vSAN or 2 external hosts</text>
+  <rect class="box" x="590" y="20" width="210" height="56" rx="8" /><text class="t" x="606" y="44">Separate lifecycle?</text><text class="s" x="606" y="64">Tenancy, compliance</text>
+  <rect class="box v9" x="590" y="110" width="210" height="56" rx="8" /><text class="t" x="606" y="134">Standard</text><text class="s" x="606" y="154">Workload domains</text>
+  <rect class="box" x="590" y="190" width="210" height="56" rx="8" /><text class="t" x="606" y="214">Consolidated</text><text class="s" x="606" y="234">Resource pools</text>
+  <path class="wire accent" d="M240 48 L298 48" marker-end="url(#arra)" /><text class="s" x="250" y="40">yes</text>
+  <path class="wire" d="M130 76 L130 138 L298 138" marker-end="url(#arr)" /><text class="s" x="140" y="128">lab, edge</text>
+  <path class="wire" d="M540 48 L588 48" marker-end="url(#arr)" />
+  <path class="wire" d="M695 76 L695 108" marker-end="url(#arr)" /><text class="s" x="702" y="96">yes</text>
+  <path class="wire" d="M790 76 L810 76 L810 218 L802 218" marker-end="url(#arr)" /><text class="s" x="760" y="186">no</text>
+</Diagram>
+
+**Consolidated** suits small estates where the management overhead of a separate domain would dominate. Its cost is that management and workloads share failure domains and maintenance windows.
+
+**Standard** suits anything with separate lifecycle, compliance or tenancy needs. Each workload domain has its own vCenter and can be upgraded on its own schedule within the support matrix.
+
+**More than one instance** makes sense for separate sites or regions, or when you want a hard lifecycle boundary. It does not make sense just to separate business units.
+
+## Pitfalls
+
+- **Quoting the floor as the design.** Two or three hosts is a minimum for the platform to install, not a recommendation for production.
+- **Forgetting the 9.x management additions.** The 5.x management cluster did not carry VCF Operations, fleet management, a cloud proxy or, in 9.1, a services runtime with a dozen or more addresses. Re-size the management cluster during upgrade planning.
+- **Mixing models without writing it down.** Per-component Simple or HA choices are supported, but they are invisible after the fact. Record them in the design so the next engineer knows why NSX is a single node.

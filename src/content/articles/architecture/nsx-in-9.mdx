@@ -1,0 +1,85 @@
+---
+title: "NSX in 9.x: one NSX per vCenter, VPCs, and networking from vCenter"
+description: "NSX 9 is built on the NSX 4.x code base, but its operating model changed. Networking is consumed from vCenter, VPCs and transit gateways are first-class, and a few long-standing options are gone."
+category: architecture
+order: 8
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [440901, 432503]
+sources:
+  - title: "VPC distributed network connectivity: no NSX Edge VMs"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/25/vpc-distributed-network-connectivity-no-nsx-edge-vms/"
+    by: "VMware Cloud Foundation blog"
+  - title: "VPC centralized network connectivity with guided edge deployment"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/25/vpc-centralized-network-connectivity-with-guided-edge-deployment/"
+    by: "VMware Cloud Foundation blog"
+  - title: "VCF 9 NSX VPC, part 1: centralized transit gateway"
+    url: "https://evoila.com/blog/vcf-9-nsx-vpc-part-1-centralized-transit-gateway"
+    by: "evoila"
+  - title: "VCF 9 NSX VPC, part 2: distributed transit gateway"
+    url: "https://evoila.com/blog/vcf-9-nsx-vpc-part-2-distributed-transit-gateway"
+    by: "evoila"
+  - title: "vSphere 9 and NSX 9 deprecated and removed features"
+    url: "https://www.starwindsoftware.com/blog/vcf9-deprecated-vsphere-nsx/"
+    by: "StarWind"
+  - title: "VCF 9 deployment guide: NSX requirements"
+    url: "https://vcf9-deployment-guide.pages.dev/requirements/nsx"
+    by: "Community guide"
+  - title: "10 VCF 9 enhancements simplifying your Day-2 operations (edge clusters)"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/"
+    by: "VMware Cloud Foundation blog"
+---
+
+<InShort>
+In VCF 5.x you consumed NSX mostly through its own manager UI, and SDDC Manager deployed edge clusters. In 9.x the everyday networking tasks happen in vCenter: VPCs, subnets, network connectivity and edge deployment. Two connectivity models exist. **Centralized** routes through a transit gateway to a Tier-0 on edge VMs. **Distributed** maps the transit gateway onto a VLAN shared by every host, with no edge VMs at all. Several older options are gone: multiple NSX instances per vCenter, standalone NSX lifecycle, N-VDS on hosts, and the NSX load balancer, which Avi replaces.
+</InShort>
+
+<Compare rows={[
+  ["Where you work", "NSX Manager UI. SDDC Manager deployed edge clusters.", "vCenter for VPCs, subnets, connectivity and guided edge deployment. NSX Manager for advanced configuration."],
+  ["Tenancy model", "Segments with Tier-1 and Tier-0 gateways, plus projects and VPCs from NSX 4.1.1", "VPCs and transit gateways as the default consumption model, with segments still available"],
+  ["North-south without edges", "Not available", "Distributed connectivity: the transit gateway maps onto a shared VLAN"],
+  ["NSX per vCenter", "Multi-NSX setups existed", "One NSX per vCenter. Disable multi-NSX before upgrading."],
+  ["Host switch", "VDS, with N-VDS on hosts removed from NSX 4.0.0.1", "VDS. Enhanced Datapath is the default mode for new installs."],
+  ["Load balancing", "NSX load balancer, deprecated", "Avi Load Balancer"],
+  ["Deployment size", "Three managers", "Simple (one manager) or HA (three managers)"],
+]} />
+
+## The two connectivity models
+
+<Diagram viewBox="0 0 820 260" label="Centralized: VPC gateways connect to a transit gateway, which routes through a Tier-0 on NSX edge VMs to the physical network. Distributed: the transit gateway maps directly onto a VLAN shared by all hosts." caption="Centralized needs edges and supports stateful services. Distributed needs no edges but supports only distributed services.">
+  <text class="lbl" x="20" y="24">Centralized</text>
+  <rect class="box" x="20" y="36" width="110" height="40" rx="6" /><text class="s" x="36" y="61">VPC A</text>
+  <rect class="box" x="140" y="36" width="110" height="40" rx="6" /><text class="s" x="156" y="61">VPC B</text>
+  <rect class="box accent" x="20" y="100" width="230" height="40" rx="6" /><text class="t" x="36" y="125">Transit gateway</text>
+  <rect class="box v9" x="20" y="164" width="230" height="40" rx="6" /><text class="t" x="36" y="189">Tier-0 on edge VMs</text>
+  <rect class="box plain" x="20" y="214" width="230" height="34" rx="6" /><text class="s" x="36" y="236">Physical network</text>
+  <path class="wire" d="M75 76 L75 98" marker-end="url(#arr)" /><path class="wire" d="M195 76 L195 98" marker-end="url(#arr)" />
+  <path class="wire" d="M135 140 L135 162" marker-end="url(#arr)" />
+  <text class="lbl" x="440" y="24">Distributed</text>
+  <rect class="box" x="440" y="36" width="110" height="40" rx="6" /><text class="s" x="456" y="61">VPC A</text>
+  <rect class="box" x="560" y="36" width="110" height="40" rx="6" /><text class="s" x="576" y="61">VPC B</text>
+  <rect class="box accent" x="440" y="100" width="230" height="40" rx="6" /><text class="t" x="456" y="125">Transit gateway</text>
+  <rect class="box v9" x="440" y="164" width="360" height="40" rx="6" /><text class="t" x="456" y="189">VLAN shared by every ESX host</text>
+  <rect class="box plain" x="440" y="214" width="360" height="34" rx="6" /><text class="s" x="456" y="236">Physical network</text>
+  <path class="wire" d="M495 76 L495 98" marker-end="url(#arr)" /><path class="wire" d="M615 76 L615 98" marker-end="url(#arr)" />
+  <path class="wire" d="M555 140 L555 162" marker-end="url(#arr)" />
+</Diagram>
+
+**Centralized** is the right default when you need stateful services such as NAT, gateway firewall or load balancing in front of VPCs. It is also required for vSphere Supervisor and VCF Automation, which need edges in active/standby with a centralized connectivity gateway. Edges can now be deployed through a guided workflow in vCenter.
+
+**Distributed** suits simple, high-throughput east-west and north-south designs where every host can reach one shared VLAN. It supports only distributed services. For example, it supports stateless 1:1 NAT and distributed DHCP, but not DHCP relay. Check the current feature matrix before promising anything stateful.
+
+## What to check before an upgrade from 5.x
+
+- **Multi-NSX.** If any vCenter is attached to more than one NSX Manager, untangle it before the upgrade. 9.x supports one NSX per vCenter.
+- **N-VDS on hosts.** Migrate any host still on N-VDS to VDS first. Edges can stay on N-VDS.
+- **Load balancer use.** Find every NSX load balancer and plan the move to Avi. Version alignment matters in the 9.1 upgrade too: the upgrade sequence calls out an Avi target and a default NSX distributed load balancer attached to a group (<KB id={440901} />).
+- **Unsupported attachments.** Bare-metal NSX agents, KVM transport nodes and third-party OpenStack integrations do not carry forward.
+- **Import prerequisites.** Workload domains imported into 9.x need NSX 4.1.0.2 or later. Clusters without NSX get it deployed during import.
+
+## Pitfalls
+
+- **Treating vCenter networking as a toy.** It is the supported Day-2 path in 9.x, and VCF Automation expects VPCs. Learn it before the customer's network team asks.
+- **Choosing distributed connectivity, then needing NAT.** Moving from distributed to centralized later means redesigning the north-south path. Ask about stateful services in the first workshop.
+- **NSX SSO.** NSX consumes VCF SSO in 9.x. If the embedded broker integration fails, NSX logins fail with it (<KB id={432503} />).

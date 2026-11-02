@@ -1,0 +1,54 @@
+---
+title: "Break-fix exercises for a VCF 9 lab: eight faults worth practising"
+description: "The fastest way to build troubleshooting skill is to diagnose faults you planted yourself, in a lab you can roll back. Eight exercises, each tied to a real class of ticket, with the symptom to expect and the skill it trains."
+category: labs
+order: 10
+versions: ["9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [403626, 409353, 444986, 436398, 434671, 426042, 443166, 344201]
+sources:
+  - title: "Announcing the general availability of Holodeck 9.0"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/30/announcing-the-general-availability-of-holodeck-9-0/"
+    by: "VMware Cloud Foundation blog"
+---
+
+<InShort>
+Take a snapshot of the whole lab, plant one fault, and let someone else find it using only the [seven-step triage](/vcf/library/troubleshooting/seven-step-triage/). Each exercise below matches a common ticket class: **DNS case**, **clock drift**, **a stale lock**, **password drift**, **a full vCenter partition**, **cloud proxy DNS**, **blocked runtime egress** and **an expired certificate**. The facilitator knows the answer. The learner writes the ticket summary, the evidence and the fix. Then roll back and swap roles.
+</InShort>
+
+<Compare v5Label="Facilitator" v9Label="Learner" title="Roles" rows={[
+  ["Before", "Snapshot the lab, plant the fault, note the expected symptom", "Nothing: arrive cold"],
+  ["During", "Answer only what a customer would know", "Triage, collect evidence, write the ticket"],
+  ["After", "Compare the fix with the planted fault", "Explain the diagnosis path in two minutes"],
+]} />
+
+## The exercises
+
+| # | Plant this | Expect | Trains |
+|---|---|---|---|
+| 1 | Change a component's DNS record to mixed case, or remove its PTR | Validation failures naming the component (<KB id={403626} />) | Reading validation errors, DNS discipline |
+| 2 | Move VCF Operations' NTP to a different, drifting source | "JWT token is expired" on SSO (<KB id={409353} />) | Clock checks across components |
+| 3 | Start a password rotation, then make the target unreachable mid-task | A failed task holding a lock (<KB id={444986} />) | Lock ownership, cancel before delete |
+| 4 | Change an ESX root password directly on the host | Account shows Disconnected (<KB id={436398} />) | Remediate versus rotate |
+| 5 | Point a host's syslog at vCenter and generate noise | `/storage/log` filling (<KB id={434671} />) | Fixing the cause, not the symptom |
+| 6 | Remove a VCF Operations node's record from the cloud proxy's resolver | Proxy goes offline periodically (<KB id={426042} />) | Testing from the right place |
+| 7 | Block one runtime node's outbound 443 (9.1) | Intermittent depot 403s (<KB id={443166} />) | 9.1 traffic sources |
+| 8 | Let a lab vCenter's certificate expire by moving the clock, then restore | "No healthy upstream" (<KB id={344201} />) | The vCenter certificate checks |
+
+## Running a session
+
+1. **Ten minutes**: brief the symptom only, as a customer would report it.
+2. **Thirty minutes**: learners work, the facilitator answers as the customer.
+3. **Ten minutes**: each learner presents the evidence, the cause and the fix.
+4. **Roll back** to the snapshot before the next exercise.
+
+<Callout type="field">
+Score the ticket, not the speed. A correct fix with a clear one-line cause and the evidence attached is the habit you want in production. Speed follows.
+</Callout>
+
+## Pitfalls
+
+- **Planting two faults at once.** It teaches guessing, not diagnosis.
+- **Forgetting the snapshot.** Exercise 3 in particular can leave a mess.
+- **Practising on a shared lab** others depend on. Use a disposable one.

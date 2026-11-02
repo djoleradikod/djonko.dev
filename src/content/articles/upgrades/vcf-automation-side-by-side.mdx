@@ -1,0 +1,81 @@
+---
+title: "VCF Automation 9.0 to 9.1: a side-by-side upgrade, not an in-place one"
+description: "VCF Automation moves to its own new cluster during the 9.1 upgrade. That changes what you prepare (addresses, an FQDN, passwords, certificates) and what you check when it stalls."
+category: upgrades
+order: 6
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [443723, 443988, 456790, 449628, 455559, 441246, 447155, 425489, 447667, 409610]
+sources:
+  - title: "Upgrade to VCF Automation 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/phase-3-import-and-upgrade-aria-automation-8-to-vcf-automation-9/upgrade-to-vcf-automation.html"
+    by: "Broadcom TechDocs"
+  - title: "VCF Automation 9.0 to 9.1 upgrade: precheck and execution stages"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/07/27/modernizing-infrastructure-a-deep-dive-into-the-vmware-cloud-foundation-automation-9-0-to-9-1-upgrade-precheck-and-execution-stages/"
+    by: "VMware Cloud Foundation blog"
+  - title: "VCF Automation deployment models (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-automation-deployment-models.html"
+    by: "Broadcom TechDocs"
+  - title: "How to upgrade to VMware Cloud Foundation 9.0 (Aria Automation as a separate workstream)"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/09/25/how-to-upgrade-to-vmware-cloud-foundation-9-0/"
+    by: "VMware Cloud Foundation blog"
+---
+
+<InShort>
+From 5.x, Aria Automation 8.18 is imported into VCF Operations fleet management and upgraded to VCF Automation 9.0. Broadcom recommends running it as its own workstream, because custom integrations take time to validate. From 9.0 to 9.1, VCF Automation does **not** upgrade in place. Fleet lifecycle builds a new three-node cluster on its own Kubernetes runtime, backs up the 9.0 data, restores it into 9.1 and powers the old nodes off. You need a new FQDN, five addresses, strong passwords, consistent credentials on the source nodes, and certificates whose SANs cover every node.
+</InShort>
+
+<Compare rows={[
+  ["Product", "Aria Automation 8.x, managed by Aria Suite Lifecycle", "VCF Automation. 9.1 runs it on a dedicated Kubernetes cluster of its own appliances."],
+  ["Upgrade style", "In place through Aria Suite Lifecycle", "8.18 to 9.0: import, then upgrade. 9.0 to 9.1: side-by-side build, migrate, power off the old nodes."],
+  ["Identity", "Workspace ONE Access (vIDM)", "VCF Identity Broker. There is no vIDM migration (<a href='https://knowledge.broadcom.com/external/article/409610' target='_blank' rel='noopener'>KB 409610</a>)."],
+  ["VCD tenants", "VMware Cloud Director, a separate product", "VCD is not supported with VCF 9 and has no official migration path. VCF Automation is the strategic replacement."],
+]} />
+
+## The stages
+
+1. **Initialization and staging.**
+2. **Create the automation cluster.** A `vcf-automation` folder is created, the runtime template is deployed, and a temporary bootstrap VM builds three nodes.
+3. **Discover the cluster.**
+4. **Component upgrade.** Back up the 9.0 cluster, scale it down, take a final backup and transfer it, restore on 9.1, power off the old nodes and finalize the database.
+5. **Install backend services,** including the migration back end.
+6. **Inventory sync and clean-up.**
+
+The old nodes are only powered off. Delete them once you are satisfied.
+
+## What to prepare
+
+- **Addresses.** For VCF Automation 9.1.0.0 to 9.1.0.300, a dedicated CIDR with five addresses (a /29 in the examples). From 9.1.0.400, five unique addresses that need not be contiguous: three for nodes and two spare. Keep them separate from the management services runtime.
+- **A dedicated FQDN,** lowercase, resolving outside the node addresses.
+- **Passwords.** The upgrade passwords for `vmware-system-user` and admin need at least 15 characters, mixed case, a digit and a special character from the documented set.
+- **Placement.** The 9.0 cluster must be in the management domain. Until fleet lifecycle, SDDC lifecycle and SDDC Manager are all at 9.1.1.0200, it must also sit on the management datastore.
+- **Topology.** A single-node extra-large Aria Automation 8.18 must be scaled to three nodes first.
+- **FIPS blockers.** An IPAM endpoint that skips certificate checks, an Aria Operations integration endpoint or plain LDAP will block the FIPS compatibility check.
+
+## The prechecks, in order
+
+Connectivity (FQDN, SSH on 22, ciphers, SSH authentication), then source validation, then health (nodes, services, database, TLS chain, Postgres disk latency), then topology (datastores, IP pool inside the CIDR, DNS, addresses already in use), then application (FIPS endpoints). When one fails, the stage name tells you where to look.
+
+## Known failures worth recognising
+
+| Message or symptom | Meaning | KB |
+|---|---|---|
+| `[VCFMS-PRECHECK-GENERIC-001]` on the SSH check | Credentials were corrupted or expired at import | <KB id={443723} /> |
+| `The source system is not a VCF Automation (VCFA) 9.x product` | `vmware-system-user` password differs between nodes | <KB id={443988} /> |
+| `vmsp_run_vcfa_prechecks` failed, tasks queued | 15-minute backups keep the precheck waiting | <KB id={456790} /> |
+| `requires VCF services runtime version 9.1.#` | The plan targets a runtime you haven't installed. Add it and download its INSTALL binary. | <KB id={449628} /> |
+| Backup precheck times out after hours | "Upgrade All" upgraded the migration engine alongside VCF Automation | <KB id={455559} /> |
+| `vmsp_upgrade_vcfa failed` but the new cluster works | An orchestration timeout. Verify pods and the UI before retrying anything. | <KB id={441246} /> |
+| VCF Automation 9.0 missing from fleet management after the upgrade | An inventory migration gap. Re-import it using the "Import 8.x appliance" option. | <KB id={447155} /> |
+| Endpoints fail TLS after the upgrade | The truststore is not migrated. Re-trust the endpoints. | <KB id={425489} />, <KB id={447667} /> |
+
+<Callout type="field">
+Run the VCF Automation upgrade on its own day, after the core platform is stable. If it overruns, it should not be holding up vCenter or ESX work, and its rollback story (the old nodes, powered off) is easiest to use when nothing else changed the same day.
+</Callout>
+
+## Pitfalls
+
+- **"Upgrade All".** Upgrade VCF Automation first and the migration engine after it.
+- **Changing one node's password** while troubleshooting. Keep `vmware-system-user` identical on every node.
+- **Forgetting the integrations.** Cloud accounts, IPAM, ITSM and identity all need checking after the move. Build the test list from the 9.0 configuration before you start.

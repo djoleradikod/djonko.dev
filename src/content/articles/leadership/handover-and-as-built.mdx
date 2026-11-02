@@ -1,0 +1,55 @@
+---
+title: "Leaving it documented: the as-built and handover pack for a VCF 9 platform"
+description: "A project isn't finished when the platform works. It's finished when someone else can run it. A compact as-built and handover pack for VCF 9 covers names and addresses, decisions, credentials ownership, recurring tasks and the first runbooks."
+category: leadership
+order: 10
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: []
+sources:
+  - title: "Documenting architecture decisions"
+    url: "https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions"
+    by: "Michael Nygard"
+  - title: "Diátaxis: a systematic approach to technical documentation"
+    url: "https://diataxis.fr/"
+    by: "Daniele Procida"
+---
+
+<InShort>
+The handover pack answers the questions the operations team will ask in their first month. **What is there?** An as-built: instances, domains, components, versions, names, addresses and owners. **Why is it like that?** The decision records. **Who holds the keys?** Credential and certificate ownership, the licensing portal owner, and break-glass access. **What has to happen regularly?** A calendar: backups checked, licensing deadlines, certificate renewals, health reports. **What do we do when...?** The first runbooks: power events, health checks, collecting a bundle, escalating.
+</InShort>
+
+<Compare rows={[
+  ["New items in the as-built", "SDDC Manager, vCenters, NSX, hosts", "Also VCF Operations, collectors and proxies, License Server, services runtime pool, identity broker, VCF Automation"],
+  ["New recurring tasks", "Backups, certificate renewals", "Also the licensing cycle, runtime volume checks, management pack updates"],
+  ["New owners", "Platform team", "Also a licensing portal owner and an identity owner"],
+]} />
+
+## The pack
+
+| Section | Contents |
+|---|---|
+| As-built | One table per instance: component, FQDN, IP, version, role, owner |
+| Decisions | The decision records, with status |
+| Access | Who owns which credentials and certificates, where they're stored, break-glass procedure |
+| Calendar | Recurring tasks with frequency and owner |
+| Runbooks | Shutdown and startup, weekly health check, support bundle, escalation |
+| Contacts | Support contracts, account team, internal escalation path |
+| Open items | Known issues, accepted risks, planned changes |
+
+## Handing it over
+
+1. **Walk through it** with the receiving team, on the live platform.
+2. **Let them run one runbook** while you watch, and fix what confused them.
+3. **Agree an end date** for support from the project team.
+
+<Callout type="field">
+Generate the as-built tables from the platform where you can (API queries for names, versions and addresses) rather than typing them. A generated table can be refreshed at the next upgrade. A typed one is out of date the day after handover.
+</Callout>
+
+## Pitfalls
+
+- **Documents in a project folder** the operations team can't access.
+- **No licensing owner** named. It becomes urgent at the worst time.
+- **Handover by email.** Walk through it together.

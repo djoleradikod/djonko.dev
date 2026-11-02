@@ -1,0 +1,62 @@
+---
+title: "One VCF account per instance: how VCF Operations discovers SDDC Manager, vCenter, NSX and vSAN"
+description: "In 9.x you don't add vCenters and NSX managers to VCF Operations one by one. You add one VMware Cloud Foundation account per instance and let it discover the rest. Three defaults surprise almost everyone: collection doesn't start, new domains aren't monitored, and credentials are system-managed."
+category: integrations
+order: 1
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [446226, 441509, 436898, 421958, 438508, 440402, 440709]
+sources:
+  - title: "Configuring a VMware Cloud Foundation account (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/connect-to-data-sources/vmware-cloud-foundation/configuring-vmware-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+  - title: "Configuring a vCenter account (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/connect-to-data-sources/vsphere/configuring-a-vcenter-server-cloud-account-in-vrealize-operations.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+Add **one VMware Cloud Foundation account** per instance, pointing at the **SDDC Manager FQDN**. VCF Operations discovers every domain and attaches vCenter, vSAN and NSX underneath it. Then: click **Start Collecting All**, because a new account doesn't collect on its own; enable monitoring for new domains, because "Enable Domain Monitoring on Creation" defaults to false (<KB id={436898} />); and leave credentials as **system-managed**, rotating them from the account when they fail. Never add the management vCenter as a separate standalone account next to it (<KB id={446226} />).
+</InShort>
+
+<Compare rows={[
+  ["How you connect", "Aria Operations: separate vCenter, NSX and vSAN accounts, or the VCF management pack", "One VCF account per instance (SDDC Manager FQDN). Children discovered automatically."],
+  ["Credentials", "Accounts you created and maintained", "System-managed service accounts per endpoint, with a Rotate button"],
+  ["Extra roles on the account", "Monitoring only", "Monitoring, fleet management, and optionally license and vSphere Client plugin management"],
+  ["Own tiles", "Each product", "Only VCF Operations for networks, VCF Automation and self-monitoring need their own (<a href='https://knowledge.broadcom.com/external/article/441509' target='_blank' rel='noopener'>KB 441509</a>)"],
+]} />
+
+## Adding it properly
+
+1. **Operate > Administration > Integrations > Accounts > Add > VMware Cloud Foundation** (9.1 navigation).
+2. Enter the **SDDC Manager FQDN** and a user with the VCF admin role. Choose a **cloud proxy or collector group**. In 9.1 this must not be the local collector. See [cloud proxies](/vcf/library/integrations/cloud-proxies-and-collector-groups/).
+3. Choose the management scope: monitoring only, or monitoring plus **license and vSphere Client plugin management**. Pick the second for the instance that will license its vCenters.
+4. Accept the certificate, save, and click **Start Collecting All**.
+5. Open the **Domains** tab and enable each domain you want monitored.
+
+## When a domain shows "not configured"
+
+Open the VCF account, **Domains**, select the domain, set **System Managed Credentials**, **Validate Connection**, **Save** (<KB id={436898} />). A case mismatch between the vCenter's name in SDDC Manager and its actual name gives the same symptom.
+
+## Credential errors
+
+| Message | First fix |
+|---|---|
+| "Failed to establish connection to NSX Manager due to an incorrect username or password" | **Rotate** the system-managed credential, validate, save (<KB id={421958} />) |
+| "SDDC Manager credentials are incorrect." | SDDC Manager may have blocked the VCF Operations IP after repeated failures. Stop collecting, restart `commonsvcs`, wait, update, start collecting (<KB id={440709} />) |
+| vCenter account fails with licensing enabled | Missing **Global.Licenses** or `LicenseService.Administrators` (<KB id={440402} />) |
+
+## VVF is different
+
+With vSphere Foundation there is no SDDC Manager, so the VCF account fails with "Management Domain details is null". Use the vCenter account instead (<KB id={438508} />).
+
+<Callout type="field">
+After any upgrade or certificate change, open Integrations and read the status column top to bottom. Two minutes of reading catches the account that stopped collecting before anyone notices empty dashboards a week later.
+</Callout>
+
+## Pitfalls
+
+- **Adding vCenter by IP.** Instances configured by IP aren't included in VCF accounts. Use FQDNs.
+- **A standalone management vCenter account** alongside the VCF account. It breaks the instance pages.
+- **Unticking system-managed credentials** as a permanent fix. It is a workaround, and you take on the rotation.

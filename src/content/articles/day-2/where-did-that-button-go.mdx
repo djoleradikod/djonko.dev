@@ -1,0 +1,68 @@
+---
+title: "Where did that button go? The 5.2 to 9.x map of Day-2 tasks"
+description: "The single most useful page for an operations team moving from 5.x: every common Day-2 task, where it lived in SDDC Manager, and where it lives now."
+category: day-2
+order: 1
+versions: ["5.x", "9.0", "9.1"]
+level: Overview
+pubDate: 2026-11-02
+kbs: [454943, 435599]
+sources:
+  - title: "10 VCF 9 enhancements simplifying your Day-2 operations"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/"
+    by: "VMware Cloud Foundation blog"
+  - title: "Upgrading VCF 5.2 to 9.0: the top 10 questions answered"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/"
+    by: "VMware Cloud Foundation blog"
+  - title: "Lifecycle management (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+In 5.2, SDDC Manager was where Day-2 work happened, and doing it anywhere else often caused trouble. In 9.x the work is split along a simple line. Tasks about **compute, storage and networking objects** moved to **vCenter**. Tasks about **the platform itself** (domains, certificates, passwords, backup, DNS and NTP, licensing and lifecycle) moved to **VCF Operations**. SDDC Manager still executes much of it underneath, which is why it must stay healthy, but you rarely start there.
+</InShort>
+
+## The map
+
+| Task | VCF 5.2 (SDDC Manager) | VCF 9.x |
+|---|---|---|
+| Network pools | Administration > Network Settings > Network Pool | **vCenter:** Global Inventory List > Hosts > Network Pools |
+| Commission and decommission hosts | Inventory > Hosts | **vCenter:** Global Inventory List > Hosts > Unassigned Hosts |
+| Create a workload domain | Inventory > Workload Domains | **VCF Operations:** Inventory > VCF Instance |
+| Create or expand a cluster | Workload Domains > Add Cluster or Add Hosts | **vCenter:** Hosts and Clusters > Datacenter > New Cluster > New SDDC Cluster |
+| NSX edge cluster | Workload Domains > Actions > Add Edge Cluster | **vCenter:** network object > Network > Network Connectivity (guided edge deployment) |
+| Backup configuration | Administration > Backup | **VCF Operations:** fleet-level backups under Fleet Management (9.0) or Build > Lifecycle > VCF Management > Backup and Restore (9.1). Instance backups under Inventory > VCF Instance > Manage VCF Instance Settings. |
+| DNS and NTP | Administration > Network Settings | **VCF Operations:** Inventory > VCF Instance > Manage VCF Instance Settings > Network Settings. 9.1 adds fleet-level settings. |
+| Certificate authority | Security > Certificate Authority | **VCF Operations:** Fleet Management > Certificates > Configure CA |
+| Certificates | Workload Domains > domain > Certificates | **VCF Operations:** Fleet Management > Certificates, with auto-renewal |
+| Passwords | Security > Password Management | **VCF Operations:** Fleet Management > Passwords (VCF Management and VCF Instances) |
+| Licensing | Administration > Licensing | **VCF Operations:** Licensing |
+| Upgrades and patches | Workload Domains > Updates | **VCF Operations:** Build > Lifecycle (VCF Management, and VCF Instances > domain > Upgrades) |
+| Image management | SDDC Manager > Lifecycle Management > Image Management | **VCF Operations:** Build > Lifecycle > VCF Instances > Image Management |
+
+The vCenter paths for workload domains need **VCF SSO and vCenter linking** in place. On the management domain they work without extra setup.
+
+<Compare rows={[
+  ["Principle", "One tool for everything platform-related", "Object tasks in vCenter, platform tasks in VCF Operations"],
+  ["SDDC Manager UI", "Primary", "9.0: still present. 9.1: deprecated."],
+  ["SDDC Manager's own passwords", "Managed in SDDC Manager", "9.1: changed in the OS. 9.1.1: from the VCF Operations UI or API (<a href='https://knowledge.broadcom.com/external/article/454943' target='_blank' rel='noopener'>KB 454943</a>)."],
+  ["Automation", "SDDC Manager public API for most tasks", "VCF Operations APIs, fleet lifecycle API (9.1), vCenter APIs and the SDDC Manager API for core lifecycle"],
+]} />
+
+## How to roll this out to a team
+
+1. **Print the map** and put it next to the runbooks for the first few months after the upgrade.
+2. **Re-record the procedures** your team does most: host commissioning, cluster expansion, certificate renewal and password rotation. Use the new paths in a lab or a quiet production window.
+3. **Update automation.** Scripts that drive Day-2 tasks through the SDDC Manager API may still work in places, but the 9.x paths are where fixes and features land.
+4. **Update monitoring.** Alerts about certificate and password expiry now come from VCF Operations.
+
+<Callout type="field">
+The question that comes up most in the first month after an upgrade is "why is Add Host greyed out?". The answer is usually not a bug. The task has moved to vCenter, or VCF SSO and vCenter linking aren't configured for that workload domain yet.
+</Callout>
+
+## Pitfalls
+
+- **Doing it twice.** Rotating a password in SDDC Manager and again in VCF Operations, or rotating it outside both, creates the drift that later breaks upgrades.
+- **Expecting 9.0 and 9.1 to look the same.** VCF Operations menus regrouped between releases, for example Fleet Management against Build > Lifecycle. KBs written for one release may use the other release's paths.
+- **Forgetting the "authoritative" rule in 9.0.** For core component accounts, SDDC Manager password management stays the source of truth in 9.0 (<KB id={435599} />).

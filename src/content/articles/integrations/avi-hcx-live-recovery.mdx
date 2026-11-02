@@ -1,0 +1,51 @@
+---
+title: "Avi, HCX and Live Recovery alongside VCF 9: where each one plugs in"
+description: "Add-on products integrate with VCF at different points: Avi through SDDC Manager and NSX, HCX through vCenter and its own management pack, Live Recovery through vCenter plugins. Each has its own licensing model and its own position in the upgrade order."
+category: integrations
+order: 10
+versions: ["5.x", "9.0", "9.1"]
+level: Overview
+pubDate: 2026-11-02
+kbs: [442998, 437447, 454432, 417767, 426469, 382440, 321631, 440630]
+sources:
+  - title: "Licensing in VMware Cloud Foundation 9.0 (products still on keys)"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/24/licensing-in-vmware-cloud-foundation-9-0/"
+    by: "VMware Cloud Foundation blog"
+  - title: "Avi Load Balancer Controller is not reachable"
+    url: "https://knowledge.broadcom.com/external/article/442998/avi-load-balancer-controller-is-not-reac.html"
+    by: "Broadcom KB"
+---
+
+<InShort>
+**Avi Load Balancer** is deployed from SDDC Manager and integrated with NSX. It still uses license keys, it sits early in the 9.0 to 9.1 upgrade order, and its passwords are managed through SDDC Manager (use **Remediate**, not Update, when only the stored value is stale) (<KB id={442998} />). **HCX** registers with vCenter, has its own vSphere Client plugin, and needed the 9.1.1 management pack for monitoring (<KB id={437447} />, <KB id={454432} />). **Live Recovery** (Site Recovery and vSphere Replication) registers plugins in vCenter, needs FQDN-based certificates, and sits near the start of the upgrade order (<KB id={426469} />). Plan each as its own integration, with its own owner.
+</InShort>
+
+<Compare rows={[
+  ["Avi", "Optional, deployed separately or via NSX", "Deployed from SDDC Manager. Still on license keys. Upgraded early in the 9.1 order."],
+  ["HCX", "Registered with vCenter, licensed separately", "Included with VCF licensing. Monitoring needs the 9.1.1 HCX management pack."],
+  ["Live Recovery", "Site Recovery Manager and vSphere Replication", "Live Recovery, partly SaaS. Upgraded early in the 9.1 order."],
+]} />
+
+## Where they sit in the 9.0 to 9.1 order
+
+The official order puts **VCF Operations first, then vSphere Replication, then Avi**, before SDDC Manager and the management services (<KB id={440630} />). HCX is upgraded with the core of each domain, before NSX and vCenter. Check each product's interoperability for the target release before planning the window.
+
+## Typical integration failures
+
+| Product | Symptom | Pointer |
+|---|---|---|
+| Avi | "Avi Load Balancer Controller is not reachable" in NSX after a certificate replacement | Reboot controllers until the cluster is stable, then remediate passwords (<KB id={442998} />) |
+| HCX | Plugin shows "no healthy upstream" | Connectivity or authentication between HCX Manager and vCenter (<KB id={321631} />) |
+| Live Recovery | Plugin "no healthy upstream" or "526 Invalid SSL Certificate" | Certificates generated with a short name. Regenerate with the FQDN (<KB id={426469} />) |
+| Live Recovery | Plugin undeploys after about 30 minutes | A stale cached plugin package (<KB id={417767} />) |
+| Site Recovery and Replication | "no healthy upstream" after a vCenter update | Reconfigure the appliances with FQDNs (<KB id={382440} />) |
+
+<Callout type="field">
+For each add-on, write a one-line integration contract: what it registers in vCenter, what it needs from NSX or SDDC Manager, which licence it uses, and where it sits in the upgrade order. Add-ons are where upgrade plans most often have a gap.
+</Callout>
+
+## Pitfalls
+
+- **Assuming add-ons inherit the VCF license file.** Avi, vDefend, Tanzu Platform and Data Services Manager still use keys.
+- **Upgrading the core before replication or Avi** in the 9.1 path.
+- **Short-name certificates** on recovery appliances.

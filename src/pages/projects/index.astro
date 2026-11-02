@@ -1,0 +1,46 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../data/site';
+import { allProjects, projectUrl, projectMeta } from '../../lib/posts';
+const projects = await Promise.all((await allProjects()).map(async (p) => ({ p, m: await projectMeta(p) })));
+const kindLabel = { script: 'Script', agent: 'Agent', 'management-pack': 'Management pack' } as const;
+---
+<Base title="Projects" description="Open scripts, agents and management packs for VCF Operations 9.1.1 and later.">
+  <p class="eyebrow">Projects</p>
+  <h1>Tools for VCF Operations</h1>
+  <p class="lede">Scripts, agents and management packs that help manage and understand VCF environments. Each tool has a page here with what it does, what it supports and the minimum permissions it needs. Code, issues and releases are on <a href={`https://github.com/${SITE.githubOwner}`} rel="noopener">GitHub</a>.</p>
+  {projects.length ? (
+    <div class="grid" style="margin-top:20px">
+      {projects.map(({ p, m }) => (
+        <a class="card" href={projectUrl(p)}>
+          {p.data.cover && <div class="thumb"><Image src={p.data.cover} alt="" widths={[400, 800]} sizes="(min-width: 900px) 360px, 100vw" loading="lazy" /></div>}
+          <span class="kicker">{kindLabel[m?.kind ?? p.data.kind]}</span>
+          <h3>{m?.displayName ?? p.data.displayName}</h3>
+          <p>{m?.summary ?? p.data.summary}</p>
+          <div class="meta">
+            <span class="status">{p.data.status}</span>
+            {m && <span class="badge">v{m.version}</span>}
+            <span class="badge">Ops {m?.baseline ?? '9.1.1'}+</span>
+            {m && <span class="badge">{m.licence}</span>}
+          </div>
+        </a>
+      ))}
+    </div>
+  ) : (
+    <div class="empty" style="margin-top:20px">
+      <h3>The first tools are in development</h3>
+      <p>Each will be listed here once it has a public repository and a tested release.</p>
+    </div>
+  )}
+  <h2>Rules every project follows</h2>
+  <div class="prose">
+    <ul>
+      <li><strong>Baseline:</strong> VCF Operations 9.1.1 or later, with a compatibility table on every tool page.</li>
+      <li><strong>Least privilege:</strong> the minimum read-only role is documented for each tool, along with what it never needs. No tool needs admin credentials.</li>
+      <li><strong>Build method stated:</strong> management packs say whether they use MP Builder or the Python integration SDK.</li>
+      <li><strong>Verifiable releases:</strong> every release publishes a machine-readable <code>project.json</code>, which is where this page gets its facts.</li>
+      <li><strong>Independent:</strong> {SITE.affiliation}</li>
+    </ul>
+  </div>
+</Base>

@@ -1,0 +1,7 @@
+# Only needed if the site is hosted on Netlify instead of Cloudflare Pages.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"

@@ -1,0 +1,75 @@
+---
+title: "DNS, NTP and proxy: the three dependencies behind a large share of tickets"
+description: "VCF 9 adds more names, more clocks and more outbound paths than 5.x had. Get these three right and a whole class of ticket never gets opened."
+category: day-2
+order: 6
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [404501, 435717, 440331, 426042, 443900, 451990, 452095, 409353, 438528, 439240, 444431, 449159, 443166, 447542, 442978, 442735, 444267, 432021, 447366, 409220, 429451]
+sources:
+  - title: "Modernizing infrastructure: VCF 5.2.x to 9.1 upgrade guide (DNS)"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/06/05/modernizing-infrastructure-vmware-cloud-foundation-5-2-x-to-9-1-upgrade-guide/"
+    by: "VMware Cloud Foundation blog"
+  - title: "Let's talk about VCF management services (firewalls and runtime addresses)"
+    url: "https://www.why-did-it.fail/blog/2026-05-lets-talk-about-vcf-mgmt-svc/"
+    by: "why-did-it.fail"
+  - title: "10 VCF 9 enhancements simplifying your Day-2 operations (DNS and NTP settings)"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/"
+    by: "VMware Cloud Foundation blog"
+---
+
+<InShort>
+In 5.x, DNS and NTP were configured in SDDC Manager, and SDDC Manager was the main thing that needed to reach the internet. In 9.x, DNS and NTP are set per instance in VCF Operations, with fleet-level settings in 9.1. Several new components also depend on them: cloud proxies, the License Server, the services runtime and the identity broker. Each has its own outbound path through a proxy or firewall. The rules are the same as ever, applied more strictly. Every FQDN needs matching **lowercase** forward and reverse records. Every node needs the **same time**. Every outbound path is tested **from the address that will really use it**.
+</InShort>
+
+<Compare rows={[
+  ["Where configured", "SDDC Manager: Administration > Network Settings", "VCF Operations: VCF Instance > Manage VCF Instance Settings > Network Settings. 9.1 adds fleet-level settings."],
+  ["Names to manage", "SDDC Manager, vCenters, NSX, hosts, Aria (optional)", "Also VCF Operations nodes and load balancer, cloud proxies, the License Server, runtime, fleet and instance FQDNs, the broker and VCF Automation"],
+  ["Outbound sources", "SDDC Manager, Aria Suite Lifecycle", "SDDC Manager, the installer, cloud proxies, the License Server and every runtime node (depot)"],
+  ["Time-sensitive pieces", "SSO tokens, vSAN, NSX", "Also VCF SSO JWTs, runtime Kubernetes certificates and fleet lifecycle tasks"],
+]} />
+
+## DNS
+
+- **Lowercase, forward and reverse, before the step that needs them.** Capital letters and PTR case mismatches fail the installer validation (<KB id={435717} />). A missing record can show as a 502 in the installer UI (<KB id={404501} />).
+- **Hosts too.** NSX host preparation stalls when a host's own DNS is wrong (<KB id={440331} />).
+- **Cloud proxies are sensitive to DNS.** A proxy going offline every few hours (<KB id={426042} />) and HAProxy 503 errors (<KB id={443900} />) both trace back to resolver configuration.
+- **License Server.** Detection fails on bad DNS, and its networking has specific requirements (<KB id={451990} />, <KB id={452095} />).
+
+## NTP
+
+- **Symptoms of drift:** VCF SSO reporting "JWT token is expired" (<KB id={409353} />), upgrades stuck part way, and intermittent 401 errors between components.
+- **Installer quirks:** an NTP server that answers slowly may need `iburst` to pass validation (<KB id={438528} />). Some formats are rejected (<KB id={439240} />). The installer must reach NTP when deploying VCF Operations (<KB id={444431} />).
+- **Changes that don't stick:** an SDDC Manager NTP change not written to `ntp.conf` is a known issue (<KB id={449159} />). Verify on the appliance after any change.
+
+## Proxy and firewall
+
+- **9.1 depot downloads leave from runtime node addresses** (<KB id={443166} />). Write firewall rules for the whole runtime pool.
+- **Configure each component's proxy where it lives:** the software depot through a utility script (<KB id={447542} />, <KB id={442978} />), and the installer's trust stores for a proxy CA (<KB id={432021} />). Note that the 9.1 vCenter appliance installer bypasses the proxy and needs a direct path (<KB id={447366} />).
+- **TLS inspection** breaks trust in predictable ways: PKIX errors on SDDC Manager (<KB id={442735} />) and `certificate_unknown(46)` from the installer (<KB id={444267} />). Exempt VCF's outbound hosts from inspection.
+- **After any proxy change on a cloud proxy,** stop and start collection (<KB id={429451} />). A "status code 0" in licensing registration is often the proxy (<KB id={409220} />).
+
+## Checks worth scripting
+
+```bash
+# Forward and reverse, case-sensitive comparison
+for fqdn in $(cat fqdns.txt); do
+  ip=$(dig +short "$fqdn" | tail -1)
+  ptr=$(dig +short -x "$ip" | sed 's/\.$//')
+  [ "$ptr" = "$fqdn" ] && echo "OK   $fqdn $ip" || echo "FAIL $fqdn -> $ip -> $ptr"
+done
+
+# Time offset against your NTP source, from each appliance (chrony or ntpd)
+chronyc tracking 2>/dev/null | grep -E 'System time|Leap' || ntpq -p
+```
+
+<Callout type="field">
+Keep one table per instance listing every FQDN, IP address, role and owner, and generate the DNS checks from it. It becomes the source of truth for firewall requests, certificate SANs and upgrade planning. Most of the upgrade prechecks are checks against that table.
+</Callout>
+
+## Pitfalls
+
+- **Testing from the wrong address.** A curl that works from SDDC Manager proves nothing about the runtime nodes.
+- **Short names in certificates and DNS.** Use FQDNs everywhere.
+- **Infrastructure VMs inside the domain they serve.** If DNS and NTP run on the management cluster, shutdown and startup order must account for them.

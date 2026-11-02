@@ -1,0 +1,80 @@
+---
+title: "Rollback in practice: no single undo button, so treat backups as checkpoints"
+description: "VCF has never had a whole-platform rollback, and 9.x adds steps that cannot be reversed at all. Here is how to design checkpoints, what each component's way back looks like, and which recovery actions are safe to take during the window."
+category: upgrades
+order: 10
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [450430, 445418, 452677, 452077, 451010, 443718, 440807, 444168, 449148, 454467, 442134, 446672]
+sources:
+  - title: "Upgrading VCF 5.2 to 9.0: the top 10 questions answered (rollback)"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/"
+    by: "VMware Cloud Foundation blog"
+  - title: "The VCF 9.1 upgrade, step by step: what actually happens"
+    url: "https://www.wwt.com/blog/the-vcf-91-upgrade-step-by-step-what-actually-happens"
+    by: "WWT"
+  - title: "Upgrade ESX to 9.1 (batches and retry)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/upgrade-esxi-for-vmware-cloud-foundation-5-2-1.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+Broadcom's own answer is that there is no single rollback for VCF. Each serial step is a checkpoint. You back up the component before it is upgraded, and if the step fails, you return that component to its pre-step state. 9.x keeps that model and adds two hard edges. Once 9.1 management services are deployed, the 9.0 fleet appliance cannot be reinstated. VCF Automation's old nodes are only powered off, not upgraded, so they are a fallback only until you delete them. Most failed steps don't need a rollback at all. They need the right *retry*, at the right level.
+</InShort>
+
+<Compare rows={[
+  ["Model", "Component checkpoints: snapshot or back up SDDC Manager, back up vCenter and NSX", "The same, plus VCF Operations offline snapshots and fleet backups"],
+  ["Irreversible steps", "Few. vSAN on-disk format and VDS upgrades.", "Also: deploying management services (9.1), and decommissioning the 9.0 fleet appliance"],
+  ["Retry", "SDDC Manager task retry", "Retry at the failed step in VCF Operations. Underlying tasks carry a retryable flag (9.1)."],
+  ["vCenter", "In-place upgrade, restored from file-based backup", "Reduced-downtime upgrade: before switchover the source stays authoritative, and you can cancel"],
+]} />
+
+## Checkpoints per component
+
+| Component | Before the step | Way back |
+|---|---|---|
+| VCF Operations | Take the cluster offline, snapshot every node, bring it back online, then install (<KB id={450430} />) | Revert all node snapshots together |
+| SDDC Manager | SFTP file backup confirmed, plus a VM snapshot | Revert the snapshot, or restore from backup |
+| vCenter | File-based backup | RDU: cancel before switchover (<KB id={454467} />). In place: restore from backup. |
+| NSX | NSX backup confirmed | Restore is a support-led process. Prevent rather than cure. |
+| ESX | Hosts healthy, image validated | Failed hosts don't block the others. Remediate them in a new batch. |
+| Management services (9.1) | Backups of everything above, plus the 9.0 fleet appliance | None after deployment |
+| VCF Automation (9.0 to 9.1) | Healthy 9.0 cluster and backups | The old nodes, powered off, until you delete them |
+
+Delete snapshots when each checkpoint is confirmed good. Long-lived snapshots on management appliances cause problems of their own.
+
+## Retry before rollback
+
+Most 9.x failures are recoverable in place, as long as you choose the right level:
+
+- **Fix the cause, then use Retry Task.** Lifecycle tasks resume at the failed step. In 9.1 the underlying task has a retryable flag. When it is false, a reset is needed, and that is a support action (<KB id={451010} />).
+- **"Stuck" isn't always stuck.** If the work finished but the status didn't update, restarting the fleet and SDDC build and upgrade pods clears it (<KB id={443718} />).
+- **Version drift after manual actions** is fixed with a version sync on SDDC Manager, not a re-upgrade (<KB id={440807} />).
+- **Stale plans and locks** can be cleared through documented API calls or database edits, after a snapshot (<KB id={444168} />, <KB id={449148} />).
+- **RDU keeps failing?** Fall back to a standard in-place vCenter upgrade (<KB id={442134} />, <KB id={446672} />).
+
+Revert to a checkpoint when the KB says so, for example after an expired root password (<KB id={445418} />), an interrupted precheck (<KB id={452677} />) or an inventory sync race (<KB id={452077} />), or when the window is closing and the fix is unknown.
+
+<Diagram viewBox="0 0 820 200" label="Decision flow: a step fails; if the cause is known and the task is retryable, fix and retry; if the status is stale, refresh services; if the KB says revert or the window is closing, revert to the checkpoint; otherwise collect evidence and escalate." caption="Decide at the level of the failed step, not the whole upgrade.">
+  <rect class="box warn" x="10" y="74" width="130" height="50" rx="8" /><text class="t" x="24" y="104">Step failed</text>
+  <rect class="box accent" x="200" y="10" width="200" height="50" rx="8" /><text class="t" x="214" y="32">Cause known?</text><text class="s" x="214" y="50">and task retryable</text>
+  <rect class="box" x="200" y="74" width="200" height="50" rx="8" /><text class="t" x="214" y="96">Work done, status</text><text class="s" x="214" y="114">stale?</text>
+  <rect class="box" x="200" y="138" width="200" height="50" rx="8" /><text class="t" x="214" y="160">KB says revert, or</text><text class="s" x="214" y="178">window closing?</text>
+  <rect class="box v9" x="460" y="10" width="160" height="50" rx="8" /><text class="t" x="474" y="40">Fix, then retry</text>
+  <rect class="box v9" x="460" y="74" width="160" height="50" rx="8" /><text class="t" x="474" y="104">Refresh services</text>
+  <rect class="box v9" x="460" y="138" width="160" height="50" rx="8" /><text class="t" x="474" y="168">Revert checkpoint</text>
+  <rect class="box" x="660" y="74" width="150" height="50" rx="8" /><text class="t" x="674" y="96">Otherwise:</text><text class="s" x="674" y="114">evidence, escalate</text>
+  <path class="wire" d="M140 99 C 170 99, 170 35, 198 35" marker-end="url(#arr)" /><path class="wire" d="M140 99 L198 99" marker-end="url(#arr)" /><path class="wire" d="M140 99 C 170 99, 170 163, 198 163" marker-end="url(#arr)" />
+  <path class="wire accent" d="M400 35 L458 35" marker-end="url(#arra)" /><path class="wire" d="M400 99 L458 99" marker-end="url(#arr)" /><path class="wire" d="M400 163 L458 163" marker-end="url(#arr)" />
+</Diagram>
+
+<Callout type="field">
+Agree the "go back" criteria with the customer before the window. For example: "If SDDC Manager is not upgraded by 02:00, we revert the snapshot and stop." Making that decision at 02:00 under pressure is how windows overrun into business hours.
+</Callout>
+
+## Pitfalls
+
+- **Snapshots as backups.** A snapshot is a checkpoint for minutes or hours, not a backup.
+- **Running database fixes from a KB without a snapshot.** Every KB that edits a database says to snapshot first, for good reason.
+- **Retrying the whole upgrade.** Retry the failed step. Re-running an earlier step on a partly upgraded system creates new problems.

@@ -1,0 +1,62 @@
+---
+title: "Running mixed versions: a 9.x management domain with 5.x workload domains"
+description: "Workload domains can follow the management domain on their own schedule. That flexibility is real, but a mixed estate is a transition state with limits, and it should have an end date."
+category: upgrades
+order: 11
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [440630]
+sources:
+  - title: "Upgrading to VCF 9.1.x (workload domains as Day-N)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+  - title: "VCF 9 deployment guide: version evolution (mixed environments)"
+    url: "https://vcf9-deployment-guide.pages.dev/overview/version-evolution"
+    by: "Community guide"
+  - title: "10 VCF 9 enhancements simplifying your Day-2 operations"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/"
+    by: "VMware Cloud Foundation blog"
+  - title: "Major enhancements to the VCF 9.1 Upgrade Planner tool (workload domain paths)"
+    url: "https://williamlam.com/2026/10/major-enhancements-to-vcf-9-1-upgrade-planner-tool.html"
+    by: "William Lam"
+---
+
+<InShort>
+In the upgrade documentation, workload domains are Day-N. They are upgraded after their instance's management domain, in later windows if needed. During that period a 9.x management domain manages workload domains still on the 5.x bill of materials. This is a supported transition, but it is not a destination. The 9.x Day-2 experience (vCenter-based host, cluster and network pool operations, VCF SSO, auto-renewal and rotation) assumes 9.x domains. Every month in a mixed state is a month of two operating procedures.
+</InShort>
+
+<Compare rows={[
+  ["Upgrade unit", "Each workload domain was upgraded separately by SDDC Manager", "The same. Workload domains follow the management domain as Day-N."],
+  ["Operating model during transition", "One model: SDDC Manager", "Two: 9.x workflows for upgraded domains, SDDC Manager workflows for the rest"],
+  ["Day-2 features", "Uniform across domains", "Some 9.x Day-2 tasks in vCenter need VCF SSO and vCenter linking, which a 5.x domain doesn't have"],
+  ["Licensing", "Keys per component", "Upgraded vCenters use the licence file. The rest keep keys until upgraded, and an upgraded vCenter starts a 90-day evaluation until licensed."],
+]} />
+
+## Why it's attractive
+
+- **Smaller windows.** Each workload domain upgrade is its own change, with its own owners and rollback points.
+- **Application calendars.** Business units with freeze periods can be scheduled around.
+- **Shared NSX.** Where workload domains share an NSX instance, they have to move together in any case. Domains that don't share NSX can be staggered.
+
+## What to put in place for the transition
+
+1. **An end date** for the mixed state, with a named owner. Without one, the last workload domain stays on 5.x until it falls out of support.
+2. **A support check.** Confirm in the Interop Matrix that your exact management domain build supports your exact workload domain builds, and recheck at every management domain patch.
+3. **Two runbooks,** clearly labelled. Operators need to know which procedure applies to which domain, for example where host commissioning happens.
+4. **A licensing plan.** Each upgraded vCenter moves to the licence file. Make sure it is licensed before the evaluation window closes.
+5. **A monitoring check.** Confirm VCF Operations collects from every domain, old and new, through the right cloud proxy.
+
+## Shared NSX is the exception
+
+When several domains share an NSX instance, upgrade NSX, vCenter and ESX on all of them. Don't cancel the plans that are created automatically on the dependent domains. Start the edge cluster upgrade and NSX finalize from the management domain. In an optimized (RDU) plan, the NSX Manager upgrade waits for every domain sharing it to finish its vCenter switchover (<KB id={440630} />).
+
+<Callout type="field">
+A useful rule for customers: "No new workload on a domain that is still on 5.x." It stops the old domains growing while they wait, and it gives application owners a reason to agree a window.
+</Callout>
+
+## Pitfalls
+
+- **Forgetting the old domains in automation.** Scripts updated for 9.x APIs may fail against domains still on 5.x, and the reverse.
+- **Leaving licensing to the end.** An upgraded vCenter left unlicensed past its evaluation window becomes an outage.
+- **Mixing up NSX sharing.** Domains that share NSX cannot be staggered freely. Map NSX sharing before you promise anyone a schedule.

@@ -1,0 +1,92 @@
+---
+title: "Planning a 5.2 to 9.x upgrade: paths, order and checkpoints"
+description: "A 5.2 to 9.x upgrade is a programme, not a maintenance window. This is the planning skeleton that keeps it predictable: pick a path the product will accept, prepare what 9.x adds, and treat every phase as a checkpoint."
+category: upgrades
+order: 1
+versions: ["5.x", "9.0", "9.1"]
+level: Overview
+pubDate: 2026-11-02
+kbs: [390634, 450972, 440630, 446313, 430825, 402314]
+sources:
+  - title: "Upgrading to VCF 9.1.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+  - title: "How to upgrade to VMware Cloud Foundation 9.0"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/09/25/how-to-upgrade-to-vmware-cloud-foundation-9-0/"
+    by: "VMware Cloud Foundation blog"
+  - title: "Upgrading VCF 5.2 to 9.0: the top 10 questions answered"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/"
+    by: "VMware Cloud Foundation blog"
+  - title: "Modernizing infrastructure: VCF 5.2.x to 9.1 upgrade guide"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/06/05/modernizing-infrastructure-vmware-cloud-foundation-5-2-x-to-9-1-upgrade-guide/"
+    by: "VMware Cloud Foundation blog"
+  - title: "VCF 9.1: demystifying supported upgrade paths"
+    url: "https://williamlam.com/2026/05/vcf-9-1-demystifying-supported-upgrade-paths-to-9-1.html"
+    by: "William Lam"
+  - title: "Major enhancements to the VCF 9.1 Upgrade Planner tool"
+    url: "https://williamlam.com/2026/10/major-enhancements-to-vcf-9-1-upgrade-planner-tool.html"
+    by: "William Lam"
+  - title: "Before you upgrade to VCF 9.1: what you need to have ready"
+    url: "https://www.wwt.com/blog/before-you-upgrade-to-vcf-91-what-you-need-to-have-ready"
+    by: "WWT"
+---
+
+<InShort>
+Upgrades to 9.1.x are supported from **5.2.x** and **9.0.x**. Anything older goes to 5.2 first. VCF checks the path, and the target must be released *after* the build you run. That rule blocks some combinations that look reasonable, such as 5.2.4 to 9.1.0. The order is now top-down: VCF Operations and the management components first, then SDDC Manager, then each domain's NSX, vCenter and ESX. Most of the effort goes into preparing what 9.x adds: VCF Operations, fleet management or the services runtime, a License Server, new IP addresses and FQDNs, stricter certificates, and vLCM images on every cluster.
+</InShort>
+
+<Compare rows={[
+  ["Typical scope", "SDDC Manager, NSX, vCenter, ESX, plus optional Aria through Aria Suite Lifecycle", "The same core, plus mandatory VCF Operations, fleet management (9.0) or management services (9.1), a License Server (9.1) and the identity broker"],
+  ["First thing upgraded", "SDDC Manager", "VCF Operations, starting with Aria Suite Lifecycle 8.18 Patch 2 if you have it"],
+  ["Path rules", "Sequential or skip-level from 4.5 to 5.2", "From 5.2.x or 9.0.x. The target must be newer than the source build (no back-in-time)."],
+  ["ESX lifecycle", "Baselines or images", "vLCM images only. Convert baseline clusters first."],
+  ["vCenter upgrade", "In place", "Reduced-downtime upgrade with a temporary IP (5.2 to 9.0). 9.1 offers sequential or optimized plans."],
+  ["Products with no upgrade", "Not applicable", "vIDM (deploy the identity broker new), Aria Ops for Logs (deploy new, migrate up to 90 days), VCD (no path)"],
+]} />
+
+## Step 1: choose a path the product will accept
+
+- **Check the exact build pair** in the Interop Matrix Upgrade view, with *Hide Patch Releases* unticked, or you will not see the pairs that matter.
+- **Watch for back-in-time blocks.** 5.2.4 was released after 9.1.0, so 5.2.4 to 9.1.0 is blocked. Go to 9.1.1 instead (<KB id={450972} />). Component builds can trigger the same block, for example an NSX patch newer than the target (<KB id={446313} />, <KB id={430825} />).
+- **Prefer the latest target.** Every 9.x release note asks you to use the latest available binaries. From 5.2.x or 9.0.x you can go straight to 9.1.1.
+- **Use the planner.** William Lam's VCF Upgrade Planner produces a per-environment runbook, and its October 2026 release exports plans for change boards.
+
+## Step 2: write the order down
+
+For a 5.2 source the order follows the published sequence (<KB id={390634} />, <KB id={440630} />):
+
+<Diagram viewBox="0 0 820 170" label="Upgrade order: management components first, then SDDC Manager, then per-domain NSX, vCenter and ESX, then finalize." caption="Top-down: management components, then the instance, then each domain. Workload domains can follow later.">
+  <rect class="box accent" x="10" y="20" width="180" height="70" rx="8" /><text class="t" x="24" y="46">Management</text><text class="s" x="24" y="66">Aria LCM 8.18 P2,</text><text class="s" x="24" y="82">VCF Ops, then others</text>
+  <rect class="box v9" x="215" y="20" width="150" height="70" rx="8" /><text class="t" x="229" y="46">SDDC Manager</text><text class="s" x="229" y="66">Backup and</text><text class="s" x="229" y="82">snapshot first</text>
+  <rect class="box v9" x="390" y="20" width="200" height="70" rx="8" /><text class="t" x="404" y="46">Mgmt domain core</text><text class="s" x="404" y="66">NSX, vCenter, ESX</text><text class="s" x="404" y="82">(9.1: services first)</text>
+  <rect class="box" x="615" y="20" width="195" height="70" rx="8" /><text class="t" x="629" y="46">Finalize, then WLDs</text><text class="s" x="629" y="66">VDS, vSAN format,</text><text class="s" x="629" y="82">licensing, Day-N</text>
+  <path class="wire accent" d="M190 55 L213 55" marker-end="url(#arra)" /><path class="wire" d="M365 55 L388 55" marker-end="url(#arr)" /><path class="wire" d="M590 55 L613 55" marker-end="url(#arr)" />
+  <text class="s" x="10" y="124">Checkpoint after every box: backups verified, health green, plan for the next box re-checked.</text>
+  <text class="s" x="10" y="146">9.1 inserts "Deploy management services and License Server" between SDDC Manager and the core.</text>
+</Diagram>
+
+Workload domains are Day-N. They can follow their instance's management domain in later windows.
+
+## Step 3: prepare what 9.x adds
+
+This is where most projects slip. Give each item an owner and a date:
+
+- **IP addresses and DNS.** You need records for VCF Operations, fleet management, the cloud proxy and, for 9.1, the runtime pool of 12 to 30 addresses, fleet, instance and runtime FQDNs, the License Server and the identity broker. Every record needs forward and reverse entries, in lowercase.
+- **Certificates.** SANs must list every node FQDN, and in some cases IP addresses too. See <a href="/vcf/library/upgrades/prechecks-that-fail/">The prechecks that fail most often</a>.
+- **vLCM images.** Convert every baseline cluster, and build images that include the vendor add-ons.
+- **Products with no upgrade.** Plan a new identity broker, a new log platform and, if you run VCD, a separate conversation with the account team.
+- **Binaries and depot access.** Plan for the 9.1 activation code, or a VCF Download Tool workflow for dark sites.
+
+## Step 4: treat every phase as a checkpoint
+
+There is no single rollback for VCF. Each component is backed up before its step, and each step is a point you can return to. This matters most just before deploying 9.1 management services, which cannot be undone. See <a href="/vcf/library/upgrades/rollback-checkpoints/">Rollback in practice</a>.
+
+<Callout type="field">
+The plan that survives contact with the customer has three columns per step: the action, the evidence that it worked (a screenshot, a health check or a task ID), and the rollback point if it didn't. Writing the evidence column first catches missing prerequisites while there is still time to fix them.
+</Callout>
+
+## Pitfalls
+
+- **Choosing the target by version number alone.** Check release dates and patch builds. The path validation will.
+- **Upgrading Aria Operations for Logs.** There is no upgrade. Deploy the 9.x log platform new, reconfigure the integrations, and keep the old one for history (<KB id={402314} />).
+- **Leaving workload domain planning until later.** Mixed versions are a transition state with limits. See <a href="/vcf/library/upgrades/mixed-versions/">Running mixed versions</a>.

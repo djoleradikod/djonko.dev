@@ -1,0 +1,24 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { CATEGORIES } from '../../../data/categories';
+import { allArticles, urlOf } from '../../../lib/articles';
+const items = await allArticles();
+---
+<Base title="Library" description="All field notes on VCF 5.x and 9.x, by category.">
+  <p class="eyebrow"><a href="/vcf/" style="color:inherit;text-decoration:none">VCF notes</a></p>
+  <h1>Library</h1>
+  <p class="lede">Every note answers one question and says what changed between VCF 5.x and 9.x. Pick a category, or use <a href="/search/">search</a>.</p>
+  {CATEGORIES.map((c) => {
+    const mine = items.filter((a) => a.data.category === c.id);
+    return (
+      <section>
+        <div class="section-head"><h2><a href={`/vcf/library/${c.id}/`} style="color:inherit;text-decoration:none">{c.title}</a></h2><a class="small" href={`/vcf/library/${c.id}/`}>{mine.length} notes</a></div>
+        <p class="muted" style="margin-top:-4px">{c.blurb}</p>
+        <ul class="list">
+          {mine.slice(0, 5).map((a) => <li><a href={urlOf(a)}><span class="t">{a.data.title}</span></a></li>)}
+          {mine.length > 5 && <li><a href={`/vcf/library/${c.id}/`}><span class="t" style="font-weight:500">All {mine.length} notes in {c.short}</span></a></li>}
+        </ul>
+      </section>
+    );
+  })}
+</Base>

@@ -1,0 +1,76 @@
+---
+title: "The prechecks that fail most often, and how to clear them before the window"
+description: "Most failed upgrade windows fail on something a pre-window check would have caught: DNS, an expired password, a certificate SAN, a cloud proxy or a VM setting someone changed by hand. Here they are, grouped so they can be checked in one sitting."
+category: upgrades
+order: 3
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [445418, 442719, 440459, 441858, 440910, 443106, 442290, 449148, 450561, 456790, 441813, 440901, 443988, 449075, 454898, 409353]
+sources:
+  - title: "Upgrade to VCF Operations 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/install-a-software-update.html"
+    by: "Broadcom TechDocs"
+  - title: "Modernizing infrastructure: VCF 9.0.x to 9.1 upgrade guide"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/07/28/modernizing-infrastructure-vmware-cloud-foundation-9-0-x-to-9-1-upgrade-guide/"
+    by: "VMware Cloud Foundation blog"
+  - title: "Before you upgrade to VCF 9.1: what you need to have ready"
+    url: "https://www.wwt.com/blog/before-you-upgrade-to-vcf-91-what-you-need-to-have-ready"
+    by: "WWT"
+  - title: "VCF Automation 9.0 to 9.1 upgrade: precheck and execution stages"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/07/27/modernizing-infrastructure-a-deep-dive-into-the-vmware-cloud-foundation-automation-9-0-to-9-1-upgrade-precheck-and-execution-stages/"
+    by: "VMware Cloud Foundation blog"
+---
+
+<InShort>
+Run the checks below a week before the window, then again the day before. Each one maps to a public KB where the failure is documented. In 5.x most of these failures surfaced in one place, the SDDC Manager precheck. In 9.x they are spread across VCF Operations, fleet lifecycle, SDDC lifecycle and the per-domain prechecks, and some only appear part way through a workflow. That makes a pre-window checklist more valuable than ever.
+</InShort>
+
+<Compare rows={[
+  ["Where prechecks run", "SDDC Manager upgrade precheck, plus the Aria Suite Lifecycle checks", "VCF Operations admin UI (PAK), Build > Lifecycle for management components, per-domain Upgrades tab, VCFA staged prechecks"],
+  ["What blocks", "Mostly errors in one report", "Errors block. Some VCF Ops pre-validation warnings do not block but predict later failures."],
+  ["New categories", "Not applicable", "IP pools and CIDRs, FQDN SANs, cloud proxy registration, runtime health, backup schedules"],
+]} />
+
+## Names and time
+
+- **Forward and reverse DNS for every new FQDN, in lowercase.** This covers VCF Operations nodes and the load balancer, the services runtime, fleet and instance FQDNs, the License Server, the identity broker and VCF Automation. A capital letter or a missing PTR record is the most common cause of "node unreachable" during management services deployment.
+- **NTP agreement on every node.** Clock drift shows up as token errors such as `IAM_401_INVALID_TOKEN` and as upgrades that hang part way (<KB id={409353} />). Check the VCF Operations nodes, SDDC Manager, the vCenters and the NSX Managers against the same source.
+
+## Passwords and accounts
+
+- **Root passwords on every VCF Operations node** must not be expired. An expired one fails the upgrade with `expired password for user root` in `/var/log/auth.log` (<KB id={445418} />, <KB id={442719} />).
+- **The 9.0 fleet appliance root password** is needed during the VCF Operations upgrade. After that, the appliance must stay powered off (<KB id={449075} />).
+- **VCF Automation `vmware-system-user`** must be valid and identical on every node, or the precheck decides the source is not a VCF Automation 9.x product (<KB id={443988} />).
+- **The SFTP backup user** must be in `user@domain` form. A backslash breaks the fleet lifecycle backup step (<KB id={450561} />).
+- **No failed password rotation tasks.** A stuck rotation can hold a domain lock and block the vCenter switchover hours into the window (<KB id={449148} />).
+
+## Certificates
+
+- **VCF Operations:** SANs include every node FQDN and the load balancer.
+- **Operations for networks:** SANs include every platform and collector FQDN **and IP address**. Otherwise "Import VCF Operations in Fleet Lifecycle" fails (<KB id={440459} />, <KB id={441858} />).
+- **NSX VIP:** the SAN covers every manager FQDN and IP address, or the NSX planning precheck times out (<KB id={440910} />).
+- **Nothing close to expiry.** Replace certificates that are within the upgrade's window, before the upgrade.
+
+## Platform settings someone changed by hand
+
+- **vCenter appliance VM hardware above version 17** fails a post-install stage (<KB id={442290} />).
+- **NetFlow on VDS uplink port groups** is unsupported in 9.1. Upgrade Operations for networks first so it removes the setting (<KB id={441813} />).
+- **The default NSX distributed load balancer** must be attached to a group (<KB id={440901} />).
+- **Baseline-managed clusters** must be converted to vLCM images.
+
+## Collection, backups and health
+
+- **Cloud proxy:** in 9.1 every VCF instance adapter must use the unified cloud proxy, not a local collector, or the instance registration validation fails (<KB id={443106} />).
+- **Backup schedules:** 15-minute incremental backups queue the VCF Automation prechecks behind backup tasks. Move to about every four hours for the duration of the upgrade (<KB id={456790} />).
+- **Health:** run the readiness set from <KB id={454898} />. That means the SoS health check on SDDC Manager, the diagnostic tool on each vCenter, the services runtime health check, and the service account sync check.
+
+<Callout type="field" title="Make it a script, not a meeting">
+Every item above can be checked from a jump host with read-only credentials: `dig` for forward and reverse records, `openssl s_client` for SANs and expiry, `chage -l` over SSH for password age, and the SoS health check. A short script run the day before turns this list into evidence for the change board. See <a href="/vcf/library/labs/scripted-health-checks/">Scripted health checks</a>.
+</Callout>
+
+## Pitfalls
+
+- **Treating warnings as noise.** The VCF Operations pre-validation warnings about SANs, break-glass accounts and networks don't block the upgrade, but they predict the next failure.
+- **Running prechecks once.** Passwords expire and certificates near expiry between the planning session and the window. Run the checks again the day before.
+- **Fixing in production during the window.** If a check fails on the day, decide on the spot whether to fix it inside the window or reschedule. Write that decision rule into the plan.

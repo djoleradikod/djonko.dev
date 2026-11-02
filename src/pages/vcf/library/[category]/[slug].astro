@@ -1,0 +1,81 @@
+---
+import { render } from 'astro:content';
+import Base from '../../../../layouts/Base.astro';
+import VersionBadges from '../../../../components/VersionBadges.astro';
+import { allArticles, slugOf, urlOf, type Article } from '../../../../lib/articles';
+import { categoryById } from '../../../../data/categories';
+import { kbInfo } from '../../../../data/kb';
+import { SITE } from '../../../../data/site';
+import { personRef } from '../../../../lib/schema';
+import { mdxComponents } from '../../../../components/mdx';
+import Share from '../../../../components/Share.astro';
+
+export async function getStaticPaths() {
+  const items = await allArticles();
+  return items.map((a) => {
+    const siblings = items.filter((x) => x.data.category === a.data.category);
+    const i = siblings.indexOf(a);
+    return { params: { category: a.data.category, slug: slugOf(a) }, props: { a, prev: siblings[i - 1], next: siblings[i + 1] } };
+  });
+}
+interface Props { a: Article; prev?: Article; next?: Article }
+const { a, prev, next } = Astro.props;
+const { Content, headings } = await render(a);
+const cat = categoryById(a.data.category);
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+const ld = {
+  '@context': 'https://schema.org', '@type': 'TechArticle', headline: a.data.title, description: a.data.description,
+  author: personRef(Astro.site), mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).href, datePublished: a.data.pubDate.toISOString(),
+  dateModified: (a.data.updated ?? a.data.pubDate).toISOString(), proficiencyLevel: a.data.level,
+};
+---
+<Base title={a.data.title} description={a.data.description} jsonLd={ld} ogType="article">
+  <article data-pagefind-body>
+    <header class="article-head">
+      <p class="eyebrow"><a href="/vcf/" style="color:inherit;text-decoration:none">VCF notes</a> / <a href={`/vcf/library/${cat.id}/`} style="color:inherit;text-decoration:none" data-pagefind-filter="category">{cat.short}</a></p>
+      <h1>{a.data.title}</h1>
+      <p class="lede">{a.data.description}</p>
+      <div class="meta">
+        <span data-pagefind-ignore><VersionBadges versions={a.data.versions} level={a.data.level} /></span>
+        <span>{fmt(a.data.updated ?? a.data.pubDate)}</span>
+        <span>{SITE.author} · {SITE.role}</span>
+      </div>
+      {a.data.versions.map((v) => <span hidden data-pagefind-filter="version">{`VCF ${v}`}</span>)}
+    </header>
+    <div class="article-layout">
+      <div class="prose">
+        <Content components={mdxComponents} />
+        <div data-pagefind-ignore style="margin-top:2em">
+          {a.data.kbs.length > 0 && (
+            <details class="drawer">
+              <summary>Broadcom KBs in this note ({a.data.kbs.length})</summary>
+              <div class="body"><ul>
+                {a.data.kbs.map((id) => { const k = kbInfo(id); return <li><a href={k.url} target="_blank" rel="noopener">KB {id}</a>{k.topic && ` · ${k.topic}`}</li>; })}
+              </ul></div>
+            </details>
+          )}
+          {a.data.sources.length > 0 && (
+            <details class="drawer">
+              <summary>Sources and further reading ({a.data.sources.length})</summary>
+              <div class="body"><ul>
+                {a.data.sources.map((s) => <li><a href={s.url} target="_blank" rel="noopener">{s.title}</a>{s.by && ` · ${s.by}`}</li>)}
+              </ul></div>
+            </details>
+          )}
+          <Share url={new URL(Astro.url.pathname, Astro.site).href} title={a.data.title} />
+          <nav class="prev-next" aria-label="More in this category">
+            {prev && <a href={urlOf(prev)}><span>Previous</span>{prev.data.title}</a>}
+            {next && <a class="next" href={urlOf(next)}><span>Next</span>{next.data.title}</a>}
+          </nav>
+        </div>
+      </div>
+      {toc.length > 2 && (
+        <aside class="toc" data-pagefind-ignore>
+          <p>On this page</p>
+          <ul>{toc.map((h) => <li class={`d${h.depth}`}><a href={`#${h.slug}`}>{h.text}</a></li>)}</ul>
+        </aside>
+      )}
+    </div>
+  </article>
+</Base>

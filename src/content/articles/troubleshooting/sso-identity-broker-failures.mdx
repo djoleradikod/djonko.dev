@@ -1,0 +1,52 @@
+---
+title: "VCF SSO and identity broker failures: redirects, clocks, secrets and a full database volume"
+description: "When VCF single sign-on fails, the message is usually generic and the cause is usually specific: the URL used to reach VCF Operations, clock drift, a rotated OAuth secret, an unreachable domain controller, or the broker's database volume filling up."
+category: troubleshooting
+order: 9
+versions: ["9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [413976, 439953, 409353, 442137, 427108, 417098, 427554, 443943, 452420, 456305, 456430]
+sources:
+  - title: "Deployment models for VCF single sign-on (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/what-is/deployment-models-for-sso.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+VCF SSO is the identity broker federating to your identity provider, with VCF Operations, vCenter, NSX and VCF Automation as OAuth clients. Failures fall into five groups. **Redirect URL**: VCF Operations reached by a short name, IP or alias that isn't registered (<KB id={413976} />). **Time**: "JWT token is expired" when clocks drift (<KB id={409353} />). **Client secrets**: stale or rotated OAuth client registrations (<KB id={442137} />, <KB id={427108} />). **Directory reachability**: one broker node can't reach the domain controllers (<KB id={427554} />). **The broker itself**: its Postgres volume fills, or an internal certificate expires (<KB id={417098} />, <KB id={456305} />).
+</InShort>
+
+<Compare rows={[
+  ["Identity source", "vCenter SSO (vsphere.local), optional Workspace ONE Access for Aria", "VCF identity broker, embedded in vCenter or as an appliance. 9.1 can run it on the services runtime."],
+  ["Scope", "Per vCenter, plus Aria", "Per fleet or per instance, across VCF Operations, vCenter, NSX and VCF Automation"],
+  ["Typical failure", "Identity source unreachable", "Redirect URL, OAuth client secrets, time, broker database"],
+]} />
+
+## By symptom
+
+| Message | Cause and fix |
+|---|---|
+| "Invalid redirect URL ... specified in authorize request" | VCF Operations reached by a VIP, alias, short name or IP. Set the **System Access URL** to the full https FQDN and always use it. After a re-IP, trigger an inventory sync (<KB id={413976} />, <KB id={439953} />). |
+| "Failed to log in with VCF SSO service. JWT token is expired." | VCF Operations clock differs from vCenter. Use the same NTP source everywhere (<KB id={409353} />). |
+| "Failed to log in with VCF SSO service" and HTTP 400 on group import | A stale OAuth client after an upgrade. Record role mappings, disable and re-enable SSO for the appliance, re-import groups (<KB id={442137} />). |
+| "Invalid access policy", "Unable to verify client secret" | vCenter's OAuth client secret mismatch. Snapshot, then rotate it per the KB (<KB id={427108} />). |
+| Intermittent errors with "LDAP server is not reachable" | One broker node can't reach the DC on 389 or 636. Open the ports from every node (<KB id={427554} />). |
+| "no healthy upstream" on the broker after a reboot | Postgres write-ahead log filled the volume. Check `patronictl list` and reinitialise replicas from the leader as the KB describes (<KB id={417098} />). |
+
+## 9.1 specifics
+
+- **"Service identity broker is not available"** after upgrade: an expired runtime service account password broke the 9.0 broker import. Support re-registers it (<KB id={443943} />).
+- **HTTP 400 on vCenter SSO, VCF Automation SSO "Not Configured"**: a consistency check rotated a secret while a component was offline. Unjoin and rejoin (<KB id={452420} />).
+- **"Internal certificate renewal is overdue"** alerts in 9.1.1: the broker's Postgres certificate. The KB deletes one secret to regenerate it (<KB id={456305} />).
+- **NSX SSO "Access Denied"** in 9.1.1: unjoin and rejoin NSX (<KB id={456430} />).
+
+<Callout type="field">
+Keep one emergency local login per component, tested quarterly, in the vault. SSO failures are rarely dangerous on their own. They become dangerous when nobody can log in to fix the thing that broke SSO.
+</Callout>
+
+## Pitfalls
+
+- **Bookmarking VCF Operations by IP.** It works until SSO is enabled.
+- **Disabling SSO without recording role mappings.** Re-enabling it is easy. Rebuilding permissions is not.
+- **Testing directory access from one node.** All broker nodes need it.

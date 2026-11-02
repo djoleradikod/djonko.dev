@@ -1,0 +1,66 @@
+---
+title: "Assigning licenses: vCenter first, add-ons second, overrides in 9.1"
+description: "In 9.0 you license vCenter and everything connected to it inherits. 9.1 adds overrides on hosts and vSAN clusters and lets one vCenter mix license types. The prerequisites are short and specific, and most failures come from skipping one of them."
+category: licensing
+order: 6
+versions: ["9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [452095, 442564, 424533, 453517, 443714, 445504, 453510, 402049]
+sources:
+  - title: "Assign a primary license to a vCenter instance (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/assign-a-licenses-to-a-vcenter-instance.html"
+    by: "Broadcom TechDocs"
+  - title: "VCF 9.1 licensing: programmatic, centralized and built to scale"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/18/vcf-9-1-licensing-programmatic-centralized-and-built-to-scale/"
+    by: "VMware Cloud Foundation blog"
+---
+
+<InShort>
+Assign a **primary license** (VCF or VVF) to each vCenter from VCF Operations. ESX hosts, NSX, VCF Automation and the rest inherit it. Then assign **add-ons**: extra vSAN capacity or Private AI Foundation. In 9.1 you can also assign an **override** directly to a host or vSAN cluster, and one vCenter can carry several primary license types, for example VCF and VCF Edge, even from different Site IDs. Before any of that works, the vCenter must be integrated for license management and its adapter account must be in `LicenseService.Administrators`.
+</InShort>
+
+<Compare rows={[
+  ["Assign to", "Each component: vCenter, hosts, vSAN, NSX", "vCenter. 9.1 adds host and vSAN cluster overrides."],
+  ["Mixed licenses per vCenter", "Not applicable", "9.0: one primary. 9.1: several types and Site IDs."],
+  ["Where", "vSphere Client or SDDC Manager", "VCF Operations: Licenses > Version 9+ (9.0) or Manage > Licensing (9.1)"],
+  ["After a refresh", "Re-enter keys on renewal", "No reassignment needed after an update"],
+]} />
+
+## Prerequisites
+
+1. VCF Operations is registered and the licenses are added to it (or to its License Server in 9.1).
+2. The vCenter or its VCF instance is integrated for **license management** in VCF Operations.
+3. The adapter's account is in the vCenter SSO group **`LicenseService.Administrators`**.
+4. You have the **Manage Licenses** permission in VCF Operations.
+5. Allow up to four collection cycles for a newly integrated vCenter to appear.
+
+## Doing it
+
+1. Open the Version 9+ licenses view, then **vCenter Systems**.
+2. Select the vCenters and choose **Assign Primary License**.
+3. For add-ons, choose **Assign an Add-on License** (vSAN TiB, Private AI Foundation).
+4. In 9.1, optionally assign an override on a specific host or vSAN cluster.
+
+An assignment fails if the license has less capacity left than the vCenter needs. Licenses with **Assignable = No** sink to the bottom of the list. The banner's **View Details** explains why.
+
+## When assignment fails
+
+- **Name resolution, case, FQDN or time** between vCenter and the License Server is the most common cause (<KB id={452095} />, <KB id={442564} />).
+- **An uppercase instance UUID** left over from an old upgrade can block License Server authentication. Check `instanceUuid` in `/etc/vmware-vpx/instance.cfg` (<KB id={424533} />).
+- **"No licenses are assignable"** or a licence that "could not be fully removed": toggle License Management off and on for the integration, waiting about 15 minutes each time (<KB id={453517} />).
+- **"Assets have been removed but still use license capacity"**: use **Reclaim Used Capacity** (<KB id={443714} />).
+- **Hosts stay in evaluation** and logs mention thumbprint mode: certificate mode can block the license push (<KB id={453510} />).
+- **A vCenter alarm "License assignment failed for this host"** after a reboot is a known false positive (<KB id={445504} />).
+
+Logs: `/storage/log/vcops/log/` on VCF Operations (`vcf-licensing-plugin.log`, `collector.log`, the ManagementAdapter logs) and `/var/log/vmware/cis-license/license.log` on vCenter.
+
+<Callout type="field">
+Capture a "license map" when you first assign: which vCenter carries which primary license and add-ons, and which hosts have overrides. Overrides are useful and easy to forget. A year later, someone will wonder why one cluster reports differently.
+</Callout>
+
+## Pitfalls
+
+- **Skipping the SSO group.** It is the most common missing prerequisite.
+- **Assigning during a 9.0 to 9.1 license transfer.** Wait until the transfer completes.
+- **A stale vSAN asset after disabling vSAN** in 9.0 can keep an expiry banner alive (<KB id={402049} />).

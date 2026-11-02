@@ -1,0 +1,18 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import VersionBadges from './VersionBadges.astro';
+import { urlOf } from '../lib/articles';
+interface Props { items: CollectionEntry<'articles'>[] }
+const { items } = Astro.props;
+---
+<ul class="list">
+  {items.map((a) => (
+    <li data-versions={a.data.versions.join(' ')}>
+      <a href={urlOf(a)}>
+        <span class="t">{a.data.title}</span>
+        <VersionBadges versions={a.data.versions} level={a.data.level} />
+        <span class="d">{a.data.description}</span>
+      </a>
+    </li>
+  ))}
+</ul>

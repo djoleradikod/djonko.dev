@@ -1,0 +1,81 @@
+---
+title: "Scripted health checks for VCF 9: a weekly report you can trust"
+description: "The PowerShell reporting module that many teams used on VCF 5.x is in sustaining mode and won't support 9.x. A small script around sos, the SDDC Manager API, VCF Operations alerts and a few appliance checks gives a better weekly report, and it is easy to build in a lab first."
+category: labs
+order: 9
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [439473, 436398, 417255, 439946]
+sources:
+  - title: "PowerShell module for VCF reporting: releases and support statement"
+    url: "https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-reporting/releases"
+    by: "VMware on GitHub"
+  - title: "VCF reporting module: health report"
+    url: "https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-reporting/documentation/getting-started/health-report"
+    by: "VMware on GitHub"
+  - title: "SDDC Manager API: Tasks"
+    url: "https://developer.broadcom.com/xapis/sddc-manager-api/9.0/tasks/"
+    by: "Broadcom Developer"
+---
+
+<InShort>
+On **5.x**, `Invoke-VcfHealthReport` from the VCF reporting module wraps SoS checks into an HTML report. Its last release says it is sustained for **5.x only** and won't support future major releases. On **9.x**, build your own: `sos --health-check` for locks and credentials (<KB id={439473} />, <KB id={436398} />), the SDDC Manager API for failed tasks, the VCF Operations API for active critical alerts, the management services dashboard for runtime volumes (<KB id={417255} />), and disk on the appliances (<KB id={439946} />). Run it weekly, keep the output, and watch the trend.
+</InShort>
+
+<Compare rows={[
+  ["Packaged report", "VCF reporting module: Invoke-VcfHealthReport", "None equivalent. Build from sos, APIs and VCF Operations."],
+  ["Health views", "SDDC Manager dashboard, SoS", "VCF Operations VCF Health, management services dashboard, SoS"],
+  ["Automation hooks", "SDDC Manager API", "SDDC Manager API plus VCF Operations API"],
+]} />
+
+## What the weekly report checks
+
+| Check | Source | Red when |
+|---|---|---|
+| Stale locks and account state | `sos --health-check` on SDDC Manager | Any active lock without a running task, any "Failed to get details" |
+| Failed tasks in the last 7 days | SDDC Manager `GET /v1/tasks` | Any FAILED task not yet explained |
+| Critical alerts | VCF Operations API | Any active critical alert older than a day |
+| Appliance disk | `df -h` on SDDC Manager, vCenter, VCF Operations nodes | Over 80% on any partition |
+| Runtime volumes (9.1) | Management services dashboard | Warning or above |
+| Last good backup | Backup status per component | Older than the agreed interval |
+| Licensing deadline | VCF Operations licensing view | Fewer than 150 days left |
+| Certificate expiry | VCF Operations certificates view | Under 60 days on anything not set to auto-renew |
+
+## A skeleton
+
+```bash
+#!/usr/bin/env bash
+# weekly-vcf-health.sh: read-only, run from a management VM with API access
+set -euo pipefail
+SDDC="sddc-manager.rainpole.io"
+OUT="report-$(date +%F).txt"
+
+TOKEN=$(curl -sk -X POST "https://$SDDC/v1/tokens" -H 'Content-Type: application/json' \
+  -d "{\"username\":\"$SDDC_USER\",\"password\":\"$SDDC_PASS\"}" | jq -r .accessToken)
+
+{
+  echo "== Failed SDDC Manager tasks"
+  curl -sk -H "Authorization: Bearer $TOKEN" "https://$SDDC/v1/tasks" |
+    jq -r '.elements[] | select(.status=="FAILED") | "\(.creationTimestamp)  \(.name)  \(.id)"'
+
+  echo "== SDDC Manager disk"
+  ssh "vcf@$SDDC" 'df -h /data /opt /var/log'
+
+  echo "== SoS health check (summary)"
+  ssh "vcf@$SDDC" 'sudo /opt/vmware/sddc-support/sos --health-check' | grep -E 'RED|YELLOW|lock' || true
+} > "$OUT"
+echo "Wrote $OUT"
+```
+
+Add VCF Operations alerts with its API (acquire a token, then list active alerts filtered to critical), and store each week's file. A diff against last week is the most useful part of the report.
+
+<Callout type="field">
+Build and test the report in a lab, including against a lab you broke on purpose. A health check that has never shown red is a health check nobody knows works.
+</Callout>
+
+## Pitfalls
+
+- **Running SoS against every domain** every week. Start with the management domain and add scope when needed.
+- **Storing credentials in the script.** Use a vault or environment injected at run time.
+- **Reports nobody reads.** Send three lines (red count, change from last week, top item) and attach the detail.

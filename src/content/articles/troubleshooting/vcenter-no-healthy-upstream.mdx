@@ -1,0 +1,68 @@
+---
+title: "\"No healthy upstream\" on vCenter: certificates, full partitions, and the usual suspects"
+description: "\"No healthy upstream\" means vCenter's reverse proxy has nothing healthy behind it. That is a symptom, not a cause. In practice the causes are a short list: an expired certificate, a full partition, a crashed vpxd, or a service that never started after a reboot."
+category: troubleshooting
+order: 7
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [344201, 385107, 427237, 434671, 399535, 410118, 453758, 344917]
+sources:
+  - title: "vCenter services fail due to expired certificates"
+    url: "https://knowledge.broadcom.com/external/article/344201"
+    by: "Broadcom KB"
+  - title: "vCert: vCenter certificate management utility"
+    url: "https://knowledge.broadcom.com/external/article/385107"
+    by: "Broadcom KB"
+---
+
+<InShort>
+The vSphere Client sits behind a proxy (Envoy). "No healthy upstream" means the services behind it aren't responding. Find out which, then why. The order that resolves most cases: **check partitions** (`df -h`, especially `/storage/log` and `/storage/seat`), **check certificates** (the VECS expiry loop), **check services** (`service-control --status --all`), then read the log of the first service that failed. The fix is almost never "reboot again".
+</InShort>
+
+<Compare rows={[
+  ["Symptom", "No healthy upstream, 503", "The same"],
+  ["Most common causes", "Expired certificates, full partitions", "The same, plus host syslog filling /storage/log when hosts point at vCenter"],
+  ["Tools", "vCert, VDT, service-control", "The same tools"],
+  ["VCF impact", "SDDC Manager workflows fail on the domain", "Also fleet lifecycle, licensing and SSO for that vCenter"],
+]} />
+
+## The first five minutes
+
+```bash
+# 1. Disk
+df -h | grep -E 'storage|/$'
+
+# 2. Services: which ones are stopped?
+service-control --status --all
+
+# 3. Certificates: anything expired? (loop from KB 344201)
+for store in $(/usr/lib/vmware-vmafd/bin/vecs-cli store list | grep -v TRUSTED_ROOT_CRLS); do
+  echo "[*] $store"; /usr/lib/vmware-vmafd/bin/vecs-cli entry list --store $store --text | grep -ie "Alias" -ie "Not After"
+done
+
+# 4. Time
+date -u
+```
+
+The VCF Diagnostic Tool for vCenter runs a broader set of checks in one go (<KB id={344917} />).
+
+## Cause by cause
+
+| Finding | Fix |
+|---|---|
+| A certificate past "Not After" | Snapshot, then vCert to check and replace, then restart all services (<KB id={344201} />, <KB id={385107} />) |
+| STS signing expired on 9.0.1, SSH refused | Unmask and start sshd, then vCert STS replacement (<KB id={427237} />) |
+| `/storage/log` full from `/storage/log/vmware/esx/` | Hosts are sending syslog to vCenter. Remove the target from the hosts, clear the folder, start services (<KB id={434671} />). An unrotated `vmon` log is another known cause (<KB id={399535} />). |
+| `/storage/seat` full | Event and task tables bloated. Purge or grow the disk as the KB describes, with no snapshot on the disk you grow (<KB id={410118} />) |
+| vpxd crashes with "Excessive depth in document" | A VM with hundreds of snapshots in its chain. Identify it, consolidate on the host, start vpxd (<KB id={453758} />) |
+
+<Callout type="field">
+Add vCenter certificate expiry and partition usage to the same monthly report as backups. Every cause in the table above announces itself weeks in advance. None of them should be discovered by a user seeing "no healthy upstream".
+</Callout>
+
+## Pitfalls
+
+- **Rebooting repeatedly.** If a certificate expired or a disk is full, the reboot ends in the same place.
+- **Snapshots on linked vCenters.** Use the cold-snapshot approach the KBs describe before certificate work.
+- **Deleting logs that explain the outage.** Copy them off first if a root cause analysis will be needed.

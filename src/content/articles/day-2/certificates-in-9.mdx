@@ -1,0 +1,78 @@
+---
+title: "Certificates in 9.x: CA setup, replacement and auto-renewal"
+description: "Certificate management moved from SDDC Manager to VCF Operations and gained auto-renewal. Most problems come down to preconditions: the right CA template, a 1:1 CSR, SANs that match the registered hostname, and a renewal mode that actually applies."
+category: day-2
+order: 2
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [427937, 414058, 425527, 410412, 443150, 401865, 447766, 449554, 344201, 385107, 438122, 427237, 317900, 431963, 441506, 425964]
+sources:
+  - title: "Automatic certificate renewal in VCF 9"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/19/automatic-certificate-renewal-in-vcf-9/"
+    by: "VMware Cloud Foundation blog"
+  - title: "VCF Operations 9.0 known issues"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/component-specific/vcfoperations-90-known-issues.html"
+    by: "Broadcom TechDocs"
+  - title: "VCF Operations 9.1 known issues"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/known-issues/vcfoperations-91-known-issues.html"
+    by: "Broadcom TechDocs"
+  - title: "VCF 5.2 administration: certificate management"
+    url: "https://docs.vmware.com/en/VMware-Cloud-Foundation/5.2/vcf-admin/GUID-5DA368B0-68CF-44D1-846F-68E36A9136C7.html"
+    by: "VMware"
+---
+
+<InShort>
+In 9.x, certificates for both management components and VCF instances are managed in **VCF Operations, Fleet Management, Certificates**. You configure a CA there (Microsoft AD CS, the fleet CA, VMCA or the SDDC Manager OpenSSL CA, depending on the target), generate CSRs, replace certificates and turn on **auto-renewal**. Auto-renewal starts 60 days before expiry in 9.0.2 and later, for components that support non-disruptive replacement. It only works if it is enabled at the instance level and the component's own mode allows it. Replacing a certificate is half the job. Everything that trusted the old one must be re-trusted.
+</InShort>
+
+<Compare rows={[
+  ["Where", "SDDC Manager: Security > Certificate Authority, and per-domain Certificates", "VCF Operations: Fleet Management > Certificates (VCF Management and VCF Instances)"],
+  ["CAs", "Microsoft CA or OpenSSL CA integrated with SDDC Manager, or an external CA through CSR", "Microsoft AD CS, the fleet CA (management components), VMCA (infrastructure and ESX), and OpenSSL on SDDC Manager (infrastructure only)"],
+  ["Renewal", "Manual", "Auto-renewal toggle. 60 days before expiry in 9.0.2+, for components that support non-disruptive replacement."],
+  ["Visibility", "Per-domain certificate lists", "Fleet-wide inventory with alerts. Expect a collection lag after setup: certificates up to 6 hours, accounts up to 30 hours."],
+  ["SAN tolerance", "Often lenient", "9.1 checks that the SAN matches the registered hostname, and removed the CN fallback for log forwarders"],
+]} />
+
+## Setting up a CA that will actually renew
+
+- **Microsoft AD CS.** Use a template that allows the key usage and SAN types VCF requests, and a service account with enrol rights. A "Denied by Policy Module" response comes from the CA, not from VCF. Fix it in the per-domain Configure CA settings (<KB id={414058} />).
+- **Know what "External CA" means.** Microsoft CA certificates can show as "External CA" with auto-renewal "Not supported" in 9.0 and 9.1.0 (<KB id={410412} />, <KB id={443150} />). Check the current release notes before promising auto-renewal on that path.
+- **Check the default VMCA period.** It can show as 730 days (<KB id={425527} />). Decide whether that matches your policy.
+
+## Auto-renewal preconditions
+
+- **Turn it on at the VCF instance level.** Otherwise domain-level settings are forced off.
+- **vCenter native renewal** works only in VMCA mode. If `vpxd.certmgmt.mode` is `custom`, nothing auto-renews. In 9.0.2, configuring CA-signed ESX certificates from Fleet Management switches the mode to `custom`, and new hosts then need a CA-signed certificate before they can be added (<KB id={427937} />).
+- **Native thresholds** in VMCA mode: ESX certificates renew 10 days before expiry, the machine SSL certificate 5 days before, and the alarm fires at 30 days (<KB id={427937} />).
+- **Don't replace twice in a row.** The non-disruptive flow can fail if a component's certificate is replaced or renewed twice (<KB id={401865} />).
+
+## Replacing a certificate without surprises
+
+1. **Generate the CSR in VCF Operations,** and get it signed. Keep CSRs and certificates strictly one to one. A certificate signed from another component's CSR is rejected. Compare public key hashes if in doubt.
+2. **Check the SANs:** every FQDN, and for some components IP addresses too. The registered hostname must match a SAN, or 9.1 certificate and password operations fail on hostname verification.
+3. **Replace,** then **re-trust everything that pinned the old one:** NSX compute managers (<KB id={431963} />), VCF Automation cloud accounts (<KB id={425964} />, <KB id={441506} />), VCF Operations adapters and backup tools.
+
+If a CSR task fails with `endpoint.not.found` after a component moved between collectors, it is a stale registration rather than a certificate problem (<KB id={447766} />). "Private key does not match" on import has its own KB (<KB id={449554} />).
+
+## vCenter's own certificates, when things are already broken
+
+When vCenter services won't start because of expired certificates (`no healthy upstream`, `certificate has expired`), check the VECS stores first. Then use the vCert tool (<KB id={385107} />) as described in <KB id={344201} />. vCenter 9-specific STS issues have their own fixes (<KB id={427237} />, <KB id={438122} />). For NSX manager certificates there is a scripted VMCA replacement (<KB id={317900} />).
+
+```bash
+# On vCenter: list every certificate store entry with its expiry (from KB 344201)
+for store in $(/usr/lib/vmware-vmafd/bin/vecs-cli store list | grep -v TRUSTED_ROOT_CRLS); do
+  echo "[*] Store: $store"
+  /usr/lib/vmware-vmafd/bin/vecs-cli entry list --store "$store" --text | grep -ie "Alias" -ie "Not After"
+done
+```
+
+<Callout type="field">
+Put an expiry report on a schedule, even with auto-renewal turned on. Auto-renewal fails quietly when a precondition changes, for example when a mode flips to `custom` or a CA template changes. A monthly list of certificates under 60 days catches it.
+</Callout>
+
+## Pitfalls
+
+- **Renewing in the component's own UI.** It works, then VCF's inventory disagrees with reality. Use VCF Operations.
+- **IP-only SANs.** 9.1 lifecycle operations expect FQDN SANs.
+- **Forgetting the root CA on admin workstations** when using a VMware-issued CA. Every browser warning trains people to click through.

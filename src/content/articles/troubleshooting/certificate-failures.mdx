@@ -1,0 +1,74 @@
+---
+title: "Certificate failures: CSR mismatches, missing SANs, and the expired vCenter certificate"
+description: "Certificate problems in 9.x come in three kinds: workflow failures in VCF Operations, trust failures between components after a replacement, and plain expiry. 9.1 is stricter about SANs than anything before it."
+category: troubleshooting
+order: 6
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [430391, 447766, 453793, 414058, 344201, 385107, 427237, 438122, 441315, 431963, 441506, 425271]
+sources:
+  - title: "Automatic certificate renewal in VCF 9"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/19/automatic-certificate-renewal-in-vcf-9/"
+    by: "VMware Cloud Foundation blog"
+  - title: "VCF Operations 9.1 known issues (hostname and SAN)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/known-issues/vcfoperations-91-known-issues.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+**Workflow failures**: the certificate doesn't match its CSR (<KB id={430391} />), the CA refuses the request (<KB id={414058} />), or VCF Operations has a stale endpoint (<KB id={447766} />). **Trust failures**: after replacing a certificate, something that pinned the old one breaks, typically NSX's compute manager (<KB id={431963} />) or VCF Automation (<KB id={441506} />). **Expiry**: vCenter shows "no healthy upstream" because an STS, machine SSL or solution user certificate expired (<KB id={344201} />). 9.1 adds strict hostname checks: if the SAN doesn't include the FQDN that VCF Operations has registered, certificate and password operations fail.
+</InShort>
+
+<Compare rows={[
+  ["Where managed", "SDDC Manager: Security > Certificates", "VCF Operations: Fleet Management > Certificates, for instances and management components"],
+  ["Auto-renewal", "Not available", "Available for supported CAs and components, enabled at instance level first"],
+  ["SAN checking", "Lenient", "Strict in 9.1: SAN must include the registered hostname"],
+  ["vCenter expiry tool", "vCert", "vCert, unchanged (<a href='https://knowledge.broadcom.com/external/article/385107' target='_blank' rel='noopener'>KB 385107</a>)"],
+]} />
+
+## Workflow failures in VCF Operations
+
+| Message | Cause and fix |
+|---|---|
+| "Public key in CSR and server certificate are not matching" | Signed from a different CSR. Keep CSR and certificate strictly one to one, and compare their public key hashes (<KB id={430391} />). |
+| "Certificate task GENERATE_CSR ... has failed", `endpoint.not.found` | A stale endpoint after a collector move. Fix adapter credentials, cycle maintenance mode on the adapter instances, retry (<KB id={447766} />). |
+| "Failed to fetch certificate from Microsoft CA with Denied by Policy Module" | CA template or credential. Reconfigure the CA for that domain (<KB id={414058} />). |
+| `BROWNFIELD_VCF_OPS_NODE_CERTIFICATE_VALIDATION.error` during a 9.1 upgrade | VCF Operations certificate SANs missing node FQDNs, IPs or short names (<KB id={453793} />). |
+| "Failed to fetch expiry details for the certificates" (9.0.0 and 9.0.1) | Auto-renewal check fails with Avi in the domain. Turn auto-renewal off for that domain or upgrade (<KB id={425271} />). |
+
+```bash
+# CSR and certificate must share the same public key
+openssl x509 -in cert.crt -pubkey -noout | sha256sum
+openssl req  -in csr.csr  -pubkey -noout | sha256sum
+```
+
+## Trust failures after a replacement
+
+- **NSX compute manager** loses trust after a vCenter certificate change, with error 90011 (<KB id={431963} />). Re-establish trust from NSX.
+- **VCF Automation** reports a retrust error because it accepts a single certificate, not a chain. Usually harmless. If the connection breaks, re-trust the cloud account (<KB id={441506} />).
+- **vSphere Client plugins** register by thumbprint. After a change, re-register from the owning product.
+
+## Expired vCenter certificates
+
+**Symptoms:** "no healthy upstream", 503 on the VAMI, "Signing certificate is not valid", services that won't start.
+
+```bash
+# List every VECS store with its expiry dates (vCenter 7, 8 and 9)
+for store in $(/usr/lib/vmware-vmafd/bin/vecs-cli store list | grep -v TRUSTED_ROOT_CRLS); do
+  echo "[*] Store: $store"
+  /usr/lib/vmware-vmafd/bin/vecs-cli entry list --store $store --text | grep -ie "Alias" -ie "Not After"
+done
+```
+
+Then take a snapshot (cold, offline snapshots for linked vCenters), use **vCert** to check and replace, and restart services (<KB id={344201} />, <KB id={385107} />). An expired STS signing certificate on 9.0.1 can also mask SSH (<KB id={427237} />). A legacy `STS_INTERNAL_SSL_CERT` store from an old upgrade lineage has its own fix (<KB id={438122} />). For NSX, expired API and cluster certificates have a scripted replacement (<KB id={441315} />).
+
+<Callout type="field">
+Before any planned replacement in 9.1, export the current SANs for every component and compare them with the FQDNs registered in VCF Operations. Mismatches found on paper take minutes to fix. Mismatches found mid-upgrade take a maintenance window.
+</Callout>
+
+## Pitfalls
+
+- **Generating several CSRs for the same component** and signing the wrong one.
+- **Short names and IPs left out of SANs** where 9.1 expects them.
+- **Waiting for auto-renewal on a custom-mode vCenter.** It doesn't renew in custom certificate mode. See [certificates in 9.x](/vcf/library/day-2/certificates-in-9/).

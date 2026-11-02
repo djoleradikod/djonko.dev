@@ -1,0 +1,110 @@
+---
+title: "Stuck tasks and resource locks: retry, cancel, and only then clean up"
+description: "\"Resource is already locked\" is one of the most common VCF tickets, and one of the most often mishandled. The supported order is: find the owner, cancel through the API, fix what made it fail, and only then touch a lock row, with a snapshot and preferably with Support."
+category: day-2
+order: 10
+versions: ["5.x", "9.0", "9.1"]
+level: Deep dive
+pubDate: 2026-11-02
+kbs: [444986, 439473, 449148, 447314, 422426, 429753, 435569, 443718, 433018, 424242]
+sources:
+  - title: "SDDC Manager API: Tasks (retry and cancel)"
+    url: "https://developer.broadcom.com/xapis/sddc-manager-api/9.0/tasks/"
+    by: "Broadcom Developer"
+  - title: "Cancel a credential task that holds a resource lock"
+    url: "https://knowledge.broadcom.com/external/article/444986"
+    by: "Broadcom KB"
+  - title: "Stuck fleet or SDDC lifecycle task in VCF 9.1"
+    url: "https://knowledge.broadcom.com/external/article/435569"
+    by: "Broadcom KB"
+---
+
+<InShort>
+SDDC Manager serialises changes with resource locks. A workflow that dies without finishing can leave its lock behind, and every later change to that domain, host or credential then fails with `Resource is already locked by OPERATIONS_MANAGER service` or `Error in acquiring resource locks`. The most common owner is a **failed password task** (<KB id={444986} />). The supported order is: **cancel** the owning task through the API, **fix** the reason it failed, and only then, with a snapshot, **delete** a stale lock row. If you skip the fix, the lock comes back (<KB id={449148} />). In 9.1, fleet and SDDC lifecycle tasks run on the services runtime and have their own supported restart script (<KB id={435569} />).
+</InShort>
+
+<Compare rows={[
+  ["Where tasks run", "SDDC Manager services", "SDDC Manager for domain workflows. 9.1: fleet and SDDC lifecycle services on the runtime."],
+  ["Retry", "UI Retry, or PATCH /v1/tasks/{id}", "The same API, still present in 9.1.1. Credential tasks cannot be retried with it."],
+  ["Cancel", "DELETE /v1/tasks/{id}", "The same, plus DELETE /v1/credentials/tasks/{id} for password tasks that hold a lock"],
+  ["Hung backup lock", "KB 447314 (5.x only)", "KB 422426 (9.x)"],
+  ["Stuck lifecycle in the runtime", "Not applicable", "lcm_service_support.sh -t, then -r with the service name (<a href='https://knowledge.broadcom.com/external/article/435569' target='_blank' rel='noopener'>KB 435569</a>)"],
+]} />
+
+## The order of operations
+
+<Diagram viewBox="0 0 760 210" label="Order of operations for a stale lock" caption="Each step to the right is riskier than the one before. Most tickets end at step two or three.">
+  <rect class="box plain" x="10" y="60" width="130" height="70" rx="8"/>
+  <text class="t" x="75" y="90" text-anchor="middle">1. Find</text>
+  <text class="s" x="75" y="110" text-anchor="middle">owner task</text>
+  <rect class="box v9" x="160" y="60" width="130" height="70" rx="8"/>
+  <text class="t" x="225" y="90" text-anchor="middle">2. Cancel</text>
+  <text class="s" x="225" y="110" text-anchor="middle">through the API</text>
+  <rect class="box accent" x="310" y="60" width="130" height="70" rx="8"/>
+  <text class="t" x="375" y="90" text-anchor="middle">3. Fix cause</text>
+  <text class="s" x="375" y="110" text-anchor="middle">account, DNS…</text>
+  <rect class="box warn" x="460" y="60" width="130" height="70" rx="8"/>
+  <text class="t" x="525" y="90" text-anchor="middle">4. Lock row</text>
+  <text class="s" x="525" y="110" text-anchor="middle">snapshot first</text>
+  <rect class="box plain" x="610" y="60" width="140" height="70" rx="8"/>
+  <text class="t" x="680" y="90" text-anchor="middle">5. Support</text>
+  <text class="s" x="680" y="110" text-anchor="middle">any other DB edit</text>
+  <line class="wire accent" x1="140" y1="95" x2="158" y2="95" marker-end="url(#arra)"/>
+  <line class="wire accent" x1="290" y1="95" x2="308" y2="95" marker-end="url(#arra)"/>
+  <line class="wire accent" x1="440" y1="95" x2="458" y2="95" marker-end="url(#arra)"/>
+  <line class="wire accent" x1="590" y1="95" x2="608" y2="95" marker-end="url(#arra)"/>
+  <text class="lbl" x="160" y="165">Supported, low risk</text>
+  <text class="lbl" x="460" y="165">KB-guided, reversible only with a snapshot</text>
+</Diagram>
+
+### 1. Find the owner
+
+The error message usually names the owning service and a task ID. Look that task up in the UI or with `GET /v1/tasks/{id}`. `sos --health-check` lists active locks too (<KB id={439473} />). The question to answer is simple: is anything actually still running? If a task is genuinely in progress, wait.
+
+### 2. Retry or cancel through the API
+
+```bash
+# Get a token on SDDC Manager (see the API reference for your release)
+TOKEN=...
+
+# Retry a failed workflow after fixing its cause
+curl -sk -X PATCH -H "Authorization: Bearer $TOKEN" https://localhost/v1/tasks/<task-id>
+
+# Cancel a task that will not complete
+curl -sk -X DELETE -H "Authorization: Bearer $TOKEN" https://localhost/v1/tasks/<task-id>
+
+# Cancel a failed password task that holds a lock
+curl -sk -X DELETE -H "Authorization: Bearer $TOKEN" https://localhost/v1/credentials/tasks/<task-id>
+```
+
+Password tasks are re-run, not retried: cancel the failed one and start a new rotation or remediation once the account is healthy (<KB id={444986} />).
+
+### 3. Fix what made it fail
+
+A lock is a symptom. The usual causes are a locked NSX service account, an ESX root password changed outside SDDC Manager, a hung backup, or a DNS failure. If you remove the lock without fixing the account, the next automatic rotation fails and leaves a new one (<KB id={449148} />).
+
+### 4. Remove a stale lock row, if the KB says so
+
+Some KBs document deleting the row from SDDC Manager's `lock` table and restarting services (<KB id={439473} />, <KB id={449148} />). Take a snapshot first, follow the KB for your exact version, and record what you removed. For hung backup locks, use <KB id={447314} /> on 5.x and <KB id={422426} /> on 9.x.
+
+### 5. Everything else goes to Support
+
+Several KBs state that other database edits must go through Broadcom Support, for example stale host records (<KB id={424242} />). That is not caution for its own sake: a wrong edit to the platform database can be much harder to recover from than the stuck task.
+
+## 9.1: stuck fleet and SDDC lifecycle tasks
+
+- **Check the result first.** If the component actually deployed and is healthy, a task stuck at "In Progress" can be a display issue. The release notes say to ignore it.
+- **Use the supported script.** `lcm_service_support.sh -t` reports the lifecycle services, and `-r fleetbuild|fleetupgrade|sddcbuild|sddcupgrade` restarts one (<KB id={435569} />). Prefer it over deleting pods by hand. A deployment stuck at "Install VCF services runtime" has its own KB (<KB id={443718} />).
+- **The Tasks UI spinning on "Fetching task info"** has a KB-attached fixer script (<KB id={429753} />). Run it only as that KB describes.
+- **9.0 fleet appliance.** "Another operation is already in progress for the environment" is a stale lifecycle operation in the appliance, cleared by a reboot from the guest OS (<KB id={433018} />).
+
+<Callout type="field">
+When you hand over a stuck-task ticket, write down four things: the task ID, the lock owner, the cause you fixed, and what you removed. The next engineer, or the same one six months later, will see the same symptom and know straight away whether it is the same problem.
+</Callout>
+
+## Pitfalls
+
+- **Deleting the lock first.** It feels fastest and often works once. Then the next rotation fails at 2 a.m.
+- **Retrying a password task with the generic API.** It is not supported. Cancel it and start a new operation.
+- **Restarting all services as a reflex.** It can kill a task that was still progressing and leave a worse partial state. Find out what is running first.
+- **Deleting runtime VMs to "reset" 9.1 lifecycle.** The runtime is a Kubernetes cluster with state. Use the scripts and KBs.

@@ -1,0 +1,68 @@
+---
+title: "Why Lifecycle pages in VCF Operations 9.1 fail differently: UI plugins and the service registry"
+description: "The Lifecycle pages in VCF Operations 9.1 aren't native views. They are UI plugins served by SDDC Manager and the fleet lifecycle services and proxied through VCF Operations. When they fail, look at reachability, certificates and the registry before VCF Operations itself."
+category: integrations
+order: 4
+versions: ["9.0", "9.1"]
+level: Deep dive
+pubDate: 2026-11-02
+kbs: [435258, 448522, 444151, 448618, 454179, 441205, 449937, 443327]
+sources:
+  - title: "Service is not available at this time when accessing an SDDC Manager instance"
+    url: "https://knowledge.broadcom.com/external/article/435258/error-service-is-not-available-at-this-t.html"
+    by: "Broadcom KB"
+  - title: "Upgrade tab missing in the VCF Management UI"
+    url: "https://knowledge.broadcom.com/external/article/444151/upgrade-tab-missing-in-vcf-management-ui.html"
+    by: "Broadcom KB"
+---
+
+<InShort>
+Build > Lifecycle in VCF Operations is assembled from **plugins**: the SDDC Manager plugin for VCF Instances, and the fleet lifecycle plugin for VCF Management. VCF Operations proxies them, so a failure appears as "Service or view is not available" with the real error in **`web-vcf.log`** on VCF Operations. The usual causes: TCP 443 blocked between SDDC Manager or the runtime and every VCF Operations node (<KB id={435258} />), a duplicate trusted certificate after the 9.1 upgrade (<KB id={448522} />), an expired internal certificate in 9.1.0 (<KB id={448618} />), or no fleet lifecycle entry in the **service registry** (<KB id={444151} />).
+</InShort>
+
+<Compare rows={[
+  ["Lifecycle UI", "SDDC Manager UI", "9.0: Fleet Management > Lifecycle. 9.1: Build > Lifecycle, served as plugins."],
+  ["Where errors appear", "SDDC Manager logs", "web-vcf.log on VCF Operations, then the serving component"],
+  ["Registry", "Not applicable", "https://ops-fqdn/casa/services lists the registered services"],
+]} />
+
+## How a Lifecycle page loads
+
+<Diagram viewBox="0 0 760 200" label="Lifecycle plugins in VCF Operations 9.1" caption="The browser talks to VCF Operations. VCF Operations fetches each plugin from the service that owns it. Any broken hop shows the same generic message.">
+  <rect class="box plain" x="10" y="70" width="130" height="60" rx="8"/>
+  <text class="t" x="75" y="105" text-anchor="middle">Browser</text>
+  <rect class="box accent" x="200" y="60" width="200" height="80" rx="8"/>
+  <text class="t" x="300" y="92" text-anchor="middle">VCF Operations</text>
+  <text class="s" x="300" y="114" text-anchor="middle">registry + plugin proxy</text>
+  <rect class="box v5" x="480" y="20" width="270" height="60" rx="8"/>
+  <text class="t" x="615" y="47" text-anchor="middle">SDDC Manager plugin</text>
+  <text class="s" x="615" y="67" text-anchor="middle">VCF Instances</text>
+  <rect class="box v9" x="480" y="120" width="270" height="60" rx="8"/>
+  <text class="t" x="615" y="147" text-anchor="middle">Fleet lifecycle plugin</text>
+  <text class="s" x="615" y="167" text-anchor="middle">VCF Management (runtime)</text>
+  <line class="wire accent" x1="140" y1="100" x2="198" y2="100" marker-end="url(#arra)"/>
+  <line class="wire" x1="400" y1="85" x2="478" y2="55" marker-end="url(#arr)"/>
+  <line class="wire" x1="400" y1="115" x2="478" y2="148" marker-end="url(#arr)"/>
+  <text class="lbl" x="405" y="190">TCP 443 to every VCF Operations node</text>
+</Diagram>
+
+## Diagnosis
+
+1. **Browser first.** Try a private window. A stale cache after the 9.1 upgrade causes endless spinners (<KB id={441205} />).
+2. **Read `web-vcf.log`** on VCF Operations (`/storage/log/vcops/log/`). "Connect timed out" on a `plug/sddc-...` path means reachability (<KB id={435258} />). A failed manifest download points at trusted certificates (<KB id={448522} />).
+3. **Check the registry.** `https://<ops-fqdn>/casa/services` should list an entry of type `VCF_FLEET_LCM`. If it doesn't, there are no Lifecycle components and no Upgrade tab. That is a support case (<KB id={444151} />).
+4. **Check the serving side.** "TLS_error ... CERTIFICATE_VERIFY_FAILED" in 9.1.0 is an internal certificate that didn't reload after rotation (<KB id={448618} />). "Identity Broker is not reachable" can be an IP conflict with a stale VM (<KB id={454179} />).
+
+## Fleet Management says "Get started" when it's deployed
+
+The page needs four things at once: management services running, Salt RaaS and Salt master running, the VCF adapter **Collecting**, and the management vCenter on 9.1.0 or later (<KB id={443327} />). A component that shows "Powered Off" with no actions after the upgrade is a stale hostname in the lifecycle database (<KB id={449937} />).
+
+<Callout type="field">
+For any Lifecycle UI ticket, ask for a HAR file from the browser and `web-vcf.log` at the same time. Together they show which plugin failed and why, which is usually the whole diagnosis.
+</Callout>
+
+## Pitfalls
+
+- **Restarting VCF Operations** for a plugin that is failing on the other side.
+- **Opening firewalls to one VCF Operations node.** Plugins are fetched by every node.
+- **Editing the registry file by hand.** It is a support-only change.

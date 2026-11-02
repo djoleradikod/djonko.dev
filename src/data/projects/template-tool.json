@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "name": "Template Tool",
+  "displayName": "Template Tool for VCF Operations",
+  "slug": "template-tool",
+  "kind": "script",
+  "managementPackApproach": "none",
+  "summary": "One sentence that says what the tool does and who it is for.",
+  "description": "Two or three sentences for the project page and the README. Say what problem it solves in a VCF estate, what it reads, and what it never changes.",
+  "version": "0.1.0",
+  "licence": "Apache-2.0",
+  "author": {
+    "name": "Jay Djonko",
+    "url": "https://djonko.dev"
+  },
+  "baseline": "9.1.1",
+  "compatibility": [
+    {
+      "release": "0.1.x",
+      "vcfOperations": "9.1.1",
+      "vcf": "9.1",
+      "status": "tested",
+      "notes": "Lab-validated on a single-node deployment."
+    },
+    {
+      "release": "0.1.x",
+      "vcfOperations": "9.0.x",
+      "vcf": "9.0",
+      "status": "unsupported",
+      "notes": "Below the 9.1.1 baseline."
+    },
+    {
+      "release": "0.1.x",
+      "vcfOperations": "8.18.x",
+      "vcf": "5.2",
+      "status": "unsupported",
+      "notes": "VMware Aria Operations. Below the baseline."
+    }
+  ],
+  "permissions": {
+    "summary": "Read-only. Needs a dedicated service account with a read-only role. Never needs an administrator account.",
+    "account": "Dedicated service account (local or from your identity source). Not a named person, not admin.",
+    "role": "Built-in ReadOnly role, or a custom role cloned from it.",
+    "privileges": [
+      {
+        "area": "Suite API",
+        "access": "Read",
+        "reason": "Acquire a session token and read the product version."
+      }
+    ],
+    "notRequired": [
+      "Administrator or any built-in admin role",
+      "Write access to policies, alerts, dashboards or adapters",
+      "Shell or SSH access to any appliance",
+      "vCenter, NSX or SDDC Manager credentials"
+    ]
+  },
+  "topics": [
+    "vcf-operations",
+    "vmware-cloud-foundation",
+    "vcf",
+    "vmware",
+    "observability",
+    "automation"
+  ],
+  "links": {
+    "projectPage": "https://djonko.dev/projects/",
+    "repository": "https://github.com/djoleradikod/vcf-operations-tool-template",
+    "releases": "https://github.com/djoleradikod/vcf-operations-tool-template/releases",
+    "latestRelease": "https://github.com/djoleradikod/vcf-operations-tool-template/releases/latest",
+    "issues": "https://github.com/djoleradikod/vcf-operations-tool-template/issues",
+    "changelog": "https://github.com/djoleradikod/vcf-operations-tool-template/blob/main/CHANGELOG.md"
+  },
+  "notAffiliated": "Independent community project. Not affiliated with, endorsed by or supported by Broadcom."
+}

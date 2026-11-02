@@ -1,0 +1,99 @@
+---
+title: "Health checks and SoS: what to run, where to look, and what changed in 9.x"
+description: "The SoS utility is still the backbone of VCF supportability, but 9.x added options, moved some bundles into VCF Operations and gave the services runtime its own health views. A practical map of what to run before a change and before a support case."
+category: day-2
+order: 9
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [385749, 402476, 439473, 436398, 417255, 451560, 444466, 443789, 433768]
+sources:
+  - title: "SoS utility options for SDDC Manager"
+    url: "https://knowledge.broadcom.com/external/article/385749"
+    by: "Broadcom KB"
+  - title: "Collecting VCF 9.x log bundles, including management services"
+    url: "https://knowledge.broadcom.com/external/article/402476"
+    by: "Broadcom KB"
+  - title: "VCF management services health and diagnostics"
+    url: "https://knowledge.broadcom.com/external/article/417255"
+    by: "Broadcom KB"
+  - title: "Troubleshooting VMware Cloud Foundation or vSphere Foundation deployments (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+`/opt/vmware/sddc-support/sos` on SDDC Manager is still where health checks and log bundles start. `sos --health-check` is the fastest way to see **stale locks** and **disconnected accounts** before they block a change (<KB id={439473} />, <KB id={436398} />). What changed in 9.x is everything around it. VCF Operations shows fleet and component health, 9.1 adds a **management services** dashboard with volume and pod health (<KB id={417255} />), and bundles for VCF Operations, VCF Automation and the runtime come from their own consoles or from fleet lifecycle, not only from SoS.
+</InShort>
+
+<Compare rows={[
+  ["Health view", "SDDC Manager dashboard, sos --health-check", "VCF Operations: VCF Health and the fleet views. 9.1 adds the management services dashboard with thresholds."],
+  ["Log bundle, core", "sos --sddc-manager-logs, --collect-all-logs", "The same, plus --vcf-installer-logs. 9.0 adds --operations-logs and --operations-fleet-logs. 9.1 adds --vcf-mgmt-svcs-logs and --hcx-manager-logs."],
+  ["Management components", "Aria Suite Lifecycle or each product", "Fleet lifecycle: component > Logs > Generate. VCF Operations bundles from its own Control Panel."],
+  ["When the runtime is unhealthy", "Not applicable", "A KB script collects the runtime bundle without fleet lifecycle (<a href='https://knowledge.broadcom.com/external/article/444466' target='_blank' rel='noopener'>KB 444466</a>)"],
+]} />
+
+## The health check before every change
+
+Run it before an upgrade, a password rotation, a host commission or a certificate replacement. It takes minutes and it answers the two questions that most often stop a workflow halfway: is something already holding a lock, and are the stored credentials still valid?
+
+```bash
+# On SDDC Manager, as root
+/opt/vmware/sddc-support/sos --health-check
+
+# Narrow the scope when the full run is slow
+/opt/vmware/sddc-support/sos --health-check --domain-name MANAGEMENT
+```
+
+Read the output for three things:
+
+- **Active locks** owned by `OPERATIONS_MANAGER` or `LCM`. If no task is running, a lock is stale. See [stuck tasks and locks](/vcf/library/day-2/stuck-tasks-locks/).
+- **"Failed to get details"** against an account. That usually means the stored password no longer matches the component, often after an out-of-band change (<KB id={436398} />).
+- **Red items you can explain.** Some checks have known false positives in specific releases, so read the release notes before chasing a red line that only appeared after an upgrade.
+
+## Log bundles, by situation
+
+| Situation | What to collect |
+|---|---|
+| SDDC Manager workflow failed | `sos --sddc-manager-logs --zip` |
+| Failure spans hosts, vCenter or NSX | `sos --collect-all-logs --zip --domain-name <name>` |
+| 9.1 runtime, fleet lifecycle or depot | Add `--vcf-mgmt-svcs-logs`. If it fails with `access_denied`, restart `commonsvcs` and retry (<KB id={451560} />). |
+| Runtime unhealthy, fleet lifecycle down | The standalone runtime bundle script (<KB id={444466} />) |
+| VCF Operations | Its Control Panel: Support Bundles, Light or Full (<KB id={443789} />) |
+| VCF Automation, identity broker | Fleet lifecycle: component > Logs > Generate (<KB id={433768} />) |
+| Deployment from the installer | The installer UI support bundle in 9.1, or `--vcf-installer-logs` (<KB id={402476} />) |
+
+Use `--log-dir <path>` when the default location is short on space, and check `/var/log/vmware/vcf/sddc-support/` for the output.
+
+## The 9.1 management services dashboard
+
+The runtime is Kubernetes underneath, but the first stop is the dashboard, not `kubectl`. It shows node and pod health, volume utilisation and backup status for the management services, with documented thresholds (<KB id={417255} />):
+
+<Diagram viewBox="0 0 760 150" label="Volume utilisation thresholds on the management services dashboard" caption="Act at warning, not at critical. Log management and the depot are the usual consumers.">
+  <rect class="box v9" x="20" y="40" width="300" height="56" rx="8"/>
+  <text class="t" x="170" y="66" text-anchor="middle">Good</text>
+  <text class="s" x="170" y="86" text-anchor="middle">up to 80%</text>
+  <rect class="box accent" x="330" y="40" width="140" height="56" rx="8"/>
+  <text class="t" x="400" y="66" text-anchor="middle">Warning</text>
+  <text class="s" x="400" y="86" text-anchor="middle">80 to 90%</text>
+  <rect class="box warn" x="480" y="40" width="120" height="56" rx="8"/>
+  <text class="t" x="540" y="66" text-anchor="middle">Severe</text>
+  <text class="s" x="540" y="86" text-anchor="middle">90 to 95%</text>
+  <rect class="box warn" x="610" y="40" width="130" height="56" rx="8"/>
+  <text class="t" x="675" y="66" text-anchor="middle">Critical</text>
+  <text class="s" x="675" y="86" text-anchor="middle">over 95%</text>
+  <text class="lbl" x="20" y="125">Plan capacity here</text>
+  <text class="lbl" x="480" y="125">Lifecycle tasks may fail here</text>
+</Diagram>
+
+When the dashboard is not enough, the read-only commands in [services runtime and kubectl](/vcf/library/troubleshooting/services-runtime-kubectl/) are the next step.
+
+<Callout type="field">
+Attach the health check output to the change record. It costs nothing, it proves the platform was clean before you started, and it is the first thing a support engineer asks for if the change goes wrong.
+</Callout>
+
+## Pitfalls
+
+- **Collecting everything, every time.** A full bundle across every domain can take an hour and fill a partition. Start narrow and add scope when the logs point somewhere else.
+- **Cleaning before collecting.** If a disk is full mid-incident, collect a bundle first, then clean. The rotated logs are often the evidence.
+- **Waiting for support to ask.** Collect the bundle when you open the case, with the exact time of the failure, so the first reply can be analysis rather than a request.

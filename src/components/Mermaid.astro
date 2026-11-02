@@ -1,0 +1,12 @@
+---
+// A diagram written as Mermaid text, rendered in the browser and re-themed for dark mode.
+// <Mermaid caption="..." code={`flowchart LR
+//   A[VCF Operations] --> B[SDDC Manager]`} />
+// Fenced ```mermaid blocks in Markdown/MDX are converted to the same element automatically.
+interface Props { code: string; caption?: string; label?: string }
+const { code, caption, label } = Astro.props;
+---
+<figure class="fig mermaid-fig">
+  <pre class="mermaid" aria-label={label ?? caption ?? 'Diagram'}>{code.trim()}</pre>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

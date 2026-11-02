@@ -1,0 +1,29 @@
+---
+// A PDF with download card and an inline preview that only loads when opened.
+// <Pdf file="/downloads/vcf9-triage-cheat-sheet.pdf" title="..." description="..." />
+import { fileInfo } from '../lib/files';
+import Download from './Download.astro';
+interface Props { file: string; title?: string; description?: string; height?: number; open?: boolean }
+const { file, title, description, height = 720, open = false } = Astro.props;
+const f = fileInfo(file);
+---
+<div class="pdf">
+  <Download file={file} title={title} description={description} />
+  <details class="pdf-preview" open={open} data-src={`${f.url}#view=FitH`} style={`--h:${height}px`}>
+    <summary>Preview in the page</summary>
+    <div class="pdf-frame"></div>
+    <p class="small muted">If the preview is blank, your browser cannot show PDFs inline. Use Download.</p>
+  </details>
+</div>
+<script>
+  const load = (d: HTMLDetailsElement) => {
+    const box = d.querySelector('.pdf-frame');
+    if (!d.open || !box || box.childElementCount) return;
+    const fr = document.createElement('iframe');
+    fr.src = d.dataset.src!; fr.title = 'PDF preview'; fr.loading = 'lazy';
+    box.append(fr);
+  };
+  document.querySelectorAll<HTMLDetailsElement>('details.pdf-preview').forEach((d) => {
+    load(d); d.addEventListener('toggle', () => load(d));
+  });
+</script>

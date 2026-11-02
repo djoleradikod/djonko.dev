@@ -1,0 +1,55 @@
+---
+title: "Holodeck for VCF 9: standard nested environments for teams and training"
+description: "Holodeck builds self-contained nested VCF environments with their own DNS, NTP, BGP and DHCP, so each one needs only a single external IP and several can run side by side. That makes it the natural choice for team training and repeatable demos."
+category: labs
+order: 3
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: []
+sources:
+  - title: "Announcing the general availability of Holodeck 9.0"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/30/announcing-the-general-availability-of-holodeck-9-0/"
+    by: "VMware Cloud Foundation blog"
+  - title: "Add clusters and hosts in VCF using Holodeck"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/11/09/add-clusters-and-hosts-in-vcf-using-holodeck/"
+    by: "VMware Cloud Foundation blog"
+  - title: "Holodeck documentation"
+    url: "https://vmware.github.io/Holodeck/"
+    by: "VMware on GitHub"
+---
+
+<InShort>
+Holodeck is a toolkit that deploys a **complete nested VCF** environment, including the management domain and workload domains, onto a single ESX host or a cluster with enough capacity. Each environment brings its own **DNS, NTP, BGP and DHCP** and needs only **one external IP**, so it avoids VLAN and routing conflicts with your network. Holodeck 9.0 supports both **VCF 5.2.x and 9.0**, which makes it useful for upgrade rehearsal. A typical 9.0 build with a four-node management domain and a three-node workload domain needs about **30 cores, 325 GB of memory and 1.1 TB of disk**. Binaries come from the support portal and need a VCF entitlement.
+</InShort>
+
+<Compare v5Label="Holodeck" v9Label="Hand-built nested lab" title="Why a toolkit" rows={[
+  ["Network services", "Built in: DNS, NTP, BGP, DHCP", "You provide them"],
+  ["Isolation", "Self-contained, several environments side by side", "Shares your lab networks"],
+  ["Repeatability", "The same environment every time, for every student", "Depends on your notes"],
+  ["Versions", "5.2.x and 9.0 from one toolkit", "Whatever you built"],
+  ["Flexibility", "Opinionated layout", "Anything you want"],
+]} />
+
+## Using it well
+
+- **Training**: one environment per student, reset between sessions. Everyone sees the same names and addresses, which makes exercises easy to write.
+- **Upgrade rehearsal**: deploy at 5.2.x, practise the move to 9.0, then repeat until the runbook is boring.
+- **Day-2 practice**: adding clusters and hosts is covered in the Holodeck blog series, which mirrors the real vCenter-based workflow.
+- **Break-fix**: snapshot, break something on purpose, and let the team diagnose. See [break-fix exercises](/vcf/library/labs/break-fix-exercises/).
+
+## What to check first
+
+- Host capacity for the layout you want, especially memory.
+- The current Holodeck documentation for supported VCF versions. 9.1 support depends on the toolkit release you download.
+- A download token or entitlement for the offline depot.
+
+<Callout type="field">
+For internal enablement, write the exercises against Holodeck's standard names. A session that starts with "everyone open the same vCenter at the same address" saves the first half hour of every workshop.
+</Callout>
+
+## Pitfalls
+
+- **Treating Holodeck performance as representative.** Nested environments are slower. Use it for workflows, not benchmarks.
+- **Running it on a host that also runs your daily tools.** One build can take most of a large host.
+- **Skipping the documentation** for version-specific steps. The toolkit changes with each release.

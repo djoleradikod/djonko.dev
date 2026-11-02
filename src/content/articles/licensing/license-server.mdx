@@ -1,0 +1,73 @@
+---
+title: "The 9.1 License Server: what it is, what it needs, and what happens when it's down"
+description: "In 9.1 licenses no longer live inside VCF Operations. They live on a small, hardened License Server appliance that VCF Operations manages. It has no internet access and few dependencies, but the ones it has (DNS case, time, the right deployment path) cause most of its tickets."
+category: licensing
+order: 5
+versions: ["9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [440471, 443082, 441251, 441526, 445428, 442564, 424533, 444094, 441175]
+sources:
+  - title: "License Server overview (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview.html"
+    by: "Broadcom TechDocs"
+  - title: "License Server networking (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-networking.html"
+    by: "Broadcom TechDocs"
+  - title: "License Server downtime impact (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-downtime-impact.html"
+    by: "Broadcom TechDocs"
+  - title: "VCF 9.1: deploying the VCF License Server directly to an ESX host"
+    url: "https://williamlam.com/2026/07/vcf-9-1-deploying-the-vcf-license-server-directly-to-an-esx-host.html"
+    by: "William Lam"
+---
+
+<InShort>
+The License Server is a small appliance (2 vCPU, 4 GB RAM, 8 GB disk) that stores the license file and answers vCenter's licensing requests. VCF Operations still **manages** licenses; the License Server **holds** them. It is deployed automatically with new 9.1 deployments and upgrades, has **no internet access**, and talks only to VCF Operations, vCenter and DNS over TCP 443. You need at least one per VCF Operations instance used for licensing. One can serve a whole fleet, but it can't be shared between fleets. If it goes down there is no immediate impact on workloads, but nothing licensing-related can change until it's back.
+</InShort>
+
+<Compare rows={[
+  ["Where licenses live", "Not applicable (keys in each product)", "9.0: VCF Operations. 9.1: the License Server."],
+  ["Internet access", "Not applicable", "None. VCF Operations talks to the console."],
+  ["Scale", "Not applicable", "Up to 250,000 assets (vCenters, hosts and vSAN clusters)"],
+  ["Protection", "Not applicable", "vSphere HA. No manual backup: VCF Operations restores assignments to a replacement."],
+  ["Networking", "Not applicable", "TCP 443 to VCF Operations and vCenter, DNS, latency up to 300 ms. 9.1.1 adds IPv6 for new deployments."],
+]} />
+
+## What a License Server outage does
+
+- **No effect** on running workloads or day-to-day management, at first.
+- **No changes:** you can't assign licenses, generate usage reports (including the daily connected report) or import license files.
+- **New assets** (vCenters, hosts, vSAN clusters) run in evaluation.
+- **The clock keeps running.** Once 180 days pass without a refresh, licenses expire as usual.
+
+That makes it important but not urgent, which is exactly the kind of component that gets forgotten. Put it in monitoring and in the [shutdown and startup order](/vcf/library/day-2/shutdown-startup-order/).
+
+## The checklist when it misbehaves
+
+| Check | Why |
+|---|---|
+| Deployed **through vCenter**, not the ESX Host Client | Host Client deployment skips the vApp properties, leaving a console that says "Not configured" (<KB id={443082} />, <KB id={441251} />) |
+| Version 9.1.0.0200 or later if your networks use 172.16.0.0/12 or 172.17.0.0/16 | Earlier builds have an internal network conflict that shows as a black console (<KB id={441526} />) |
+| Forward and reverse DNS, **lowercase**, from vCenter and the License Server | One uppercase letter or a missing PTR breaks detection and assignment (<KB id={445428} />, <KB id={442564} />) |
+| The FQDN matches what the console has registered | Watch for a domain suffix appended twice |
+| Time within about 30 seconds | Drift causes "disconnected" status and failed assignment (<KB id={424533} />) |
+| TCP 443 between vCenter, the License Server and VCF Operations | ICMP is disabled on the appliance, so ping tests fail by design |
+| Proxy settings exclude internal traffic | A proxy that captures internal calls breaks License Server to VCF Operations |
+
+The **License Server Health** view in VCF Operations is the first place to look. No public documentation describes shell access or log paths on the appliance, so don't improvise there: collect a support bundle and open a case.
+
+## Replacing or removing one
+
+- **Replace:** deploy a new License Server, register it and transfer licenses. VCF Operations restores assignment data to it. Remove licenses from the old one first (<KB id={441175} />).
+- **Don't just delete the VM.** A License Server deleted from vCenter without decommissioning in the console leaves an orphaned registration (<KB id={444094} />).
+
+<Callout type="field">
+On upgrade projects, the most common License Server problem is that it was never deployed, because the upgrade was done out of order. "One or more vCenter instances are not connected to a license server" is the tell (<KB id={440471} />). See [licensing through upgrades](/vcf/library/licensing/licensing-through-upgrades/).
+</Callout>
+
+## Pitfalls
+
+- **Deploying it on a standalone host** with the Host Client. TechDocs doesn't support that path. A community ovftool method exists for edge cases, but treat it as lab-only.
+- **Putting it on a host that is itself unlicensed.** If evaluation expires, the License Server VM can fail to power on with "License expired".
+- **Forgetting it in DR planning.** Plan where it runs if the management domain is lost.

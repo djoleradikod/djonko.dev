@@ -1,0 +1,69 @@
+---
+title: "NSX and host remediation failures: TEPs, host preparation and vLCM images"
+description: "Infrastructure failures during VCF workflows often surface in SDDC Manager but live in NSX or vLCM. Faulty TEPs, hosts stuck waiting for managers, cluster images that would downgrade a driver, and vSAN alarms that block remediation all have well-worn diagnostics."
+category: troubleshooting
+order: 11
+versions: ["5.x", "9.0", "9.1"]
+level: Deep dive
+pubDate: 2026-11-02
+kbs: [386023, 405174, 429558, 418506, 440331, 420572, 443279, 444283, 447375, 404830, 410343]
+sources:
+  - title: "NSX 9.0 known issues"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/component-specific/nsx-90-known-issues.html"
+    by: "Broadcom TechDocs"
+  - title: "vSphere 9.0 known issues"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/component-specific/vsphere-90-known-issues.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+For NSX, start with **cluster status** on a manager, then the **TEP path**: a "Faulty TEP" alarm with host-to-edge tunnels down usually means no routing between the host and edge TEP VLANs, a VLAN missing on the switch trunk, or a duplicate TEP address (<KB id={405174} />). Hosts stuck at "Waiting for connection to Managers" are usually a host DNS problem (<KB id={440331} />). For vLCM, remediation fails when the target image would **downgrade** a vendor component (<KB id={443279} />) or when **vSAN health alarms** are active (<KB id={444283} />). Build the right image and clear the alarm, then retry from VCF.
+</InShort>
+
+<Compare rows={[
+  ["Host lifecycle", "vLCM images or baselines", "vLCM images only. Baseline-managed clusters are not supported from 9.0."],
+  ["Image source", "SDDC Manager image management", "VCF Operations: Build > Lifecycle > Image Management"],
+  ["NSX deployment", "One NSX per workload domain, or shared", "The same model, managed from VCF Operations and vCenter"],
+]} />
+
+## NSX
+
+```text
+# On an NSX Manager (admin CLI)
+get cluster status
+get cluster config
+
+# From an ESX host: TEP to edge TEP, do-not-fragment
+#   -s 1572 tests MTU 1600; use -s 8972 for MTU 9000
+vmkping ++netstack=vxlan -d -s 1572 -I vmk10 <edge-tep-ip>
+esxcfg-vmknic -l
+```
+
+| Symptom | Cause and fix |
+|---|---|
+| Cluster not STABLE, appliance nodes not UP | A node or service down, or the datastore group degraded. Bring the node up; datastore issues go to support (<KB id={386023} />). |
+| "Faulty TEP", host-to-edge tunnels down | No L3 path between TEP VLANs (<KB id={405174} />), VLAN not trunked (<KB id={429558} />) or duplicate TEP IP (<KB id={418506} />). |
+| Host prep stuck at about 48%, "Waiting for connection to Managers" | Host DNS can't resolve vCenter. Fix it, restart host services, retry in SDDC Manager (<KB id={440331} />). |
+| `/var/log` full on every manager, logs dated in the far future | An NTP failure stamped files with a future year. Remove them and reboot (<KB id={420572} />). |
+
+## Hosts and vLCM
+
+| Symptom | Cause and fix |
+|---|---|
+| "Downgrades of Addon Components ... are not supported" | The target image is older than what the host runs. Build a new image in vCenter, import it into VCF Operations, re-precheck (<KB id={443279} />). |
+| Remediation blocked by vSAN health alarms | Lifecycle refuses while alarms are active. Silence the specific alarm, retry, then fix the hardware. Check NTP too (<KB id={444283} />). |
+| `get_host_inventory failed` with HTTP 500 | The vendor hardware support manager. Check its registration (<KB id={447375} />). |
+| Live patch remediation fails to load modules | The image is applied. Reboot the host (<KB id={404830} />). |
+| Image compliance loops on "Health Check failed" | A known false positive. Reboot vCenter (<KB id={410343} />). |
+
+Logs: `/var/log/vmware/vmware-updatemgr/vum-server/` on vCenter, `/var/log/lifecycle.log` on the host, and `domainmanager.log` or `lcm-debug.log` on SDDC Manager for the VCF side.
+
+<Callout type="field">
+For TEP issues, draw the path before running commands: host TEP VLAN, gateway, edge TEP VLAN, and where routing happens. Half of these tickets are solved by the drawing, because it shows the hop that nobody configured.
+</Callout>
+
+## Pitfalls
+
+- **Testing TEPs without the don't-fragment flag.** A plain ping hides MTU problems.
+- **Suppressing vSAN alarms permanently** to get an upgrade through. Silence one, fix it, unsilence it.
+- **Building images from the wrong vendor add-on.** Start from what the hosts run today.

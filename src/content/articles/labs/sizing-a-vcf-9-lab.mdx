@@ -1,0 +1,65 @@
+---
+title: "Sizing a VCF 9 lab: what the smallest working fleet needs, and what runs out first"
+description: "The minimum VCF 9.0 lab with VCF Operations and Automation fits in roughly 48 vCPU and 194 GB of memory with simple deployment modes. VCF Automation sets the floor for host cores, and memory is always the first resource to run out."
+category: labs
+order: 2
+versions: ["9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: []
+sources:
+  - title: "Minimal resources for deploying VCF 9.0 in a lab"
+    url: "https://williamlam.com/2025/06/minimal-resources-for-deploying-vcf-9-0-in-a-lab.html"
+    by: "William Lam"
+  - title: "NVMe tiering with nested virtualization in VCF 9.0"
+    url: "https://williamlam.com/2025/06/nvme-tiering-with-nested-virtualization-in-vcf-9-0.html"
+    by: "William Lam"
+  - title: "NVMe memory tiering design and sizing on VCF 9, part 5"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/12/29/nvme-memory-tiering-design-and-sizing-on-vmware-cloud-foundation-9-part-5/"
+    by: "VMware Cloud Foundation blog"
+  - title: "Announcing the general availability of Holodeck 9.0"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/30/announcing-the-general-availability-of-holodeck-9-0/"
+    by: "VMware Cloud Foundation blog"
+---
+
+<InShort>
+With **simple (single-node) deployment modes**, one instance of each 9.0 component adds up to about **48 vCPU, 194 GB of memory and 3.2 TB provisioned**, of which about 330 GB is actually used. **VCF Automation** is the constraint: a 24 vCPU, 96 GB VM, which needs a physical host with at least **12 cores and 24 threads**. Its memory can't be reduced. A fuller nested fleet with a four-node management domain and a three-node workload domain, as Holodeck builds it, needs about **30 cores, 325 GB of memory and 1.1 TB of disk**. Memory runs out first, so look at **NVMe memory tiering** before buying more RAM.
+</InShort>
+
+<Compare rows={[
+  ["NSX Managers", "Three required", "One in simple mode"],
+  ["Management appliances", "SDDC Manager, vCenter, NSX, optional Aria", "Adds VCF Operations, the collector, fleet management (9.0) or the services runtime (9.1), and optionally VCF Automation"],
+  ["Largest single VM", "NSX Manager or Aria Automation", "VCF Automation: 24 vCPU and 96 GB"],
+  ["Memory relief", "None built in", "NVMe memory tiering, including for nested ESX"],
+]} />
+
+## The minimal 9.0 footprint
+
+| Component | vCPU | Memory | Provisioned | Used |
+|---|---|---|---|---|
+| vCenter | 4 | 21 GB | 642 GB | ~30 GB |
+| NSX Manager | 6 | 24 GB | 300 GB | ~14 GB |
+| SDDC Manager | 4 | 16 GB | 931 GB | ~77 GB |
+| VCF Operations | 4 | 16 GB | 290 GB | ~13 GB |
+| Fleet management (9.0) | 4 | 12 GB | 206 GB | ~117 GB |
+| Collector | 4 | 16 GB | 280 GB | ~11 GB |
+| VCF Automation | 24 | 96 GB | 626 GB | ~72 GB |
+
+Figures from William Lam's measurements on 9.0. In 9.1, fleet management is replaced by the services runtime, which has its own node count and sizing, so measure your own build.
+
+## What to buy, in order
+
+1. **Memory** first, or NVMe capacity for memory tiering.
+2. **Cores**: at least 12 cores and 24 threads if VCF Automation is in scope. Many 8-core consumer systems won't run it.
+3. **NVMe storage**: thin provisioning hides most of the 3.2 TB, but vSAN ESA and snapshots add up.
+4. **10 GbE** if you go physical with more than one host.
+
+<Callout type="field">
+Leave VCF Automation out of the first build unless the lab is for Automation. Deploy it later as a Day-N step. The rest of the fleet fits in much smaller hardware, and you learn the core platform faster.
+</Callout>
+
+## Pitfalls
+
+- **Counting provisioned storage as used.** Thin disks make the real number much smaller, until snapshots pile up.
+- **Hand-shrinking VCF Automation's vCPU.** It has been done, but behaviour beyond setup is not guaranteed.
+- **Ignoring host memory overhead** for nested ESX VMs.

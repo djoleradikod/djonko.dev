@@ -1,0 +1,66 @@
+---
+title: "Aria Operations for Logs to 9.x log management: what migrates and what is new"
+description: "Logs is the one management product that is always rebuilt on the way to 9.x. Plan a parallel run, an integration cut-over and a history window, and know which 9.1 behaviours will surprise operators."
+category: upgrades
+order: 8
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [402314, 442588, 443718, 451919, 451907, 433089, 451758, 441515, 436904]
+sources:
+  - title: "Upgrade guidance for Aria Operations for Logs 8.18.3 to VCF Operations for Logs 9.0"
+    url: "https://knowledge.broadcom.com/external/article/402314/upgrade-guidance-for-aria-operations-for.html"
+    by: "Broadcom KB"
+  - title: "Log management design (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html"
+    by: "Broadcom TechDocs"
+  - title: "Upgrading to VCF 9.1.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+Aria Operations for Logs 8.x cannot be upgraded in place. In 9.0 you deploy **VCF Operations for logs** as a new cluster, run it in parallel, move integrations across, and transfer up to 90 days of history (<KB id={402314} />). In 9.1 the appliance disappears altogether. **Log management** becomes a Day-N service on the services runtime, searched from VCF Operations under Operate > Logs. vCenter and NSX collection is off until you enable it, and some upgrade screens behave in ways the documentation does not warn you about.
+</InShort>
+
+<Compare rows={[
+  ["Product", "Aria Operations for Logs (formerly vRealize Log Insight), an appliance cluster", "9.0: VCF Operations for logs, a new cluster. 9.1: the log management service on the runtime."],
+  ["Upgrade", "In place through Aria Suite Lifecycle", "No in-place path from 8.x. From 9.0 to 9.1 it is side-by-side through fleet lifecycle."],
+  ["History", "Retained in place", "Up to 90 days can be transferred from 8.18. Keep the old cluster for anything older."],
+  ["Where you search", "The Logs UI", "9.1: VCF Operations, Operate > Logs"],
+  ["What forwards", "Whatever you configured", "Management services forward automatically and cannot be turned off. vCenter and NSX collection is off by default."],
+]} />
+
+## 5.2 or 8.x to 9.0
+
+1. Deploy VCF Operations for logs 9.0 as a new instance. Both can run together.
+2. Remove the integrations from the 8.18 instance, then configure them on the new one: vCenter, NSX, ESX syslog targets and agents.
+3. Transfer the history you need, up to 90 days.
+4. Keep 8.18 read-only for reference until the retention requirement is met, then retire it.
+
+## 9.0 to 9.1
+
+Log management installs on the services runtime as a Day-N service, and the runtime may add workers to fit it.
+
+- **Run Prechecks returns HTTP 500.** There is no back-end precheck for this side-by-side move. Click Upgrade instead (<KB id={442588} />).
+- **Stuck at "Install VCF services runtime"** while the 9.0 log VMs still run. The work often finished and only the status was lost. Restarting the fleet and SDDC build and upgrade pods clears it (<KB id={443718} />).
+- **Backup of "Operations Logs" fails** on a corrupt backup repository. Fixed in 9.1.1 (<KB id={451919} />).
+- **"Log management was not discovered with the provided import details".** The 9.0 cluster was imported with wrong details. Recovery involves deregistering and redeploying (<KB id={451907} />).
+
+## After the move
+
+- **Enable collection** for vCenter and NSX under VCF Operations, Administration, Integrations, VMware Cloud Foundation. You can collect directly or through a cloud proxy, which round-robins across log endpoints.
+- **Re-check vCenter after its 9.1 upgrade.** vCenter 9.1 ships its own agent, and the upgrade wipes the old syslog configuration. Re-enable collection (<KB id={433089} />).
+- **Trust chain.** A missing intermediate CA in the runtime's platform trust breaks the VCF Operations to log management integration, and shows the "Install" screen where logs should be (<KB id={441515} />).
+- **Noisy "logs are getting dropped" banner.** Often a false positive from a tight dynamic threshold. Recalculate thresholds before chasing it (<KB id={451758} />).
+- **Disaster recovery.** Restoring log management onto a rebuilt runtime needs a post-restore step (<KB id={436904} />).
+
+<Callout type="field">
+Agree the history requirement with the security team before the project starts. "We need a year of logs" is a different design from "90 days is fine". It can mean keeping the old cluster for months, or exporting to a long-term store.
+</Callout>
+
+## Pitfalls
+
+- **Assuming logs keep flowing after the vCenter upgrade.** They don't. Add a log check to the post-upgrade test list.
+- **Certificates without SANs.** 9.1 removed the CN fallback for log forwarders. Reissue certificates with SANs.
+- **Forgetting the buffer.** Cloud proxies buffer about 20 GB when log management is unreachable. That is enough for a maintenance window, not for a week-long outage.

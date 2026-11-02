@@ -1,0 +1,13 @@
+---
+// Share links without third-party scripts: LinkedIn, email, and copy link.
+interface Props { url: string; title: string }
+const { url, title } = Astro.props;
+const e = encodeURIComponent;
+---
+<div class="share">
+  <span class="small muted">Share</span>
+  <a class="badge" href={`https://www.linkedin.com/sharing/share-offsite/?url=${e(url)}`} target="_blank" rel="noopener">LinkedIn</a>
+  <a class="badge" href={`mailto:?subject=${e(title)}&body=${e(url)}`}>Email</a>
+  <button type="button" class="copy-btn" data-copy={url}>Copy link</button>
+</div>
+<style>.share { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding-top: 14px; border-top: 1px solid var(--line); }</style>

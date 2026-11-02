@@ -1,0 +1,56 @@
+---
+title: "Connecting components to VCF SSO: NSX, VCF Automation and the directory behind the broker"
+description: "Joining NSX, vCenter or VCF Automation to VCF single sign-on is a few clicks when the prerequisites are in place. When they aren't, the error is generic. The checklist: a collecting adapter, one adapter per manager, and directory access from the right addresses."
+category: integrations
+order: 9
+versions: ["9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [432503, 440395, 447767, 442139, 427554, 456430, 452420]
+sources:
+  - title: "Deployment models for VCF single sign-on (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/what-is/deployment-models-for-sso.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+Components are joined to VCF SSO from **Identity & Access > Component Configuration** in VCF Operations. For NSX, the **NSX adapter must be collecting** first, or the join fails with a generic "Error occurred while configuring the component for SSO" (<KB id={432503} />). Remove any **standalone NSX adapter** that duplicates the VCF-integrated one (<KB id={440395} />). Don't use identity broker users for the **NSX adapter** itself, because the token exchange isn't supported; keep the automatic service account (<KB id={447767} />). In 9.1, the broker's LDAP traffic can come from **runtime node addresses**, so open 389 and 636 from those (<KB id={442139} />).
+</InShort>
+
+<Compare rows={[
+  ["Join point", "Each product's own identity settings", "VCF Operations: Identity & Access, per component"],
+  ["Directory traffic source", "vCenter or Workspace ONE Access", "The broker nodes. 9.1 on the runtime: runtime node IPs."],
+  ["Adapter accounts", "Any account with rights", "System-managed local service accounts. Broker users not supported for the NSX adapter."],
+]} />
+
+## Before you join a component
+
+```text
+[ ] The component's adapter is Collecting in VCF Operations
+[ ] Only one adapter exists for that component (no legacy standalone duplicate)
+[ ] The broker can reach the directory on 389/636 from every node (and runtime nodes in 9.1)
+[ ] Time is in sync across the broker, VCF Operations and the component
+[ ] Role mappings for the component are written down
+```
+
+## Common failures
+
+| Symptom | Cause and fix |
+|---|---|
+| "Error occurred while configuring the component for SSO" | NSX adapter not collecting. Rotate its credential, collect, then deregister and reconfigure (<KB id={432503} />). |
+| SSO workflow aborts for NSX | A duplicate standalone NSX adapter. Delete it (<KB id={440395} />). |
+| 403 when integrating NSX with a broker user | Not supported. Use the service account (<KB id={447767} />). |
+| LDAP timeouts after the 9.1 upgrade | The broker now connects from runtime node IPs (<KB id={442139} />). |
+| Intermittent "LDAP server is not reachable" | One broker node lacks the path (<KB id={427554} />). |
+| NSX SSO "Access Denied" on 9.1.1 | Unjoin and rejoin NSX (<KB id={456430} />). |
+| VCF Automation SSO "Not Configured" after an upgrade | A secret rotated while the component was offline. Rejoin as the KB describes (<KB id={452420} />). |
+
+<Callout type="field">
+Join components one at a time, and test login with a normal user and a break-glass local account after each. Doing all of them at once makes it impossible to tell which join broke which login.
+</Callout>
+
+## Pitfalls
+
+- **Opening directory ports only from the broker appliance** in a 9.1 runtime deployment.
+- **Rejoining without saving role mappings.** Permissions do not come back on their own.
+- **Testing with an administrator** who also has a local fallback. Test with a normal user.

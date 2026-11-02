@@ -1,0 +1,77 @@
+---
+title: "How this site is built, checked and deployed"
+description: "The requirements, the design that follows from them, and the checks that run before anything is published: a static site, a privacy scan, a browser audit of every page, and releases that can be rolled back in one command."
+pubDate: 2026-11-02
+tags: ["Site news", "Engineering"]
+kind: "Write-up"
+---
+
+A personal technical site has modest needs, and it is easy to build one that fails them quietly: pages that get slower with each addition, a broken link nobody notices for a year, a screenshot that shows something it should not. This write-up describes how this site avoids those failures. It is also a small example of the approach the rest of the site argues for: state the requirements, choose the simplest design that meets them, and check the result automatically rather than by hope.
+
+## Requirements
+
+1. **Readable anywhere, fast everywhere.** Most readers arrive from a search result or a link in a chat, often on a phone, sometimes on a poor connection.
+2. **Many content types.** Text, diagrams, screenshots, video, downloadable scripts and PDFs.
+3. **Nothing private.** No customer names, internal host names, internal addresses or material marked for restricted distribution, ever. A single mistake here is permanent once a page is indexed or archived.
+4. **Correct over time.** Links between notes must keep working as notes are added, renamed and reorganised.
+5. **Portable.** The hosting will change: a free subdomain first, then a purchased domain, possibly a different host. None of that should require changes to the site.
+6. **Cheap to operate.** No database, no application server, no plugins to patch.
+
+## Design
+
+Requirements 1, 5 and 6 point to a static site. Every page is generated once, at build time, as plain HTML with a small amount of CSS and JavaScript. There is nothing on the server to exploit or to keep running beyond a web server, and any web server will do.
+
+The site is built with [Astro](https://astro.build/). Content is written in Markdown with a few components for the things Markdown does not do well: side-by-side 5.x and 9.x comparisons, diagrams, downloads with checksums, and video. Content collections give each kind of page a schema, so a missing description or an image without alternative text fails the build instead of reaching a reader.
+
+Search is [Pagefind](https://pagefind.app/), which builds a static index during the build and loads only the parts of it that a query needs. There is no search service to run.
+
+Facts about the open tools are not typed into the site. Each tool's GitHub release publishes a `project.json` file with its version, compatibility table and required permissions, and the site reads that file at build time. The page and the release cannot disagree, because there is only one source.
+
+## What runs before anything is published
+
+The build stops if any of these checks fails.
+
+| Check | What it catches | How |
+|---|---|---|
+| Schema validation | Missing titles, descriptions, alt text; tool names that break the naming rule | Content collection schemas |
+| Privacy scan | Email addresses, IP addresses outside the documentation ranges, internal host names, private names, restricted-distribution markings | A pattern scan of the source and of the built pages |
+| Link and asset check | Internal links, images, downloads and share images that do not resolve | A scan of every generated page |
+
+A separate audit runs in continuous integration and on demand. It opens every page in Chromium, in light and dark colour schemes, and records:
+
+- accessibility problems rated serious or critical by [axe-core](https://github.com/dequelabs/axe-core), against the WCAG 2.2 AA rules;
+- console errors, including any violation of the page's Content Security Policy;
+- images that fail to load;
+- the size of the HTML, CSS and JavaScript needed for the first render, against a budget of 350 KB uncompressed.
+
+At the time of writing, every page passes. The heaviest page is search at about 150 KB before compression; every note is under 50 KB. Diagram rendering code is loaded only on pages that have a diagram, and only when the reader scrolls near it.
+
+## Media without the usual costs
+
+**Images** are converted at build time to AVIF and WebP at several widths, and the browser picks the smallest one that fits the screen. Any image can be opened full size.
+
+**Video** has two modes. Self-hosted files carry a poster image and captions, and nothing but the poster is downloaded until the reader presses play. YouTube videos show a locally hosted preview image and load YouTube's privacy-enhanced player only on request, so a page with a video makes no request to YouTube for readers who do not watch it.
+
+**Downloads** show the file type, size and SHA-256 checksum, and scripts can be read in the page before they are downloaded. A script that changes infrastructure should never be run unread.
+
+## Security
+
+The Content Security Policy is embedded in every page rather than configured on the server, so it travels with the site to any host. It allows scripts only from the site itself, and frames only from YouTube's privacy-enhanced domain and Vimeo. The servers add the usual transport and framing headers. There are no forms, no comments and no third-party scripts by default.
+
+## Deployment
+
+The primary host is a small Linux server running [Caddy](https://caddyserver.com/), which obtains and renews TLS certificates on its own. A deploy uploads the new build to a new release directory, reusing unchanged files from the previous release through hard links, and then switches a single symbolic link to the new release. The switch is one atomic rename, so a reader gets either the old site or the new site, never a mixture. The last five releases stay on the server, and rolling back is the same switch in the other direction.
+
+After each deploy, a smoke test requests a handful of key pages and fails the deploy if any of them does not return successfully. The same build can also be published to Cloudflare Pages or any static host without changes, which is how the site can start on a free subdomain and move to its own domain later by changing one setting.
+
+## What is deliberately not here
+
+- **No analytics by default.** A privacy-respecting option can be switched on with one setting. Until it is, the site sets no cookies and makes no third-party requests.
+- **No comments.** Corrections are welcome through the contact page, where they can be checked before they are published.
+- **No generated filler.** Every page is written to answer a question someone has asked.
+
+## Further reading
+
+- *Site Reliability Engineering*, chapter 8, "Release Engineering", on hermetic builds and the value of rollback.
+- [Web Content Accessibility Guidelines (WCAG) 2.2](https://www.w3.org/TR/WCAG22/).
+- [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP), MDN.

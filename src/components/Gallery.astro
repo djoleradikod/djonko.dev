@@ -1,0 +1,27 @@
+---
+// A grid of images that open in the zoom viewer. Use for screenshots that belong together.
+// <Gallery items={[{ src: shotA, alt: '...', caption: '...' }, ...]} />
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { mediaUrl } from '../data/site';
+interface Item { src: ImageMetadata | string; alt: string; caption?: string }
+interface Props { items: Item[]; caption?: string }
+const { items, caption } = Astro.props;
+---
+<figure class="fig gallery">
+  <ul>
+    {items.map((it) => {
+      const local = typeof it.src !== 'string';
+      const full = local ? (it.src as ImageMetadata).src : mediaUrl(it.src as string);
+      return (
+        <li>
+          {local
+            ? <Picture src={it.src as ImageMetadata} alt={it.alt} formats={['avif', 'webp']} widths={[400, 800]} sizes="(min-width: 900px) 360px, 50vw" loading="lazy" decoding="async" data-zoom={full} data-caption={it.caption} />
+            : <img src={full} alt={it.alt} loading="lazy" decoding="async" data-zoom={full} data-caption={it.caption} />}
+          {it.caption && <span class="cap">{it.caption}</span>}
+        </li>
+      );
+    })}
+  </ul>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

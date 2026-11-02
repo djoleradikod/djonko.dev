@@ -1,0 +1,76 @@
+---
+title: "PowerCLI and the APIs in VCF 9: the toolkit, the endpoints, and a safe first script"
+description: "VMware PowerCLI is now VCF PowerCLI, and existing scripts keep working. Underneath, SDDC Manager, VCF Operations, vCenter and NSX each expose a REST API. A short map of where to automate what, with read-only examples to start from."
+category: labs
+order: 7
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: []
+sources:
+  - title: "VCF PowerCLI"
+    url: "https://developer.broadcom.com/tools/vcf-powercli/latest"
+    by: "Broadcom Developer"
+  - title: "VCF.PowerCLI on the PowerShell Gallery"
+    url: "https://www.powershellgallery.com/packages/VCF.PowerCLI/9.1.0.25380678"
+    by: "PowerShell Gallery"
+  - title: "SDDC Manager API: Tasks"
+    url: "https://developer.broadcom.com/xapis/sddc-manager-api/9.0/tasks/"
+    by: "Broadcom Developer"
+  - title: "VMware VCF PowerCLI 9"
+    url: "https://vinfrastructure.it/2025/07/vmware-vcf-powercli-9/"
+    by: "vInfrastructure"
+---
+
+<InShort>
+**VCF PowerCLI** is the renamed continuation of VMware PowerCLI: existing cmdlets, modules and scripts keep working. Install it from the PowerShell Gallery as `VCF.PowerCLI`. For VCF-specific work, the **SDDC Manager API** still covers domains, clusters, hosts, tasks and credentials, and the **VCF Operations API** covers alerts, inventory, and in 9.x much of fleet management. Start every automation project with **read-only** calls: list domains, failed tasks and active alerts. Write operations come later, behind a change process.
+</InShort>
+
+<Compare rows={[
+  ["Toolkit", "VMware.PowerCLI", "VCF.PowerCLI (renamed, compatible)"],
+  ["SDDC Manager API", "Primary API for VCF operations", "Still present for domains, clusters, hosts, tasks. Some functions deprecated in favour of VCF Operations."],
+  ["Fleet API", "Aria Suite Lifecycle API", "VCF Operations and fleet lifecycle APIs"],
+  ["Auth to SDDC Manager", "POST /v1/tokens", "The same"],
+]} />
+
+## Where to automate what
+
+| Task | Best API or tool |
+|---|---|
+| Domains, clusters, hosts, network pools, failed tasks | SDDC Manager API |
+| Alerts, inventory, reports, health | VCF Operations API |
+| VMs, hosts, storage, vSphere configuration | vCenter, through PowerCLI |
+| Segments, gateways, firewall | NSX API, or the NSX Terraform provider |
+| Repeatable infrastructure | Terraform. See [Terraform for VCF](/vcf/library/labs/terraform-for-vcf/). |
+
+## A safe first script
+
+```powershell
+# Install once
+Install-Module VCF.PowerCLI -Scope CurrentUser
+
+# Read-only: list domains and failed tasks from SDDC Manager
+$sddc = "sddc-manager.rainpole.io"
+$cred = Get-Credential
+$body = @{ username = $cred.UserName; password = $cred.GetNetworkCredential().Password } | ConvertTo-Json
+$tok  = (Invoke-RestMethod -Method Post -Uri "https://$sddc/v1/tokens" -Body $body -ContentType "application/json" -SkipCertificateCheck).accessToken
+$h    = @{ Authorization = "Bearer $tok" }
+
+(Invoke-RestMethod -Uri "https://$sddc/v1/domains" -Headers $h -SkipCertificateCheck).elements |
+  Select-Object name, type, status
+
+(Invoke-RestMethod -Uri "https://$sddc/v1/tasks" -Headers $h -SkipCertificateCheck).elements |
+  Where-Object status -eq "FAILED" | Select-Object name, creationTimestamp, id
+```
+
+`-SkipCertificateCheck` is for labs. In production, trust the CA instead. PowerCLI also includes SDK-generated cmdlets for the VCF APIs. Run `Get-Command -Module *Vcf*` to see what your version provides.
+
+<Callout type="field">
+Give every automation a read-only mode and run it in that mode for a week before allowing changes. It finds the edge cases (an unexpected domain, an old task, a missing permission) without changing anything.
+</Callout>
+
+## Pitfalls
+
+- **Using personal administrator accounts** for automation. Create a dedicated account with the least role needed.
+- **Hard-coding passwords** in scripts. Use a vault or the PowerShell SecretManagement module.
+- **Assuming 5.x endpoints still behave the same** in 9.x. Check the API reference for your version; some operations were deprecated.

@@ -1,0 +1,76 @@
+---
+title: "Terraform for VCF: the vcf provider and where it fits with vSphere and NSX"
+description: "The vmware/vcf Terraform provider talks to the VCF Installer or Cloud Builder and to SDDC Manager, and supports VCF 9.0 and 9.1.1 from specific provider versions. Paired with the vSphere and NSX providers, it covers the platform from bring-up to workload networking."
+category: labs
+order: 8
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: []
+sources:
+  - title: "terraform-provider-vcf"
+    url: "https://www.github.com/vmware/terraform-provider-vcf"
+    by: "VMware on GitHub"
+  - title: "vmware/vcf provider on the Terraform Registry"
+    url: "https://registry.terraform.io/providers/vmware/vcf/"
+    by: "HashiCorp Terraform Registry"
+---
+
+<InShort>
+The **vmware/vcf** provider manages VCF through Cloud Builder or the installer, and SDDC Manager: bring-up, domains, clusters, hosts and network pools are the typical resources. Provider versions follow VCF versions: **v0.17.0 or later for VCF 9.0**, and **v0.19.0 or later for 9.1.1**. Earlier 5.x versions need older provider ranges. Use it for the platform layer, the **vSphere** provider for compute configuration, and the **NSX** provider for networking inside the domains. VCF on VxRail is not supported by the vcf provider.
+</InShort>
+
+<Compare rows={[
+  ["Bring-up target", "Cloud Builder", "VCF Installer"],
+  ["Provider version", "v0.9.0 or later for 5.0 and 5.1. v0.13.0 to below v0.17.0 for 5.2.1.", "v0.17.0 or later for 9.0. v0.19.0 or later for 9.1.1."],
+  ["Domain and cluster changes", "SDDC Manager API", "SDDC Manager API underneath. Some UI flows moved to vCenter, but the API remains."],
+]} />
+
+## Provider versions
+
+| VCF | Provider |
+|---|---|
+| 9.1.1 | v0.19.0 or later |
+| 9.0.0 | v0.17.0 or later |
+| 5.2.1 | v0.13.0 to below v0.17.0 |
+| 5.2.0 | v0.12.0 or later |
+| 5.0 and 5.1 | v0.9.0 or later |
+
+Pin the provider version in every configuration, and upgrade it deliberately along with the platform.
+
+## A starting layout
+
+```hcl
+terraform {
+  required_providers {
+    vcf     = { source = "vmware/vcf",     version = ">= 0.19.0" }
+    vsphere = { source = "vmware/vsphere" }
+    nsxt    = { source = "vmware/nsxt" }
+  }
+}
+
+# Platform layer: SDDC Manager (credentials from variables or a vault, never in code)
+provider "vcf" {
+  sddc_manager_host     = var.sddc_manager_fqdn
+  sddc_manager_username = var.sddc_manager_user
+  sddc_manager_password = var.sddc_manager_password
+}
+```
+
+Resource arguments change between provider versions, so take examples from the registry documentation for the version you pin.
+
+## How to use it in practice
+
+- **Labs first.** Reproduce a lab build in code before touching a customer environment.
+- **Separate state per layer**: platform (vcf), compute (vsphere), network (nsxt). A mistake in one doesn't plan a change in another.
+- **Plan reviews as change records.** `terraform plan` output is an excellent change description.
+
+<Callout type="field">
+Import existing objects before managing them. In brownfield VCF, the fastest way to cause an outage with Terraform is to let it believe a domain or segment doesn't exist.
+</Callout>
+
+## Pitfalls
+
+- **Unpinned providers** that upgrade under you.
+- **Secrets in state.** Protect the state backend like a password vault.
+- **Mixing UI and Terraform changes** on the same objects without a rule about which wins.

@@ -1,0 +1,104 @@
+---
+import { render } from 'astro:content';
+import { Picture } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Video from '../../components/Video.astro';
+import Share from '../../components/Share.astro';
+import { SITE } from '../../data/site';
+import { mdxComponents } from '../../components/mdx';
+import { allProjects, projectMeta, repoOf, fmtDate, slugOf, type Project } from '../../lib/posts';
+import { personRef } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  return (await allProjects()).map((p) => ({ params: { slug: slugOf(p) }, props: { p } }));
+}
+const { p } = Astro.props as { p: Project };
+const d = p.data;
+const m = await projectMeta(p);
+const { Content } = await render(p);
+const repoUrl = m?.links.repository ?? `https://github.com/${repoOf(p)}`;
+const name = m?.displayName ?? d.displayName;
+const kindLabel = { script: 'Script', agent: 'Agent', 'management-pack': 'Management pack' }[m?.kind ?? d.kind];
+const approach = m?.managementPackApproach && m.managementPackApproach !== 'none'
+  ? { 'mp-builder': 'MP Builder', 'integration-sdk': 'Python integration SDK' }[m.managementPackApproach] ?? m.managementPackApproach : undefined;
+const statusLabel = { tested: 'Tested', supported: 'Supported', untested: 'Untested', unsupported: 'Not supported' } as const;
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const ld = {
+  '@context': 'https://schema.org', '@type': 'SoftwareApplication', name, description: m?.summary ?? d.summary,
+  applicationCategory: 'DeveloperApplication', operatingSystem: `VCF Operations ${m?.baseline ?? '9.1.1'}+`,
+  author: personRef(Astro.site), url, codeRepository: repoUrl,
+  ...(m && { softwareVersion: m.version, license: `https://spdx.org/licenses/${m.licence}.html`, downloadUrl: m.links.latestRelease ?? m.links.releases }),
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
+---
+<Base title={name} description={m?.summary ?? d.summary} jsonLd={ld}>
+  <article data-pagefind-body>
+    <header class="article-head">
+      <p class="eyebrow"><a href="/projects/" style="color:inherit;text-decoration:none">Projects</a> / {kindLabel}</p>
+      <h1>{name}</h1>
+      <p class="lede">{m?.description ?? m?.summary ?? d.summary}</p>
+      <div class="meta">
+        <span class="status">{d.status}</span>
+        {m ? <span>Version {m.version}</span> : <span>No release yet</span>}
+        {m?.fetchedAt && <span>Checked {fmtDate(new Date(m.fetchedAt))}</span>}
+        <span hidden data-pagefind-filter="category">Projects</span>
+      </div>
+      <div class="actions">
+        {m?.links.latestRelease && <a class="btn primary" href={m.links.latestRelease} rel="noopener">Download v{m.version}</a>}
+        <a class="btn" href={repoUrl} rel="noopener">Source on GitHub</a>
+        {m?.links.issues && <a class="btn" href={m.links.issues} rel="noopener">Report an issue</a>}
+        {m?.links.changelog && <a class="btn" href={m.links.changelog} rel="noopener">Changelog</a>}
+      </div>
+    </header>
+
+    {d.cover && <figure class="post-cover"><Picture src={d.cover} alt={d.coverAlt ?? `${name} screenshot`} formats={['avif', 'webp']} widths={[800, 1200, 1600]} sizes="(min-width: 1100px) 1040px, 100vw" data-zoom={d.cover.src} /></figure>}
+    {d.youtube && <Video youtube={d.youtube} title={`${name} demo`} />}
+
+    <div class="prose">
+      <Content components={mdxComponents} />
+
+      <h2>At a glance</h2>
+      <dl class="kv">
+        <dt>Type</dt><dd>{kindLabel}{approach && ` · built with ${approach}`}</dd>
+        <dt>Baseline</dt><dd>VCF Operations {m?.baseline ?? '9.1.1'} or later</dd>
+        {m && <><dt>Licence</dt><dd>{m.licence}</dd></>}
+        {m && <><dt>Latest release</dt><dd>{m.version}</dd></>}
+      </dl>
+
+      <h2>Permissions it needs</h2>
+      {m ? (
+        <>
+          <p>{m.permissions.summary}</p>
+          <dl class="kv">
+            {m.permissions.account && <><dt>Account</dt><dd>{m.permissions.account}</dd></>}
+            {m.permissions.role && <><dt>Role</dt><dd>{m.permissions.role}</dd></>}
+          </dl>
+          {m.permissions.privileges.length > 0 && (
+            <div class="table-wrap"><table>
+              <thead><tr><th>Area</th><th>Access</th><th>Why</th></tr></thead>
+              <tbody>{m.permissions.privileges.map((x) => <tr><td>{x.area}</td><td>{x.access}</td><td>{x.reason}</td></tr>)}</tbody>
+            </table></div>
+          )}
+          {m.permissions.notRequired.length > 0 && (<><p><strong>Never needs:</strong></p><ul>{m.permissions.notRequired.map((x) => <li>{x}</li>)}</ul></>)}
+        </>
+      ) : <p>Documented with the first release. No tool here requires administrator credentials.</p>}
+
+      <h2>Compatibility</h2>
+      {m ? (
+        <div class="table-wrap"><table>
+          <thead><tr><th>Release</th><th>VCF Operations</th><th>VCF</th><th>Status</th><th>Notes</th></tr></thead>
+          <tbody>{m.compatibility.map((c) => <tr><td>{c.release ?? 'n/a'}</td><td>{c.vcfOperations}</td><td>{c.vcf ?? 'n/a'}</td><td><span class:list={['compat', c.status]}>{statusLabel[c.status]}</span></td><td>{c.notes ?? ''}</td></tr>)}</tbody>
+        </table></div>
+      ) : <p>Published with the first release. The baseline is VCF Operations 9.1.1.</p>}
+
+      <p class="small muted">{m?.notAffiliated ?? `${name} is independent work.`} {SITE.affiliation}</p>
+      <Share url={url} title={name} />
+    </div>
+  </article>
+</Base>
+<style>
+  .compat { font-weight: 600; font-size: 0.86rem; }
+  .compat.tested, .compat.supported { color: var(--accent-ink); }
+  .compat.unsupported { color: var(--warn); }
+  .compat.untested { color: var(--ink-3); }
+</style>

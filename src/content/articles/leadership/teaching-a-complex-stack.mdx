@@ -1,0 +1,61 @@
+---
+title: "Teaching a complex stack: how the VCF 9 talk series was built"
+description: "VCF 9 changed enough that experienced engineers needed to relearn where things live. The talk series behind this site follows the life of a support ticket, shows instead of tells, and keeps references out of the way. Here is the method, so it can be reused for any platform change."
+category: leadership
+order: 1
+versions: ["5.x", "9.0", "9.1"]
+level: Overview
+pubDate: 2026-11-02
+kbs: []
+sources:
+  - title: "Diátaxis: a systematic approach to technical documentation"
+    url: "https://diataxis.fr/"
+    by: "Daniele Procida"
+---
+
+<InShort>
+Four decisions shaped the series. **Follow the ticket**: the modules run in the order an engineer meets a problem, from "what is this estate" to "how do I escalate it", rather than product by product. **Show, then tell**: each idea starts with a diagram or a real error string, then the explanation. **Anchor on what changed**: every topic opens with the 5.x way and the 9.x way side by side. **Keep references out of the slide**: KB numbers sit in a compact index, so the slide carries the idea and the index carries the lookup. The same four decisions work for any platform change a team has to absorb.
+</InShort>
+
+<Compare v5Label="Common approach" v9Label="This series" title="Two ways to teach a new release" rows={[
+  ["Order", "Product by product", "The life of a ticket: orient, plan, operate, diagnose, escalate"],
+  ["Opening", "Feature list", "What changed from the version you know"],
+  ["Evidence", "Screenshots of UI", "Diagrams, real error strings, log paths"],
+  ["References", "On the slide", "In a separate index, linked"],
+  ["Ending", "Q&A", "A cheat sheet people keep"],
+]} />
+
+## 1. Follow the ticket
+
+Engineers don't meet a platform as a product catalogue. They meet it as a problem with a timeline: something is reported, they orient themselves, find the owning component, read the right log, fix or escalate. Ordering the material that way means every module answers "when would I need this?" before it is asked. It also makes the series useful for people who join halfway through: they know where they are in the story.
+
+## 2. Show, then tell
+
+Each concept starts with something concrete: the fleet diagram, the exact message a customer will paste, the path of a log file. The explanation follows. A diagram that shows the mechanism, such as which service calls which and from which address, is remembered long after the bullet points.
+
+## 3. Anchor on what changed
+
+The audience already knows 5.x. Starting every topic with a two-column comparison respects that, and it puts the learning effort exactly where it's needed. It is also the format used throughout this site.
+
+## 4. Keep references out of the way
+
+KB numbers are necessary and distracting. On slides they sit in a compact, expandable index; on this site, in the KB drawer at the end of each note. People can look up the details later, and in the session they follow the idea.
+
+## Building and testing it
+
+- **Plan first.** Outline every module, agree the order, then build.
+- **Vet the sources.** Every claim was checked against a public KB, TechDocs page or a reputable blog, and labelled where only a title was seen.
+- **Dry run with a skeptic.** One run-through with an experienced colleague who will say "that's not quite right" saves a room full of corrections.
+- **Two editions.** An internal edition can name internal tools. A customer edition keeps only what is public.
+
+<Callout type="field">
+End every module with one thing people can use on Monday: a command, a checklist, a decision table. If a module has no such thing, it's background, and it might be better as a reading link.
+</Callout>
+
+## What to avoid
+
+- **Feature tours.** They're the vendor's job.
+- **Humour that ages.** Keep it light, but the content should carry the session.
+- **Unchecked claims.** One wrong slide undermines the other forty.
+
+See [Talks](/talks/) for the module summaries.

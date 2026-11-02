@@ -1,0 +1,86 @@
+---
+title: "From Aria Suite Lifecycle to Fleet Management to the services runtime"
+description: "The appliance that managed the management stack changed form twice in two releases. In 9.1 it is a set of services on a small Kubernetes cluster that you need to size, address and protect."
+category: architecture
+order: 4
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [417255, 440630, 440862, 440874, 452124, 443216, 441122, 454898]
+sources:
+  - title: "Components in VCF and vSphere Foundation 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/vcf-management-appliances.html"
+    by: "Broadcom TechDocs"
+  - title: "VCF management services models (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-management-services-models.html"
+    by: "Broadcom TechDocs"
+  - title: "Deploy VCF management services (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html"
+    by: "Broadcom TechDocs"
+  - title: "Let's talk about VCF management services"
+    url: "https://www.why-did-it.fail/blog/2026-05-lets-talk-about-vcf-mgmt-svc/"
+    by: "why-did-it.fail"
+  - title: "VCF 9.1 upgrade, part 2: SDDC Manager and management services"
+    url: "https://ithinkvirtual.com/posts/vcf-9-1-upgrade-part-2-sddc-manager-management-services/"
+    by: "ithinkvirtual"
+  - title: "VCF 9.1.1: adopting the reduced VCFMS footprint after an upgrade"
+    url: "https://williamlam.com/2026/09/vcf-9-1-1-adopting-the-reduced-vcf-management-services-vcfms-footprint-after-an-upgrade.html"
+    by: "William Lam"
+---
+
+<InShort>
+5.x used Aria Suite Lifecycle, a separate appliance, to deploy and upgrade the Aria products. 9.0 renamed and repurposed it as the VCF Operations fleet management appliance. 9.1 removes the appliance. Its work is split into **fleet lifecycle** and **SDDC lifecycle** services, which run with the software depot, identity broker, Salt and log management on the **VCF services runtime**. That runtime is a VCF-managed Kubernetes cluster in every instance. It brings new IP, DNS, placement and backup requirements, and it gives operators a new troubleshooting surface.
+</InShort>
+
+<Compare rows={[
+  ["What manages the management stack", "Aria Suite Lifecycle appliance, optionally VCF-aware", "9.0: VCF Operations fleet management appliance. 9.1: fleet lifecycle and SDDC lifecycle services."],
+  ["Where it runs", "One VM", "9.0: one VM. 9.1: pods on the services runtime, which has control-plane and worker node VMs."],
+  ["What else shares it", "Nothing", "9.1: software depot, identity broker, Salt RaaS and master, telemetry, log management and real-time metrics"],
+  ["Credentials it holds", "The Aria locker", "9.0: a locker for management component passwords and certificates. 9.1: Kubernetes secrets for service accounts."],
+  ["Rollback", "Snapshot the appliance", "9.1: there is no rollback once the runtime is deployed. Back it up and protect it."],
+]} />
+
+## The 9.1 services, and where they run
+
+TechDocs maps the old products to the new services directly:
+
+| 5.x or 9.0 | 9.1 service | Runs in |
+|---|---|---|
+| Aria Suite Lifecycle or fleet management appliance | Fleet lifecycle | First instance |
+| (part of SDDC Manager) | SDDC lifecycle | Every instance |
+| SDDC Manager depot and fleet binaries | Software depot | First instance, optionally others |
+| Workspace ONE Access or the 9.0 identity broker appliance | Identity broker (instance mode) | First instance, optionally others |
+| Aria Automation Config | Salt RaaS and Salt master | RaaS in the first instance, a master in every instance |
+| Aria Operations for Logs or VCF Operations for logs | Log management | First instance (deployed Day-N) |
+| (new) | Real-time metrics and telemetry | Every instance |
+
+Management services are mandatory for VCF and optional for vSphere Foundation (<KB id={440630} />).
+
+## Sizing and addressing
+
+- **Models.** Simple has one control-plane node and a few workers, and suits labs and proofs of concept. Losing its single control-plane node means a redeploy and a restore. HA has three control-plane nodes. In 9.1.1 you can convert Simple to HA, and a reduced footprint is available after upgrade.
+- **IP pool.** The minimum is 12 addresses and the maximum 30, with a /27 recommended, all on the management network in 9.1.0. You can add up to 18 more addresses later. The pool exists so that upgrades can build new node VMs before retiring the old ones (<KB id={440630} />).
+- **Internal CIDR.** The default pod and service range is `198.18.0.0/15`. If that range is routed anywhere in your network, choose one of the alternatives at deployment time.
+- **FQDNs.** You need separate fleet, instance and runtime FQDNs, plus the identity broker and License Server. Each needs A and PTR records, and the addresses must sit outside the runtime pool.
+- **Firewalls.** Pods can run on any node, so firewall rules must allow the whole runtime pool as a source. This matters for depot downloads: they leave from runtime node addresses, not from SDDC Manager (<KB id={443216} />).
+
+## How it gets deployed
+
+On a new build, the VCF Installer deploys the runtime. On an upgrade from 5.2 or 9.0, you first upgrade VCF Operations and SDDC Manager. Then you run *Deploy VCF Management Services and License Server*, during which SDDC Manager boots a temporary bootstrap VM that builds the cluster (<KB id={441122} />). Community write-ups report about an hour for the bootstrap and about three hours end to end in a lab.
+
+## Living with it
+
+- **Don't move it.** Do not Storage vMotion the node VMs, and do not move them to another folder or resource pool. The runtime records its vSphere placement and uses it to replace nodes. Changing it breaks upgrades with `VCFMS-HEALTH-002` (<KB id={452124} />).
+- **Watch it in VCF Operations.** The management services dashboard shows node, gateway, component, volume and backup health. Its thresholds and checks are documented in <KB id={417255} />.
+- **Shut it down properly.** Use the documented shutdown script, which handles dependency order (<KB id={440874} />). After an unclean power event, power on the control plane first, wait, then power on the workers (<KB id={440862} />).
+- **Check it before every upgrade.** The pre-upgrade readiness KB pairs a runtime health check with the SoS health check and vCenter checks (<KB id={454898} />).
+
+<Callout type="field">
+Four names refer to the same thing: VCF services runtime, VCF management services, VCFMS and VMSP. KBs, logs and blogs use all of them. Error codes use `VCFMS-…`, and the namespace is `vmsp-platform`.
+</Callout>
+
+## Pitfalls
+
+- **Treating the runtime as a black box.** It is a Kubernetes cluster with VCF-specific namespaces. A small read-only kubectl toolkit pays for itself. See <a href="/vcf/library/troubleshooting/services-runtime-kubectl/">The 9.1 services runtime: a read-only kubectl toolkit</a>.
+- **Under-sizing the pool.** A pool sized at the minimum leaves nothing for node replacement or Day-N services. Log management and real-time metrics can add workers on their own.
+- **Assuming you can roll back.** You cannot. Take backups of every component before the step, and configure the runtime's own backup afterwards.

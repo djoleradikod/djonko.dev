@@ -1,0 +1,61 @@
+---
+title: "Cloud proxies and collector groups in 9.1: unified proxies, HA and the default-group trap"
+description: "Cloud proxies run the adapters, so where an integration collects from decides whether it works. 9.1 requires the VCF instance adapter on a cloud proxy, introduces unified proxy sizes, and keeps a few networking rules that are easy to miss."
+category: integrations
+order: 2
+versions: ["9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [443106, 442380, 449290, 414885, 429451, 426042, 443900, 433379]
+sources:
+  - title: "Deploy a cloud proxy as part of a VCF 9.1 upgrade"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/configuring-cloud-proxies-in-vrealize-operations-cloud.html"
+    by: "Broadcom TechDocs"
+  - title: "Cloud proxy FAQ (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/cloud-proxy-faq.html"
+    by: "Broadcom TechDocs"
+  - title: "Cloud proxy troubleshooting (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/cloud-proxy-troubleshooting.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+In 9.1 the **VCF instance adapter must collect through a healthy cloud proxy or collector group**, not the local collector, or the management services deployment fails validation (<KB id={443106} />). Deploy proxies as **Unified Small** (up to 16,000 VMs) or **Unified Standard** (16,000 to 80,000), not Classic. The registration key expires after 24 hours. Group two or more proxies for HA: another one takes over after about 10 minutes. If you leave adapters on the **default collector group**, every VCF Operations node must reach vCenter on 443 (<KB id={442380} />).
+</InShort>
+
+<Compare rows={[
+  ["Collector types", "Remote collectors and cloud proxies", "Cloud proxies. 9.1 adds unified proxy sizes."],
+  ["VCF instance adapter", "Any collector", "Must be on a cloud proxy or collector group (9.1)"],
+  ["Upgrade", "Proxies upgraded with the product", "Proxies auto-upgrade. 8.18 had no unified proxies, so reassign integrations after upgrading."],
+  ["Network", "Outbound 443 to VCF Operations", "The same, plus inbound 443 for push adapters and VRRP between proxies in a group"],
+]} />
+
+## Design rules
+
+- **One collector group per site or network zone**, with at least two unified proxies.
+- **Proxy to VCF Operations:** outbound 443. **Push adapters** need inbound 443 to the proxy. **Groups** need VRRP between members.
+- **DNS from the proxy** must resolve every VCF Operations node. Proxies that go offline every few hours, or return 503s through haproxy, are almost always resolver problems (<KB id={426042} />, <KB id={443900} />).
+- **SSH** is disabled by default on proxies. Enable it only when needed.
+
+## Moving adapters after a 9.1 upgrade
+
+1. Deploy unified proxies and put them in a group.
+2. Edit the VCF account and set the collector to that group for all domains and vCenters.
+3. Run an inventory sync, then retry anything that failed validation.
+4. If an adapter is stuck in "State: Stopping" or Warning, **Stop collecting**, then **Start collecting** (<KB id={414885} />, <KB id={429451} />).
+
+A known 9.1.0 issue makes a vCenter adapter moved from a group to a single proxy revert to the group on save (<KB id={449290} />). Keep it in a group.
+
+## The vCenter plugin depends on the proxy
+
+The VCF Operations plugin in the vSphere Client is served by the node or proxy running the vCenter adapter. After a proxy certificate change, the plugin can show "Download plug-in" until the proxy's certificate file is updated (<KB id={433379} />).
+
+<Callout type="field">
+Draw the collector design as part of the network design: which proxy group collects which instance, from which subnet, through which firewall. It makes the 9.1 requirement visible early and turns "the adapter won't connect" into a one-line firewall request.
+</Callout>
+
+## Pitfalls
+
+- **Deploying Classic proxies** in 9.1 out of habit.
+- **Letting the registration key expire** between deploying the OVA and registering.
+- **Default collector group with segmented networks.** Replica and data nodes can't reach vCenter, and collection breaks intermittently.

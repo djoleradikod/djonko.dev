@@ -1,0 +1,97 @@
+---
+title: "The 9.1 services runtime for VI admins: read-only kubectl that answers most questions"
+description: "In 9.1, fleet lifecycle, the depot, SDDC lifecycle and possibly the identity broker run as pods on a Kubernetes cluster called the services runtime. You don't need to be a Kubernetes engineer, but you do need a dozen read-only commands, a namespace map, and supported scripts for fixes."
+category: troubleshooting
+order: 3
+versions: ["9.1"]
+level: Deep dive
+pubDate: 2026-11-02
+kbs: [450375, 455244, 453116, 445301, 445455, 435569, 440862, 444466, 443784]
+sources:
+  - title: "Let's talk about VCF management services"
+    url: "https://www.why-did-it.fail/blog/2026-05-lets-talk-about-vcf-mgmt-svc/"
+    by: "why-did-it.fail"
+  - title: "Stuck fleet or SDDC lifecycle task in VCF 9.1"
+    url: "https://knowledge.broadcom.com/external/article/435569"
+    by: "Broadcom KB"
+  - title: "Kubernetes documentation: kubectl"
+    url: "https://kubernetes.io/docs/reference/kubectl/"
+    by: "Kubernetes"
+---
+
+<InShort>
+Start with the **management services dashboard** in VCF Operations. When it's not enough, SSH to a **control-plane node** as `vmware-system-user`, become root, and point `kubectl` at `/etc/kubernetes/admin.conf` (<KB id={450375} />). Four namespaces matter most: `vcf-fleet-lcm` (fleet build and upgrade), `vcf-sddc-lcm` (SDDC build and upgrade), `vcf-fleet-depot` (depot and downloads) and `vmsp-platform` (the runtime's own tasks). Read freely. Change things only through the KB scripts: `lcm_service_support.sh` for stuck lifecycle services (<KB id={435569} />), the service-account scripts for stale credentials, and the shutdown script for power events.
+</InShort>
+
+<Compare rows={[
+  ["Where lifecycle runs", "SDDC Manager services (and Aria Suite Lifecycle)", "Pods on the services runtime, plus SDDC Manager for domain workflows"],
+  ["How to inspect", "Service logs on one appliance", "kubectl on a control-plane node, plus the VCF Operations dashboard"],
+  ["Supported restart", "Restart SDDC Manager services", "lcm_service_support.sh -r with the service name"],
+  ["Support bundle", "sos --sddc-manager-logs", "sos --vcf-mgmt-svcs-logs, or the standalone script if fleet lifecycle is down (<a href='https://knowledge.broadcom.com/external/article/444466' target='_blank' rel='noopener'>KB 444466</a>)"],
+]} />
+
+## Getting in
+
+```bash
+# Find a control-plane node IP: VCF Operations > Build > Lifecycle > Components >
+# VCF Services Runtime > Nodes. Then:
+ssh vmware-system-user@<control-plane-node>
+sudo su -
+export KUBECONFIG=/etc/kubernetes/admin.conf
+```
+
+## The namespace map
+
+| Namespace | What lives there | Pod label |
+|---|---|---|
+| `vcf-fleet-lcm` | Fleet build and fleet upgrade services, and their database | `app=fleetbuild`, `app=fleetupgrade` |
+| `vcf-sddc-lcm` | SDDC build and SDDC upgrade services | `app=sddcbuild`, `app=sddcupgrade` |
+| `vcf-fleet-depot` | Depot and download services | `app=fleetdepot` |
+| `vmsp-platform` | The runtime's own install, stage and configure tasks | |
+| `vidb-external` | Identity broker, when it runs on the runtime | |
+
+## Read-only commands worth knowing
+
+```bash
+# Health snapshot
+kubectl get nodes -o wide
+kubectl get pods -A | grep -vE 'Running|Completed'
+kubectl get pods -A | grep -iE 'fleet|sddc|depot'
+
+# Runtime platform tasks
+kubectl get tasks -n vmsp-platform --no-headers | grep -E '^(install|stage|configure)-component'
+kubectl describe task <task> -n vmsp-platform
+
+# Recent events in a namespace
+kubectl get events -n vcf-fleet-lcm --sort-by=.lastTimestamp | tail -30
+
+# Logs of the fleet build service (swap namespace and label for the others)
+P=$(kubectl get pods -n vcf-fleet-lcm -l app=fleetbuild -o jsonpath='{.items[0].metadata.name}')
+kubectl logs $P -n vcf-fleet-lcm --tail=200
+kubectl describe pod $P -n vcf-fleet-lcm | grep -E 'Restart|Node:'
+
+# Fleet lifecycle database health: one leader, no lag
+kubectl -n vcf-fleet-lcm exec vcf-fleet-lcm-db-0 -- patronictl list
+```
+
+If a pod restarted, its previous logs are under `/var/log/pods/` on the node that hosted it. The database check comes from <KB id={445301} /> and <KB id={445455} />. Depot log reading comes from <KB id={453116} />.
+
+## Supported changes
+
+| Situation | Supported action |
+|---|---|
+| Fleet or SDDC lifecycle task makes no progress | `lcm_service_support.sh -t <task>`, then `-r fleetbuild`, `fleetupgrade`, `sddcbuild` or `sddcupgrade` (<KB id={435569} />) |
+| `InvalidLogin` from SDDC lifecycle after a rotation | The `Reestablish...ServiceAccount.sh` scripts, then restart the two SDDC lifecycle deployments (<KB id={450375} />) |
+| Bootstrap fails on a vCenter thumbprint mismatch | Diagnose on the bootstrap VM, then use the fixed bundle (<KB id={455244} />) |
+| Services at zero replicas after a power event | Control plane first, then workers, then wait (<KB id={440862} />) |
+| Node disk pressure (9.1.1 alert) | The clean-up in <KB id={443784} />, after running tasks finish |
+
+<Callout type="field">
+Keep a "runtime read-only" snippet in the team wiki with exactly these commands. When a lifecycle task stalls at 2 a.m., the engineer on call can collect the pod states, events and logs in five minutes and attach them to the case, without changing anything.
+</Callout>
+
+## Pitfalls
+
+- **Deleting pods "to restart them".** Use the service script. Pods hold work in progress.
+- **Deleting `vcf-svc-*` VMs to redeploy.** The runtime has state. Retry instead.
+- **Editing secrets or the database by hand** outside a KB. It may work once and break the next upgrade.

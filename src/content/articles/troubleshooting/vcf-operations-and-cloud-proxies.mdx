@@ -1,0 +1,62 @@
+---
+title: "VCF Operations and cloud proxy problems: cluster state, disk, DNS and haproxy"
+description: "VCF Operations is now the console for the whole fleet, so its problems look like platform problems. Most of them reduce to disk on the analytics nodes, the cluster's own state, or DNS seen from the cloud proxies."
+category: troubleshooting
+order: 8
+versions: ["9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [410759, 446447, 318768, 454593, 436047, 448522, 426042, 443900, 437258, 443018, 440916]
+sources:
+  - title: "VCF Operations 9.1 known issues"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/known-issues/vcfoperations-91-known-issues.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+Three areas cover most VCF Operations tickets. **Disk on the analytics nodes**: a full root or `/storage/db` stops analytics, and the fix is a **new disk on every node**, not expanding an existing one (<KB id={318768} />, <KB id={454593} />). **Cluster state**: stuck at "Waiting for Analytics", which is recovered through the admin UI by taking the cluster offline and online in order (<KB id={446447} />). **Cloud proxies and DNS**: proxies going offline every few hours, or 503s through haproxy, almost always trace back to name resolution (<KB id={426042} />, <KB id={443900} />). Never revert VCF Operations to a snapshot to undo a failed change (<KB id={436047} />).
+</InShort>
+
+<Compare rows={[
+  ["Role", "Aria Operations: optional monitoring", "VCF Operations: the fleet console for lifecycle, licensing, certificates and passwords"],
+  ["Collectors", "Remote collectors and cloud proxies", "Cloud proxies. 9.1 needs a unified cloud proxy in the first instance."],
+  ["Admin UI", "https://primary/admin", "The same, for cluster state"],
+  ["Impact of an outage", "Monitoring gap", "Monitoring gap plus no lifecycle, certificate or licensing actions"],
+]} />
+
+## Analytics nodes
+
+| Symptom | Cause and fix |
+|---|---|
+| Cluster stuck "Waiting for Analytics" | Root partition full, for example from an outbound plugin writing to a temp folder (<KB id={410759} />). Otherwise a generic start failure: snapshot, force offline, restart nodes one by one, bring online (<KB id={446447} />). |
+| "data retrieve is not initialized yet" | `/storage/db` low. Take the cluster offline, add a new disk of the same size to every node, bring it online (<KB id={318768} />). |
+| PAK upload fails with "ensure there is an active connection" | Out of disk during staging (<KB id={454593} />). |
+| "Service or view is not available" on Build > Lifecycle after 9.1 upgrade | A duplicate thumbprint in Trusted Certificates (<KB id={448522} />). |
+
+```bash
+# On each analytics node
+df -h / /storage/db /storage/log
+systemctl status analytics.service
+# Cluster role check: there must be a MASTER
+curl -sk https://<node>/casa/cluster/status
+```
+
+## Cloud proxies
+
+| Symptom | Cause and fix |
+|---|---|
+| Proxy offline every 4 to 8 hours | haproxy can't resolve the VCF Operations node names. Run `nslookup` for each node from the proxy (<KB id={426042} />). |
+| Periodic 503s, `NOSRV` in haproxy logs | haproxy's resolver caches stale DNS. Apply the KB, and recheck after a 9.0 to 9.1 upgrade, because the config can revert (<KB id={443900} />). |
+| SSO page won't load, proxy shows "Outdated life status" | haproxy hung, DNS, or a certificate chain mismatch with the primary (<KB id={437258} />). |
+| "Disk space on cloud proxy is low" with a huge catalina log | A corrupt health status file (<KB id={443018} />). |
+| "VCF Operations lost connection to SDDC Manager" | An expired token on the diagnostics adapter. Recreate it (<KB id={440916} />). |
+
+<Callout type="field">
+Treat VCF Operations like vCenter now: image-level backups, disk monitoring, and a change window for upgrades. Many teams still think of it as "the monitoring tool". In 9.x it holds licensing and lifecycle for the whole fleet.
+</Callout>
+
+## Pitfalls
+
+- **Expanding an existing VMDK** on analytics nodes. Add a new disk, identically sized, to all of them.
+- **Reverting to a snapshot.** It has duplicated adapters thousands of times in documented cases.
+- **Testing DNS from your laptop.** Test from the proxy, against every node.

@@ -1,0 +1,16 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostCard from '../../components/PostCard.astro';
+import { allPosts, tagSlug } from '../../lib/posts';
+const posts = await allPosts();
+const tags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
+---
+<Base title="Blog" description="Write-ups, case studies and announcements on VMware Cloud Foundation, VCF Operations and the tools built for them.">
+  <p class="eyebrow">Blog</p>
+  <h1>Write-ups</h1>
+  <p class="lede">Longer pieces: case studies, how a problem was worked through, walkthrough videos, and news about the projects. Short reference material lives in the <a href="/vcf/">VCF notes</a>.</p>
+  {tags.length > 0 && <div class="tags" style="margin:14px 0 4px">{tags.map((t) => <a class="badge" href={`/blog/tags/${tagSlug(t)}/`}>{t}</a>)}</div>}
+  {posts.length ? (
+    <div class="grid" style="margin-top:18px">{posts.map((p) => <PostCard p={p} />)}</div>
+  ) : <div class="empty"><h3>Nothing here yet</h3><p>The first write-ups are on their way.</p></div>}
+</Base>

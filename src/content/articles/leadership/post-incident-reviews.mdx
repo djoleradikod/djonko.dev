@@ -1,0 +1,55 @@
+---
+title: "Post-incident reviews for platform teams: timeline, causes, and one improvement that sticks"
+description: "A good review explains what happened without blame, finds the conditions that allowed it, and commits to a small number of changes that are actually done. For platform teams, the best output is often a check added to the health report."
+category: leadership
+order: 6
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: []
+sources:
+  - title: "Postmortem culture: learning from failure"
+    url: "https://sre.google/sre-book/postmortem-culture/"
+    by: "Google SRE book"
+---
+
+<InShort>
+Run the review within a few days, while memories and logs are fresh. Build a **timeline** from evidence: logs, tickets, chat. Separate the **trigger** (what happened) from the **conditions** (why it could happen, and why it wasn't caught sooner). Keep it **blameless**: people acted reasonably on what they knew, so ask what they knew. End with **two or three actions**, each with an owner and a date, and prefer actions that become **automatic checks** over actions that rely on memory.
+</InShort>
+
+<Compare v5Label="Weak review" v9Label="Useful review" title="The difference" rows={[
+  ["Cause", "Human error", "The conditions that made the error easy and invisible"],
+  ["Actions", "Ten, vague, unowned", "Two or three, owned, dated, checked"],
+  ["Output", "A document nobody reads", "A changed runbook, a new health check, a KB entry"],
+]} />
+
+## A structure
+
+1. **Summary**: impact, duration, one-line cause.
+2. **Timeline**: times in one time zone, each with its source.
+3. **Detection**: how it was noticed and how it could have been noticed sooner.
+4. **Trigger and conditions**: what happened, and what allowed it.
+5. **What went well**: so it is kept.
+6. **Actions**: owner, date, and how completion will be checked.
+
+## Typical platform conditions, and the check that catches them
+
+| Condition | Automatic check |
+|---|---|
+| Certificate expired unnoticed | Certificate expiry in the weekly report |
+| Partition filled slowly | Disk trend per appliance |
+| Password changed outside VCF | Weekly `sos --health-check` for disconnected accounts |
+| Licensing deadline missed | Days-to-deadline in the monthly report |
+| Backup silently failing | Last good backup per component |
+
+See [scripted health checks](/vcf/library/labs/scripted-health-checks/).
+
+<Callout type="field">
+Close every review by asking "which check would have told us a week earlier?" If the answer is a check you can automate, that's the action that matters most.
+</Callout>
+
+## Pitfalls
+
+- **Skipping the review** for incidents that "were only an hour".
+- **Action lists that grow** every review and never shrink.
+- **Naming individuals** in the cause. It ends honest reporting.

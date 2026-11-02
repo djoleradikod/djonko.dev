@@ -1,0 +1,60 @@
+---
+title: "Explaining VCF 9 to people who don't run it: five changes in plain language"
+description: "Managers, architects outside infrastructure, security teams and finance each need a different slice of what VCF 9 changes. Five plain-language statements cover most conversations, with the question each audience usually asks next."
+category: leadership
+order: 4
+versions: ["5.x", "9.0", "9.1"]
+level: Overview
+pubDate: 2026-11-02
+kbs: []
+sources:
+  - title: "Licensing in VMware Cloud Foundation 9.0"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/24/licensing-in-vmware-cloud-foundation-9-0/"
+    by: "VMware Cloud Foundation blog"
+  - title: "10 VCF 9 enhancements simplifying your Day-2 operations"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/"
+    by: "VMware Cloud Foundation blog"
+---
+
+<InShort>
+1. **One console for the whole estate.** VCF Operations becomes where the platform is run, not just watched.
+2. **The platform has more of its own moving parts.** In 9.1 the management tools run on a small internal Kubernetes cluster, which needs addresses, backups and monitoring.
+3. **Licensing is a file with a deadline.** Usage is reported at least every 180 days, and someone must own that.
+4. **One login across the tools.** VCF single sign-on connects them to the corporate identity provider.
+5. **Upgrades follow a strict order** and need more preparation than before, but they run as planned phases.
+
+Each statement has a predictable follow-up question, and having the answer ready is most of the conversation.
+</InShort>
+
+<Compare v5Label="What they hear" v9Label="What to say" title="Translating" rows={[
+  ["\"Fleet management\"", "Jargon", "One place to patch, certify and license everything"],
+  ["\"Services runtime\"", "Kubernetes, alarm", "The management tools' own small cluster. It needs IPs and backups like any other system."],
+  ["\"License file\"", "Another portal", "A calendar item: every 180 days, or automatically if the network allows"],
+  ["\"VCF SSO\"", "Security review", "Fewer separate admin logins, tied to the corporate identity provider"],
+]} />
+
+## By audience
+
+| Audience | They care about | Lead with | Expect next |
+|---|---|---|---|
+| Managers | Cost, risk, people | Upgrade phases, training, licensing owner | "How long, and what's the risk?" |
+| Security | Identity, exposure | VCF SSO, outbound traffic in 9.1, certificate management | "Which addresses talk to the internet?" |
+| Network team | Addresses, firewalls | New components and their IP and DNS needs | "Which flows, from which subnets?" |
+| Finance and procurement | Licences, renewals | The license file and the 180-day cycle | "Who has access to the licensing portal?" |
+| Application owners | Outages | Running workloads are untouched by management changes | "When is our window?" |
+
+## How to hold the conversation
+
+- **Start from their concern**, not from the architecture.
+- **Use one diagram**, the fleet picture, and point to the part that matters to them.
+- **Name the decision you need** from them: an owner, a window, a firewall approval.
+
+<Callout type="field">
+Write one paragraph per audience and reuse it. A short, consistent explanation repeated across meetings builds trust faster than a new deep dive every time.
+</Callout>
+
+## Pitfalls
+
+- **Leading with Kubernetes** to an audience that has never run it. It sounds like risk.
+- **Over-promising simplicity.** Fewer consoles doesn't mean less preparation.
+- **Leaving licensing as "the vendor's thing".** It has a technical owner and a deadline.

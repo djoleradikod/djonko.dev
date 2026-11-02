@@ -1,0 +1,74 @@
+---
+title: "Host commissioning, network pools and cluster expansion, now done from vCenter"
+description: "Adding capacity is the most frequent Day-2 change, and it moved from SDDC Manager into vCenter. The validations are the same, so the failures are familiar: DNS, certificates, uplinks, IP pools and leftovers from the last decommission."
+category: day-2
+order: 5
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [415767, 424728, 424242, 451550, 412127, 416946, 428877, 316098, 417229, 456013, 453788]
+sources:
+  - title: "10 VCF 9 enhancements simplifying your Day-2 operations"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/"
+    by: "VMware Cloud Foundation blog"
+  - title: "VMware Cloud Foundation 9.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+In 9.x you create network pools, commission hosts and create or expand clusters from **vCenter**: Global Inventory List > Hosts for pools and unassigned hosts, and New SDDC Cluster for clusters. For workload domains this needs VCF SSO and vCenter linking. SDDC Manager still runs the guardrail validations and the work underneath, so its log (`operationsmanager.log` for commissioning, `domainmanager.log` for clusters) is where failures are explained. Almost every failure falls into one of five groups: names, trust, network shape, IP pools, or leftovers.
+</InShort>
+
+<Compare rows={[
+  ["Network pools", "SDDC Manager: Administration > Network Settings", "vCenter: Global Inventory List > Hosts > Network Pools"],
+  ["Commission hosts", "SDDC Manager: Inventory > Hosts", "vCenter: Global Inventory List > Hosts > Unassigned Hosts"],
+  ["Create or expand clusters", "SDDC Manager: Workload Domains > Add Cluster or Add Hosts", "vCenter: New Cluster > New SDDC Cluster, and add hosts from there"],
+  ["Minimum NIC speed", "10 GbE recommended", "Validated: pNICs below 10 GbE fail commissioning (<a href='https://knowledge.broadcom.com/external/article/412127' target='_blank' rel='noopener'>KB 412127</a>)"],
+  ["Logs", "operationsmanager.log, domainmanager.log", "The same logs on SDDC Manager"],
+]} />
+
+## The five groups of failures
+
+**Names.** Guardrail validation reaches NSX Manager by name. A DNS failure shows up as `HOST_COMMISSION operation validation failed`, with `UnknownHostException` in the log. Fix DNS before anything else.
+
+**Trust.**
+- If the host presents a default certificate while the domain uses CA-signed certificates, or the other way round, SDDC Manager refuses to trust it (<KB id={415767} />).
+- Offline depots with vSAN HCL data older than 90 days fail the HCL check (<KB id={424728} />).
+- In 9.1, a locked or out-of-sync NSX service account fails cluster creation at host selection (<KB id={456013} />).
+
+**Network shape.**
+- vSwitch0 must have exactly one uplink, and pNICs must be 10 GbE or faster (<KB id={412127} />).
+- On expansion, uplink names and vmnic mapping must match the existing hosts on the VDS (<KB id={428877} />).
+- In API specs, storage type values are case sensitive: `VSAN_ESA`, not `vsan_esa` (<KB id={453788} />).
+
+**IP pools.**
+- Network pool exhausted: extend it, or clean stale IP addresses left by rebuilt hosts (<KB id={316098} />).
+- NSX TEP pool exhausted: that is NSX's pool, not SDDC Manager's. Create a larger one, update the transport node profile, and re-run (<KB id={417229} />).
+
+**Leftovers.**
+- VMs registered on the host fail the add-host check (<KB id={416946} />).
+- A stale `svc-vcf-*` account left on a host by an unclean decommission fails "Create New Local ESX Host User" (<KB id={451550} />).
+- A stale host row in SDDC Manager's database after a rebuild needs a support-led clean-up (<KB id={424242} />).
+
+## A pre-flight for every new host
+
+```text
+[ ] Forward and reverse DNS for the host, lowercase, resolving from SDDC Manager
+[ ] Same ESX build and vendor add-on as the target cluster image
+[ ] Certificate mode matches the domain (VMCA or CA-signed)
+[ ] vSwitch0: one uplink; all pNICs >= 10 GbE; vmnic layout matches the cluster
+[ ] No VMs registered; no stale svc-vcf-* local accounts (esxcli system account list)
+[ ] Free IPs in the network pool (vMotion, vSAN) and in the NSX TEP pool
+[ ] NTP configured and in sync
+```
+
+<Callout type="field">
+Decommission cleanly. Most of the "leftovers" group exists because a host was removed by re-imaging it, not by decommissioning it. If a host is dead and can't be decommissioned cleanly, record it, because its IP addresses and accounts will need a clean-up later.
+</Callout>
+
+## Pitfalls
+
+- **Looking for the old buttons.** If Add Host is greyed out in SDDC Manager, use the vCenter path. For workload domains, check VCF SSO and vCenter linking first.
+- **Mixed images.** A new host with a different vendor add-on fails cluster image compliance. Build or update the cluster image first.
+- **Forgetting TEP addresses.** Plan NSX TEP pool capacity with the network pool, not separately.

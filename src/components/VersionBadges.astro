@@ -1,0 +1,8 @@
+---
+interface Props { versions: string[]; level?: string }
+const { versions, level } = Astro.props;
+---
+<span class="badges">
+  {versions.map((v) => <span class={`badge ${v.startsWith('5') ? 'v5' : 'v9'}`}>VCF {v}</span>)}
+  {level && <span class="badge level">{level}</span>}
+</span>

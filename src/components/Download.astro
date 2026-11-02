@@ -1,0 +1,39 @@
+---
+// A downloadable file with type, size, SHA-256 and, for scripts, an expandable source view.
+// <Download file="/downloads/vcf-health/Get-VcfHealth.ps1" title="..." description="..." source />
+// <Download file="pdf/triage-handout.pdf" title="..." />   (large files from the media origin)
+import { Code } from 'astro:components';
+import { fileInfo } from '../lib/files';
+interface Props { file: string; title?: string; description?: string; source?: boolean; open?: boolean; version?: string; license?: string }
+const { file, title, description, source = false, open = false, version, license } = Astro.props;
+const f = fileInfo(file, source);
+---
+<div class="dl" data-pagefind-ignore="all">
+  <div class="dl-head">
+    <span class="dl-icon" aria-hidden="true">{f.ext.slice(0, 4).toUpperCase()}</span>
+    <div class="dl-text">
+      <strong>{title ?? f.name}</strong>
+      {description && <span class="dl-desc">{description}</span>}
+      <span class="dl-meta">
+        <span>{f.kind}</span>
+        {f.size && <span>{f.size}</span>}
+        {version && <span>v{version}</span>}
+        {license && <span>{license}</span>}
+        <span class="mono">{f.name}</span>
+      </span>
+    </div>
+    <a class="btn primary" href={f.url} download={f.name}>Download</a>
+  </div>
+  {f.sha256 && (
+    <div class="dl-sum">
+      <span>SHA-256</span><code>{f.sha256}</code>
+      <button type="button" class="copy-btn" data-copy={f.sha256} aria-label="Copy SHA-256 checksum">Copy</button>
+    </div>
+  )}
+  {source && f.text && (
+    <details class="dl-src" open={open}>
+      <summary>View source</summary>
+      <Code code={f.text} lang={f.lang as any} themes={{ light: 'github-light-high-contrast', dark: 'github-dark-high-contrast' }} wrap={false} />
+    </details>
+  )}
+</div>

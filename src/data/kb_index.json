@@ -1,0 +1,2777 @@
+[
+ {
+  "kb": 205795,
+  "topic": "Collecting a HAR file",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/205795"
+ },
+ {
+  "kb": 312247,
+  "topic": "Reverse proxy: Global.Proxy privilege",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/312247"
+ },
+ {
+  "kb": 313533,
+  "topic": "VCF Operations slice and cluster CLI",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/313533"
+ },
+ {
+  "kb": 313551,
+  "topic": "Ops vSphere Client plugin refresh on certificate renewal",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/313551"
+ },
+ {
+  "kb": 313839,
+  "topic": "Local plugins deprecated, unsupported in 9",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/313839"
+ },
+ {
+  "kb": 314640,
+  "topic": "CLIENT_IP_BLOCKED: SDDC Manager credentials incorrect",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/314640"
+ },
+ {
+  "kb": 315973,
+  "topic": "Truncate alerts and alarms (internal DB)",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/315973"
+ },
+ {
+  "kb": 316026,
+  "topic": "EMM suppression can still fail at install",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/316026"
+ },
+ {
+  "kb": 316028,
+  "topic": "fix_known_hosts.sh / fixHostKeys.py",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/316028"
+ },
+ {
+  "kb": 316098,
+  "topic": "Insufficient free IPs in network pool",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/316098"
+ },
+ {
+  "kb": 317794,
+  "topic": "Compute manager errors 7055 and 90204",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/317794"
+ },
+ {
+  "kb": 317900,
+  "topic": "NSX scripted VMCA certificate replacement",
+  "decks": [
+   "Meet the fleet",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/317900"
+ },
+ {
+  "kb": 318768,
+  "topic": "Ops data retriever: add a disk to every node",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/318768"
+ },
+ {
+  "kb": 318853,
+  "topic": "Maintenance-mode dry-run precheck fails",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/318853"
+ },
+ {
+  "kb": 321631,
+  "topic": "HCX plugin after a vCenter certificate change",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/321631"
+ },
+ {
+  "kb": 325773,
+  "topic": "vCenter adapter login and certificate errors",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/325773"
+ },
+ {
+  "kb": 326391,
+  "topic": "Reset the VCF Operations admin password",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/326391"
+ },
+ {
+  "kb": 326396,
+  "topic": "Unlock the VCF Operations admin account",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/326396"
+ },
+ {
+  "kb": 327195,
+  "topic": "Service account credentials via the API (TEST_BEFORE_REMEDIATE)",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/327195"
+ },
+ {
+  "kb": 328774,
+  "topic": "CaSA API: enable or disable HA",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/328774"
+ },
+ {
+  "kb": 339041,
+  "topic": "Clear a stale deployment lock",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/339041"
+ },
+ {
+  "kb": 341964,
+  "topic": "VCF Operations shutdown and startup order",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/341964"
+ },
+ {
+  "kb": 344201,
+  "topic": "vCenter expired certificates",
+  "decks": [
+   "Meet the fleet",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/344201"
+ },
+ {
+  "kb": 344633,
+  "topic": "vCenter service-control usage",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/344633"
+ },
+ {
+  "kb": 368313,
+  "topic": "Uppercase vCenter instanceUuid blocks License Server auth",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/368313"
+ },
+ {
+  "kb": 376813,
+  "topic": "NSX Manager log locations",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/376813"
+ },
+ {
+  "kb": 381709,
+  "topic": "vCenter service to log file map",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/381709"
+ },
+ {
+  "kb": 382440,
+  "topic": "SRM/VR \"URI is not absolute\" after vCenter update",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/382440"
+ },
+ {
+  "kb": 385107,
+  "topic": "vCert tool",
+  "decks": [
+   "Meet the fleet",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/385107"
+ },
+ {
+  "kb": 385749,
+  "topic": "SoS utility options",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/385749"
+ },
+ {
+  "kb": 386023,
+  "topic": "NSX cluster not STABLE",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/386023"
+ },
+ {
+  "kb": 395813,
+  "topic": "Plugin version stuck in the package cache",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/395813"
+ },
+ {
+  "kb": 401658,
+  "topic": "Installer vCenter deployment (vcsa-cli-installer.log)",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/401658"
+ },
+ {
+  "kb": 402033,
+  "topic": "Avi Controller logs and generate_techsupport.py",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/402033"
+ },
+ {
+  "kb": 402476,
+  "topic": "SoS log bundle with management services logs",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/402476"
+ },
+ {
+  "kb": 403626,
+  "topic": "Uppercase FQDN: SDDC Manager services fail",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/403626"
+ },
+ {
+  "kb": 404155,
+  "topic": "vCenter 9 has no license key field",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/404155"
+ },
+ {
+  "kb": 404501,
+  "topic": "Installer UI 502: no DNS record",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/404501"
+ },
+ {
+  "kb": 404593,
+  "topic": "Registration spins or \"activation pending\": reachability",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/404593"
+ },
+ {
+  "kb": 404830,
+  "topic": "ESX Live Patch failure: reboot",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/404830"
+ },
+ {
+  "kb": 405174,
+  "topic": "NSX Faulty TEP",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/405174"
+ },
+ {
+  "kb": 406917,
+  "topic": "Take the VCF Operations cluster offline",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/406917"
+ },
+ {
+  "kb": 406976,
+  "topic": "Find and unregister a vCenter extension (MOB)",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/406976"
+ },
+ {
+  "kb": 407073,
+  "topic": "Domain locked by an SDDC Manager operation",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/407073"
+ },
+ {
+  "kb": 408659,
+  "topic": "Changing ESX password expiry disconnects hosts",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/408659"
+ },
+ {
+  "kb": 409220,
+  "topic": "\"Server returned status code: 0\": proxy",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/409220"
+ },
+ {
+  "kb": 409353,
+  "topic": "VCF SSO \"JWT token is expired\": NTP",
+  "decks": [
+   "Meet the fleet",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/409353"
+ },
+ {
+  "kb": 410118,
+  "topic": "vCenter /storage/seat full",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/410118"
+ },
+ {
+  "kb": 410383,
+  "topic": "Supervisor vCenter object shows no data (by design)",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/410383"
+ },
+ {
+  "kb": 410759,
+  "topic": "Ops \"Waiting for Analytics\": root full",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/410759"
+ },
+ {
+  "kb": 411268,
+  "topic": "Error downloading plug-in",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/411268"
+ },
+ {
+  "kb": 412127,
+  "topic": "Installer: vSwitch0 must have one 10 GbE+ uplink",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/412127"
+ },
+ {
+  "kb": 413178,
+  "topic": "nsxt_ service account password renewal",
+  "decks": [
+   "Meet the fleet",
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/413178"
+ },
+ {
+  "kb": 413190,
+  "topic": "\"Failed to evaluate lambda\": null DB data",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/413190"
+ },
+ {
+  "kb": 413976,
+  "topic": "Invalid redirect URL: set the System Access URL",
+  "decks": [
+   "Meet the fleet",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/413976"
+ },
+ {
+  "kb": 414058,
+  "topic": "Microsoft CA \"Denied by Policy Module\"",
+  "decks": [
+   "How it all connects",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/414058"
+ },
+ {
+  "kb": 414449,
+  "topic": "NSX compute manager 7056: duplicate thumbprint",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/414449"
+ },
+ {
+  "kb": 414456,
+  "topic": "Installer bring-up log pointers",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/414456"
+ },
+ {
+  "kb": 414885,
+  "topic": "Adapter stuck in State: Stopping",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/414885"
+ },
+ {
+  "kb": 415466,
+  "topic": "Reverse lookup FQDN does not match the spec (case)",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/415466"
+ },
+ {
+  "kb": 415550,
+  "topic": "No route to host during vDS migration",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/415550"
+ },
+ {
+  "kb": 415767,
+  "topic": "Host certificate not trusted by SDDC Manager",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/415767"
+ },
+ {
+  "kb": 416358,
+  "topic": "9.0 Fleet appliance depot handshake_failure",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/416358"
+ },
+ {
+  "kb": 416490,
+  "topic": "Installer: deploy using an edited JSON spec",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/416490"
+ },
+ {
+  "kb": 416864,
+  "topic": "Only the local admin can register VCF Operations",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/416864"
+ },
+ {
+  "kb": 416946,
+  "topic": "Installer: VMs on a host being added",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/416946"
+ },
+ {
+  "kb": 417098,
+  "topic": "Identity broker pg_wal full",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/417098"
+ },
+ {
+  "kb": 417229,
+  "topic": "NSX TEP pool exhausted on expand",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/417229"
+ },
+ {
+  "kb": 417255,
+  "topic": "Management services dashboard and thresholds",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/417255"
+ },
+ {
+  "kb": 417767,
+  "topic": "Live Recovery plugin undeploys: stale package",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/417767"
+ },
+ {
+  "kb": 418460,
+  "topic": "Distributed firewall packet log on ESX",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/418460"
+ },
+ {
+  "kb": 418555,
+  "topic": "Rolling 180-day license file validity",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/418555"
+ },
+ {
+  "kb": 419010,
+  "topic": "Reset vmware-system-user on VCFA nodes",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/419010"
+ },
+ {
+  "kb": 419087,
+  "topic": "SDDC Manager vSphere Client plugin redeploy",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/419087"
+ },
+ {
+  "kb": 420460,
+  "topic": "vSphere Client misbehaves: browser cache",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/420460"
+ },
+ {
+  "kb": 420572,
+  "topic": "NSX /var/log full from future-dated files",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/420572"
+ },
+ {
+  "kb": 420736,
+  "topic": "NSX account locked: lockout immunity",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/420736"
+ },
+ {
+  "kb": 420928,
+  "topic": "Log Assist to a support case",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/420928"
+ },
+ {
+  "kb": 421016,
+  "topic": "SSLHandshakeException, PKIX path building failed",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/421016"
+ },
+ {
+  "kb": 421958,
+  "topic": "NSX adapter credential; Ops-NSX accounts never expire",
+  "decks": [
+   "Meet the fleet",
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/421958"
+ },
+ {
+  "kb": 422426,
+  "topic": "Clear a stale deployment lock (9.x)",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/422426"
+ },
+ {
+  "kb": 423908,
+  "topic": "Host commission guardrail failure",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/423908"
+ },
+ {
+  "kb": 424242,
+  "topic": "Host already present in inventory",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/424242"
+ },
+ {
+  "kb": 424533,
+  "topic": "Licenses could not be assigned to vCenters",
+  "decks": [
+   "Meet the fleet",
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/424533"
+ },
+ {
+  "kb": 424728,
+  "topic": "Offline depot vSAN HCL older than 90 days",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/424728"
+ },
+ {
+  "kb": 424877,
+  "topic": "Logs: TlsFatalAlert certificate_unknown(46)",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/424877"
+ },
+ {
+  "kb": 425271,
+  "topic": "Certificate expiry fetch fails with Avi",
+  "decks": [
+   "How it all connects",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/425271"
+ },
+ {
+  "kb": 426042,
+  "topic": "Cloud proxy offline every 4-8 hours: DNS",
+  "decks": [
+   "Meet the fleet",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/426042"
+ },
+ {
+  "kb": 426389,
+  "topic": "NSX extension already registered: MOB cleanup",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/426389"
+ },
+ {
+  "kb": 426469,
+  "topic": "Live Recovery plugin: FQDN certificate",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/426469"
+ },
+ {
+  "kb": 426872,
+  "topic": "9.0: certificate rotation not automated for some components",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/426872"
+ },
+ {
+  "kb": 426913,
+  "topic": "Unsupported local plugins; MOB cleanup",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/426913"
+ },
+ {
+  "kb": 427228,
+  "topic": "VCF Operations plugin does not upgrade with Ops",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/427228"
+ },
+ {
+  "kb": 427237,
+  "topic": "vCenter STS will not start (9.0.1)",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/427237"
+ },
+ {
+  "kb": 427554,
+  "topic": "LDAP not reachable from one broker node",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/427554"
+ },
+ {
+  "kb": 427937,
+  "topic": "Certificate auto-renewal timing",
+  "decks": [
+   "Meet the fleet",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/427937"
+ },
+ {
+  "kb": 428053,
+  "topic": "Everything expired: recovery path (9.0)",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/428053"
+ },
+ {
+  "kb": 428209,
+  "topic": "\"Switching the reporting mode failed\"",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/428209"
+ },
+ {
+  "kb": 428877,
+  "topic": "Installer: uplink names must match the cluster",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/428877"
+ },
+ {
+  "kb": 429451,
+  "topic": "Stop and start collecting after a proxy change",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/429451"
+ },
+ {
+  "kb": 429696,
+  "topic": "\"Cis License Health Alarm\" after vmdir downtime",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/429696"
+ },
+ {
+  "kb": 429753,
+  "topic": "Tasks UI \"Fetching task info\"",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/429753"
+ },
+ {
+  "kb": 430066,
+  "topic": "Inventory sync guardrails",
+  "decks": [
+   "How it all connects",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/430066"
+ },
+ {
+  "kb": 430391,
+  "topic": "CSR and certificate public key mismatch",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/430391"
+ },
+ {
+  "kb": 430558,
+  "topic": "Resync the NSX service account",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/430558"
+ },
+ {
+  "kb": 431149,
+  "topic": "Commission guardrail: NSX account locked",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/431149"
+ },
+ {
+  "kb": 431474,
+  "topic": "Installer vSAN HCL step",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/431474"
+ },
+ {
+  "kb": 431546,
+  "topic": "9.1 licensing path and License Server",
+  "decks": [
+   "Meet the fleet",
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/431546"
+ },
+ {
+  "kb": 431963,
+  "topic": "Compute manager 90011 OIDC thumbprint",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/431963"
+ },
+ {
+  "kb": 432021,
+  "topic": "VCF Installer trust stores for a proxy CA",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/432021"
+ },
+ {
+  "kb": 432158,
+  "topic": "Reporting mode switch: endpoints blocked",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/432158"
+ },
+ {
+  "kb": 432196,
+  "topic": "vSAN plugin: stale thumbprint in VCDB",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/432196"
+ },
+ {
+  "kb": 432201,
+  "topic": "Disconnected mode needs no activation code",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/432201"
+ },
+ {
+  "kb": 432503,
+  "topic": "NSX in VCF SSO needs the NSX adapter collecting",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/432503"
+ },
+ {
+  "kb": 432694,
+  "topic": "Log collection credential (svc-li-vc) rotation",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/432694"
+ },
+ {
+  "kb": 433085,
+  "topic": "Compute manager 7061: external IdP user",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/433085"
+ },
+ {
+  "kb": 433089,
+  "topic": "vCenter log collection lost after 9.1 upgrade",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/433089"
+ },
+ {
+  "kb": 433208,
+  "topic": "no healthy upstream after Ops VMs deleted",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/433208"
+ },
+ {
+  "kb": 433259,
+  "topic": "Duplicate VCF adapters (IP and FQDN)",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/433259"
+ },
+ {
+  "kb": 433379,
+  "topic": "Cloud proxy certificate: south_cert.pem",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/433379"
+ },
+ {
+  "kb": 433425,
+  "topic": "Registered with Errors: licence admin privilege",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/433425"
+ },
+ {
+  "kb": 433768,
+  "topic": "Identity broker logs from Lifecycle",
+  "decks": [
+   "Meet the fleet",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/433768"
+ },
+ {
+  "kb": 434281,
+  "topic": "Brownfield import guardrails report",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/434281"
+ },
+ {
+  "kb": 434671,
+  "topic": "vCenter /storage/log full from ESX syslog",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/434671"
+ },
+ {
+  "kb": 435258,
+  "topic": "VCF Instance page: 443 SDDC Manager to Ops nodes",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/435258"
+ },
+ {
+  "kb": 435569,
+  "topic": "Stuck Fleet or SDDC lifecycle task",
+  "decks": [
+   "Meet the fleet",
+   "Upgrading to VCF 9.1, the right way round",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/435569"
+ },
+ {
+  "kb": 435599,
+  "topic": "9.0: password rotation not automated for some components",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/435599"
+ },
+ {
+  "kb": 435664,
+  "topic": "\"This activation code is not valid\"",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/435664"
+ },
+ {
+  "kb": 435717,
+  "topic": "Installer DNS validation: PTR case mismatch",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/435717"
+ },
+ {
+  "kb": 436026,
+  "topic": "Duplicate VCF adapters pushed back",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/436026"
+ },
+ {
+  "kb": 436047,
+  "topic": "Ops snapshot revert duplicated adapters",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/436047"
+ },
+ {
+  "kb": 436092,
+  "topic": "Compute manager down after out-of-band vCenter upgrade",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/436092"
+ },
+ {
+  "kb": 436398,
+  "topic": "ESX root Disconnected: Remediate",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/436398"
+ },
+ {
+  "kb": 436542,
+  "topic": "Disconnected mode: registration (.data) file",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/436542"
+ },
+ {
+  "kb": 436898,
+  "topic": "New domains not monitored; Domain not configured",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/436898"
+ },
+ {
+  "kb": 437242,
+  "topic": "One allocation cannot serve two Ops instances",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/437242"
+ },
+ {
+  "kb": 437258,
+  "topic": "Cloud proxy \"Outdated life status\"",
+  "decks": [
+   "Meet the fleet",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/437258"
+ },
+ {
+  "kb": 437447,
+  "topic": "No HCX pack supports VCF Operations 9.0",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/437447"
+ },
+ {
+  "kb": 437580,
+  "topic": "License file validity vs contract length",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/437580"
+ },
+ {
+  "kb": 438020,
+  "topic": "NSX admin password expired",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/438020"
+ },
+ {
+  "kb": 438122,
+  "topic": "Stale STS_INTERNAL_SSL_CERT store",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/438122"
+ },
+ {
+  "kb": 438397,
+  "topic": "Fleet 9.0 Not Ready: /storage full",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/438397"
+ },
+ {
+  "kb": 438508,
+  "topic": "VVF: VCF adapter fails, use the vCenter adapter",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/438508"
+ },
+ {
+  "kb": 438527,
+  "topic": "Licenses expired, service degraded banner",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/438527"
+ },
+ {
+  "kb": 438528,
+  "topic": "Installer precheck \"NTP Server null\": add iburst",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/438528"
+ },
+ {
+  "kb": 438533,
+  "topic": "\"VCF Operations is not registered\" after upgrade",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/438533"
+ },
+ {
+  "kb": 438771,
+  "topic": "\"Usage Report overdue today\"",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/438771"
+ },
+ {
+  "kb": 438846,
+  "topic": "System Access URL and redirects after a re-IP",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/438846"
+ },
+ {
+  "kb": 438868,
+  "topic": "New license file before the usage due date",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/438868"
+ },
+ {
+  "kb": 439010,
+  "topic": "FQDN mapped to loopback in /etc/hosts",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/439010"
+ },
+ {
+  "kb": 439240,
+  "topic": "Installer: \"Specified NTP server is specified incorrect\"",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/439240"
+ },
+ {
+  "kb": 439473,
+  "topic": "\"Failed to acquire System lock\" (backups)",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/439473"
+ },
+ {
+  "kb": 439522,
+  "topic": "Restarting the vCenter licence service",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/439522"
+ },
+ {
+  "kb": 439546,
+  "topic": "Install image missing; depot on port 80",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/439546"
+ },
+ {
+  "kb": 439946,
+  "topic": "SDDC Manager disk space precheck",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/439946"
+ },
+ {
+  "kb": 439953,
+  "topic": "Trigger Inventory Sync after a re-IP",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/439953"
+ },
+ {
+  "kb": 440282,
+  "topic": "9.1 binaries listed but not available until VCF Ops is 9.1",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/440282"
+ },
+ {
+  "kb": 440331,
+  "topic": "NSX host prep stuck: host DNS",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/440331"
+ },
+ {
+  "kb": 440395,
+  "topic": "Duplicate NSX adapters abort SSO configuration",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/440395"
+ },
+ {
+  "kb": 440402,
+  "topic": "Licence and plug-in management privileges",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/440402"
+ },
+ {
+  "kb": 440459,
+  "topic": "Ops for networks certificate missing IP SANs",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/440459"
+ },
+ {
+  "kb": 440471,
+  "topic": "vCenter not connected to a license server",
+  "decks": [
+   "Meet the fleet",
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/440471"
+ },
+ {
+  "kb": 440630,
+  "topic": "Upgrade order and interop companion article",
+  "decks": [
+   "Meet the fleet",
+   "Upgrading to VCF 9.1, the right way round",
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/440630"
+ },
+ {
+  "kb": 440673,
+  "topic": "Expired trusted root breaks the reverse proxy",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/440673"
+ },
+ {
+  "kb": 440685,
+  "topic": "Everything expired: recovery path (9.1)",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/440685"
+ },
+ {
+  "kb": 440709,
+  "topic": "SDDC Manager credentials are incorrect (IP block)",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/440709"
+ },
+ {
+  "kb": 440807,
+  "topic": "NSX upgraded outside VCF: run a version sync",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/440807"
+ },
+ {
+  "kb": 440862,
+  "topic": "Runtime power-on order; power-off marker recovery",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/440862"
+ },
+ {
+  "kb": 440863,
+  "topic": "ESX precheck: vCenter not licensed by LS",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/440863"
+ },
+ {
+  "kb": 440874,
+  "topic": "Services runtime shutdown script",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/440874"
+ },
+ {
+  "kb": 440901,
+  "topic": "Default NSX Distributed Load Balancer blocks the precheck",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/440901"
+ },
+ {
+  "kb": 440910,
+  "topic": "NSX VIP certificate SAN: resource validations time out",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/440910"
+ },
+ {
+  "kb": 441097,
+  "topic": "SDDC Manager upgrade failed while VCF Ops says success",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/441097"
+ },
+ {
+  "kb": 441205,
+  "topic": "Lifecycle page spins forever: browser cache",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/441205"
+ },
+ {
+  "kb": 441246,
+  "topic": "vmsp_upgrade_vcfa reports failure after a timeout",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/441246"
+ },
+ {
+  "kb": 441251,
+  "topic": "License Server OVA via Host Client: not configured",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/441251"
+ },
+ {
+  "kb": 441315,
+  "topic": "NSX API and VIP certificates expired",
+  "decks": [
+   "Meet the fleet",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/441315"
+ },
+ {
+  "kb": 441333,
+  "topic": "Remove a failed Day-N component (cleanup_component.py)",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/441333"
+ },
+ {
+  "kb": 441340,
+  "topic": "Dark sites: VCF Download Tool 9.1",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/441340"
+ },
+ {
+  "kb": 441349,
+  "topic": "9.1 binaries 403: entitlement on the wrong Site ID",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round",
+   "Mind the licensing clock",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/441349"
+ },
+ {
+  "kb": 441506,
+  "topic": "VCFA truststore re-trust",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/441506"
+ },
+ {
+  "kb": 441509,
+  "topic": "Ops for networks, Automation: own integrations",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/441509"
+ },
+ {
+  "kb": 441515,
+  "topic": "platform-trust configmap, missing intermediate CA",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/441515"
+ },
+ {
+  "kb": 441526,
+  "topic": "License Server 9.1.0 clashes with 172.16.0.0/12 and 172.17.0.0/16",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round",
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/441526"
+ },
+ {
+  "kb": 441725,
+  "topic": "Supervisor load balancer: Foundation, NSX or Avi",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/441725"
+ },
+ {
+  "kb": 441813,
+  "topic": "NetFlow on VDS uplinks blocks the vCenter precheck",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/441813"
+ },
+ {
+  "kb": 441858,
+  "topic": "Import VCF Operations in Fleet Lifecycle fails or warns",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/441858"
+ },
+ {
+  "kb": 442133,
+  "topic": "Upgraded hosts show evaluation license",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/442133"
+ },
+ {
+  "kb": 442134,
+  "topic": "RDU prepare: cannot download target certificate (proxy)",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/442134"
+ },
+ {
+  "kb": 442139,
+  "topic": "9.1 LDAP leaves from runtime node IPs",
+  "decks": [
+   "Meet the fleet",
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/442139"
+ },
+ {
+  "kb": 442142,
+  "topic": "SSH host key case mismatch",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/442142"
+ },
+ {
+  "kb": 442223,
+  "topic": "RDU switchover: database schema, orphan rows",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/442223"
+ },
+ {
+  "kb": 442290,
+  "topic": "vCenter VM hardware above 17 blocks the precheck",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/442290"
+ },
+ {
+  "kb": 442380,
+  "topic": "Default collector group: every node reaches vCenter",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/442380"
+ },
+ {
+  "kb": 442564,
+  "topic": "License Server and vCenter connectivity",
+  "decks": [
+   "Meet the fleet",
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/442564"
+ },
+ {
+  "kb": 442588,
+  "topic": "Log management: skip Run Prechecks, click UPGRADE",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/442588"
+ },
+ {
+  "kb": 442719,
+  "topic": "VCF Ops node root password expired",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/442719"
+ },
+ {
+  "kb": 442735,
+  "topic": "SDDC Manager depot PKIX behind SSL inspection",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/442735"
+ },
+ {
+  "kb": 442857,
+  "topic": "VCFDT: ESX_HOST excluded from INSTALL type",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/442857"
+ },
+ {
+  "kb": 442978,
+  "topic": "9.1 Software depot: proxy CA via vmsp-utility.py",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/442978"
+ },
+ {
+  "kb": 442993,
+  "topic": "UNABLE_TO_UPDATE_SOFTWARE_INFO: restart lcm",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/442993"
+ },
+ {
+  "kb": 442998,
+  "topic": "Avi after a certificate swap; Remediate",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/442998"
+ },
+ {
+  "kb": 443082,
+  "topic": "LS console \"Not configured and Disconnected\"",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/443082"
+ },
+ {
+  "kb": 443106,
+  "topic": "Cloud proxy registration validation (Unified cloud proxy)",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round",
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/443106"
+ },
+ {
+  "kb": 443166,
+  "topic": "9.1 depot 403: egress from runtime nodes",
+  "decks": [
+   "Meet the fleet",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/443166"
+ },
+ {
+  "kb": 443216,
+  "topic": "Management services runtime components (9.1)",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/443216"
+ },
+ {
+  "kb": 443240,
+  "topic": "Evaluation runs out while Ops or LS is down",
+  "decks": [
+   "Meet the fleet",
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/443240"
+ },
+ {
+  "kb": 443279,
+  "topic": "ESX: add-on downgrade, incompatible compliance",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/443279"
+ },
+ {
+  "kb": 443327,
+  "topic": "Fleet Management \"get started\" prerequisites",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/443327"
+ },
+ {
+  "kb": 443647,
+  "topic": "Activation Code replaces download tokens",
+  "decks": [
+   "Meet the fleet",
+   "Upgrading to VCF 9.1, the right way round",
+   "Mind the licensing clock",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/443647"
+ },
+ {
+  "kb": 443672,
+  "topic": "ESX metadata from vvs: x509 unknown authority",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/443672"
+ },
+ {
+  "kb": 443680,
+  "topic": "VCF adapter to SDDC Manager API flow",
+  "decks": [
+   "Meet the fleet",
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/443680"
+ },
+ {
+  "kb": 443714,
+  "topic": "Removed assets still hold capacity: Reclaim Used Capacity",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/443714"
+ },
+ {
+  "kb": 443718,
+  "topic": "Stuck at \"Install VCF services runtime\": restart lifecycle pods",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/443718"
+ },
+ {
+  "kb": 443723,
+  "topic": "VCFA precheck: vmware-system-user expired",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/443723"
+ },
+ {
+  "kb": 443737,
+  "topic": "Cloud proxy registration validation, companion article",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/443737"
+ },
+ {
+  "kb": 443763,
+  "topic": "NSX Global Managers before Local Managers",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/443763"
+ },
+ {
+  "kb": 443784,
+  "topic": "Runtime node resource usage (9.1.1)",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/443784"
+ },
+ {
+  "kb": 443789,
+  "topic": "VCF Operations support bundle",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/443789"
+ },
+ {
+  "kb": 443900,
+  "topic": "Cloud proxy 503: haproxy resolver",
+  "decks": [
+   "Meet the fleet",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/443900"
+ },
+ {
+  "kb": 443928,
+  "topic": "Edit or Cancel Plan greyed out",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/443928"
+ },
+ {
+  "kb": 443943,
+  "topic": "Identity broker unavailable: runtime password expired",
+  "decks": [
+   "Meet the fleet",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/443943"
+ },
+ {
+  "kb": 443988,
+  "topic": "VCFA vmware-system-user differs between nodes",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/443988"
+ },
+ {
+  "kb": 444003,
+  "topic": "\"Identity broker is not available\" after 9.1",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/444003"
+ },
+ {
+  "kb": 444075,
+  "topic": "Express Patch version strings: bring components to EP1",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/444075"
+ },
+ {
+  "kb": 444094,
+  "topic": "Decommission the License Server properly",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/444094"
+ },
+ {
+  "kb": 444151,
+  "topic": "No VCF_FLEET_LCM entry in the Service Registry",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/444151"
+ },
+ {
+  "kb": 444168,
+  "topic": "Greyed-out vCenter or NSX upgrade: stale target version",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/444168"
+ },
+ {
+  "kb": 444267,
+  "topic": "Installer depot via proxy: certificate_unknown(46)",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/444267"
+ },
+ {
+  "kb": 444283,
+  "topic": "ESX remediation blocked by vSAN health alarms",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/444283"
+ },
+ {
+  "kb": 444324,
+  "topic": "ESX: corrupt vLCM depot metadata",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/444324"
+ },
+ {
+  "kb": 444349,
+  "topic": "vCenters not licensed by these licenses: Site ID",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/444349"
+ },
+ {
+  "kb": 444431,
+  "topic": "Installer cannot reach NTP deploying VCF Ops",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/444431"
+ },
+ {
+  "kb": 444466,
+  "topic": "Collect logs when Fleet lifecycle itself is down",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round",
+   "How it all connects",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/444466"
+ },
+ {
+  "kb": 444718,
+  "topic": "9.1 inventory sync location",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/444718"
+ },
+ {
+  "kb": 444734,
+  "topic": "Identity broker on a non-management network",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/444734"
+ },
+ {
+  "kb": 444938,
+  "topic": "Two NSX plugins with Federation",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/444938"
+ },
+ {
+  "kb": 444986,
+  "topic": "Cancel a credential task holding a lock",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/444986"
+ },
+ {
+  "kb": 444992,
+  "topic": "Interop data timeout: vvs.broadcom.com blocked",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/444992"
+ },
+ {
+  "kb": 445084,
+  "topic": "RDU switchover: foreign key error",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/445084"
+ },
+ {
+  "kb": 445179,
+  "topic": "\"Failed to bootstrap VCF services runtime\": mixed case",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/445179"
+ },
+ {
+  "kb": 445301,
+  "topic": "Fleet LCM DB leader (patronictl)",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/445301"
+ },
+ {
+  "kb": 445418,
+  "topic": "VCF Ops upgrade times out: root password expired",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/445418"
+ },
+ {
+  "kb": 445428,
+  "topic": "vCenter cannot resolve License Server name",
+  "decks": [
+   "Meet the fleet",
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/445428"
+ },
+ {
+  "kb": 445455,
+  "topic": "Fleet LCM database replica health (patronictl)",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/445455"
+ },
+ {
+  "kb": 445504,
+  "topic": "\"License assignment failed\" on host reboot: false positive",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/445504"
+ },
+ {
+  "kb": 445767,
+  "topic": "Third-party plugin (Cisco Intersight) after cert change",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/445767"
+ },
+ {
+  "kb": 446056,
+  "topic": "Disconnected 9.1 licensing; VCF Operations stays the authority",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/446056"
+ },
+ {
+  "kb": 446110,
+  "topic": "\"NSX Dataplane upgrade is not available\"",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/446110"
+ },
+ {
+  "kb": 446226,
+  "topic": "Management vCenter added as a standalone account",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/446226"
+ },
+ {
+  "kb": 446313,
+  "topic": "NSX back-in-time error during the upgrade",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/446313"
+ },
+ {
+  "kb": 446447,
+  "topic": "Cluster stuck Waiting for Analytics",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/446447"
+ },
+ {
+  "kb": 446454,
+  "topic": "VCFDT --depot-store must be the root",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/446454"
+ },
+ {
+  "kb": 446667,
+  "topic": "Fleet and SDDC lifecycle tasks view (9.1)",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/446667"
+ },
+ {
+  "kb": 446672,
+  "topic": "RDU prepare: Enhanced Linked Mode detection bug",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/446672"
+ },
+ {
+  "kb": 446831,
+  "topic": "Component import stalls at 46%: firewall to VCF Ops",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/446831"
+ },
+ {
+  "kb": 446874,
+  "topic": "SvcAccountsCreationResult is null",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/446874"
+ },
+ {
+  "kb": 446929,
+  "topic": "Storage vMotioned components break the bootstrap",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/446929"
+ },
+ {
+  "kb": 447248,
+  "topic": "bundle_cleanup.py for old bundles",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/447248"
+ },
+ {
+  "kb": 447314,
+  "topic": "Hung backup lock (5.x)",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/447314"
+ },
+ {
+  "kb": 447366,
+  "topic": "9.1 VCSA installer bypasses the proxy",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/447366"
+ },
+ {
+  "kb": 447375,
+  "topic": "ESX: vendor hardware support manager error",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/447375"
+ },
+ {
+  "kb": 447542,
+  "topic": "9.1 Software depot: proxy settings via vmsp-utility.py",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/447542"
+ },
+ {
+  "kb": 447554,
+  "topic": "License servers pending registration",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/447554"
+ },
+ {
+  "kb": 447589,
+  "topic": "Offline depot stale metadata",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/447589"
+ },
+ {
+  "kb": 447632,
+  "topic": "Online depot Disconnected: NSX resync",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/447632"
+ },
+ {
+  "kb": 447766,
+  "topic": "GENERATE_CSR endpoint.not.found (9.1)",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/447766"
+ },
+ {
+  "kb": 447767,
+  "topic": "NSX adapter: identity broker users not supported",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/447767"
+ },
+ {
+  "kb": 447995,
+  "topic": "OBTU not supported for SDDC Manager 9.x",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/447995"
+ },
+ {
+  "kb": 448054,
+  "topic": "VCF Ops 9.0 to 9.1 stuck at 10/14: node time drift",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/448054"
+ },
+ {
+  "kb": 448068,
+  "topic": "UPGRADE_SPEC_NSXT_ID_EMPTY: half-registered Edge",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/448068"
+ },
+ {
+  "kb": 448518,
+  "topic": "Licenses expire: 180-day update missed",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/448518"
+ },
+ {
+  "kb": 448522,
+  "topic": "Duplicate trusted certificate breaks Lifecycle",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/448522"
+ },
+ {
+  "kb": 448618,
+  "topic": "Runtime internal certificate expired (9.1.0)",
+  "decks": [
+   "Meet the fleet",
+   "How it all connects",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/448618"
+ },
+ {
+  "kb": 448638,
+  "topic": "Host with expired evaluation cannot be licensed",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/448638"
+ },
+ {
+  "kb": 448643,
+  "topic": "Network and flow collection: NSX added by IP",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/448643"
+ },
+ {
+  "kb": 448839,
+  "topic": "Installer does not trust the offline depot",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/448839"
+ },
+ {
+  "kb": 448885,
+  "topic": "Password remediation: 127-character UI limit",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/448885"
+ },
+ {
+  "kb": 448888,
+  "topic": "Runtime bootstrap needs vCenter on 443",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/448888"
+ },
+ {
+  "kb": 448933,
+  "topic": "ESX: leftover offline depot \"AlreadyExists\"",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/448933"
+ },
+ {
+  "kb": 449013,
+  "topic": "Duplicate key: vCenter certificate chain",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/449013"
+ },
+ {
+  "kb": 449075,
+  "topic": "ops_precheck 401: 9.0 fleet appliance still on",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/449075"
+ },
+ {
+  "kb": 449122,
+  "topic": "Renewal with new serial: Change Capacity",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/449122"
+ },
+ {
+  "kb": 449131,
+  "topic": "9.1 SDDC Manager-vCenter service account missing",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/449131"
+ },
+ {
+  "kb": 449148,
+  "topic": "Domain lock held by a stuck password task",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/449148"
+ },
+ {
+  "kb": 449159,
+  "topic": "SDDC Manager NTP change not written to ntp.conf",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/449159"
+ },
+ {
+  "kb": 449290,
+  "topic": "vCenter adapter reverts to the collector group",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/449290"
+ },
+ {
+  "kb": 449628,
+  "topic": "VCF Automation target needs a specific services runtime version",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/449628"
+ },
+ {
+  "kb": 449684,
+  "topic": "TEST_BEFORE_REMEDIATE failure",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/449684"
+ },
+ {
+  "kb": 449686,
+  "topic": "ESXI lock plus out-of-band root change",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/449686"
+ },
+ {
+  "kb": 449907,
+  "topic": "FQDN required in certificate SAN (9.1)",
+  "decks": [
+   "Meet the fleet",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/449907"
+ },
+ {
+  "kb": 449937,
+  "topic": "Component Powered Off, no Actions menu",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/449937"
+ },
+ {
+  "kb": 450375,
+  "topic": "Runtime service-account secrets stale after rotation",
+  "decks": [
+   "Meet the fleet",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/450375"
+ },
+ {
+  "kb": 450430,
+  "topic": "Snapshot VCF Ops offline, then bring it online",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/450430"
+ },
+ {
+  "kb": 450561,
+  "topic": "SFTP backup user must be user@domain",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/450561"
+ },
+ {
+  "kb": 450589,
+  "topic": "Remediate disconnected NSX and Avi service accounts",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/450589"
+ },
+ {
+  "kb": 450972,
+  "topic": "Back-in-time releases: 5.2.4 cannot go to 9.1.0",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/450972"
+ },
+ {
+  "kb": 451010,
+  "topic": "vmsp_upgrade: false \"IP pool exhausted\"",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/451010"
+ },
+ {
+  "kb": 451125,
+  "topic": "Compute manager 7058 after a root CA change",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/451125"
+ },
+ {
+  "kb": 451249,
+  "topic": "Duplicate key: CA imported by hand",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/451249"
+ },
+ {
+  "kb": 451344,
+  "topic": "Compute manager 7059: vCenter 9.0 into NSX 4.2",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/451344"
+ },
+ {
+  "kb": 451550,
+  "topic": "Stale svc-vcf-ESX account blocks re-commission",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/451550"
+ },
+ {
+  "kb": 451560,
+  "topic": "SoS access_denied: restart commonsvcs",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/451560"
+ },
+ {
+  "kb": 451644,
+  "topic": "\"Invalid VCF Operations instance\": SDDC Manager upgraded first",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/451644"
+ },
+ {
+  "kb": 451758,
+  "topic": "False \"logs are getting dropped\" (9.1)",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/451758"
+ },
+ {
+  "kb": 451990,
+  "topic": "License Server detection fails on DNS",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/451990"
+ },
+ {
+  "kb": 452077,
+  "topic": "Race with the 9.0 daily inventory sync",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/452077"
+ },
+ {
+  "kb": 452095,
+  "topic": "License Server networking and DNS",
+  "decks": [
+   "Meet the fleet",
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/452095"
+ },
+ {
+  "kb": 452124,
+  "topic": "Runtime moved or Storage-vMotioned: VCFMS-HEALTH-002",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/452124"
+ },
+ {
+  "kb": 452677,
+  "topic": "VCF Ops APUAT precheck interrupted by a reboot",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/452677"
+ },
+ {
+  "kb": 452764,
+  "topic": "No key upgrade: \"No data available to upgrade\"",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/452764"
+ },
+ {
+  "kb": 452951,
+  "topic": "ESX early-boot PSOD: Sub-NUMA Clustering",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/452951"
+ },
+ {
+  "kb": 453026,
+  "topic": "Disconnected: \"License Expired\" after 180 days without usage",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/453026"
+ },
+ {
+  "kb": 453116,
+  "topic": "Depot OAuth server unreachable",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/453116"
+ },
+ {
+  "kb": 453149,
+  "topic": "Usage report due date passed",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/453149"
+ },
+ {
+  "kb": 453510,
+  "topic": "Thumbprint cert mode blocks license push to hosts",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/453510"
+ },
+ {
+  "kb": 453517,
+  "topic": "\"No licenses are assignable\": toggle integration",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/453517"
+ },
+ {
+  "kb": 453736,
+  "topic": "Salt master to vCenter on TCP 4505/4506",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/453736"
+ },
+ {
+  "kb": 453758,
+  "topic": "vpxd panic from long snapshot chains",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/453758"
+ },
+ {
+  "kb": 453793,
+  "topic": "Ops node certificate SAN validation (9.1)",
+  "decks": [
+   "Meet the fleet",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/453793"
+ },
+ {
+  "kb": 453800,
+  "topic": "vCenter to License Server: sustained TLS on 443",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/453800"
+ },
+ {
+  "kb": 453809,
+  "topic": "CaSA has no MASTER: Fleet sync breaks (9.0)",
+  "decks": [
+   "How it all connects",
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/453809"
+ },
+ {
+  "kb": 454179,
+  "topic": "503, identity broker not reachable: IP conflict",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/454179"
+ },
+ {
+  "kb": 454287,
+  "topic": "Licenses could not be synchronized with vCenters",
+  "decks": [
+   "Mind the licensing clock"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/454287"
+ },
+ {
+  "kb": 454432,
+  "topic": "9.1.1: sixteen packs must be upgraded",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/454432"
+ },
+ {
+  "kb": 454434,
+  "topic": "9.1.1: MP Builder packs re-save and re-install",
+  "decks": [
+   "How it all connects"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/454434"
+ },
+ {
+  "kb": 454467,
+  "topic": "\"A vCenter upgrade is already running\": cancel script",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/454467"
+ },
+ {
+  "kb": 454593,
+  "topic": "PAK upload: No space left on device",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/454593"
+ },
+ {
+  "kb": 454943,
+  "topic": "VVF: management services are optional",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/454943"
+ },
+ {
+  "kb": 455225,
+  "topic": "lcm-debug.log: prechecks, bundles, depot",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/455225"
+ },
+ {
+  "kb": 455244,
+  "topic": "9.1 runtime bootstrap thumbprint mismatch",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/455244"
+ },
+ {
+  "kb": 455296,
+  "topic": "VCF Health \"Not configured\": management-services adapter",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/455296"
+ },
+ {
+  "kb": 455559,
+  "topic": "\"Upgrade All\" broke VCF Automation",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/455559"
+ },
+ {
+  "kb": 455733,
+  "topic": "NSX SSO after a broker certificate change",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/455733"
+ },
+ {
+  "kb": 455842,
+  "topic": "Simple runtime footprint after 9.1.1",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/455842"
+ },
+ {
+  "kb": 456013,
+  "topic": "9.1 cluster create: NSX OIDC 403",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/456013"
+ },
+ {
+  "kb": 456305,
+  "topic": "Runtime internal certificate overdue (9.1.1)",
+  "decks": [
+   "Follow the signposts"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/456305"
+ },
+ {
+  "kb": 456430,
+  "topic": "NSX VCF SSO Access Denied (9.1.1)",
+  "decks": [
+   "Meet the fleet"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/456430"
+ },
+ {
+  "kb": 456790,
+  "topic": "15-minute backups keep VCFA prechecks queued",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/456790"
+ },
+ {
+  "kb": 457245,
+  "topic": "Identity broker precheck needs the 9.1.1 runtime",
+  "decks": [
+   "Upgrading to VCF 9.1, the right way round"
+  ],
+  "url": "https://knowledge.broadcom.com/external/article/457245"
+ }
+]

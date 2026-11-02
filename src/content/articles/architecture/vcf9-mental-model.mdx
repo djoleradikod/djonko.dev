@@ -1,0 +1,111 @@
+---
+title: "The VCF 9 mental model: fleet, instance and domain"
+description: "VCF 5.x thought in domains. VCF 9 adds two layers above them, and most of the confusion in early 9.x projects comes from not seeing those layers."
+category: architecture
+order: 1
+versions: ["5.x", "9.0", "9.1"]
+level: Overview
+pubDate: 2026-11-02
+kbs: [440630, 443240]
+sources:
+  - title: "Fleet deployment models (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-operations-deployment-models.html"
+    by: "Broadcom TechDocs"
+  - title: "VCF management services models (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-management-services-models.html"
+    by: "Broadcom TechDocs"
+  - title: "SDDC Manager design (VCF 9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/design/design-library/vcf-operations-design/sddc-manager-design.html"
+    by: "Broadcom TechDocs"
+  - title: "VCF 9.1 lifecycle: one control plane and the real work to get there"
+    url: "https://humbledgeeks.com/vcf-91-lifecycle-one-control-plane-and-the-real-work-to-get-there/"
+    by: "humbledgeeks"
+  - title: "10 VCF 9 enhancements simplifying your Day-2 operations"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/"
+    by: "VMware Cloud Foundation blog"
+---
+
+<InShort>
+In VCF 5.x, the biggest thing you managed was an SDDC Manager and its domains. VCF 9 puts two layers above that. A **fleet** shares one VCF Operations and one VCF Automation. Inside a fleet, each **VCF instance** is a management domain with its own SDDC Manager, plus its workload domains. The domain still exists and still means one vCenter. What changed is that the fleet now owns the console, identity, licensing and the lifecycle of the management components. Most 9.x design questions start with "is this fleet-level or instance-level?"
+</InShort>
+
+<Compare rows={[
+  ["Top-level unit", "One SDDC Manager and its domains. Several SDDC Managers were federated loosely, if at all.", "The <b>fleet</b>: one VCF Operations and one VCF Automation over one or more instances."],
+  ["Middle layer", "None. The management domain was the top.", "The <b>VCF instance</b>: a management domain, its SDDC Manager and its workload domains."],
+  ["Domain", "One vCenter, with NSX dedicated or shared. Management domain plus VI workload domains.", "Unchanged in meaning: one vCenter per domain, with NSX dedicated or shared."],
+  ["Where you start", "The SDDC Manager UI.", "VCF Operations. SDDC Manager works underneath it."],
+  ["Management components", "Aria Suite, optional, deployed by Aria Suite Lifecycle in VCF-aware mode.", "Mandatory and fleet-scoped. In 9.1 most run as services on a Kubernetes runtime in each instance."],
+  ["Identity", "vCenter SSO per domain, or isolated SSO domains. vIDM for Aria.", "VCF Identity Broker, with a scope of fleet, cross-instance or single instance."],
+]} />
+
+## The three layers
+
+<Diagram viewBox="0 0 820 400" label="A fleet contains VCF Operations, VCF Automation and fleet services, and holds two VCF instances. Each instance has a management domain with SDDC Manager and a services runtime, and one or more workload domains each with a vCenter." caption="One fleet, two instances. Fleet-level services live in the first instance; every instance has its own SDDC Manager.">
+  <rect class="zone" x="10" y="10" width="800" height="380" rx="10" />
+  <text class="lbl" x="26" y="34">Fleet</text>
+  <rect class="box accent" x="26" y="46" width="768" height="62" rx="8" />
+  <text class="t" x="44" y="72">VCF Operations · VCF Automation</text>
+  <text class="s" x="44" y="92">One console, licensing, fleet lifecycle, certificates, passwords, identity configuration</text>
+  <rect class="zone" x="26" y="124" width="376" height="252" rx="8" />
+  <text class="lbl" x="40" y="146">VCF instance 1 (first)</text>
+  <rect class="box v9" x="40" y="158" width="348" height="92" rx="6" />
+  <text class="t" x="54" y="180">Management domain</text>
+  <text class="s" x="54" y="200">SDDC Manager · vCenter · NSX</text>
+  <text class="s" x="54" y="218">Services runtime (9.1): fleet and</text>
+  <text class="s" x="54" y="236">instance services</text>
+  <rect class="box" x="40" y="264" width="166" height="96" rx="6" />
+  <text class="t" x="54" y="288">Workload domain</text>
+  <text class="s" x="54" y="308">vCenter</text>
+  <text class="s" x="54" y="326">NSX (own or shared)</text>
+  <rect class="box" x="222" y="264" width="166" height="96" rx="6" />
+  <text class="t" x="236" y="288">Workload domain</text>
+  <text class="s" x="236" y="308">vCenter</text>
+  <text class="s" x="236" y="326">NSX (own or shared)</text>
+  <rect class="zone" x="418" y="124" width="376" height="252" rx="8" />
+  <text class="lbl" x="432" y="146">VCF instance 2</text>
+  <rect class="box v9" x="432" y="158" width="348" height="92" rx="6" />
+  <text class="t" x="446" y="180">Management domain</text>
+  <text class="s" x="446" y="200">SDDC Manager · vCenter · NSX</text>
+  <text class="s" x="446" y="218">Services runtime (9.1): instance</text>
+  <text class="s" x="446" y="236">services only</text>
+  <rect class="box" x="432" y="264" width="348" height="96" rx="6" />
+  <text class="t" x="446" y="288">Workload domain(s)</text>
+  <text class="s" x="446" y="308">vCenter · NSX</text>
+</Diagram>
+
+### Fleet
+
+A fleet is the operational boundary. It has exactly one VCF Operations and one VCF Automation, and it shares log management, operations for networks and the identity broker. Licensing hangs off VCF Operations, so the fleet is also your licensing boundary. You can run more than one fleet, for example one per region or per regulatory zone. Broadcom's design guidance is clear that every extra fleet adds management overhead, so treat a second fleet as a decision that needs a reason, not a default.
+
+### VCF instance
+
+An instance is what a 5.x engineer would recognise: a management domain with its own SDDC Manager, plus zero or more workload domains. In 9.1 each instance also gets its own services runtime, which runs instance-level services such as SDDC lifecycle, a Salt master and telemetry. The **first** instance is special. Its runtime also hosts the fleet-level services: fleet lifecycle, Salt RaaS and log management.
+
+### Domain
+
+A domain is unchanged in meaning: one vCenter, with NSX either dedicated or shared. The management domain still hosts the management plane. Workload domains still host the workloads.
+
+## Why the layers matter in practice
+
+**Upgrades go top-down.** The fleet is upgraded before any instance, and an instance's management plane before its domains. In 9.1, VCF Operations must be upgraded first (<KB id={440630} />). A useful rule of thumb from the community is "the fleet gates the instance, never the reverse". In 5.x, the order started at SDDC Manager because there was nothing above it.
+
+**The blast radius follows the layer.** If one domain's vCenter goes down, the damage stays inside that domain. If the first instance's management domain goes down, every instance loses the fleet-level services that live there. When VCF Operations itself is unavailable, workloads keep running and existing licences stay valid, but new licence assignments and capacity updates are blocked (<KB id={443240} />). The lifecycle and configuration screens are also unavailable.
+
+**Day-2 tasks moved up a layer.** Certificates, passwords, backup configuration, DNS and NTP settings for an instance, and workload domain creation all start in VCF Operations now. Host commissioning, network pools, cluster creation and edge clusters moved into vCenter. The <a href="/vcf/library/day-2/where-did-that-button-go/">Day-2 task map</a> lists them all.
+
+<Callout type="field">
+When a 9.x ticket or design question is vague, the first thing to settle is which layer it is about. "Certificates are failing" means something very different for a fleet management component, such as VCF Operations or the identity broker, than it does for an instance's core infrastructure, such as vCenter, NSX or ESX. Different services own them, and they log to different places.
+</Callout>
+
+## Design questions to settle early
+
+- **How many fleets?** Usually one. A second fleet makes sense for hard separation, such as sovereignty, a separate operator team or a separate licence entitlement. It does not make sense just for a second site.
+- **How many instances?** An instance is a failure and lifecycle boundary with its own SDDC Manager. Separate sites or regions often justify a second instance. Separate business units usually justify a workload domain instead.
+- **Where will the first instance live?** It carries the fleet services, so put it on the most resilient site you have.
+- **What identity scope?** Fleet-wide SSO is the simplest. Cross-instance or single-instance scopes limit the blast radius but add brokers to run. See <a href="/vcf/library/architecture/identity-broker/">Identity in VCF 9</a>.
+
+## Pitfalls
+
+- **Treating "instance" as a 9.x name for "domain".** It is not. An instance contains domains.
+- **Planning a 5.2 upgrade without planning the fleet.** The upgrade deploys VCF Operations and fleet management if they are missing, because they are mandatory in 9.x. Their sizing, IP addresses and DNS records need to be ready before the window.
+- **Assuming the fleet-level services are spread out.** In 9.1 they sit in the first instance's services runtime. If you lose that runtime, you lose fleet lifecycle and log management for every instance.

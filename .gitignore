@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.astro/
+deploy/.env
+.DS_Store
+# Large media lives outside git: synced to the server with deploy/hetzner/deploy.sh --media
+media/*
+!media/README.md

@@ -1,0 +1,41 @@
+import { defineConfig } from 'astro/config';
+import mdx from '@astrojs/mdx';
+import sitemap from '@astrojs/sitemap';
+import { createReadStream, existsSync, statSync } from 'node:fs';
+import { join, normalize, extname } from 'node:path';
+import remarkMermaid from './src/lib/remark-mermaid.mjs';
+
+// Pages that should not appear in the sitemap.
+const HIDDEN = /\/(404|search|cv|guide)\/?$/;
+
+// In `npm run dev`, serve ./media at /media so videos and large files work locally.
+// In production the web server (Caddy on Hetzner) or a separate media origin serves them.
+const TYPES = { '.mp4': 'video/mp4', '.webm': 'video/webm', '.vtt': 'text/vtt', '.pdf': 'application/pdf', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.zip': 'application/zip' };
+const devMedia = {
+  name: 'dev-media',
+  hooks: {
+    'astro:server:setup': ({ server }) => {
+      server.middlewares.use('/media', (req, res, next) => {
+        const file = normalize(join(process.cwd(), 'media', decodeURIComponent((req.url || '/').split('?')[0])));
+        if (!file.startsWith(join(process.cwd(), 'media')) || !existsSync(file) || statSync(file).isDirectory()) return next();
+        res.setHeader('Content-Type', TYPES[extname(file)] || 'application/octet-stream');
+        createReadStream(file).pipe(res);
+      });
+    },
+  },
+};
+
+export default defineConfig({
+  site: process.env.SITE_URL
+    // Cloudflare Pages preview branches get their own URL so canonicals and the sitemap match.
+    || (process.env.CF_PAGES && process.env.CF_PAGES_BRANCH !== 'main' ? process.env.CF_PAGES_URL : undefined)
+    || 'https://djonko.dev',
+  trailingSlash: 'always',
+  prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
+  integrations: [mdx(), sitemap({ filter: (page) => !HIDDEN.test(new URL(page).pathname) }), devMedia],
+  markdown: {
+    remarkPlugins: [remarkMermaid],
+    syntaxHighlight: { type: 'shiki', excludeLangs: ['mermaid'] },
+    shikiConfig: { themes: { light: 'github-light-high-contrast', dark: 'github-dark-high-contrast' } },
+  },
+});

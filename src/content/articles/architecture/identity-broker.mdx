@@ -1,0 +1,93 @@
+---
+title: "Identity in VCF 9: from vIDM and vCenter SSO to the VCF Identity Broker"
+description: "5.x had two identity stories, vCenter SSO for infrastructure and Workspace ONE Access for Aria. VCF 9 replaces both with one broker and one sign-on, and the scope you choose for it sets your blast radius."
+category: architecture
+order: 5
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [409610, 437258, 444003, 444734, 432503, 420836, 444757]
+sources:
+  - title: "Deployment models for VCF SSO (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/what-is/deployment-models-for-sso.html"
+    by: "Broadcom TechDocs"
+  - title: "Authentication design for VCF (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/auth-design-vcf.html"
+    by: "Broadcom TechDocs"
+  - title: "vIDM vs vIDB: understanding the VCF identity shift"
+    url: "https://www.wwt.com/blog/vidm-vs-vidb-understanding-the-vcf-identity-shift"
+    by: "WWT"
+  - title: "Group and link your vCenter Servers to simplify workload management"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/19/group-and-link-your-vcenter-servers-to-simplify-workload-management/"
+    by: "VMware Cloud Foundation blog"
+  - title: "VCF 5.2 release notes (Entra ID federation)"
+    url: "https://docs.vmware.com/en/VMware-Cloud-Foundation/5.2/rn/vmware-cloud-foundation-52-release-notes/index.html"
+    by: "VMware"
+---
+
+<InShort>
+In 5.x, infrastructure users signed in through vCenter SSO. That was usually one `vsphere.local` domain in Enhanced Linked Mode, plus isolated domains where needed. Aria products used Workspace ONE Access (vIDM). VCF 9 introduces the **VCF Identity Broker**, which federates to your identity provider and gives vCenter, NSX, VCF Operations and VCF Automation a single sign-on. SDDC Manager is the exception: it is not part of VCF SSO. There is **no migration from vIDM**, so the broker is always a new deployment. Choose its mode and scope deliberately, because the broker is a single point of failure for authentication within its scope.
+</InShort>
+
+<Compare rows={[
+  ["Infrastructure sign-on", "vCenter SSO (vsphere.local), Enhanced Linked Mode, and isolated SSO domains per workload domain where needed", "VCF SSO through the Identity Broker. Enhanced Linked Mode is deprecated for new use, and vCenter linking in VCF Operations replaces it."],
+  ["Management product sign-on", "Workspace ONE Access (vIDM), deployed by Aria Suite Lifecycle", "The same broker. vIDM is not carried forward."],
+  ["Identity providers", "AD over LDAP, and federation with ADFS, Okta and, from 5.2, Entra ID", "AD and LDAP, OIDC or SAML providers. Generic OIDC added in 9.1."],
+  ["SDDC Manager", "Part of the management SSO domain", "Excluded from VCF SSO, with local accounts only"],
+  ["Upgrade path", "Not applicable", "None from vIDM. Deploy the broker new, then reconfigure consumers such as VCF Automation (<a href='https://knowledge.broadcom.com/external/article/409610' target='_blank' rel='noopener'>KB 409610</a>)."],
+]} />
+
+## Modes
+
+**9.0**
+- **Embedded:** runs inside the management domain vCenter and is protected by vSphere HA. It is simple, but it fails with that vCenter. Recommended for a single instance.
+- **Appliance:** a three-node cluster deployed by fleet management. It tolerates the loss of one node and serves up to five VCF instances. Recommended for multiple instances, or when some components cannot reach the management vCenter.
+
+**9.1**
+- **Embedded:** still available. TechDocs describes it as having limited scale and availability.
+- **Instance mode:** runs as a multi-node service on the VCF services runtime, and is the recommended model for production. A 9.0 appliance is migrated into instance mode during the 9.1 upgrade. If the appliance sat on a non-management network, the move is a disruptive backup-and-restore transition that needs a window (<KB id={444734} />).
+
+## Scope is the real design decision
+
+VCF SSO can be **fleet-wide**, **cross-instance** or **single-instance**. A broker covers everything in its scope, so the scope is also the blast radius when it fails:
+
+<Diagram viewBox="0 0 820 220" label="Three SSO scopes: fleet-wide covers every instance with one broker; cross-instance groups some instances; single-instance gives each instance its own broker." caption="Wider scope means fewer brokers to run and a larger blast radius.">
+  <text class="lbl" x="20" y="24">Fleet-wide</text>
+  <rect class="box accent" x="20" y="34" width="240" height="40" rx="6" /><text class="t" x="34" y="59">One broker</text>
+  <rect class="box" x="20" y="90" width="72" height="44" rx="6" /><text class="s" x="30" y="117">Inst. 1</text>
+  <rect class="box" x="104" y="90" width="72" height="44" rx="6" /><text class="s" x="114" y="117">Inst. 2</text>
+  <rect class="box" x="188" y="90" width="72" height="44" rx="6" /><text class="s" x="198" y="117">Inst. 3</text>
+  <text class="lbl" x="290" y="24">Cross-instance</text>
+  <rect class="box accent" x="290" y="34" width="156" height="40" rx="6" /><text class="t" x="304" y="59">Broker A</text>
+  <rect class="box accent" x="458" y="34" width="72" height="40" rx="6" /><text class="t" x="468" y="59">B</text>
+  <rect class="box" x="290" y="90" width="72" height="44" rx="6" /><text class="s" x="300" y="117">Inst. 1</text>
+  <rect class="box" x="374" y="90" width="72" height="44" rx="6" /><text class="s" x="384" y="117">Inst. 2</text>
+  <rect class="box" x="458" y="90" width="72" height="44" rx="6" /><text class="s" x="468" y="117">Inst. 3</text>
+  <text class="lbl" x="560" y="24">Single-instance</text>
+  <rect class="box accent" x="560" y="34" width="72" height="40" rx="6" /><text class="t" x="570" y="59">A</text>
+  <rect class="box accent" x="644" y="34" width="72" height="40" rx="6" /><text class="t" x="654" y="59">B</text>
+  <rect class="box accent" x="728" y="34" width="72" height="40" rx="6" /><text class="t" x="738" y="59">C</text>
+  <rect class="box" x="560" y="90" width="72" height="44" rx="6" /><text class="s" x="570" y="117">Inst. 1</text>
+  <rect class="box" x="644" y="90" width="72" height="44" rx="6" /><text class="s" x="654" y="117">Inst. 2</text>
+  <rect class="box" x="728" y="90" width="72" height="44" rx="6" /><text class="s" x="738" y="117">Inst. 3</text>
+  <text class="s" x="20" y="170">Simplest to run.</text>
+  <text class="s" x="20" y="188">One outage affects all.</text>
+  <text class="s" x="290" y="170">Group by site or by</text>
+  <text class="s" x="290" y="188">operator team.</text>
+  <text class="s" x="560" y="170">Smallest blast radius,</text>
+  <text class="s" x="560" y="188">most brokers to run.</text>
+</Diagram>
+
+Changing from embedded to an external model later requires a reset of VCF SSO. Settle the scope in the design, not after go-live.
+
+## How it is configured
+
+SSO is configured in VCF Operations under Fleet Management, Identity and Access. It needs at least one licensed instance with a management domain vCenter. The page depends on the management domain's cloud proxy and fails to load if that proxy is offline (<KB id={437258} />). VCF Operations stores the broker's registration and mode. If the stored mode is wrong, for example after an upgrade, the broker shows as unavailable (<KB id={444003} />).
+
+## Pitfalls
+
+- **Planning a vIDM upgrade.** There isn't one. Plan a new broker deployment and a cut-over for every consumer, especially VCF Automation.
+- **Putting the embedded broker in front of a multi-instance fleet.** It works, but the management vCenter becomes the sign-on for everything.
+- **Certificates with IP SANs.** The broker certificate must not carry an IP SAN in the 9.1 transition (<KB id={444734} />).
+- **Losing SDDC Manager credentials.** Because SDDC Manager is outside VCF SSO, its local admin credentials are your only way in. Keep them in your vault.
+- **Expecting VVF to have a broker.** vSphere Foundation without management services does not include one. Its components manage their identity providers separately.

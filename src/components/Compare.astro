@@ -1,0 +1,23 @@
+---
+// Two ways to use it:
+//   <Compare title="..." rows={[["Topic", "5.x text", "9.x text"], ...]} />
+//   <Compare title="..."><Fragment slot="v5">...</Fragment><Fragment slot="v9">...</Fragment></Compare>
+interface Props { title?: string; rows?: [string, string, string][]; v5Label?: string; v9Label?: string }
+const { title = 'What changed from 5.x', rows, v5Label = 'VCF 5.x', v9Label = 'VCF 9.x' } = Astro.props;
+---
+<section class="compare" aria-label={title}>
+  <div class="cap">{title}</div>
+  {rows ? (
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th class="v5">{v5Label}</th><th class="v9">{v9Label}</th></tr></thead>
+        <tbody>{rows.map(([t, a, b]) => <tr><td>{t}</td><td set:html={a} /><td set:html={b} /></tr>)}</tbody>
+      </table>
+    </div>
+  ) : (
+    <div class="cols">
+      <div class="col v5"><h4>{v5Label}</h4><slot name="v5" /></div>
+      <div class="col v9"><h4>{v9Label}</h4><slot name="v9" /></div>
+    </div>
+  )}
+</section>

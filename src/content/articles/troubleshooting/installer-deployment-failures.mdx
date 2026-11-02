@@ -1,0 +1,79 @@
+---
+title: "VCF Installer and bring-up failures: the validation errors that come up again and again"
+description: "Most deployment failures in 9.x are caught by validation and caused by input: DNS case, missing records, host storage, HCL data, uplinks, a spec field, or a proxy the vCenter installer ignores. A catalogue grouped by cause, with the fix and the KB."
+category: troubleshooting
+order: 4
+versions: ["9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [403626, 404501, 405770, 408233, 427591, 416490, 401658, 431474, 447366, 415550, 439010, 447589]
+sources:
+  - title: "VCF Installer 9.1 known issues"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/known-issues/vcf-installer-91-known-issues.html"
+    by: "Broadcom TechDocs"
+  - title: "VCF 9 deployment planning and operations"
+    url: "https://vcf-planning.hollebollevsan.nl/"
+    by: "Community guide"
+---
+
+<InShort>
+The VCF Installer replaced Cloud Builder. It validates more, and most of its failures are input problems that the validation found. Six causes cover nearly all of them: **names** (uppercase FQDNs, missing A or PTR records), **hosts** (storage, stale vSAN partitions, beta builds, incompatible VIBs), **hardware compatibility** (HCL data older than 90 days), **network shape** (uplinks configured differently), **the spec** (a missing field), and **outbound paths** (the vCenter installer bypasses the depot proxy in 9.1). Fix the input, then **Retry**. For a broken spec, cancel, edit the JSON and deploy from it.
+</InShort>
+
+<Compare rows={[
+  ["Tool", "Cloud Builder appliance", "VCF Installer appliance, which becomes SDDC Manager"],
+  ["Spec", "Deployment parameter workbook or JSON", "UI wizard or JSON spec, with POST /v1/sddcs/validations first"],
+  ["Scope", "Management domain", "Management domain plus fleet components, VCF Operations and, in 9.1, the services runtime"],
+  ["Retry", "Retry in the UI", "Retry in the UI, or Cancel Progress, edit JSON, then deploy from JSON"],
+]} />
+
+## Names
+
+- **Uppercase in any FQDN.** SDDC Manager services fail to start, and in 9.1 uppercase also breaks fleet, runtime, identity broker and VCF Automation names (<KB id={403626} />).
+- **No DNS record for the installer itself** shows as a 502 on login (<KB id={404501} />).
+- **The SDDC Manager FQDN mapped to 127.0.0.1** in `/etc/hosts` fails certificate installation. Manual SSH fixes can then lock the `vcf` user (<KB id={439010} />).
+
+## Hosts
+
+- **"ESX Host Configuration Validation Failed"** with `Cannot open volume`: host storage, so fix it and reboot (<KB id={405770} />).
+- **vSAN disk availability fails**: stale vSAN partitions or ineligible disks. Check with `vdq -qH`. Partition removal is destructive, so be sure of the disk (<KB id={408233} />).
+- **Host seeding failed**: a pre-release ESX build on the first host (<KB id={401658} />) or VIBs that don't match the image (<KB id={431474} />).
+
+## Hardware compatibility
+
+**"ESX Host is not HCL compatible"**: uncertified hardware, an HCL database older than 90 days, or NVMe behind tri-mode controllers (<KB id={427591} />). Update the HCL data before the deployment window, not during it.
+
+## Network shape
+
+**"No route to host" at network migration**: management and VM management networks configured differently, so the vDS uplink assignment fails (<KB id={415550} />). Keep the two identical.
+
+## The spec
+
+**A VCF Automation IP pool error** in 9.0: the pool needs two entries for standard and four for high availability (<KB id={416490} />). Download the JSON, cancel progress, fix it, then **Deploy using JSON spec**.
+
+## Outbound paths
+
+- **"Deploy vCenter Appliance" hangs** at the HCL time check in 9.1. The vCenter CLI installer ignores the installer's proxy and calls `eapi.broadcom.com` directly. Allow that path (<KB id={447366} />).
+- **Stuck at "Initializing binary database"** with an offline depot: stale manifest or metadata, often from a caching web server (<KB id={447589} />).
+
+## Before you press Deploy
+
+```text
+[ ] Every FQDN lowercase, with A and PTR, resolving from the installer
+[ ] NTP reachable and answering quickly from the installer
+[ ] Hosts on a GA build, matching the image, storage visible, vSAN disks clean
+[ ] HCL data fresh (less than 90 days)
+[ ] Management and VM management networks configured identically
+[ ] Direct HTTPS from the installer to eapi.broadcom.com (9.1), or offline depot ready
+[ ] JSON spec saved and validated
+```
+
+<Callout type="field">
+Run the validation a day before the deployment window and keep the output. It turns deployment day into a formality, and the saved JSON becomes the as-built record.
+</Callout>
+
+## Pitfalls
+
+- **Fixing by hand on the appliance** instead of fixing the input. The retry repeats the same validation.
+- **Redeploying from scratch** when Retry would resume.
+- **Typing passwords with characters the spec rejects.** Check the password rules before generating them.

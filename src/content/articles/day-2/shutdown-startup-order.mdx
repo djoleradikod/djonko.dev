@@ -1,0 +1,83 @@
+---
+title: "Shutdown and startup order for a 9.x fleet"
+description: "Power events are rare, so nobody remembers the order. In 9.x the order gained a fleet rule, a License Server and a Kubernetes runtime with its own script. Here is the sequence with the reasoning, so it can be adapted rather than memorised."
+category: day-2
+order: 7
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [440874, 440862, 341964]
+sources:
+  - title: "Shutting down VMware Cloud Foundation (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/vcf-shutdown-and-startup/vcf-shutdown.html"
+    by: "Broadcom TechDocs"
+  - title: "Shut down the management domain (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain.html"
+    by: "Broadcom TechDocs"
+  - title: "Shut down VCF management services (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain/shut-down-vcf-managament-services.html"
+    by: "Broadcom TechDocs"
+  - title: "Start the management domain (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain.html"
+    by: "Broadcom TechDocs"
+  - title: "VCF 9 deployment planning and operations: shutdown and startup"
+    url: "https://vcf-planning.hollebollevsan.nl/docs/13-shutdown-startup/"
+    by: "Community guide"
+---
+
+<InShort>
+The principle hasn't changed since 5.x: shut down consumers before what they depend on, and start in reverse. Workload domains go before the management domain, and the management components go before the infrastructure that hosts them. VCF 9 adds a fleet rule: **the instance that runs VCF Operations goes down last and comes up first**. 9.1 adds two components to the management domain sequence. The **License Server** is an ordinary VM. The **services runtime** is shut down only with its script, which knows the runtime's internal order. After an unclean power event, the runtime comes back control plane first.
+</InShort>
+
+<Compare rows={[
+  ["Fleet rule", "None. Each SDDC Manager stood alone.", "Instances without VCF Operations or Automation first. The VCF Operations instance last down, first up."],
+  ["Management components", "Aria products (if any), then NSX edges and managers, SDDC Manager, vCenter and hosts", "VCF Automation, Ops for networks, collectors or cloud proxies, logs (9.0), the broker (9.0), fleet management (9.0), VCF Operations, then NSX, SDDC Manager and hosts"],
+  ["New in 9.1", "Not applicable", "License Server, then the services runtime with its shutdown script, before VCF Operations"],
+  ["Timing", "Minutes per component", "VCF Operations offline or online takes about an hour each way. Runtime workers can take about 20 minutes to settle."],
+]} />
+
+## Shutdown, 9.1 management domain
+
+After every workload domain is down (customer workloads, protection, edges, NSX managers if not shared, hosts, then the workload domain vCenter):
+
+1. VCF Automation
+2. VCF Operations for networks
+3. Cloud proxies
+4. License Server
+5. **Management services:** `vcf_services_runtime_shutdown.sh` (<KB id={440874} />). Run it with `--dry-run` first. Don't stop runtime VMs by hand.
+6. **VCF Operations:** take the cluster offline, then shut the nodes down in the documented order (<KB id={341964} />)
+7. Protection and recovery, if deployed, as late as possible
+8. NSX edges, then NSX managers
+9. SDDC Manager
+10. Hosts and the management vCenter through the vSAN shutdown wizard. DNS, NTP and AD VMs go last if they live here.
+
+For 9.0, the list differs in the middle. There is no License Server or runtime, but VCF Operations for logs, the identity broker appliance and the fleet management appliance are shut down before VCF Operations.
+
+## Startup, 9.1 management domain
+
+1. Hosts, powered on out of band
+2. SDDC Manager
+3. NSX managers (wait for the cluster to be stable), then edges
+4. Protection and recovery
+5. **VCF Operations:** power on in order, then bring the cluster online
+6. **Management services:** control plane nodes first, then workers. Allow about 20 minutes, and confirm no workers are still being replaced.
+7. License Server
+8. Cloud proxies
+9. VCF Operations for networks
+10. VCF Automation
+
+Then each workload domain: vCenter, hosts, a cluster restart to re-establish principal storage integration (easy to miss), NSX, edges and workloads. With shared NSX, bring up the other workload domains first, then the domain that runs the shared edges.
+
+## After an unclean power event
+
+If the runtime came back on its own in the wrong order, services can stay at zero replicas and nodes at "Ready,SchedulingDisabled". The documented recovery is to power on the control plane first, wait five minutes, power on the workers, then wait 15 to 20 minutes (<KB id={440862} />). The same KB covers the power-off marker that the shutdown script leaves behind.
+
+<Callout type="field">
+Write the order for the customer's actual estate, not the generic one. List which optional components exist, where DNS, NTP and AD run, and which domains share NSX. Then time a planned shutdown in a maintenance window. The hour each way for VCF Operations surprises people the first time.
+</Callout>
+
+## Pitfalls
+
+- **Forgetting the backup tools.** Stop VADP-based backup jobs first, or they fail noisily and hold snapshots.
+- **Running management VMs on snapshots** through a shutdown. Consolidate first.
+- **Credentials.** Save the host and vCenter credentials before you start. SSO may not be available halfway through.

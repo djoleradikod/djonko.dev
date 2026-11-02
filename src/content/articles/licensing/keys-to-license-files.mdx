@@ -1,0 +1,89 @@
+---
+title: "From 25-character keys to license files: the 9.x licensing model in one page"
+description: "VCF 5.x licensing was a key typed into a product. VCF 9.x licensing is a signed file, issued by the VCF Business Services console to a registered VCF Operations instance and assigned to vCenter. Everything else in 9.x licensing follows from that change."
+category: licensing
+order: 1
+versions: ["5.x", "9.0", "9.1"]
+level: Overview
+pubDate: 2026-11-02
+kbs: [437242, 404155, 406836, 452764]
+sources:
+  - title: "Licensing overview (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/licensing-overview.html"
+    by: "Broadcom TechDocs"
+  - title: "Licensing overview (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview.html"
+    by: "Broadcom TechDocs"
+  - title: "Licensing in VMware Cloud Foundation 9.0"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/24/licensing-in-vmware-cloud-foundation-9-0/"
+    by: "VMware Cloud Foundation blog"
+  - title: "VCF 9.1 licensing: programmatic, centralized and built to scale"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/18/vcf-9-1-licensing-programmatic-centralized-and-built-to-scale/"
+    by: "VMware Cloud Foundation blog"
+---
+
+<InShort>
+In 9.x there are no keys to type into vCenter. You buy a subscription, and the **VCF Business Services console** (vcf.broadcom.com) turns it into a **default license** with your purchased capacity. A **VCF Operations** instance registers with the console and receives a signed **license file**. You then assign a **primary license** (VCF or VVF) to each **vCenter**, and everything connected to that vCenter is licensed through it. Usage is reported back at least every 180 days. VCF Operations is mandatory for this: vCenter 9 has no field for a key (<KB id={404155} />).
+</InShort>
+
+<Compare rows={[
+  ["What you hold", "25-character keys, per component or one VCF solution key (from 5.1.1)", "A subscription in the console, issued as a signed license file"],
+  ["Where it lives", "In each product (vCenter, NSX, vSAN, SDDC Manager)", "VCF Operations. In 9.1, on a dedicated License Server appliance managed by VCF Operations."],
+  ["What you assign to", "Each component separately", "vCenter. 9.1 adds optional overrides on hosts and vSAN clusters."],
+  ["Reporting", "None", "Usage reported, and licenses refreshed, at least every 180 days"],
+  ["Evaluation", "60 days", "90 days"],
+  ["Upgrade of keys", "Not applicable", "None. A subscription carries 9.x licenses and 8.x keys side by side (<a href='https://knowledge.broadcom.com/external/article/452764' target='_blank' rel='noopener'>KB 452764</a>)."],
+]} />
+
+## The moving parts
+
+<Diagram viewBox="0 0 760 230" label="Licensing flow in 9.x" caption="The console issues, VCF Operations holds and assigns, vCenter enforces. In 9.1 the License Server holds the file on VCF Operations' behalf.">
+  <rect class="box plain" x="10" y="80" width="170" height="70" rx="8"/>
+  <text class="t" x="95" y="110" text-anchor="middle">Business Services</text>
+  <text class="s" x="95" y="130" text-anchor="middle">console (Site ID)</text>
+  <rect class="box accent" x="240" y="80" width="170" height="70" rx="8"/>
+  <text class="t" x="325" y="110" text-anchor="middle">VCF Operations</text>
+  <text class="s" x="325" y="130" text-anchor="middle">registered instance</text>
+  <rect class="box v9" x="240" y="170" width="170" height="44" rx="8"/>
+  <text class="s" x="325" y="197" text-anchor="middle">9.1: License Server</text>
+  <rect class="box plain" x="470" y="80" width="130" height="70" rx="8"/>
+  <text class="t" x="535" y="110" text-anchor="middle">vCenter</text>
+  <text class="s" x="535" y="130" text-anchor="middle">primary license</text>
+  <rect class="box plain" x="630" y="40" width="120" height="44" rx="8"/>
+  <text class="s" x="690" y="67" text-anchor="middle">ESX hosts</text>
+  <rect class="box plain" x="630" y="100" width="120" height="44" rx="8"/>
+  <text class="s" x="690" y="127" text-anchor="middle">NSX, vSAN</text>
+  <rect class="box plain" x="630" y="160" width="120" height="44" rx="8"/>
+  <text class="s" x="690" y="187" text-anchor="middle">VCF Automation</text>
+  <line class="wire accent" x1="180" y1="105" x2="238" y2="105" marker-end="url(#arra)"/>
+  <line class="wire dash" x1="238" y1="128" x2="182" y2="128" marker-end="url(#arr)"/>
+  <text class="lbl" x="185" y="72">license file</text>
+  <text class="lbl" x="185" y="166">usage</text>
+  <line class="wire" x1="325" y1="150" x2="325" y2="168"/>
+  <line class="wire accent" x1="410" y1="115" x2="468" y2="115" marker-end="url(#arra)"/>
+  <line class="wire" x1="600" y1="100" x2="628" y2="62" marker-end="url(#arr)"/>
+  <line class="wire" x1="600" y1="115" x2="628" y2="122" marker-end="url(#arr)"/>
+  <line class="wire" x1="600" y1="130" x2="628" y2="182" marker-end="url(#arr)"/>
+</Diagram>
+
+- **Default license.** Capacity from every active subscription of the same product in a Site ID pools into one default license. Each VCF core includes 1 TiB of vSAN.
+- **Splitting.** One allocation cannot serve two VCF Operations instances. To license several instances, split the default license in the console so each gets its own share (<KB id={437242} />).
+- **Primary and add-on.** VCF and VVF are primary licenses and must be assigned first. vSAN capacity beyond the included amount, and Private AI Foundation, are add-ons in the same file. NSX and HCX are no longer licensed separately.
+- **Still on keys.** vDefend Firewall, Avi Load Balancer, Tanzu Platform and Data Services Manager keep license keys. VMware Live Recovery is SaaS.
+
+## What this changes for operations
+
+1. **VCF Operations becomes infrastructure.** If it is down for long enough, licensing cannot be refreshed. Plan its availability and backups accordingly.
+2. **A calendar item appears.** Every instance has a usage-reporting deadline. See [the 180-day cycle](/vcf/library/licensing/180-day-cycle/).
+3. **Licensing has a network path.** Connected mode needs outbound HTTPS from every VCF Operations node. See [connected or disconnected](/vcf/library/licensing/connected-vs-disconnected/).
+4. **Mixed estates are normal during migration.** 8.x components keep their keys while 9.x components use the file (<KB id={406836} />).
+
+<Callout type="field">
+On a 5.x to 9.x project, give licensing its own workstream with an owner on the customer side who has access to the console for the right Site ID. The technical steps take an hour. Getting the right person with the right portal access can take two weeks.
+</Callout>
+
+## Pitfalls
+
+- **Trying to upgrade keys in the support portal.** There is nothing to upgrade. The 9.x license comes from the console.
+- **Registering against the wrong Site ID.** It produces false expiry banners and failed updates. See [licensing errors decoded](/vcf/library/licensing/licensing-errors-decoded/).
+- **Treating a monitoring-only VCF Operations as a licensing authority.** It does not need to be registered, and should not be, unless it will license vCenters.

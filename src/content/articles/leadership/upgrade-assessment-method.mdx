@@ -1,0 +1,72 @@
+---
+title: "Assessing a 5.x estate for VCF 9: the questions that decide the plan"
+description: "An upgrade assessment is only useful if it ends in a plan the customer can approve. These are the questions, grouped by what they decide, that turn a 5.x estate into a sequenced, risk-ranked VCF 9 upgrade proposal."
+category: leadership
+order: 2
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [440630]
+sources:
+  - title: "Modernizing infrastructure: VCF 5.2.x to 9.1 upgrade guide"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/06/05/modernizing-infrastructure-vmware-cloud-foundation-5-2-x-to-9-1-upgrade-guide/"
+    by: "VMware Cloud Foundation blog"
+  - title: "Upgrading to VCF 9.1.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+An assessment answers five questions, each of which decides part of the plan. **Where are we?** Versions, topology and drift decide the path and the first step. **What's in the way?** Baseline-managed clusters, unsupported hardware, add-on versions and certificates decide the pre-work. **What changes for the people?** The new consoles, SSO, licensing and the services runtime decide the training and the change plan. **What are the dependencies?** DNS, firewalls, IP pools and the depot decide the lead times. **What's the risk appetite?** Windows, rollback points and sequencing decide the schedule. The deliverable is a sequenced plan with owners, not an inventory.
+</InShort>
+
+<Compare v5Label="Inventory" v9Label="Assessment" title="What makes it an assessment" rows={[
+  ["Output", "Spreadsheet of components", "A sequenced plan with risks and owners"],
+  ["Focus", "What exists", "What blocks, what changes, what it costs"],
+  ["Audience", "Engineers", "Engineers and the person who approves the budget"],
+]} />
+
+## The question bank
+
+**Where are we?**
+- Exact versions of every component, including add-ons (Avi, replication, HCX, Aria products).
+- Number of instances, domains and clusters, and which share NSX or SSO.
+- Anything changed outside SDDC Manager: passwords, certificates, manual patches.
+
+**What's in the way?**
+- Clusters still on baselines rather than images (images are required from 9.0).
+- Hardware and firmware against the compatibility guide for the target release.
+- Certificates: issuer, expiry, and whether SANs will satisfy 9.1's stricter checks.
+- Aria products and how each one maps to its 9.x successor.
+
+**What changes for the people?**
+- Who will operate VCF Operations day to day, and who owns licensing in the console.
+- Identity: current SSO model, identity provider, and the target VCF SSO model.
+- Runbooks that reference SDDC Manager UI paths that will move.
+
+**What are the dependencies?**
+- DNS and IP addresses for new components: VCF Operations, the License Server, the services runtime pool, VCF Automation.
+- Firewall changes, especially outbound from runtime nodes in 9.1.
+- Depot method: online, proxy, or offline.
+
+**What's the risk appetite?**
+- Change windows and freeze periods.
+- Rollback expectations for each phase.
+- Whether a lab rehearsal is required before production.
+
+## The plan structure
+
+1. **Pre-work** with lead times: DNS, IPs, firewall, certificates, images, add-on upgrades.
+2. **Phase gates** in the official order, with a go or no-go check at each (<KB id={440630} />).
+3. **Risk register**: each risk with likelihood, impact, owner and mitigation.
+4. **People plan**: training, runbook updates, licensing ownership.
+
+<Callout type="field">
+Present the plan with one recommendation and the reason for it, plus the alternatives you considered. Customers rarely want five options. They want to know what you would do and why.
+</Callout>
+
+## Pitfalls
+
+- **Assessing only the management domain.** Workload domains carry most of the risk.
+- **Ignoring add-ons.** They decide the order more often than the core does.
+- **No owner for licensing.** It becomes a blocker in week three.

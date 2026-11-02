@@ -1,0 +1,92 @@
+---
+title: "Worked example: an upgrade precheck that fails on name resolution"
+description: "One failure, taken through the seven-step triage from first report to closure, with the time each step took and the change made afterwards so it does not recur."
+pubDate: 2026-11-02
+tags: ["Troubleshooting", "Upgrades", "Method"]
+kind: "Write-up"
+series: "Worked examples"
+---
+
+<Callout type="note">
+This is a constructed example. The names, addresses, IDs and timings are invented, and the domain is the fictional `rainpole.io`. The method, the log locations and the checks are the ones used on real tickets.
+</Callout>
+
+The [seven-step triage](/vcf/library/troubleshooting/seven-step-triage/) is easier to follow in use than in outline. This write-up takes one ordinary failure through it, step by step. The failure is deliberately unremarkable. Most tickets are, and the method earns its keep on those, not on the rare exotic one.
+
+## The report
+
+On a Tuesday afternoon the platform team runs the upgrade prechecks for a workload domain ahead of a planned move from 9.0 to 9.1. The precheck for the domain completes with one failure on a single ESX host, `esx-07.rainpole.io`. The summary line says that a name resolution check failed for the host. The change window is on Thursday.
+
+The first instinct in a situation like this is to look at the host. The method asks for something else first.
+
+## 1. Capture the IDs (2 minutes)
+
+The engineer copies three things into the ticket before opening anything else:
+
+- the precheck task ID from the task details,
+- the failed check and the object it ran against (`esx-07.rainpole.io`),
+- the time of failure: 14:32 local time, which is 13:32 UTC. SDDC Manager logs in UTC, so the UTC time is the one that matters for searching.
+
+## 2. Find the layer (1 minute)
+
+An ESX host belongs to the core infrastructure, and the precheck ran from SDDC Manager. That decides where to look: the SDDC Manager task, and the logs under `/var/log/vmware/vcf/` on SDDC Manager. The management components and the services runtime are not involved.
+
+## 3. Read the message (5 minutes)
+
+The task details carry a short message and a resolution hint. For the full story, the engineer opens `lcm/lcm-debug.log` on SDDC Manager, searches for the task ID around 13:32 UTC, and reads to the last "Caused by" in the stack trace. It says that the reverse lookup of the host's management address returned a different name from the one in the inventory.
+
+That is already a strong lead, but it is a lead, not a conclusion. The next two steps exist to stop a plausible explanation from cutting the investigation short.
+
+## 4. Check for locks (1 minute)
+
+Nothing else is running against the domain: no other precheck, no password rotation, no backup. A lock would not explain this message, but it takes a minute to rule out and it would change the retry plan if one were present.
+
+## 5. Check the basics (6 minutes)
+
+The engineer runs the read-only [basics check](/downloads/vcf/vcf-check-basics.sh) from SDDC Manager itself, because SDDC Manager's view of DNS is the one the precheck used. The input file lists every host in the domain plus vCenter and the NSX Managers.
+
+```text
+FQDN                                     IPv4             Forward  Reverse  Case
+vc-wld01.rainpole.io                     198.51.100.20    OK       OK       OK
+nsx-wld01a.rainpole.io                   198.51.100.31    OK       OK       OK
+esx-05.rainpole.io                       198.51.100.105   OK       OK       OK
+esx-06.rainpole.io                       198.51.100.106   OK       OK       OK
+esx-07.rainpole.io                       198.51.100.107   OK       FAIL (esx-old-03.rainpole.io)  OK
+esx-08.rainpole.io                       198.51.100.108   OK       OK       OK
+
+1 of 6 names failed. Fix DNS first (forward and reverse, lowercase) before retrying the workflow.
+```
+
+The forward record for `esx-07` is correct. The reverse record for its address still points at the name of a host that was decommissioned last year. When the address was reused, the forward record was created and the old pointer record was never removed.
+
+NTP, disk space and reachability are checked in the same pass and are all fine. That matters: it means the DNS record is the only explanation on the table, not just the first one found.
+
+## 6. Recover in scope (10 minutes, most of it waiting)
+
+The DNS team removes the stale pointer record and adds the correct one. The engineer repeats the check from SDDC Manager until the reverse lookup returns `esx-07.rainpole.io`, which takes a few minutes while caches expire. Then they use **Retry Precheck** on the domain. It passes.
+
+Nothing on the host was changed, nothing was redeployed, and the upgrade window on Thursday is unaffected.
+
+## 7. Escalate with evidence (not needed)
+
+The ticket closes without escalation. Had the retry failed, the ticket already held everything a support engineer would ask for first: the task ID, the time in UTC, the "Caused by" line, the output of the basics check, and what had been changed since.
+
+## What the example shows
+
+**Where the time went.** About fifteen minutes of engineer time, of which the fix itself took one. The rest went on establishing that the fix was the right one. That ratio is normal and healthy.
+
+**Why the order matters.** Going straight to the host in step 1 would have found nothing wrong with it. Going straight to "it's DNS" from the log line in step 3 would have been right this time, but without step 5 there would have been no evidence that nothing else was also wrong two days before a change window.
+
+**The follow-up is the valuable part.** The failure was caused by a process gap, not by the precheck or by the host. The team made two changes:
+
+1. Address reuse now includes removing the old pointer record, as a checklist item in the DNS request template.
+2. The basics check runs against every VCF component as part of the monthly health check, not only before upgrades. A stale record is cheaper to find on an ordinary Tuesday than in a change window.
+
+Neither change is clever. Both remove a class of failure rather than one instance of it, which is what a post-incident action should do.
+
+## Related
+
+- [A seven-step triage for any VCF 9.x failure](/vcf/library/troubleshooting/seven-step-triage/)
+- [Reading SDDC Manager and lifecycle logs: which file, and how to follow one ID](/vcf/library/troubleshooting/reading-sddc-manager-logs/)
+- [DNS, NTP and proxy: the three dependencies behind a large share of tickets](/vcf/library/day-2/dns-ntp-proxy/)
+- [The prechecks that fail most often, and how to clear them before the window](/vcf/library/upgrades/prechecks-that-fail/)

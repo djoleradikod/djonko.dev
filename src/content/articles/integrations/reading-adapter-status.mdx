@@ -1,0 +1,64 @@
+---
+title: "Reading adapter status: Collecting, Object down, Data receiving, and what each combination means"
+description: "VCF Operations shows integration health in four different places with slightly different words. Once you know the vocabulary, the combination of proxy state, collection state and status points straight at the fix: credentials, certificates, reachability or a stuck collector."
+category: integrations
+order: 3
+versions: ["9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [325773, 421016, 449013, 446874, 421958, 429451, 433259, 410383]
+sources:
+  - title: "Cloud proxy troubleshooting (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/cloud-proxy-troubleshooting.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+Read health in this order: **proxy** (Online, Offline, Going Online), **account status** (Collecting, Warning, Failed), the **tooltip** on a warning (State and Status), and the **admin UI** collection status (Data receiving, No data receiving). The combination usually tells you the fix. **Proxy Online, account Collecting, status Object down** means the credentials are wrong. **State: Stopping** that never finishes means a stuck collector: stop and start collection. **PKIX** or **SSLHandshake** errors mean certificate trust. **Duplicate key ... CertificateConfig** means a duplicate certificate in a chain or in trusted certificates (<KB id={449013} />).
+</InShort>
+
+<Compare rows={[
+  ["Where to look", "Administration > Solutions, then Collection status", "Operate > Administration > Integrations > Accounts, then the admin UI"],
+  ["Credentials", "Usually your own accounts", "Usually system-managed: Rotate, Validate, Save"],
+  ["Adapter logs", "/storage/log/vcops/log/adapters/", "The same, on whichever node or proxy runs the adapter"],
+]} />
+
+## The combinations
+
+| Proxy | Account | Detail | Meaning and fix |
+|---|---|---|---|
+| Online | Collecting | Status: Object down | Credentials wrong or rotated. Rotate or update, validate, save (<KB id={421958} />). |
+| Online | Warning | State: Stopping | Collector stuck. Stop collecting, then start (<KB id={429451} />). |
+| Online | Failed | "Certificate verification failed" | The endpoint certificate changed. Edit, validate, accept the new certificate (<KB id={325773} />). |
+| Online | Failed | PKIX or SSLHandshakeException | Trust chain. Import leaf, intermediate and root into Trusted Certificates (<KB id={421016} />). |
+| Online | Warning | "Unable to connect to VC: Duplicate key" | Duplicate certificate in vCenter's chain. Rebuild the chain (<KB id={449013} />). |
+| Offline or Going Online | Any | | Fix the proxy first: DNS, outbound 443, registration. "Going Online" can take 20 minutes after first boot. |
+
+## Two cases that look broken but aren't
+
+- **"No data receiving" on vCenter from the Supervisor adapter** is by design. It only borrows vCenter's credentials (<KB id={410383} />).
+- **Duplicate VCF adapters**, one by IP and one by FQDN, cause "Service or view is not available". Delete one **without** deleting related objects (<KB id={433259} />).
+
+## Where the logs are
+
+```text
+On the node or proxy running the adapter:
+  /storage/log/vcops/log/collector.log
+  /storage/log/vcops/log/adapters/VMwareAdapter/      vCenter
+  /storage/log/vcops/log/adapters/VcfAdapter/          VCF account
+  /storage/log/vcops/log/adapters/ManagementAdapter/   passwords, certificates, licensing tasks
+On a cloud proxy:
+  cprc-cli -s                                           proxy status
+```
+
+If "Invalid username or password" persists with system-managed credentials, the analytics log may show that service account creation failed. Rotate, then validate (<KB id={446874} />).
+
+<Callout type="field">
+Teach the four-word rule to the operations team: "Online, Collecting, Object down: credentials." It is the single most common integration ticket, and it never needs escalation.
+</Callout>
+
+## Pitfalls
+
+- **Deleting and re-adding an account** as the first move. You lose history and sometimes create duplicates.
+- **Deleting related objects** when removing a duplicate adapter.
+- **Reading logs on the wrong node.** Adapters run where their collector is.

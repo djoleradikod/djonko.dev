@@ -1,0 +1,50 @@
+---
+title: "Building team knowledge: a KB index, signposts and the habit of writing it down"
+description: "Platform teams solve the same problem many times unless someone writes it down where the next person will look. A small, curated index of the KBs that matter, mapped to symptoms, does more than a large wiki nobody searches."
+category: leadership
+order: 9
+versions: ["5.x", "9.0", "9.1"]
+level: Overview
+pubDate: 2026-11-02
+kbs: []
+sources:
+  - title: "Diátaxis: a systematic approach to technical documentation"
+    url: "https://diataxis.fr/"
+    by: "Daniele Procida"
+---
+
+<InShort>
+Keep a **curated KB index**: each entry is a KB number, a one-line topic in your own words, the version it applies to, and the symptom that should lead someone to it. The [KB index](/vcf/resources/kb-index/) on this site is an example, built while preparing the talk series. Add **signposts**: short "if you see X, go to Y" tables at the top of runbooks and notes. And build the **habit**: every solved ticket ends with one line added somewhere the next person will find it.
+</InShort>
+
+<Compare v5Label="Large wiki" v9Label="Curated index" title="What gets used" rows={[
+  ["Size", "Hundreds of pages", "A few hundred lines"],
+  ["Entry point", "Search, if it works", "Symptom or error string"],
+  ["Upkeep", "Nobody owns it", "Updated as tickets close"],
+  ["Trust", "Low: old pages mixed with new", "Versions on every line"],
+]} />
+
+## What a good index entry looks like
+
+| KB | Topic in your words | Versions | Symptom that leads here |
+|---|---|---|---|
+| 444986 | Cancel a credential task holding a lock | 9.x | "Resource is already locked by OPERATIONS_MANAGER" |
+| 443166 | Depot 403: allow all runtime nodes | 9.1 | 403 from the depot after moving to 9.1 |
+| 448518 | 180-day rolling licence window | 9.x | Expiry date months before the contract ends |
+
+## Habits that keep it alive
+
+- **Close with a line.** Every resolved ticket adds or updates one entry.
+- **Version everything.** An entry without a version is a trap after the next upgrade.
+- **Prune quarterly.** Remove entries for versions you no longer run.
+- **Own it.** One person reviews additions, so the language stays consistent.
+
+<Callout type="field">
+When onboarding a new engineer, give them the index and three past tickets to solve with it. It teaches the platform and tests the index at the same time.
+</Callout>
+
+## Pitfalls
+
+- **Copying KB text** into the index. Link it, and write the topic in your own words.
+- **Details not meant for customers** in a shared index. Keep a separate private layer if you need one.
+- **Indexing everything.** If it hasn't helped twice, it probably doesn't belong.

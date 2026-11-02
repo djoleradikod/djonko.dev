@@ -1,0 +1,51 @@
+---
+title: "Log collection and network flow collection: the integrations that ride on the VCF account"
+description: "Log management and VCF Operations for networks each need data from vCenter, NSX and hosts, with their own system-managed credentials. Most of their failures trace back to how the source was first added, a certificate, or the vCenter 9.1 log agent change."
+category: integrations
+order: 8
+versions: ["9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [425906, 432694, 422606, 424877, 448643, 433089, 451758, 436904]
+sources:
+  - title: "Configuring a VMware Cloud Foundation account (9.1): log and flow collection"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/connect-to-data-sources/vmware-cloud-foundation/configuring-vmware-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+**Log collection** uses its own system-managed vCenter account per source, named like `svc-li-vc-...@vsphere.local`, with a number that increments on each rotation (<KB id={432694} />). With a VCF licence, the integration between VCF Operations and the logs cluster is configured automatically when the logs cluster is imported; with VVF it is a manual tile (<KB id={425906} />). In 9.1, vCenter ships its own log agent, and upgrading vCenter **wipes the old log configuration**, so re-enable collection afterwards (<KB id={433089} />). **Network and flow collection** fails if NSX was previously added to VCF Operations for networks by IP: remove it, wait two hours, re-add by FQDN (<KB id={448643} />).
+</InShort>
+
+<Compare rows={[
+  ["Log platform", "Aria Operations for Logs, separate appliance cluster", "9.0: VCF Operations for logs. 9.1: log management on the services runtime."],
+  ["Log credentials", "Your own vCenter account", "System-managed per integration"],
+  ["vCenter log agent", "Syslog configuration", "9.1: built-in agent. The upgrade resets syslog targets."],
+  ["SDDC Manager logs", "Syslog to the log platform", "9.1.1: Log Operations toggle on the VCF account"],
+]} />
+
+## Log collection failures
+
+| Symptom | Cause and fix |
+|---|---|
+| VC collection status "Error: Failed to login" | Credential rotation pending or failed. Rotate the integration's credential (<KB id={432694} />). |
+| "You are viewing this account configuration in read-only mode" | Credential ownership. Log in as the owner or use a shared domain credential (<KB id={422606} />). |
+| `certificate_unknown(46)` on 9.0.0 or 9.0.1 | Restart logs nodes, or the forwarder container on a collector (<KB id={424877} />). |
+| vCenter logs stop after upgrading vCenter to 9.1 | Re-enable collection on Configure Collection (<KB id={433089} />). |
+| Banner "logs are getting dropped" with zero drops on the dashboard | A false positive from a tight dynamic threshold (<KB id={451758} />). |
+| No ingestion after restoring to a rebuilt runtime | The documented post-restore step (<KB id={436904} />). |
+
+## Network and flow collection
+
+- **Activate it on the vCenter or NSX account** with the "Activate Network & Flow Collection" option, which creates its own credential.
+- **If NSX was added by IP** in VCF Operations for networks, enabling it fails with "Adapter instance successfully saved but failed to enable Network and Flow Collection feature". Delete the IP-based source, wait two hours, re-add by FQDN (<KB id={448643} />).
+
+<Callout type="field">
+Before a vCenter 9.1 upgrade, screenshot the log collection configuration for each vCenter. Re-enabling it afterwards takes minutes when you know what was there, and the gap in logs is visible to auditors.
+</Callout>
+
+## Pitfalls
+
+- **Adding data sources by IP** anywhere. FQDN everywhere.
+- **Sending SDDC Manager logs through the default unified proxy** in 9.1.1. That path needs an advanced unified proxy.
+- **Using third-party Logs content packs** after 9.1. Convert them to management packs.

@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+const l = SITE.links;
+const channels = [
+  l.linkedin && { label: 'LinkedIn', href: l.linkedin, note: 'The best place for work enquiries and introductions.' },
+  l.github && { label: 'GitHub', href: l.github, note: 'Issues, feature requests and pull requests for the tools.' },
+  l.email && { label: 'Email', href: `mailto:${l.email}`, note: l.email },
+].filter(Boolean) as { label: string; href: string; note: string }[];
+---
+<Base title="Contact" description={`How to reach ${SITE.author} about VMware Cloud Foundation work, talks or the tools for VCF Operations.`}>
+  <div class="prose">
+    <p class="eyebrow">Contact</p>
+    <h1>Get in touch</h1>
+    <p class="lede">I'm glad to hear about VCF architecture and upgrade work, workshop or talk invitations, and feedback on the notes or the tools.</p>
+    {channels.length ? (
+      <ul class="list" style="margin-top:20px">
+        {channels.map((c) => <li><a href={c.href} rel="me noopener" target={c.href.startsWith('mailto:') ? undefined : '_blank'}><span class="t">{c.label}</span><span class="d">{c.note}</span></a></li>)}
+      </ul>
+    ) : <div class="empty"><h3>Contact links are coming</h3><p>LinkedIn and GitHub links will appear here at launch.</p></div>}
+    <h2>Before you write</h2>
+    <ul>
+      <li><strong>Found a mistake in a note?</strong> Say which page and what you saw. Corrections are welcome and get credited.</li>
+      <li><strong>A problem with a tool?</strong> Open an issue in its GitHub repository, with the VCF Operations build you run.</li>
+      <li><strong>Support cases:</strong> I can't take on support for a specific environment here. For production problems, open a case with Broadcom support.</li>
+    </ul>
+  </div>
+</Base>

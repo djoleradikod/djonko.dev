@@ -1,0 +1,156 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { kbInfo } from '../../../data/kb';
+import Pdf from '../../../components/Pdf.astro';
+const k = (id: number) => kbInfo(id);
+const steps: [string, string][] = [
+  ['Capture the IDs', 'Reference ID or task ID, failed step, and the time to the minute with its time zone.'],
+  ['Find the layer', 'Management component or core infrastructure (table below).'],
+  ['Read the message', 'Including the resolution text in the task details, then the last "Caused by" in the log.'],
+  ['Check for locks', 'Nothing else running on the same scope: no parallel precheck, backup or rotation.'],
+  ['Check the basics', 'DNS (lowercase, forward and reverse), NTP, disk, reachability from the real source address.'],
+  ['Recover in scope', 'Retry Precheck, Retry Task, or the API. Never redeploy to retry.'],
+  ['Escalate with evidence', 'Bundle, IDs, timestamps, and what was tried since.'],
+];
+const prefixes: [string, string][] = [
+  ['VCFMS-…', 'Services runtime unhealthy. Fix pod health, then retry.'],
+  ['VCFA-…', 'VCF Automation topology or health validation.'],
+  ['VCF_LCM_FLEET_UPGRADE_…', 'Plan level. Then open the SDDC lifecycle task details.'],
+  ['…IAM_401_INVALID_TOKEN…', 'Time sync on every node in the cluster.'],
+  ['"failed at step …"', 'Fleet or SDDC lifecycle workflow. Follow the ID trail across services.'],
+  ['UnknownHostException', 'DNS.'],
+  ['No route to host', 'Network path or uplinks.'],
+  ['InvalidLogin, 403, locked', 'Credentials or lockout.'],
+  ['PKIX path building failed', 'Certificate trust.'],
+];
+const fixes: [string, number[]][] = [
+  ['9.1 binaries missing in VCF Operations 9.0', [440282]],
+  ['vCenter not connected to a license server', [440471]],
+  ['Import VCF Operations in fleet lifecycle fails', [440459, 441858]],
+  ['Failed or duplicate component', [441333]],
+  ['Stale service account (InvalidLogin)', [450375]],
+  ['SSH host key mismatch', [316028]],
+  ['Stuck deployment lock', [422426]],
+  ['Credential task holding a lock', [444986]],
+  ['Stuck fleet or SDDC lifecycle task', [435569]],
+  ['SoS runtime logs access_denied', [451560]],
+  ['Depot 403 (9.0 token, 9.1 activation code)', [420374, 443647]],
+  ['Depot 403 from runtime nodes', [443166]],
+  ['JWT token expired', [409353]],
+];
+---
+<Base title="Triage cheat sheet" description="One page for VCF 9.x triage: which layer owns the problem, where its logs are, what its errors look like, how to retry and what to attach.">
+  <p class="eyebrow"><a href="/vcf/" style="color:inherit;text-decoration:none">VCF notes</a> / <a href="/vcf/resources/" style="color:inherit;text-decoration:none">Resources</a></p>
+  <h1>VCF 9.x triage cheat sheet</h1>
+  <p class="lede">Find the layer that owns the failure first, then open that layer's logs.</p>
+  <div class="no-print"><Pdf file="/downloads/vcf/vcf9-triage-cheat-sheet.pdf" title="Printable PDF (A4)" description="The same content as a handout for the desk or the war room." /></div>
+
+  <section class="cs">
+    <h2>Which layer owns it?</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>Management component</th><th>Core infrastructure</th></tr></thead>
+        <tbody>
+          <tr><th>What</th><td>VCF Operations, VCF Automation, identity broker, Ops for networks, log management, services runtime</td><td>vCenter, ESX, NSX Managers and Edges, vSAN, HCX</td></tr>
+          <tr><th>Driven by</th><td>Fleet lifecycle (plans) and SDDC lifecycle (runs)</td><td>SDDC Manager</td></tr>
+          <tr><th>UI (9.1)</th><td>Build &gt; Lifecycle &gt; VCF Management &gt; Tasks</td><td>Build &gt; Lifecycle &gt; VCF Instances</td></tr>
+          <tr><th>Errors</th><td><code>VCF_LCM_…</code> codes with a reference ID</td><td>Enum codes with a reference token</td></tr>
+          <tr><th>Logs</th><td>Pods in <code>vcf-fleet-lcm</code>, <code>vcf-sddc-lcm</code></td><td><code>/var/log/vmware/vcf/</code> on SDDC Manager</td></tr>
+          <tr><th>Retry</th><td>Fix, then Retry Task (resumes at the failed step)</td><td>Fix, then UI retry or <code>PATCH /v1/tasks/&#123;id&#125;</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="cs">
+    <h2>The method, in order</h2>
+    <ol class="steps">{steps.map(([t, d]) => <li><strong>{t}.</strong> {d}</li>)}</ol>
+    <p class="small muted">The reasoning behind each step: <a href="/vcf/library/troubleshooting/seven-step-triage/">A seven-step triage for any VCF 9.x failure</a>.</p>
+  </section>
+
+  <div class="cs-grid">
+    <section class="cs">
+      <h2>Error text to likely cause</h2>
+      <table class="tight"><tbody>{prefixes.map(([a, b]) => <tr><td><code>{a}</code></td><td>{b}</td></tr>)}</tbody></table>
+    </section>
+    <section class="cs">
+      <h2>Log map</h2>
+      <table class="tight"><tbody>
+        <tr><th>SDDC Manager</th><td><code>/var/log/vmware/vcf/</code>: <code>lcm/lcm-debug.log</code> (prechecks, bundles, upgrades), <code>domainmanager/</code> (domains, clusters, hosts, fleet task results), <code>operationsmanager/</code> (passwords, certificates, backups, commissioning), <code>commonsvcs/</code> (tokens, SSH keys, API), <code>sddc-support/</code> (SoS)</td></tr>
+        <tr><th>VCF Operations</th><td><code>/storage/log/vcops/log/</code>: <code>collector.log</code>, <code>web-vcf.log</code> (Lifecycle plugins), <code>adapters/&lt;Kind&gt;/</code>, <code>casa/casa.log</code> (cluster)</td></tr>
+        <tr><th>Runtime (9.1)</th><td>Fleet build and upgrade in <code>vcf-fleet-lcm</code>, SDDC build and upgrade in <code>vcf-sddc-lcm</code>, depot in <code>vcf-fleet-depot</code>, platform tasks in <code>vmsp-platform</code></td></tr>
+        <tr><th>vCenter</th><td><code>/var/log/vmware/</code>: <code>vsphere-ui/logs/</code> (plugins), <code>cis-license/license.log</code>, <code>vmware-updatemgr/</code> (vLCM)</td></tr>
+        <tr><th>NSX</th><td><code>/var/log/cm-inventory/cm-inventory.log</code> (compute managers), <code>/var/log/syslog</code></td></tr>
+      </tbody></table>
+    </section>
+  </div>
+
+  <section class="cs">
+    <h2>Runtime toolkit (read-only)</h2>
+    <pre><code>{`# On a control-plane node: ssh vmware-system-user, then
+sudo su -
+export KUBECONFIG=/etc/kubernetes/admin.conf
+
+kubectl get pods -A | grep -vE 'Running|Completed'
+kubectl get tasks -n vmsp-platform --no-headers | grep -E '^(install|stage|configure)-component'
+kubectl get events -n vcf-fleet-lcm --sort-by=.lastTimestamp | tail -30
+P=$(kubectl get pods -n vcf-fleet-lcm -l app=fleetbuild -o jsonpath='{.items[0].metadata.name}')
+kubectl logs $P -n vcf-fleet-lcm --tail=200
+kubectl -n vcf-fleet-lcm exec vcf-fleet-lcm-db-0 -- patronictl list`}</code></pre>
+    <p class="small muted">Fixes go through KB scripts, not kubectl. More in <a href="/vcf/library/troubleshooting/services-runtime-kubectl/">the services runtime for VI admins</a>.</p>
+  </section>
+
+  <div class="cs-grid">
+    <section class="cs">
+      <h2>Known fixes</h2>
+      <table class="tight"><tbody>{fixes.map(([t, ids]) => <tr><td>{t}</td><td class="nowrap">{ids.map((id, i) => <>{i > 0 && ' · '}<a href={k(id).url} target="_blank" rel="noopener" title={k(id).topic}>{id}</a></>)}</td></tr>)}</tbody></table>
+    </section>
+    <section class="cs">
+      <h2>Evidence to attach</h2>
+      <ul class="tight-list">
+        <li><strong>Core:</strong> <code>sos --sddc-manager-logs --zip</code>, or <code>--collect-all-logs</code> (<a href={k(385749).url} target="_blank" rel="noopener">KB 385749</a>)</li>
+        <li><strong>Management services (9.1):</strong> add <code>--vcf-mgmt-svcs-logs</code>, or the fleet lifecycle bundle. Fleet lifecycle down: <a href={k(444466).url} target="_blank" rel="noopener">KB 444466</a></li>
+        <li><strong>VCF Operations:</strong> Control Panel &gt; Support Bundles (<a href={k(443789).url} target="_blank" rel="noopener">KB 443789</a>)</li>
+        <li><strong>UI problems:</strong> a browser HAR file</li>
+        <li><strong>Always:</strong> reference and task IDs, time of failure, what was tried since</li>
+      </ul>
+      <p class="small"><strong>Rules:</strong> snapshot before any database change · one operation at a time · health before retry · retry before rebuild.</p>
+    </section>
+  </div>
+
+  <section class="cs">
+    <h2>Upgrade order (9.0 to 9.1)</h2>
+    <p>VCF Operations first, then vSphere Replication, Avi, SDDC Manager, then management services with the License Server and depot, identity broker, VCF Automation, then Orchestrator, Ops for networks and logs, then the core per domain (HCX, NSX Manager and vCenter, ESX, NSX Edges), then finalize (<a href={k(440630).url} target="_blank" rel="noopener">KB 440630</a>).</p>
+  </section>
+  <p class="small muted">Not official vendor guidance. Confirm against the current KB for your build before changing production.</p>
+</Base>
+
+<style>
+  .cs { margin: 1.6rem 0; }
+  .cs h2 { font-size: 1.12rem; margin: 0 0 0.6rem; }
+  .cs-grid { display: grid; gap: 0 28px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+  .steps { margin: 0; padding-left: 1.3rem; }
+  .steps li { margin: 0.25rem 0; }
+  table.tight td, table.tight th { padding: 6px 8px; vertical-align: top; font-size: 0.92rem; }
+  table.tight th { text-align: left; white-space: nowrap; }
+  .tight-list { margin: 0; padding-left: 1.1rem; font-size: 0.94rem; }
+  .tight-list li { margin: 0.3rem 0; }
+  .nowrap { white-space: nowrap; }
+  pre { overflow-x: auto; }
+  @media print {
+    @page { size: A4; }
+    :global(html) { font-size: 8.6pt; }
+    :global(body) { font-size: 1rem; line-height: 1.35; }
+    :global(h1) { font-size: 17pt; margin: 0 0 2pt; }
+    :global(.lede) { font-size: 9.5pt; margin: 0 0 4pt; }
+    :global(.eyebrow) { display: none; }
+    .cs { margin: 6pt 0; }
+    .cs h2 { font-size: 10.5pt; margin: 0 0 3pt; }
+    .cs-grid { grid-template-columns: 1fr 1fr; gap: 0 14pt; }
+    table.tight td, table.tight th, .cs table td, .cs table th { padding: 2pt 5pt; font-size: 8.2pt; }
+    .steps li { margin: 1pt 0; }
+    .tight-list li { margin: 1pt 0; }
+    pre { padding: 6pt 8pt; }
+    tr, li { break-inside: avoid; }
+  }
+</style>

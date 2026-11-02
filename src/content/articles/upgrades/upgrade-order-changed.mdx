@@ -1,0 +1,79 @@
+---
+title: "Why the upgrade order changed: SDDC Manager first in 5.x, VCF Operations first in 9.x"
+description: "The order is not arbitrary. It follows who manages whom. Once you see the dependency chain, the 9.1 sequence and the 9.1.1 patch rules stop looking like trivia."
+category: upgrades
+order: 2
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [440630, 390634, 440282, 457245, 449075]
+sources:
+  - title: "VCF 9.1.1 release notes: getting to 9.1.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+  - title: "Upgrading to VCF 9.1.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+  - title: "VCF 9.1: understanding VCF Express Patches"
+    url: "https://williamlam.com/2026/07/vcf-9-1-understanding-vcf-express-patches.html"
+    by: "William Lam"
+  - title: "VCF 9.1 lifecycle: one control plane and the real work to get there"
+    url: "https://humbledgeeks.com/vcf-91-lifecycle-one-control-plane-and-the-real-work-to-get-there/"
+    by: "humbledgeeks"
+---
+
+<InShort>
+The rule is that **whatever manages a component is upgraded before the component**. In 5.x, SDDC Manager managed everything, so it went first. In 9.x, VCF Operations is the console, the licence holder and, in 9.1, the orchestrator of fleet and SDDC lifecycle, so it goes first. After it come the services it uses, then SDDC Manager, then the management services, then each domain's core. The 9.1.1 patch rules apply the same logic one level down. Fleet lifecycle is patched first, and a service is patched before anything that runs on it.
+</InShort>
+
+<Compare rows={[
+  ["Who orchestrates", "SDDC Manager", "VCF Operations, through fleet lifecycle and SDDC lifecycle in 9.1"],
+  ["First step", "SDDC Manager (then Aria Suite Lifecycle, if VCF-aware)", "Aria Suite Lifecycle 8.18 Patch 2 if present, then VCF Operations"],
+  ["Core order", "NSX, then vCenter, then ESX", "The same, with HCX first and edges and NSX finalize after ESX. 9.1 offers sequential or optimized (RDU) vCenter plans."],
+  ["New in the middle", "Nothing", "9.1: deploy management services, the License Server and the depot after SDDC Manager"],
+  ["Patching", "Async patch tool, built into SDDC Manager from 5.2", "Express Patches per component. Fleet lifecycle first, and no parallel VCF Operations patching."],
+]} />
+
+## The 9.1 sequence, and the reason for each step
+
+The published sequence (<KB id={440630} />) reads as a list. Here is the reasoning behind each position:
+
+1. **VCF Operations first.** It holds the lifecycle UI and the licence file, and on a 9.0 source it receives the fleet appliance's inventory during its own upgrade. The 9.1 binaries do not even appear in VCF Operations 9.0 until it is upgraded (<KB id={440282} />).
+2. **vSphere Replication and Avi.** These are compatibility gates. Avi must already be supported by the SDDC Manager you are about to install.
+3. **SDDC Manager.** This is the engine that will deploy the management services and later upgrade the core.
+4. **Management services, License Server and software depot (9.1).** Fleet lifecycle and SDDC lifecycle must exist before they can upgrade anything. Configure the depot before any further component upgrades.
+5. **Identity broker, then VCF Automation, then the rest of the management components** (Orchestrator, Operations for networks, log management). These are clients of the runtime and of SSO.
+6. **Core, per domain.** HCX, then NSX and vCenter according to the plan, then ESX, NSX edges and finalize.
+
+<Diagram viewBox="0 0 820 120" label="Manager before managed: VCF Operations, then SDDC Manager, then management services, then management components, then each domain's core." caption="Each box manages, hosts or authenticates the boxes to its right.">
+  <rect class="box accent" x="10" y="30" width="140" height="56" rx="8" /><text class="t" x="22" y="56">VCF Ops</text><text class="s" x="22" y="74">console, licences</text>
+  <rect class="box v9" x="175" y="30" width="140" height="56" rx="8" /><text class="t" x="187" y="56">SDDC Manager</text><text class="s" x="187" y="74">engine</text>
+  <rect class="box v9" x="340" y="30" width="150" height="56" rx="8" /><text class="t" x="352" y="56">Mgmt services</text><text class="s" x="352" y="74">runtime, depot, LS</text>
+  <rect class="box" x="515" y="30" width="140" height="56" rx="8" /><text class="t" x="527" y="56">IdB, VCFA, …</text><text class="s" x="527" y="74">runtime clients</text>
+  <rect class="box" x="680" y="30" width="130" height="56" rx="8" /><text class="t" x="692" y="56">Domain core</text><text class="s" x="692" y="74">NSX, vCenter, ESX</text>
+  <path class="wire accent" d="M150 58 L173 58" marker-end="url(#arra)" /><path class="wire" d="M315 58 L338 58" marker-end="url(#arr)" /><path class="wire" d="M490 58 L513 58" marker-end="url(#arr)" /><path class="wire" d="M655 58 L678 58" marker-end="url(#arr)" />
+</Diagram>
+
+## The 9.1.1 patch rules follow the same logic
+
+Within 9.1, patches arrive per component as Express Patches. The release notes set dependencies that only make sense with the manager-before-managed rule in mind:
+
+- **Patch fleet lifecycle first.** It is the tool that applies every other patch.
+- **Don't use "Upgrade All"** until the dependencies below are met.
+- **Never patch VCF Operations in parallel** with anything else.
+- **Patch VCF Operations and the License Servers before moving ESX** from 9.1.0.x to 9.1.1.
+- **Patch the services runtime before the identity broker and Salt RaaS** that run on it. The broker precheck enforces this with `VCFMS-PRECHECK-VIDB-VMSP-VERSION-001` (<KB id={457245} />).
+- **Patch VCF Automation before the migration service engine.**
+- **Let a software depot patch finish.** It blocks all other patches while it runs.
+
+Express Patches are cumulative, so you can skip intermediate ones. If an Express Patch contains fleet lifecycle, apply that one first.
+
+<Callout type="warn" title="The 9.0 fleet appliance after the upgrade">
+Once VCF Operations is upgraded from 9.0, the fleet management appliance is decommissioned and powered off. Its inventory is kept until the management services are deployed. Powering it back on causes authentication failures later in the upgrade (<KB id={449075} />). Delete it once the management services are in place.
+</Callout>
+
+## Pitfalls
+
+- **Starting with SDDC Manager out of 5.x habit.** On a 5.2 source the SDDC Manager UI still drives its own upgrade, but only after the management components are ready.
+- **Running lifecycle tasks in parallel to save time.** Fleet lifecycle serializes work for a reason. A stuck "In Progress" subtask blocks later patches until it is cleared.
+- **Assuming a patch order that worked last time.** Re-read "Getting to 9.1.1" in the target's release notes before every window. The rules change between patches.

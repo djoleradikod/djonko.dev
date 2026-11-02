@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import { allArticles, urlOf } from '../lib/articles';
+const notesById = new Map((await allArticles()).map((a) => [a.id, a]));
+const talks = [
+  { title: 'Meet the fleet', sub: 'How the VCF 9 components fit together, who talks to whom, and what breaks when one goes quiet.',
+    learn: ['Why VCF Operations is the first place to look in 9.x, and what SDDC Manager still does underneath', 'What moved between 5.x and 9.1: Aria appliances, the services runtime, the License Server', 'Service accounts, certificates, DNS, NTP and proxy as fleet-wide dependencies', 'A failure-impact view: what stops when each management component is down'],
+    notes: ['architecture/vcf9-mental-model', 'architecture/what-moved-from-sddc-manager'] },
+  { title: 'Upgrading to VCF 9.1, the right way round', sub: 'Paths, preparation, the order that matters, and what to do when a step fails.',
+    learn: ['Choosing a target build the product will accept, from 5.2.x or 9.0.x', 'Preparing DNS, IP ranges, certificates, passwords, backups and binaries', 'The order of the upgrade, and why it differs from 5.x', 'Reading a failed step and deciding whether to retry, fix or roll back'],
+    notes: ['upgrades/planning-52-to-90', 'upgrades/upgrade-order-changed', 'upgrades/rollback-checkpoints'] },
+  { title: 'How it all connects', sub: 'Adapters, plugins and trust between VCF Operations, SDDC Manager, vCenter and NSX, and how each one breaks.',
+    learn: ['Three kinds of wire: data collection, user-interface plugins and trust registrations', 'Cloud proxies, collector groups and adapter status', 'vCenter plugin registration and safe cleanup', 'NSX compute manager registration and its common errors'],
+    notes: ['integrations/reading-adapter-status', 'integrations/vsphere-client-plugins', 'integrations/nsx-compute-manager'] },
+  { title: 'Mind the licensing clock', sub: 'Licence files, the License Server, the 180-day clock, and what to check when licensing breaks.',
+    learn: ['From licence keys to a signed licence file', 'Connected and disconnected registration', 'Usage reporting, the 180-day validity, the 90-day grace period and enforcement', 'A decision flow for licensing errors'],
+    notes: ['licensing/keys-to-license-files', 'licensing/180-day-cycle', 'licensing/licensing-errors-decoded'] },
+  { title: 'Follow the signposts', sub: 'A repeatable way to triage VCF 9: which plane, which log, which error, and which KB fixes it.',
+    learn: ['The life of a ticket, from first report to closure', 'Which layer owns a failure: the management components or the core infrastructure', 'Error prefixes, IDs and the logs they lead to', 'Recovering in scope, and escalating with evidence'],
+    notes: ['troubleshooting/seven-step-triage', 'troubleshooting/reading-sddc-manager-logs'] },
+];
+---
+<Base title="Talks and workshops" description="A five-part enablement series on VCF 9: architecture, upgrades, integrations, licensing and troubleshooting.">
+  <p class="eyebrow">Portfolio</p>
+  <h1>Talks and workshops</h1>
+  <p class="lede">A five-part series on VCF 9 for operations and platform teams. Each module stands on its own and runs 40 to 60 minutes, with a diagram-led walk-through and a list of the KBs it relies on. It is delivered as a lunch-and-learn for engineers and as a webinar for customers.</p>
+  <div class="grid" style="margin-top:20px">
+    {talks.map((t) => (
+      <section class="card">
+        <h3>{t.title}</h3>
+        <p>{t.sub}</p>
+        <p class="small" style="margin-top:8px;color:var(--ink-3);font-weight:600">What the audience leaves with</p>
+        <ul class="small" style="margin:0;padding-left:18px;color:var(--ink-2)">{t.learn.map((l) => <li>{l}</li>)}</ul>
+        {t.notes.length > 0 && (
+          <div class="related">
+            <p class="small" style="margin:10px 0 2px;color:var(--ink-3);font-weight:600">Read the notes</p>
+            <ul class="small">{t.notes.map((n) => notesById.get(n)).filter(Boolean).map((a) => <li><a href={urlOf(a!)}>{a!.data.title}</a></li>)}</ul>
+          </div>
+        )}
+      </section>
+    ))}
+  </div>
+  <h2>How the series is built</h2>
+  <div class="prose">
+    <p>Each module follows the same rules. It carries one idea per slide, shown with a diagram or a redacted screen rather than a wall of bullets. KBs are listed at the end instead of crowding the slides. Customer and engineer editions are built from the same source, so the two never drift apart. The design choices behind it are written up in <a href="/vcf/library/leadership/teaching-a-complex-stack/">Teaching a complex stack</a>.</p>
+    <p class="muted">The slide decks themselves are not published on this site.</p>
+  </div>
+</Base>

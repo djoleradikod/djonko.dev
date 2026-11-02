@@ -1,0 +1,70 @@
+---
+title: "Failure-impact matrix: what stops when each component is down"
+description: "When a management component fails, the first questions are whether workloads are affected and what else stops. This matrix answers both for VCF 9.0 and 9.1, and marks what is documented and what is reasoned."
+category: architecture
+order: 10
+versions: ["9.0", "9.1"]
+level: Deep dive
+pubDate: 2026-11-02
+kbs: [443240, 440862, 440874, 453736, 455296, 443680, 437258, 443216, 452124, 441515, 450375]
+sources:
+  - title: "VCF management services models (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-management-services-models.html"
+    by: "Broadcom TechDocs"
+  - title: "Authentication design for VCF (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/auth-design-vcf.html"
+    by: "Broadcom TechDocs"
+  - title: "Log management design (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html"
+    by: "Broadcom TechDocs"
+  - title: "Lifecycle management (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+No VCF management component sits in the data path, so running workloads survive the loss of any of them. What you lose is control. That can be lifecycle, configuration, monitoring, sign-on or, in edge cases, the ability to license new capacity. The matrix below is the version to keep in a runbook. Rows marked *documented* come from a KB or TechDocs. Rows marked *reasoned* follow from the architecture, so treat them as hypotheses to confirm in your own environment.
+</InShort>
+
+<Compare title="How the question changed from 5.x">
+  <Fragment slot="v5">
+  <p>The answer was short. SDDC Manager down meant no lifecycle or Day-2 automation. An Aria product down meant you lost that product's function. vCenter and NSX were the only components whose failure affected operators broadly.</p>
+  </Fragment>
+  <Fragment slot="v9">
+  <p>VCF Operations, the services runtime, the identity broker and the License Server each carry fleet-wide functions. A failure in the first instance's management domain can affect every instance. Map the blast radius per component, and per instance.</p>
+  </Fragment>
+</Compare>
+
+## Management components
+
+| Component down | Lifecycle | Config and UI | Licensing | Monitoring and logs | Sign-on | Basis |
+|---|---|---|---|---|---|---|
+| **VCF Operations** | No lifecycle UI (9.1) | No password, certificate, SSO or fleet DNS and NTP changes | Existing licences fine. New assignments and capacity changes blocked (<KB id={443240} />). | Alerts and dashboards lost. In 9.1, log ingestion continues but search is lost. | Logins continue | Documented for licensing; reasoned for the rest |
+| **License Server (9.1)** | Unaffected | Unaffected | As above, with a vSphere banner about the license server connection | Unaffected | Unaffected | Documented (<KB id={443240} />) |
+| **Services runtime (9.1)** | Fleet and SDDC lifecycle, depot and backups stop (<KB id={440862} />, <KB id={440874} />) | Custom role push fails (<KB id={453736} />). Fleet DNS and password policy tasks fail (<KB id={455296} />). | Likely unaffected, since the License Server is separate | Log management and real-time metrics stop (<KB id={440874} />) | Lost for the realm if the broker runs in instance mode | Documented except licensing and sign-on |
+| **Fleet management appliance (9.0)** | No lifecycle for VCF Ops, VCFA or the broker | Management component passwords and certificates unavailable | Unaffected | Unaffected | Logins continue | Documented |
+| **SDDC Manager** | Core lifecycle stops: ESX, vCenter, NSX and domains | VCF Ops SDDC Manager page blank. VCF adapter reports failed (<KB id={443680} />). | Unaffected | VCF adapter collection stops | Unaffected (not in VCF SSO) | Documented |
+| **Cloud proxy** | Management services deployment blocked (9.1) | SSO configuration page fails to load (<KB id={437258} />) | Probably degraded | Collection for that site stops. Log forwarding through the proxy stops. | Logins continue | Documented except licensing |
+| **Identity broker** | Unaffected | Local accounts still work | Unaffected | Unaffected | SSO lost for every component in its scope | Documented (TechDocs single point of failure) |
+| **Software depot or its egress (9.1)** | Binary download and sync fail (<KB id={443216} />) | Unaffected | Unaffected | Unaffected | Unaffected | Documented |
+| **Log management (9.1)** | Unaffected | Operate > Logs unavailable | Unaffected | Ingest and search lost. Cloud proxies buffer about 20 GB. | Unaffected | Documented |
+
+## Infrastructure and dependencies
+
+| Failure | What it takes with it | Basis |
+|---|---|---|
+| **Management domain vCenter** | Runtime node replacement and scaling (the runtime records vSphere placement, <KB id={452124} />). SSO if the broker is embedded. vCenter-dependent operations for everything it manages. | Documented |
+| **NSX Manager** | Data plane continues. Management services bootstrap edits the DFW exclusion list, so deployments can fail. NSX sign-on through SSO. | Documented for bootstrap; reasoned for SSO |
+| **DNS** | Upgrades and bootstrap (A and PTR records needed), License Server detection, cloud proxy load balancing, sign-on | Documented |
+| **Service account drift** | 9.1 upgrades and inventory sync. Repeated failures lock runtime addresses out of SDDC Manager (<KB id={450375} />). | Documented |
+| **Missing intermediate CA in platform trust** | VCF Ops to log management integration, and log management backups (<KB id={441515} />) | Documented |
+
+## Using the matrix
+
+- **In design reviews,** ask "where does this run, and what is in the row for it?" for each management component. It turns availability choices such as Simple or HA, embedded or instance mode, and the number of cloud proxies into conversations about consequences.
+- **In incidents,** use it to answer the first customer question, "are my workloads affected?", in one sentence. Then use it to scope what else to check.
+- **In runbooks,** pair each row with the recovery KB and the order of restart. The services runtime, for example, must come back control plane first (<KB id={440862} />).
+
+<Callout type="warn">
+The *reasoned* entries are deliberately conservative, but they are still reasoning. Validate them in a lab before quoting them in a customer's operating procedures.
+</Callout>

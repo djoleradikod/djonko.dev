@@ -1,0 +1,58 @@
+---
+// Video three ways:
+//  <Video src="video/triage-walkthrough" poster={posterImg} captions="video/triage.en.vtt" title="..." />
+//      self-hosted: looks for <src>.webm and <src>.mp4 under the media origin (or pass full file names in `sources`)
+//  <Video youtube="VIDEO_ID" title="..." poster={localImage} />   YouTube, privacy-enhanced; nothing loads from YouTube until play
+//  <Video vimeo="123456" title="..." />
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { mediaUrl } from '../data/site';
+
+interface Props {
+  title: string; src?: string; sources?: string[]; poster?: ImageMetadata | string; captions?: string;
+  youtube?: string; vimeo?: string; start?: number; caption?: string; duration?: string;
+}
+const { title, src, sources, poster, captions, youtube, vimeo, start = 0, caption, duration } = Astro.props;
+const posterUrl = poster
+  ? typeof poster === 'string' ? mediaUrl(poster) : (await getImage({ src: poster, width: 1280, format: 'webp' })).src
+  : undefined; // no remote thumbnail: nothing is requested from YouTube or Vimeo until the reader presses play
+const files = sources?.map(mediaUrl) ?? (src ? [`${mediaUrl(src)}.webm`, `${mediaUrl(src)}.mp4`] : []);
+const type = (f: string) => (f.endsWith('.webm') ? 'video/webm' : f.endsWith('.mp4') ? 'video/mp4' : undefined);
+const embed = youtube
+  ? `https://www.youtube-nocookie.com/embed/${youtube}?autoplay=1&rel=0&modestbranding=1${start ? `&start=${start}` : ''}`
+  : vimeo ? `https://player.vimeo.com/video/${vimeo}?autoplay=1&dnt=1${start ? `#t=${start}s` : ''}` : '';
+---
+<figure class="fig video">
+  {embed ? (
+    <div class="video-frame" data-embed={embed}>
+      <button type="button" class="video-facade" aria-label={`Play video: ${title}`}>
+        {posterUrl && <img src={posterUrl} alt="" loading="lazy" decoding="async" />}
+        <span class="play" aria-hidden="true"><svg viewBox="0 0 68 48" width="68" height="48"><rect width="68" height="48" rx="12" /><path d="M27 15v18l16-9z" fill="#fff" /></svg></span>
+        <span class="vt">{title}{duration && <span> · {duration}</span>}</span>
+      </button>
+      <noscript><a href={embed.replace('autoplay=1', 'autoplay=0')}>Watch “{title}”</a></noscript>
+    </div>
+  ) : (
+    <div class="video-frame">
+      <video controls preload="none" playsinline poster={posterUrl} aria-label={title}>
+        {files.map((f) => <source src={f} type={type(f)} />)}
+        {captions && <track kind="captions" srclang="en" label="English" src={mediaUrl(captions)} default />}
+        <a href={files.at(-1)}>Download “{title}”</a>
+      </video>
+    </div>
+  )}
+  {(caption || embed) && <figcaption>{caption ?? title}{embed && <span class="credit"> {youtube ? 'Plays from YouTube (privacy-enhanced mode) when you press play.' : 'Plays from Vimeo when you press play.'}</span>}</figcaption>}
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.video-frame[data-embed]').forEach((frame) => {
+    frame.querySelector('.video-facade')?.addEventListener('click', () => {
+      const f = document.createElement('iframe');
+      f.src = frame.dataset.embed!;
+      f.title = frame.querySelector('.vt')?.textContent ?? 'Video';
+      f.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen';
+      f.allowFullscreen = true;
+      frame.replaceChildren(f);
+    }, { once: true });
+  });
+</script>

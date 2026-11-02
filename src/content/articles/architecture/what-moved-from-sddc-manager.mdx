@@ -1,0 +1,98 @@
+---
+title: "What SDDC Manager still owns in 9.x, and what moved"
+description: "SDDC Manager is not gone in VCF 9. It stopped being the front door, but it still runs core lifecycle work, and in 9.1 it does that on instructions from the management services."
+category: architecture
+order: 2
+versions: ["5.x", "9.0", "9.1"]
+level: Overview
+pubDate: 2026-11-02
+kbs: [443680, 435599, 426872, 450375, 454943]
+sources:
+  - title: "SDDC Manager design (VCF 9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/design/design-library/vcf-operations-design/sddc-manager-design.html"
+    by: "Broadcom TechDocs"
+  - title: "Components in VCF and vSphere Foundation 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/vcf-management-appliances.html"
+    by: "Broadcom TechDocs"
+  - title: "Lifecycle management (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html"
+    by: "Broadcom TechDocs"
+  - title: "Upgrading VCF 5.2 to 9.0: the top 10 questions answered"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/"
+    by: "VMware Cloud Foundation blog"
+  - title: "10 VCF 9 enhancements simplifying your Day-2 operations"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/"
+    by: "VMware Cloud Foundation blog"
+  - title: "Accounts in VMware Cloud Foundation (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+In 5.x, SDDC Manager was both the console and the engine. In 9.0 it keeps the engine role for core infrastructure: ESX, vCenter, NSX and workload domains. Most of its screens moved to VCF Operations, and some moved to vCenter. In 9.1 its UI is formally deprecated and the new SDDC lifecycle service drives it through a service account. The practical consequence is simple: you rarely log in to SDDC Manager, but it still has to be healthy, or core lifecycle stops.
+</InShort>
+
+<Compare rows={[
+  ["Role", "Console and engine. Bring-up hand-off, domains, lifecycle, certificates, passwords, backup, licensing.", "Engine for core infrastructure. In 9.1 it is called by SDDC lifecycle running on the services runtime."],
+  ["UI", "The primary admin UI. From 5.2.1 some tasks also appear in the vSphere Client.", "9.0: tasks surface in VCF Operations under Fleet Management. 9.1: the SDDC Manager UI is deprecated."],
+  ["Lifecycle scope", "Everything in the BOM, including Aria Suite Lifecycle in VCF-aware mode.", "ESX, vCenter, NSX and, in 9.1, HCX. Management components belong to fleet lifecycle."],
+  ["Passwords and certificates", "Managed from SDDC Manager for every component.", "Managed from VCF Operations. SDDC Manager's own password and certificate APIs are deprecated in favour of VCF Operations."],
+  ["Identity", "Part of the vCenter SSO domain of the management domain.", "Excluded from VCF SSO. It keeps local accounts only."],
+]} />
+
+## What SDDC Manager still does
+
+**Core lifecycle.** SDDC Manager plans and runs upgrades and patches for ESX, vCenter and NSX in its instance. In 9.1 it also handles HCX lifecycle, workload domain deployment and import, and stretched vSAN clusters. Its service accounts on vCenter, NSX and ESX are what make that possible. They are the `svc-sddc-manager-…` and `svc-vcf-…` accounts in the accounts table in TechDocs.
+
+**Instance inventory.** VCF Operations reads the instance through the VCF adapter on a cloud proxy, which calls the SDDC Manager API. If SDDC Manager is down, the SDDC Manager page in VCF Operations goes blank and the adapter reports a collection failure (<KB id={443680} />).
+
+**Execution back end in 9.1.** The 9.1 SDDC lifecycle service holds an administrator account on SDDC Manager. It is created as `svc-vcf-sddc-lcm-SDDC_MANAGER-<uuid>` and rotated every 30 days. Lifecycle requests that start in VCF Operations pass through SDDC lifecycle and arrive at SDDC Manager as API calls. If that account is changed or deleted out of band, upgrades and inventory sync fail. Repeated failed logins can also lock the runtime nodes out of SDDC Manager (<KB id={450375} />).
+
+## What moved
+
+<Diagram viewBox="0 0 820 300" label="Tasks that were in SDDC Manager in 5.x move to VCF Operations or vCenter in 9.x, while SDDC Manager keeps core lifecycle." caption="Where SDDC Manager's 5.x responsibilities live in 9.x.">
+  <rect class="box v5" x="20" y="20" width="230" height="260" rx="8" />
+  <text class="t" x="36" y="46">SDDC Manager in 5.x</text>
+  <text class="s" x="36" y="74">Workload domains</text>
+  <text class="s" x="36" y="96">Hosts, network pools, clusters</text>
+  <text class="s" x="36" y="118">Edge clusters</text>
+  <text class="s" x="36" y="140">Certificates and CA</text>
+  <text class="s" x="36" y="162">Passwords</text>
+  <text class="s" x="36" y="184">Backup, DNS, NTP</text>
+  <text class="s" x="36" y="206">Licensing</text>
+  <text class="s" x="36" y="228">Core lifecycle</text>
+  <text class="s" x="36" y="250">Aria Suite Lifecycle</text>
+  <rect class="box accent" x="420" y="20" width="380" height="96" rx="8" />
+  <text class="t" x="436" y="46">VCF Operations</text>
+  <text class="s" x="436" y="70">Workload domains, certificates and CA, passwords,</text>
+  <text class="s" x="436" y="90">backup, DNS and NTP, licensing, fleet lifecycle</text>
+  <rect class="box v9" x="420" y="130" width="380" height="70" rx="8" />
+  <text class="t" x="436" y="156">vCenter</text>
+  <text class="s" x="436" y="180">Hosts, network pools, clusters, edge clusters</text>
+  <rect class="box" x="420" y="214" width="380" height="66" rx="8" />
+  <text class="t" x="436" y="240">SDDC Manager (still)</text>
+  <text class="s" x="436" y="262">Core lifecycle for ESX, vCenter, NSX, HCX</text>
+  <path class="wire accent" d="M250 110 C 330 110, 340 68, 418 68" marker-end="url(#arra)" />
+  <path class="wire" d="M250 100 C 330 100, 340 165, 418 165" marker-end="url(#arr)" />
+  <path class="wire" d="M250 230 C 330 230, 340 247, 418 247" marker-end="url(#arr)" />
+</Diagram>
+
+The VCF blog's Day-2 comparison is the best single list of where each task went. The short version:
+
+- **To VCF Operations:** workload domain deployment, backup configuration, DNS and NTP settings per instance, certificate authority configuration, certificate management (now with auto-renewal) and password management.
+- **To vCenter:** network pools, host commissioning and decommissioning, cluster creation and expansion, and NSX edge cluster deployment. For workload domains these need VCF SSO and vCenter linking in place first.
+- **To fleet lifecycle:** everything Aria Suite Lifecycle did for the management components. That is a separate appliance in 9.0 and a service in 9.1. See <a href="/vcf/library/architecture/aria-lifecycle-to-services-runtime/">From Aria Suite Lifecycle to the services runtime</a>.
+
+## The password and certificate overlap in 9.0
+
+9.0 is a transition release, and the split is not perfectly clean. In 9.0, automatic rotation for the management components is not complete (<KB id={426872} />). SDDC Manager password management stays the authoritative source for core component accounts (<KB id={435599} />). In 9.1, VCF Operations owns more of it. From 9.1.1 even SDDC Manager's own `vcf`, `root` and `admin@local` passwords can be managed from the VCF Operations UI or API, where 9.1 still required changing them in the OS (<KB id={454943} />).
+
+<Callout type="warn" title="Don't hand service accounts to a PAM tool">
+TechDocs is explicit: VCF service accounts must not be rotated or managed by an external privileged access management tool. Rotation has to go through VCF Operations or SDDC Manager, or the components fall out of sync with each other.
+</Callout>
+
+## Pitfalls
+
+- **Ignoring SDDC Manager because "it's deprecated".** Only the UI is deprecated. Disk space, its services and its certificates still matter, and a failed SDDC Manager stops core upgrades.
+- **Doing Day-2 tasks the old way.** Commissioning hosts or rotating passwords through old SDDC Manager API scripts can still work in places, but it bypasses the 9.x workflows and can leave VCF Operations out of step. Update automation to the 9.x paths.
+- **Looking for SDDC Manager in SSO.** It is not in VCF SSO. Keep its local admin credentials somewhere safe.

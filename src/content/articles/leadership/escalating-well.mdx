@@ -1,0 +1,60 @@
+---
+title: "Escalating well: support cases that get answered on the first reply"
+description: "A support case is a handover to an engineer who has never seen your environment. The cases that get fixed fastest share a pattern: one clear problem statement, exact identifiers, the right bundle, and an honest list of what was already tried."
+category: leadership
+order: 3
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [385749, 402476, 140731]
+sources:
+  - title: "Uploading diagnostic information to Broadcom support"
+    url: "https://knowledge.broadcom.com/external/article/140731"
+    by: "Broadcom KB"
+---
+
+<InShort>
+Write the case for a reader who has five minutes and no context. Lead with **one sentence**: what fails, where, since when, and the impact. Then the **identifiers**: task or reference IDs, exact error text, time with time zone, versions. Then the **evidence**: the right bundle for the layer that failed, uploaded as the KB describes (<KB id={140731} />). Then **what you tried**, including what made it worse. Set severity by business impact, not frustration, and name one contact who can make changes.
+</InShort>
+
+<Compare v5Label="Slow case" v9Label="Fast case" title="Same problem, two cases" rows={[
+  ["Summary", "Upgrade failed, please help", "9.0 to 9.1: SDDC lifecycle step vmsp_upgrade fails with InvalidLogin since 14:05 UTC. Management domain upgrade blocked."],
+  ["Identifiers", "Screenshot of the UI", "Task ID, reference ID, exact message, versions"],
+  ["Evidence", "Everything, or nothing", "sos with the management services option, plus the fleet lifecycle bundle"],
+  ["History", "Missing", "Rotated SDDC Manager service account yesterday. Restarted commonsvcs, no change."],
+]} />
+
+## A template
+
+```text
+Summary:    <what fails> in <component/domain> since <time UTC>. Impact: <who/what is blocked>.
+Versions:   VCF <x>, SDDC Manager <x>, VCF Operations <x>, vCenter <x>, NSX <x>
+IDs:        Task <id>, reference <id>, failed step <name>
+Error:      <exact text, copied, not retyped>
+Evidence:   <bundle names and upload reference>
+Tried:      <step> -> <result>; <step> -> <result>
+Changes:    <anything changed in the last 7 days>
+Contact:    <name, hours, can approve changes: yes/no>
+```
+
+## Choosing the bundle
+
+| Failure layer | Bundle |
+|---|---|
+| SDDC Manager workflow | `sos --sddc-manager-logs --zip` (<KB id={385749} />) |
+| Hosts, vCenter or NSX involved | `sos --collect-all-logs` with the domain |
+| 9.1 runtime, fleet or depot | Add `--vcf-mgmt-svcs-logs`, or the fleet lifecycle bundle (<KB id={402476} />) |
+| VCF Operations | Its Control Panel bundle |
+| UI only | A browser HAR file plus the VCF Operations bundle |
+
+See [health checks and SoS](/vcf/library/day-2/health-checks-sos/) for details.
+
+<Callout type="field">
+Before sending, read the case as if you were the support engineer. If you would have to ask a question to start work, answer it in the case now.
+</Callout>
+
+## Habits that help
+
+- **One problem per case.** Two problems in one case get half an answer each.
+- **Update the case** when anything changes, even "no change after restart".
+- **Close the loop**: record the fix and the KB in your own knowledge base when it's solved.

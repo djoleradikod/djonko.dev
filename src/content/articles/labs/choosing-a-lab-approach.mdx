@@ -1,0 +1,65 @@
+---
+title: "Choosing a VCF 9 lab: Holodeck, nested scripts, a physical box, or hosted labs"
+description: "There are four practical ways to get hands-on with VCF 9, and they suit different goals. A comparison by cost, realism, effort and what each is good for, so the lab matches what you need to learn or prove."
+category: labs
+order: 1
+versions: ["5.x", "9.0", "9.1"]
+level: Overview
+pubDate: 2026-11-02
+kbs: []
+sources:
+  - title: "Announcing the general availability of Holodeck 9.0"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/30/announcing-the-general-availability-of-holodeck-9-0/"
+    by: "VMware Cloud Foundation blog"
+  - title: "Lab deployment scripts"
+    url: "https://williamlam.com/lab-deployment-scripts"
+    by: "William Lam"
+  - title: "VMware Cloud Foundation homelab hardware options"
+    url: "https://williamlam.com/2024/12/vmware-cloud-foundation-vcf-homelab-hardware-options.html"
+    by: "William Lam"
+  - title: "How to deploy VVF and VCF 9.0 using VMUG Advantage and VCP-VCF entitlement"
+    url: "https://williamlam.com/2025/07/how-to-deploy-vvf-vcf-9-0-using-vmug-advantage-vcp-vcf-certification-entitlement.html"
+    by: "William Lam"
+---
+
+<InShort>
+- **Holodeck** gives repeatable, isolated, nested environments with built-in DNS, NTP, BGP and DHCP. It is best for teams and training.
+- **Nested automation scripts** deploy a VCF or VVF fleet onto an existing vSphere host in about half an hour. They are best for individuals who rebuild often.
+- **A physical "VCF in a box"** on one or two capable hosts is closest to real hardware behaviour. It is best for testing features like vSAN ESA, NSX edges or the Supervisor.
+- **Hosted hands-on labs** cost nothing and need no setup, but you can't break or keep them.
+
+All but the last need binaries and an entitlement, such as a trial, NFR, or VMUG Advantage with VCP-VCF.
+</InShort>
+
+<Compare v5Label="Nested (Holodeck or scripts)" v9Label="Physical box" title="Nested or physical" rows={[
+  ["Realism", "Good for workflows. Hardware behaviour simulated.", "Real NICs, real NVMe, real vSAN ESA behaviour"],
+  ["Resets", "Minutes: redeploy", "Hours: reinstall"],
+  ["Hardware", "One large host, or a cluster with spare capacity", "One or more hosts that meet VCF 9 minimums"],
+  ["Networking", "Self-contained, one external IP (Holodeck)", "You build VLANs, routing and DNS"],
+  ["Best for", "Upgrades, lifecycle, break-fix practice, teaching", "Feature testing, performance shape, hardware quirks"],
+]} />
+
+## Match the lab to the goal
+
+| Goal | Best fit |
+|---|---|
+| Learn the 9.x fleet model and workflows | Hosted labs first, then Holodeck |
+| Rehearse a customer's 5.2 to 9.x upgrade | Nested lab built at the customer's starting version |
+| Practise troubleshooting | Nested lab you can snapshot and break. See [break-fix exercises](/vcf/library/labs/break-fix-exercises/). |
+| Test vSAN ESA, NVMe tiering or edge performance | Physical box |
+| Develop automation | Any lab, plus API access. See [PowerCLI and the APIs](/vcf/library/labs/powercli-and-apis/). |
+| Teach a team | Holodeck: one standard environment per student |
+
+## Entitlement and binaries
+
+You need an entitlement to download VCF 9 binaries and, in 9.0, a download token for the depot. VMUG Advantage members who hold the VCP-VCF certification are entitled to non-commercial licenses. Trials and partner NFR licenses are the other routes. Everything also runs in **90-day evaluation** after deployment, which is enough for a short project. Plan the depot early: see [an offline depot for your lab](/vcf/library/labs/offline-depot-in-a-lab/).
+
+<Callout type="field">
+Keep one long-lived lab at the version most of your customers run, and build disposable ones for the version they're moving to. Upgrade rehearsals are only useful when the starting point matches.
+</Callout>
+
+## Pitfalls
+
+- **Under-sizing memory.** It runs out first, every time. See [sizing a VCF 9 lab](/vcf/library/labs/sizing-a-vcf-9-lab/).
+- **Treating lab workarounds as production advice.** Label them clearly. See [ESX settings for labs](/vcf/library/labs/esx-settings-for-labs/).
+- **Building a lab nobody can rebuild.** Script it, or use a toolkit that does.

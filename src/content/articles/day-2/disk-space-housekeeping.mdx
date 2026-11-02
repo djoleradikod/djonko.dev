@@ -1,0 +1,65 @@
+---
+title: "Disk space housekeeping: vCenter partitions, SDDC Manager bundles and VCF Operations"
+description: "A full partition is the most boring cause of a failed upgrade and the easiest to prevent. These are the partitions that fill, why they fill, and the documented ways to clean them."
+category: day-2
+order: 8
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [439946, 447248, 410118, 434671, 318768, 417255]
+sources:
+  - title: "VCF management services health and diagnostics (volume utilization)"
+    url: "https://knowledge.broadcom.com/external/article/417255/vcf-management-services-health-and-diagn.html"
+    by: "Broadcom KB"
+  - title: "Upgrading to VCF 9.1.x (prerequisites)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+Four places fill up again and again: **SDDC Manager**, with old bundles and its database partition; **vCenter's** `/storage/log` and `/storage/seat`; the **VCF Operations** nodes; and, in 9.1, the **services runtime** volumes. SDDC Manager's precheck marks less than 1 GB free for its database or less than 10 GB in `/opt` as critical (<KB id={439946} />). The fix is rarely "delete files until it works". Each location has a documented clean-up and a reason it filled.
+</InShort>
+
+<Compare rows={[
+  ["Bundle store", "SDDC Manager kept every downloaded bundle until cleaned up", "The same on SDDC Manager, plus management component binaries in the 9.1 software depot"],
+  ["Clean-up tool", "Manual clean-up or KB scripts", "bundle_cleanup.py for SDDC Manager (<a href='https://knowledge.broadcom.com/external/article/447248' target='_blank' rel='noopener'>KB 447248</a>)"],
+  ["New storage to watch", "Not applicable", "Runtime persistent volumes, with warning thresholds on the VCF Operations dashboard"],
+]} />
+
+## SDDC Manager
+
+- **Thresholds.** The precheck flags `dbDataDirFreeSpaceGb` at 1 GB or less and `vmOptDirFreeSpaceGb` at 10 GB or less as critical (<KB id={439946} />).
+- **Old bundles** are the usual cause. Use `bundle_cleanup.py` to remove superseded bundles safely (<KB id={447248} />). Don't delete bundle directories by hand, because the database still references them.
+- **When:** after every upgrade, and before downloading the next release.
+
+## vCenter
+
+- **`/storage/log` full from ESX syslog.** vCenter can end up receiving host syslog it was never sized for (<KB id={434671} />). Send host logs to the log platform instead, and clean up as the KB describes.
+- **`/storage/seat` full.** Events, tasks and statistics outgrow the partition, often from chatty integrations or long retention settings (<KB id={410118} />). Fix the retention, then follow the KB to reclaim space.
+- **Before every upgrade:** run the vCenter diagnostic tool, and check `df -h` on the appliance. The upgrade needs room on several partitions.
+
+## VCF Operations
+
+Analytics nodes need disk headroom for growth and for upgrades. Some features need extra disks on every node. The data retriever is one documented example (<KB id={318768} />). Watch the self-monitoring dashboards, and add disk before the cluster goes read-only.
+
+## 9.1 services runtime
+
+The management services dashboard shows volume utilisation with clear thresholds: up to 80% is good, 80 to 90% is warning, 90 to 95% is severe and over 95% is critical (<KB id={417255} />). Day-N services, especially log management, are the usual consumers. Don't try to clean runtime volumes from the node shell. Use the documented scale and retention options.
+
+```bash
+# Quick read-only checks
+# SDDC Manager
+df -h /data /opt /var/log /nfs/vmware/vcf/nfs-mount 2>/dev/null
+# vCenter
+df -h /storage/log /storage/seat /storage/db /storage/core
+```
+
+<Callout type="field">
+Add a disk report to the monthly health check: one line per appliance and partition, with the percentage used. A trend line catches the slow fill-ups that cause failures in the middle of an upgrade.
+</Callout>
+
+## Pitfalls
+
+- **Deleting logs that are evidence.** If you are mid-incident, collect a support bundle before cleaning.
+- **Fixing the symptom, not the cause.** A `/storage/log` that filled from host syslog will fill again until the syslog target changes.
+- **Snapshots consuming datastore space** under the appliances. Check the datastore, not just the guest partitions.

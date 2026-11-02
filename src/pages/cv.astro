@@ -1,0 +1,91 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+import { CV } from '../data/cv';
+import { allArticles } from '../lib/articles';
+import { allProjects } from '../lib/posts';
+import { personLd } from '../lib/schema';
+const notes = (await allArticles()).length;
+const projects = await allProjects();
+const ld = { '@context': 'https://schema.org', '@type': 'ProfilePage', mainEntity: personLd(Astro.site) };
+const l = SITE.links;
+---
+<Base title="CV" description={`${SITE.author}, ${SITE.role}: experience, skills, talks and open-source work.`} noindex={!CV.published} jsonLd={ld}>
+  <div class="cv">
+    <header class="cv-head">
+      <div>
+        <h1>{SITE.author}</h1>
+        <p class="cv-role">{SITE.role}{CV.location && ` · ${CV.location}`}</p>
+        <p class="cv-links small">
+          <a href={`https://${SITE.domain}/`}>{SITE.domain}</a>
+          {l.linkedin && <> · <a href={l.linkedin}>LinkedIn</a></>}
+          {l.github && <> · <a href={l.github}>GitHub</a></>}
+          {l.email && <> · <a href={`mailto:${l.email}`}>{l.email}</a></>}
+        </p>
+      </div>
+      <button type="button" class="btn cv-print" onclick="window.print()">Save as PDF</button>
+    </header>
+    {!CV.published && <p class="cv-draft small">Draft: hidden from search engines and navigation until published in <code>src/data/cv.ts</code>.</p>}
+
+    <section><h2>Profile</h2><p>{CV.summary}</p></section>
+
+    {CV.experience.length > 0 && (
+      <section><h2>Experience</h2>
+        {CV.experience.map((x) => (
+          <div class="cv-item">
+            <div class="cv-item-head"><strong>{x.role}</strong><span>{x.org}</span><span class="muted">{x.start} – {x.end}</span></div>
+            <ul>{x.points.map((pt) => <li>{pt}</li>)}</ul>
+          </div>
+        ))}
+      </section>
+    )}
+
+    <section><h2>Selected work</h2>
+      <ul>
+        <li><strong>VCF Field Notes</strong> ({SITE.domain}/vcf): {notes} public notes comparing VCF 5.x and 9.x across architecture, upgrades, day-2 operations, licensing, troubleshooting, integrations, labs and leadership.</li>
+        <li><strong>VCF 9 workshop series</strong>: five modules on architecture, upgrades, integrations, licensing and troubleshooting, delivered to engineers and to customers.</li>
+        <li><strong>Triage method</strong>: a seven-step method and one-page cheat sheet for VCF 9.x failures.</li>
+        {projects.length > 0
+          ? <li><strong>Open tools for VCF Operations</strong>: {projects.map((p) => p.data.displayName).join(', ')}.</li>
+          : <li><strong>Open tools for VCF Operations</strong>: scripts, agents and management packs for 9.1.1+, in development.</li>}
+      </ul>
+    </section>
+
+    <section><h2>Skills</h2>
+      <dl class="cv-skills">{CV.skills.map((g) => <><dt>{g.group}</dt><dd>{g.items.join(' · ')}</dd></>)}</dl>
+    </section>
+
+    {CV.certifications.length > 0 && (
+      <section><h2>Certifications</h2>
+        <ul>{CV.certifications.map((c) => <li>{c.url ? <a href={c.url}>{c.name}</a> : c.name}, {c.issuer}, {c.year}</li>)}</ul>
+      </section>
+    )}
+    {CV.education.length > 0 && (
+      <section><h2>Education</h2><ul>{CV.education.map((e) => <li>{e.name}, {e.org}, {e.year}</li>)}</ul></section>
+    )}
+    {CV.languages.length > 0 && <section><h2>Languages</h2><p>{CV.languages.join(' · ')}</p></section>}
+  </div>
+</Base>
+<style>
+  .cv { max-width: 820px; }
+  .cv-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; border-bottom: 2px solid var(--accent); padding-bottom: 12px; margin-bottom: 8px; }
+  .cv-head h1 { margin: 0; }
+  .cv-role { margin: 2px 0 4px; font-size: 1.1rem; color: var(--ink-2); }
+  .cv-links { margin: 0; }
+  .cv-draft { background: var(--warn-soft); color: var(--warn); padding: 6px 10px; border-radius: 6px; }
+  .cv section { margin: 18px 0; }
+  .cv h2 { font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent-ink); margin: 0 0 8px; }
+  .cv-item { margin-bottom: 12px; }
+  .cv-item-head { display: flex; gap: 10px; flex-wrap: wrap; align-items: baseline; }
+  .cv-item ul { margin: 4px 0 0; }
+  .cv-skills { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; margin: 0; }
+  .cv-skills dt { font-weight: 600; }
+  .cv-skills dd { margin: 0; color: var(--ink-2); }
+  @media print {
+    @page { size: A4; margin: 14mm 14mm 16mm; }
+    :global(.site-header), :global(.site-footer), :global(.skip), .cv-print, .cv-draft { display: none !important; }
+    :global(body) { background: #fff; color: #111; font-size: 10.5pt; }
+    .cv section { break-inside: avoid; margin: 10px 0; }
+    .cv a { color: inherit; text-decoration: none; }
+  }
+</style>

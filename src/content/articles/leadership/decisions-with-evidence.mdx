@@ -1,0 +1,57 @@
+---
+title: "Decisions with evidence: writing a recommendation a customer can approve"
+description: "Technical leadership is mostly decisions: which design, which order, which risk to accept. A short decision record with context, options, a recommendation and its evidence makes those decisions faster, easier to approve, and easier to revisit later."
+category: leadership
+order: 8
+versions: ["5.x", "9.0", "9.1"]
+level: Overview
+pubDate: 2026-11-02
+kbs: []
+sources:
+  - title: "Documenting architecture decisions"
+    url: "https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions"
+    by: "Michael Nygard"
+---
+
+<InShort>
+For each decision that matters, write one page: the **context** (what forces the decision), the **options** you seriously considered, your **recommendation**, the **evidence** behind it (a KB, a release note, a lab measurement), and the **consequences**, including what it makes harder. Keep it short enough to read in five minutes. Recommend one option. Record the decision once it's made, with the date and who made it, so nobody has to rediscover the reasoning in a year.
+</InShort>
+
+<Compare v5Label="Opinion" v9Label="Evidence" title="How a recommendation lands" rows={[
+  ["\"We should use a collector group\"", "Sounds like preference", "\"9.1 requires the VCF instance adapter on a cloud proxy or group, or deployment fails validation (KB 443106)\""],
+  ["\"The upgrade will take a weekend\"", "A guess", "\"The lab rehearsal took 9 hours for the management domain\""],
+  ["\"Licensing is fine\"", "Reassurance", "\"Connected mode, last refresh yesterday, 179 days remaining\""],
+]} />
+
+## A decision record
+
+```text
+Decision:      <short title>
+Status:        proposed | accepted | superseded by <link>
+Date / owner:  <date> / <who decides>
+
+Context:       <what forces this decision now; constraints>
+Options:       A) ...  B) ...  C) ...
+Recommendation: <one option>, because <reason>
+Evidence:      <KB, documentation, lab measurement, past incident>
+Consequences:  <what becomes easier, what becomes harder, what we must now do>
+```
+
+## Decisions that come up in VCF 9 projects
+
+- Connected or disconnected licensing.
+- One VCF Operations for the fleet, or several.
+- Identity broker deployment model.
+- Collector group design.
+- Upgrade straight to 9.1, or through 9.0.
+- Which add-ons to keep, retire or replace.
+
+<Callout type="field">
+When a customer disagrees with a recommendation, record their decision with the same care as your own. The record isn't about being right. It's about everyone knowing why the platform looks the way it does.
+</Callout>
+
+## Pitfalls
+
+- **Five options, no recommendation.** It hands the work back to the customer.
+- **Evidence that's only "best practice".** Cite the source, or say it's judgment.
+- **Records that are never updated** when the decision changes.

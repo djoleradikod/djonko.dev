@@ -1,0 +1,61 @@
+---
+title: "Renewals, capacity changes, Site IDs and splitting allocations"
+description: "The commercial side of 9.x licensing has a few technical consequences: renewals that don't move the date, allocations that can't be shared, Site ID changes that need a new activation code, and VCF Operations instances that can't be thrown away."
+category: licensing
+order: 8
+versions: ["9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [449122, 421124, 437242, 429748, 444349, 436542, 446056, 441175]
+sources:
+  - title: "Update licenses (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/update-licenses.html"
+    by: "Broadcom TechDocs"
+  - title: "Simplify license management across a VCF Operations fleet and standalone deployment for monitoring"
+    url: "https://williamlam.com/2026/03/simplify-license-management-across-vcf-operations-fleet-standalone-deployment-for-monitoring.html"
+    by: "William Lam"
+  - title: "Automating license entitlement workflows between VCF Operations and the console"
+    url: "https://williamlam.com/2025/12/automating-license-entitlement-workflows-between-vcf-operations-vcf-business-service-console-bsc.html"
+    by: "William Lam"
+---
+
+<InShort>
+New or expanded entitlements appear in the console first. Add them to the VCF Operations instance (or License Server) there, then **Update Licenses** or import a new license file. There's no need to reassign (<KB id={421124} />). A renewal that creates a **new serial number** may not move the end date until you use **Change Capacity** in the console (<KB id={449122} />). One allocation can't serve two instances, so **split** the default license (<KB id={437242} />). A change of **Site ID** means unregistering and registering again with a new activation code (<KB id={429748} />).
+</InShort>
+
+<Compare rows={[
+  ["Adding capacity", "Add new keys to each product", "Add to the instance in the console, then update or import"],
+  ["Renewal", "New keys, re-entered", "Update licenses. With a new serial number, use Change Capacity first."],
+  ["Several environments", "Separate keys per environment", "Split the default license so each instance has its own allocation"],
+  ["Who to call", "Licensing portal support", "Contract mapping problems go to Global Customer Assistance, not technical support"],
+]} />
+
+## Common changes
+
+**Renewing.**
+1. Renew through the account team or distributor.
+2. Update licenses (connected) or run the usage and license file cycle (disconnected).
+3. If the date doesn't move and the renewal has a new serial number, go to the console's licenses view, choose **Change Capacity**, add the amount, and update again.
+
+**Splitting for several instances.** Use the console's menu on the default license to split it, then assign each part to one VCF Operations instance or License Server. The allocated cores cap that environment.
+
+**Changing Site ID.** Unregister from the old Site ID, register against the new one with a new activation code, then update. Plan for restricted management if there is a gap in coverage.
+
+**Wrong Site ID at registration.** False expiry warnings and "managed vCenter systems are not licensed by the licenses added" are the symptoms. Generate a new activation code for the right Site ID (<KB id={444349} />).
+
+## Replacing or retiring a VCF Operations instance
+
+- **It is not disposable.** Once it has licensed an environment, it remains the licensing authority, and removing it leaves the estate heading for restricted management (<KB id={446056} />).
+- **Replacing one in a dark site** has a documented procedure: remove the adapters, power off and remove the old appliance, deploy and register the new one, reassign, then recreate integrations (<KB id={436542} />).
+- **9.1 License Servers** can't move between fleets. Deploy a new one and transfer (<KB id={441175} />).
+- **A monitoring-only VCF Operations** can see entitlements through a vCenter licensed by the fleet instance, without being registered itself.
+
+<Callout type="field">
+Keep a one-page licensing register per customer: Site ID, console owner, VCF Operations instances and their allocations, mode, last refresh date, renewal date. Most licensing tickets are solved faster by that page than by any log.
+</Callout>
+
+## Pitfalls
+
+- **Raising a technical case for a contract problem.** It gets redirected and the clock keeps running.
+- **Uploading usage expecting it to extend past the subscription.** It won't.
+- **Two instances, one allocation.** It doesn't work, however it's configured.

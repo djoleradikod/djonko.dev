@@ -1,0 +1,37 @@
+{
+  "name": "djonko-dev",
+  "type": "module",
+  "version": "0.2.0",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && pagefind --site dist && npm run check",
+    "check": "node scripts/privacy-scan.mjs && node scripts/check-content.mjs",
+    "preview": "astro preview",
+    "deploy:pages": "npm run build && npx wrangler@3 pages deploy dist --project-name djonko-dev",
+    "deploy:hetzner": "deploy/hetzner/deploy.sh",
+    "sync:projects": "node scripts/sync-projects.mjs",
+    "audit": "node scripts/audit.mjs",
+    "pdfs": "node scripts/make-pdfs.mjs",
+    "lint:style": "node scripts/style-lint.mjs",
+    "check:privacy": "node scripts/privacy-scan.mjs",
+    "check:links": "node scripts/check-content.mjs"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.3.14",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource/inter": "^5.3.0",
+    "@resvg/resvg-js": "^2.6.2",
+    "astro": "^5.18.2",
+    "mermaid": "^11.17.2",
+    "pagefind": "^1.6.0",
+    "satori": "^0.18.4"
+  },
+  "devDependencies": {
+    "axe-core": "^4.14.0"
+  }
+}

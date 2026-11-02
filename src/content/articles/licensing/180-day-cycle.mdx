@@ -1,0 +1,69 @@
+---
+title: "The 180-day cycle, the 90-day window and what actually stops working"
+description: "The expiry date in VCF Operations is usually not your contract end date. It is a rolling 180-day window that moves every time usage is reported and licenses are refreshed. Miss it, and a 90-day window starts before enforcement. Running workloads are never stopped, but almost everything else is."
+category: licensing
+order: 4
+versions: ["9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [448518, 437580, 418555, 438527, 449122, 438868, 448638, 443240]
+sources:
+  - title: "Licensing overview: expiration and enforcement (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview.html"
+    by: "Broadcom TechDocs"
+  - title: "The due date for submitting your usage report"
+    url: "https://knowledge.broadcom.com/external/article/448518/the-due-date-for-submitting-your-usage-r.html"
+    by: "Broadcom KB"
+---
+
+<InShort>
+A 9.x license file is valid for a **rolling 180 days**, whatever the length of the subscription (<KB id={448518} />). Each usage report and license refresh moves the date out again. If 180 days pass without one, the license shows as **expired**, and a **90-day window** begins. After that, enforcement starts: management operations can be blocked, ESX hosts disconnect from vCenter, and new workloads cannot be created or powered on. **Running VMs are not stopped.** Recovery is always the same: get a refreshed license file into VCF Operations.
+</InShort>
+
+<Compare rows={[
+  ["Expiry concept", "Key expiry matched the contract or was perpetual", "Rolling 180-day validity, separate from the subscription end date"],
+  ["Warning", "vCenter alarm near key expiry", "Banners in VCF Operations and vCenter, plus console reminders"],
+  ["Evaluation", "60 days", "90 days, for VCF Operations, upgraded vCenters and new hosts without capacity"],
+  ["After expiry", "Features locked on the component", "90-day window, then hosts disconnect and new workloads can't start"],
+]} />
+
+## The timeline
+
+<Diagram viewBox="0 0 760 170" label="License validity timeline" caption="The clock resets every time usage is reported and the license is refreshed. In connected mode on 9.1 that happens daily.">
+  <line class="wire" x1="30" y1="80" x2="730" y2="80"/>
+  <rect class="box v9" x="30" y="55" width="380" height="50" rx="6"/>
+  <text class="t" x="220" y="85" text-anchor="middle">Valid: up to 180 days since last refresh</text>
+  <rect class="box warn" x="420" y="55" width="190" height="50" rx="6"/>
+  <text class="t" x="515" y="85" text-anchor="middle">Expired: 90 days</text>
+  <rect class="box plain" x="620" y="55" width="110" height="50" rx="6"/>
+  <text class="t" x="675" y="85" text-anchor="middle">Enforced</text>
+  <text class="lbl" x="30" y="135">Refresh here and nothing happens</text>
+  <text class="lbl" x="420" y="135">Red banner. Refresh now.</text>
+  <text class="lbl" x="620" y="135">Recover with a new file</text>
+</Diagram>
+
+## What each banner means
+
+| Message | Meaning |
+|---|---|
+| "The due date for submitting your usage report is on ..." | The normal 180-day reminder. Report usage and update. |
+| "One or more licenses have expired and your service will be degraded on ..." | You are in the 90-day window. Act now (<KB id={438527} />). |
+| "You have expired or expiring version 9+ licenses in your inventory" | Usually the 180-day window, sometimes a stale vSAN asset in 9.0 (<KB id={437580} />). |
+| "Next Usage Report is required on ..." and the date won't move | The subscription itself may have ended, or a renewal needs **Change Capacity** (<KB id={449122} />). |
+| Expiry alerts for keys you no longer use | Old keys on the **Pre-Version 9** tab. Remove them once that infrastructure is gone (<KB id={418555} />). |
+
+## Hosts and evaluation
+
+- A host added without enough capacity joins in **evaluation** and must be licensed within 90 days, or it disconnects. Its VMs keep running.
+- A host whose own evaluation has already expired **cannot** take a subscription license. The documented fix is to reinstall it or open a case (<KB id={448638} />).
+- If the evaluation runs out while VCF Operations or the License Server is down, hosts can disconnect and VMs can't power on (<KB id={443240} />). See [recovering an expired estate](/vcf/library/licensing/expired-estate-recovery/).
+
+<Callout type="field">
+Add "days until next licensing deadline, per VCF Operations instance" to the monthly report. In connected mode it should always read about 180. Any lower number is an early warning that the daily path is broken.
+</Callout>
+
+## Pitfalls
+
+- **Reading the 180-day date as the contract end** and escalating a renewal that isn't needed. Check the console first.
+- **Uploading usage after the subscription ended.** It does not extend past the subscription end date.
+- **Ignoring evaluation hosts.** One forgotten host can be the only thing that disconnects.

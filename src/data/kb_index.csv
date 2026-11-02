@@ -1,0 +1,341 @@
+kb,topic,decks,url
+205795,Collecting a HAR file,How it all connects,https://knowledge.broadcom.com/external/article/205795
+312247,Reverse proxy: Global.Proxy privilege,How it all connects,https://knowledge.broadcom.com/external/article/312247
+313533,VCF Operations slice and cluster CLI,How it all connects,https://knowledge.broadcom.com/external/article/313533
+313551,Ops vSphere Client plugin refresh on certificate renewal,How it all connects,https://knowledge.broadcom.com/external/article/313551
+313839,"Local plugins deprecated, unsupported in 9",How it all connects,https://knowledge.broadcom.com/external/article/313839
+314640,CLIENT_IP_BLOCKED: SDDC Manager credentials incorrect,How it all connects,https://knowledge.broadcom.com/external/article/314640
+315973,Truncate alerts and alarms (internal DB),How it all connects,https://knowledge.broadcom.com/external/article/315973
+316026,EMM suppression can still fail at install,Follow the signposts,https://knowledge.broadcom.com/external/article/316026
+316028,fix_known_hosts.sh / fixHostKeys.py,Follow the signposts,https://knowledge.broadcom.com/external/article/316028
+316098,Insufficient free IPs in network pool,Follow the signposts,https://knowledge.broadcom.com/external/article/316098
+317794,Compute manager errors 7055 and 90204,How it all connects,https://knowledge.broadcom.com/external/article/317794
+317900,NSX scripted VMCA certificate replacement,Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/317900
+318768,Ops data retriever: add a disk to every node,Follow the signposts,https://knowledge.broadcom.com/external/article/318768
+318853,Maintenance-mode dry-run precheck fails,Follow the signposts,https://knowledge.broadcom.com/external/article/318853
+321631,HCX plugin after a vCenter certificate change,How it all connects,https://knowledge.broadcom.com/external/article/321631
+325773,vCenter adapter login and certificate errors,How it all connects,https://knowledge.broadcom.com/external/article/325773
+326391,Reset the VCF Operations admin password,How it all connects,https://knowledge.broadcom.com/external/article/326391
+326396,Unlock the VCF Operations admin account,How it all connects,https://knowledge.broadcom.com/external/article/326396
+327195,Service account credentials via the API (TEST_BEFORE_REMEDIATE),Follow the signposts,https://knowledge.broadcom.com/external/article/327195
+328774,CaSA API: enable or disable HA,How it all connects,https://knowledge.broadcom.com/external/article/328774
+339041,Clear a stale deployment lock,Follow the signposts,https://knowledge.broadcom.com/external/article/339041
+341964,VCF Operations shutdown and startup order,How it all connects,https://knowledge.broadcom.com/external/article/341964
+344201,vCenter expired certificates,Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/344201
+344633,vCenter service-control usage,Follow the signposts,https://knowledge.broadcom.com/external/article/344633
+368313,Uppercase vCenter instanceUuid blocks License Server auth,Mind the licensing clock,https://knowledge.broadcom.com/external/article/368313
+376813,NSX Manager log locations,Follow the signposts,https://knowledge.broadcom.com/external/article/376813
+381709,vCenter service to log file map,Follow the signposts,https://knowledge.broadcom.com/external/article/381709
+382440,"SRM/VR ""URI is not absolute"" after vCenter update",How it all connects,https://knowledge.broadcom.com/external/article/382440
+385107,vCert tool,Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/385107
+385749,SoS utility options,Follow the signposts,https://knowledge.broadcom.com/external/article/385749
+386023,NSX cluster not STABLE,Follow the signposts,https://knowledge.broadcom.com/external/article/386023
+395813,Plugin version stuck in the package cache,How it all connects,https://knowledge.broadcom.com/external/article/395813
+401658,Installer vCenter deployment (vcsa-cli-installer.log),Follow the signposts,https://knowledge.broadcom.com/external/article/401658
+402033,Avi Controller logs and generate_techsupport.py,Follow the signposts,https://knowledge.broadcom.com/external/article/402033
+402476,SoS log bundle with management services logs,"Upgrading to VCF 9.1, the right way round; Follow the signposts",https://knowledge.broadcom.com/external/article/402476
+403626,Uppercase FQDN: SDDC Manager services fail,Follow the signposts,https://knowledge.broadcom.com/external/article/403626
+404155,vCenter 9 has no license key field,Mind the licensing clock,https://knowledge.broadcom.com/external/article/404155
+404501,Installer UI 502: no DNS record,Follow the signposts,https://knowledge.broadcom.com/external/article/404501
+404593,"Registration spins or ""activation pending"": reachability",Mind the licensing clock,https://knowledge.broadcom.com/external/article/404593
+404830,ESX Live Patch failure: reboot,Follow the signposts,https://knowledge.broadcom.com/external/article/404830
+405174,NSX Faulty TEP,Follow the signposts,https://knowledge.broadcom.com/external/article/405174
+406917,Take the VCF Operations cluster offline,How it all connects,https://knowledge.broadcom.com/external/article/406917
+406976,Find and unregister a vCenter extension (MOB),How it all connects,https://knowledge.broadcom.com/external/article/406976
+407073,Domain locked by an SDDC Manager operation,Follow the signposts,https://knowledge.broadcom.com/external/article/407073
+408659,Changing ESX password expiry disconnects hosts,Follow the signposts,https://knowledge.broadcom.com/external/article/408659
+409220,"""Server returned status code: 0"": proxy",Mind the licensing clock,https://knowledge.broadcom.com/external/article/409220
+409353,"VCF SSO ""JWT token is expired"": NTP",Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/409353
+410118,vCenter /storage/seat full,Follow the signposts,https://knowledge.broadcom.com/external/article/410118
+410383,Supervisor vCenter object shows no data (by design),How it all connects,https://knowledge.broadcom.com/external/article/410383
+410759,"Ops ""Waiting for Analytics"": root full",Follow the signposts,https://knowledge.broadcom.com/external/article/410759
+411268,Error downloading plug-in,How it all connects,https://knowledge.broadcom.com/external/article/411268
+412127,Installer: vSwitch0 must have one 10 GbE+ uplink,Follow the signposts,https://knowledge.broadcom.com/external/article/412127
+413178,nsxt_ service account password renewal,Meet the fleet; How it all connects,https://knowledge.broadcom.com/external/article/413178
+413190,"""Failed to evaluate lambda"": null DB data",Follow the signposts,https://knowledge.broadcom.com/external/article/413190
+413976,Invalid redirect URL: set the System Access URL,Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/413976
+414058,"Microsoft CA ""Denied by Policy Module""",How it all connects; Follow the signposts,https://knowledge.broadcom.com/external/article/414058
+414449,NSX compute manager 7056: duplicate thumbprint,How it all connects,https://knowledge.broadcom.com/external/article/414449
+414456,Installer bring-up log pointers,Follow the signposts,https://knowledge.broadcom.com/external/article/414456
+414885,Adapter stuck in State: Stopping,How it all connects,https://knowledge.broadcom.com/external/article/414885
+415466,Reverse lookup FQDN does not match the spec (case),Meet the fleet,https://knowledge.broadcom.com/external/article/415466
+415550,No route to host during vDS migration,Follow the signposts,https://knowledge.broadcom.com/external/article/415550
+415767,Host certificate not trusted by SDDC Manager,Follow the signposts,https://knowledge.broadcom.com/external/article/415767
+416358,9.0 Fleet appliance depot handshake_failure,Follow the signposts,https://knowledge.broadcom.com/external/article/416358
+416490,Installer: deploy using an edited JSON spec,Follow the signposts,https://knowledge.broadcom.com/external/article/416490
+416864,Only the local admin can register VCF Operations,Mind the licensing clock,https://knowledge.broadcom.com/external/article/416864
+416946,Installer: VMs on a host being added,Follow the signposts,https://knowledge.broadcom.com/external/article/416946
+417098,Identity broker pg_wal full,Follow the signposts,https://knowledge.broadcom.com/external/article/417098
+417229,NSX TEP pool exhausted on expand,Follow the signposts,https://knowledge.broadcom.com/external/article/417229
+417255,Management services dashboard and thresholds,Meet the fleet,https://knowledge.broadcom.com/external/article/417255
+417767,Live Recovery plugin undeploys: stale package,How it all connects,https://knowledge.broadcom.com/external/article/417767
+418460,Distributed firewall packet log on ESX,Follow the signposts,https://knowledge.broadcom.com/external/article/418460
+418555,Rolling 180-day license file validity,Mind the licensing clock,https://knowledge.broadcom.com/external/article/418555
+419010,Reset vmware-system-user on VCFA nodes,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/419010
+419087,SDDC Manager vSphere Client plugin redeploy,How it all connects,https://knowledge.broadcom.com/external/article/419087
+420460,vSphere Client misbehaves: browser cache,How it all connects,https://knowledge.broadcom.com/external/article/420460
+420572,NSX /var/log full from future-dated files,Follow the signposts,https://knowledge.broadcom.com/external/article/420572
+420736,NSX account locked: lockout immunity,Follow the signposts,https://knowledge.broadcom.com/external/article/420736
+420928,Log Assist to a support case,Follow the signposts,https://knowledge.broadcom.com/external/article/420928
+421016,"SSLHandshakeException, PKIX path building failed",How it all connects,https://knowledge.broadcom.com/external/article/421016
+421958,NSX adapter credential; Ops-NSX accounts never expire,Meet the fleet; How it all connects,https://knowledge.broadcom.com/external/article/421958
+422426,Clear a stale deployment lock (9.x),"Upgrading to VCF 9.1, the right way round; Follow the signposts",https://knowledge.broadcom.com/external/article/422426
+423908,Host commission guardrail failure,Follow the signposts,https://knowledge.broadcom.com/external/article/423908
+424242,Host already present in inventory,Follow the signposts,https://knowledge.broadcom.com/external/article/424242
+424533,Licenses could not be assigned to vCenters,Meet the fleet; Mind the licensing clock,https://knowledge.broadcom.com/external/article/424533
+424728,Offline depot vSAN HCL older than 90 days,Follow the signposts,https://knowledge.broadcom.com/external/article/424728
+424877,Logs: TlsFatalAlert certificate_unknown(46),How it all connects,https://knowledge.broadcom.com/external/article/424877
+425271,Certificate expiry fetch fails with Avi,How it all connects; Follow the signposts,https://knowledge.broadcom.com/external/article/425271
+426042,Cloud proxy offline every 4-8 hours: DNS,Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/426042
+426389,NSX extension already registered: MOB cleanup,How it all connects,https://knowledge.broadcom.com/external/article/426389
+426469,Live Recovery plugin: FQDN certificate,How it all connects,https://knowledge.broadcom.com/external/article/426469
+426872,9.0: certificate rotation not automated for some components,Meet the fleet,https://knowledge.broadcom.com/external/article/426872
+426913,Unsupported local plugins; MOB cleanup,How it all connects,https://knowledge.broadcom.com/external/article/426913
+427228,VCF Operations plugin does not upgrade with Ops,How it all connects,https://knowledge.broadcom.com/external/article/427228
+427237,vCenter STS will not start (9.0.1),Follow the signposts,https://knowledge.broadcom.com/external/article/427237
+427554,LDAP not reachable from one broker node,Meet the fleet,https://knowledge.broadcom.com/external/article/427554
+427937,Certificate auto-renewal timing,Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/427937
+428053,Everything expired: recovery path (9.0),Mind the licensing clock,https://knowledge.broadcom.com/external/article/428053
+428209,"""Switching the reporting mode failed""",Mind the licensing clock,https://knowledge.broadcom.com/external/article/428209
+428877,Installer: uplink names must match the cluster,Follow the signposts,https://knowledge.broadcom.com/external/article/428877
+429451,Stop and start collecting after a proxy change,How it all connects,https://knowledge.broadcom.com/external/article/429451
+429696,"""Cis License Health Alarm"" after vmdir downtime",Mind the licensing clock,https://knowledge.broadcom.com/external/article/429696
+429753,"Tasks UI ""Fetching task info""",Follow the signposts,https://knowledge.broadcom.com/external/article/429753
+430066,Inventory sync guardrails,How it all connects; Follow the signposts,https://knowledge.broadcom.com/external/article/430066
+430391,CSR and certificate public key mismatch,Follow the signposts,https://knowledge.broadcom.com/external/article/430391
+430558,Resync the NSX service account,Follow the signposts,https://knowledge.broadcom.com/external/article/430558
+431149,Commission guardrail: NSX account locked,Follow the signposts,https://knowledge.broadcom.com/external/article/431149
+431474,Installer vSAN HCL step,Follow the signposts,https://knowledge.broadcom.com/external/article/431474
+431546,9.1 licensing path and License Server,Meet the fleet; Mind the licensing clock,https://knowledge.broadcom.com/external/article/431546
+431963,Compute manager 90011 OIDC thumbprint,How it all connects,https://knowledge.broadcom.com/external/article/431963
+432021,VCF Installer trust stores for a proxy CA,Meet the fleet,https://knowledge.broadcom.com/external/article/432021
+432158,Reporting mode switch: endpoints blocked,Mind the licensing clock,https://knowledge.broadcom.com/external/article/432158
+432196,vSAN plugin: stale thumbprint in VCDB,How it all connects,https://knowledge.broadcom.com/external/article/432196
+432201,Disconnected mode needs no activation code,Mind the licensing clock,https://knowledge.broadcom.com/external/article/432201
+432503,NSX in VCF SSO needs the NSX adapter collecting,How it all connects,https://knowledge.broadcom.com/external/article/432503
+432694,Log collection credential (svc-li-vc) rotation,How it all connects,https://knowledge.broadcom.com/external/article/432694
+433085,Compute manager 7061: external IdP user,How it all connects,https://knowledge.broadcom.com/external/article/433085
+433089,vCenter log collection lost after 9.1 upgrade,Follow the signposts,https://knowledge.broadcom.com/external/article/433089
+433208,no healthy upstream after Ops VMs deleted,How it all connects,https://knowledge.broadcom.com/external/article/433208
+433259,Duplicate VCF adapters (IP and FQDN),How it all connects,https://knowledge.broadcom.com/external/article/433259
+433379,Cloud proxy certificate: south_cert.pem,How it all connects,https://knowledge.broadcom.com/external/article/433379
+433425,Registered with Errors: licence admin privilege,How it all connects,https://knowledge.broadcom.com/external/article/433425
+433768,Identity broker logs from Lifecycle,Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/433768
+434281,Brownfield import guardrails report,Follow the signposts,https://knowledge.broadcom.com/external/article/434281
+434671,vCenter /storage/log full from ESX syslog,Follow the signposts,https://knowledge.broadcom.com/external/article/434671
+435258,VCF Instance page: 443 SDDC Manager to Ops nodes,How it all connects,https://knowledge.broadcom.com/external/article/435258
+435569,Stuck Fleet or SDDC lifecycle task,"Meet the fleet; Upgrading to VCF 9.1, the right way round; Follow the signposts",https://knowledge.broadcom.com/external/article/435569
+435599,9.0: password rotation not automated for some components,Meet the fleet,https://knowledge.broadcom.com/external/article/435599
+435664,"""This activation code is not valid""",Mind the licensing clock,https://knowledge.broadcom.com/external/article/435664
+435717,Installer DNS validation: PTR case mismatch,Meet the fleet,https://knowledge.broadcom.com/external/article/435717
+436026,Duplicate VCF adapters pushed back,How it all connects,https://knowledge.broadcom.com/external/article/436026
+436047,Ops snapshot revert duplicated adapters,Follow the signposts,https://knowledge.broadcom.com/external/article/436047
+436092,Compute manager down after out-of-band vCenter upgrade,How it all connects,https://knowledge.broadcom.com/external/article/436092
+436398,ESX root Disconnected: Remediate,Follow the signposts,https://knowledge.broadcom.com/external/article/436398
+436542,Disconnected mode: registration (.data) file,Mind the licensing clock,https://knowledge.broadcom.com/external/article/436542
+436898,New domains not monitored; Domain not configured,How it all connects,https://knowledge.broadcom.com/external/article/436898
+437242,One allocation cannot serve two Ops instances,Mind the licensing clock,https://knowledge.broadcom.com/external/article/437242
+437258,"Cloud proxy ""Outdated life status""",Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/437258
+437447,No HCX pack supports VCF Operations 9.0,How it all connects,https://knowledge.broadcom.com/external/article/437447
+437580,License file validity vs contract length,Mind the licensing clock,https://knowledge.broadcom.com/external/article/437580
+438020,NSX admin password expired,Follow the signposts,https://knowledge.broadcom.com/external/article/438020
+438122,Stale STS_INTERNAL_SSL_CERT store,Follow the signposts,https://knowledge.broadcom.com/external/article/438122
+438397,Fleet 9.0 Not Ready: /storage full,Follow the signposts,https://knowledge.broadcom.com/external/article/438397
+438508,"VVF: VCF adapter fails, use the vCenter adapter",How it all connects,https://knowledge.broadcom.com/external/article/438508
+438527,"Licenses expired, service degraded banner",Mind the licensing clock,https://knowledge.broadcom.com/external/article/438527
+438528,"Installer precheck ""NTP Server null"": add iburst",Meet the fleet,https://knowledge.broadcom.com/external/article/438528
+438533,"""VCF Operations is not registered"" after upgrade",Mind the licensing clock,https://knowledge.broadcom.com/external/article/438533
+438771,"""Usage Report overdue today""",Mind the licensing clock,https://knowledge.broadcom.com/external/article/438771
+438846,System Access URL and redirects after a re-IP,Meet the fleet,https://knowledge.broadcom.com/external/article/438846
+438868,New license file before the usage due date,Mind the licensing clock,https://knowledge.broadcom.com/external/article/438868
+439010,FQDN mapped to loopback in /etc/hosts,Follow the signposts,https://knowledge.broadcom.com/external/article/439010
+439240,"Installer: ""Specified NTP server is specified incorrect""",Meet the fleet,https://knowledge.broadcom.com/external/article/439240
+439473,"""Failed to acquire System lock"" (backups)",Follow the signposts,https://knowledge.broadcom.com/external/article/439473
+439522,Restarting the vCenter licence service,Mind the licensing clock,https://knowledge.broadcom.com/external/article/439522
+439546,Install image missing; depot on port 80,Follow the signposts,https://knowledge.broadcom.com/external/article/439546
+439946,SDDC Manager disk space precheck,Follow the signposts,https://knowledge.broadcom.com/external/article/439946
+439953,Trigger Inventory Sync after a re-IP,Meet the fleet,https://knowledge.broadcom.com/external/article/439953
+440282,9.1 binaries listed but not available until VCF Ops is 9.1,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/440282
+440331,NSX host prep stuck: host DNS,Follow the signposts,https://knowledge.broadcom.com/external/article/440331
+440395,Duplicate NSX adapters abort SSO configuration,How it all connects,https://knowledge.broadcom.com/external/article/440395
+440402,Licence and plug-in management privileges,How it all connects,https://knowledge.broadcom.com/external/article/440402
+440459,Ops for networks certificate missing IP SANs,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/440459
+440471,vCenter not connected to a license server,Meet the fleet; Mind the licensing clock,https://knowledge.broadcom.com/external/article/440471
+440630,Upgrade order and interop companion article,"Meet the fleet; Upgrading to VCF 9.1, the right way round; Mind the licensing clock",https://knowledge.broadcom.com/external/article/440630
+440673,Expired trusted root breaks the reverse proxy,How it all connects,https://knowledge.broadcom.com/external/article/440673
+440685,Everything expired: recovery path (9.1),Mind the licensing clock,https://knowledge.broadcom.com/external/article/440685
+440709,SDDC Manager credentials are incorrect (IP block),How it all connects,https://knowledge.broadcom.com/external/article/440709
+440807,NSX upgraded outside VCF: run a version sync,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/440807
+440862,Runtime power-on order; power-off marker recovery,Meet the fleet,https://knowledge.broadcom.com/external/article/440862
+440863,ESX precheck: vCenter not licensed by LS,Mind the licensing clock,https://knowledge.broadcom.com/external/article/440863
+440874,Services runtime shutdown script,Meet the fleet,https://knowledge.broadcom.com/external/article/440874
+440901,Default NSX Distributed Load Balancer blocks the precheck,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/440901
+440910,NSX VIP certificate SAN: resource validations time out,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/440910
+441097,SDDC Manager upgrade failed while VCF Ops says success,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/441097
+441205,Lifecycle page spins forever: browser cache,How it all connects,https://knowledge.broadcom.com/external/article/441205
+441246,vmsp_upgrade_vcfa reports failure after a timeout,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/441246
+441251,License Server OVA via Host Client: not configured,Mind the licensing clock,https://knowledge.broadcom.com/external/article/441251
+441315,NSX API and VIP certificates expired,Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/441315
+441333,Remove a failed Day-N component (cleanup_component.py),"Upgrading to VCF 9.1, the right way round; Follow the signposts",https://knowledge.broadcom.com/external/article/441333
+441340,Dark sites: VCF Download Tool 9.1,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/441340
+441349,9.1 binaries 403: entitlement on the wrong Site ID,"Upgrading to VCF 9.1, the right way round; Mind the licensing clock; Follow the signposts",https://knowledge.broadcom.com/external/article/441349
+441506,VCFA truststore re-trust,Follow the signposts,https://knowledge.broadcom.com/external/article/441506
+441509,"Ops for networks, Automation: own integrations",How it all connects,https://knowledge.broadcom.com/external/article/441509
+441515,"platform-trust configmap, missing intermediate CA",Meet the fleet,https://knowledge.broadcom.com/external/article/441515
+441526,License Server 9.1.0 clashes with 172.16.0.0/12 and 172.17.0.0/16,"Upgrading to VCF 9.1, the right way round; Mind the licensing clock",https://knowledge.broadcom.com/external/article/441526
+441725,"Supervisor load balancer: Foundation, NSX or Avi",Follow the signposts,https://knowledge.broadcom.com/external/article/441725
+441813,NetFlow on VDS uplinks blocks the vCenter precheck,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/441813
+441858,Import VCF Operations in Fleet Lifecycle fails or warns,"Upgrading to VCF 9.1, the right way round; Follow the signposts",https://knowledge.broadcom.com/external/article/441858
+442133,Upgraded hosts show evaluation license,Mind the licensing clock,https://knowledge.broadcom.com/external/article/442133
+442134,RDU prepare: cannot download target certificate (proxy),"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/442134
+442139,9.1 LDAP leaves from runtime node IPs,Meet the fleet; How it all connects,https://knowledge.broadcom.com/external/article/442139
+442142,SSH host key case mismatch,Follow the signposts,https://knowledge.broadcom.com/external/article/442142
+442223,"RDU switchover: database schema, orphan rows","Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/442223
+442290,vCenter VM hardware above 17 blocks the precheck,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/442290
+442380,Default collector group: every node reaches vCenter,How it all connects,https://knowledge.broadcom.com/external/article/442380
+442564,License Server and vCenter connectivity,Meet the fleet; Mind the licensing clock,https://knowledge.broadcom.com/external/article/442564
+442588,"Log management: skip Run Prechecks, click UPGRADE","Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/442588
+442719,VCF Ops node root password expired,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/442719
+442735,SDDC Manager depot PKIX behind SSL inspection,Meet the fleet,https://knowledge.broadcom.com/external/article/442735
+442857,VCFDT: ESX_HOST excluded from INSTALL type,Follow the signposts,https://knowledge.broadcom.com/external/article/442857
+442978,9.1 Software depot: proxy CA via vmsp-utility.py,Meet the fleet,https://knowledge.broadcom.com/external/article/442978
+442993,UNABLE_TO_UPDATE_SOFTWARE_INFO: restart lcm,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/442993
+442998,Avi after a certificate swap; Remediate,How it all connects,https://knowledge.broadcom.com/external/article/442998
+443082,"LS console ""Not configured and Disconnected""",Mind the licensing clock,https://knowledge.broadcom.com/external/article/443082
+443106,Cloud proxy registration validation (Unified cloud proxy),"Upgrading to VCF 9.1, the right way round; How it all connects",https://knowledge.broadcom.com/external/article/443106
+443166,9.1 depot 403: egress from runtime nodes,Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/443166
+443216,Management services runtime components (9.1),Meet the fleet,https://knowledge.broadcom.com/external/article/443216
+443240,Evaluation runs out while Ops or LS is down,Meet the fleet; Mind the licensing clock,https://knowledge.broadcom.com/external/article/443240
+443279,"ESX: add-on downgrade, incompatible compliance","Upgrading to VCF 9.1, the right way round; Follow the signposts",https://knowledge.broadcom.com/external/article/443279
+443327,"Fleet Management ""get started"" prerequisites",How it all connects,https://knowledge.broadcom.com/external/article/443327
+443647,Activation Code replaces download tokens,"Meet the fleet; Upgrading to VCF 9.1, the right way round; Mind the licensing clock; Follow the signposts",https://knowledge.broadcom.com/external/article/443647
+443672,ESX metadata from vvs: x509 unknown authority,Meet the fleet,https://knowledge.broadcom.com/external/article/443672
+443680,VCF adapter to SDDC Manager API flow,Meet the fleet; How it all connects,https://knowledge.broadcom.com/external/article/443680
+443714,Removed assets still hold capacity: Reclaim Used Capacity,Mind the licensing clock,https://knowledge.broadcom.com/external/article/443714
+443718,"Stuck at ""Install VCF services runtime"": restart lifecycle pods","Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/443718
+443723,VCFA precheck: vmware-system-user expired,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/443723
+443737,"Cloud proxy registration validation, companion article","Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/443737
+443763,NSX Global Managers before Local Managers,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/443763
+443784,Runtime node resource usage (9.1.1),Follow the signposts,https://knowledge.broadcom.com/external/article/443784
+443789,VCF Operations support bundle,Follow the signposts,https://knowledge.broadcom.com/external/article/443789
+443900,Cloud proxy 503: haproxy resolver,Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/443900
+443928,Edit or Cancel Plan greyed out,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/443928
+443943,Identity broker unavailable: runtime password expired,Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/443943
+443988,VCFA vmware-system-user differs between nodes,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/443988
+444003,"""Identity broker is not available"" after 9.1",Meet the fleet,https://knowledge.broadcom.com/external/article/444003
+444075,Express Patch version strings: bring components to EP1,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/444075
+444094,Decommission the License Server properly,Mind the licensing clock,https://knowledge.broadcom.com/external/article/444094
+444151,No VCF_FLEET_LCM entry in the Service Registry,How it all connects,https://knowledge.broadcom.com/external/article/444151
+444168,Greyed-out vCenter or NSX upgrade: stale target version,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/444168
+444267,Installer depot via proxy: certificate_unknown(46),Meet the fleet,https://knowledge.broadcom.com/external/article/444267
+444283,ESX remediation blocked by vSAN health alarms,"Upgrading to VCF 9.1, the right way round; Follow the signposts",https://knowledge.broadcom.com/external/article/444283
+444324,ESX: corrupt vLCM depot metadata,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/444324
+444349,vCenters not licensed by these licenses: Site ID,Mind the licensing clock,https://knowledge.broadcom.com/external/article/444349
+444431,Installer cannot reach NTP deploying VCF Ops,Meet the fleet,https://knowledge.broadcom.com/external/article/444431
+444466,Collect logs when Fleet lifecycle itself is down,"Upgrading to VCF 9.1, the right way round; How it all connects; Follow the signposts",https://knowledge.broadcom.com/external/article/444466
+444718,9.1 inventory sync location,How it all connects,https://knowledge.broadcom.com/external/article/444718
+444734,Identity broker on a non-management network,Meet the fleet,https://knowledge.broadcom.com/external/article/444734
+444938,Two NSX plugins with Federation,How it all connects,https://knowledge.broadcom.com/external/article/444938
+444986,Cancel a credential task holding a lock,"Upgrading to VCF 9.1, the right way round; Follow the signposts",https://knowledge.broadcom.com/external/article/444986
+444992,Interop data timeout: vvs.broadcom.com blocked,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/444992
+445084,RDU switchover: foreign key error,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/445084
+445179,"""Failed to bootstrap VCF services runtime"": mixed case",Meet the fleet,https://knowledge.broadcom.com/external/article/445179
+445301,Fleet LCM DB leader (patronictl),Follow the signposts,https://knowledge.broadcom.com/external/article/445301
+445418,VCF Ops upgrade times out: root password expired,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/445418
+445428,vCenter cannot resolve License Server name,Meet the fleet; Mind the licensing clock,https://knowledge.broadcom.com/external/article/445428
+445455,Fleet LCM database replica health (patronictl),Follow the signposts,https://knowledge.broadcom.com/external/article/445455
+445504,"""License assignment failed"" on host reboot: false positive",Mind the licensing clock,https://knowledge.broadcom.com/external/article/445504
+445767,Third-party plugin (Cisco Intersight) after cert change,How it all connects,https://knowledge.broadcom.com/external/article/445767
+446056,Disconnected 9.1 licensing; VCF Operations stays the authority,Mind the licensing clock,https://knowledge.broadcom.com/external/article/446056
+446110,"""NSX Dataplane upgrade is not available""","Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/446110
+446226,Management vCenter added as a standalone account,How it all connects,https://knowledge.broadcom.com/external/article/446226
+446313,NSX back-in-time error during the upgrade,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/446313
+446447,Cluster stuck Waiting for Analytics,How it all connects,https://knowledge.broadcom.com/external/article/446447
+446454,VCFDT --depot-store must be the root,Follow the signposts,https://knowledge.broadcom.com/external/article/446454
+446667,Fleet and SDDC lifecycle tasks view (9.1),Follow the signposts,https://knowledge.broadcom.com/external/article/446667
+446672,RDU prepare: Enhanced Linked Mode detection bug,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/446672
+446831,Component import stalls at 46%: firewall to VCF Ops,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/446831
+446874,SvcAccountsCreationResult is null,How it all connects,https://knowledge.broadcom.com/external/article/446874
+446929,Storage vMotioned components break the bootstrap,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/446929
+447248,bundle_cleanup.py for old bundles,Follow the signposts,https://knowledge.broadcom.com/external/article/447248
+447314,Hung backup lock (5.x),Follow the signposts,https://knowledge.broadcom.com/external/article/447314
+447366,9.1 VCSA installer bypasses the proxy,Follow the signposts,https://knowledge.broadcom.com/external/article/447366
+447375,ESX: vendor hardware support manager error,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/447375
+447542,9.1 Software depot: proxy settings via vmsp-utility.py,Meet the fleet,https://knowledge.broadcom.com/external/article/447542
+447554,License servers pending registration,Mind the licensing clock,https://knowledge.broadcom.com/external/article/447554
+447589,Offline depot stale metadata,Follow the signposts,https://knowledge.broadcom.com/external/article/447589
+447632,Online depot Disconnected: NSX resync,Follow the signposts,https://knowledge.broadcom.com/external/article/447632
+447766,GENERATE_CSR endpoint.not.found (9.1),Follow the signposts,https://knowledge.broadcom.com/external/article/447766
+447767,NSX adapter: identity broker users not supported,How it all connects,https://knowledge.broadcom.com/external/article/447767
+447995,OBTU not supported for SDDC Manager 9.x,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/447995
+448054,VCF Ops 9.0 to 9.1 stuck at 10/14: node time drift,Meet the fleet,https://knowledge.broadcom.com/external/article/448054
+448068,UPGRADE_SPEC_NSXT_ID_EMPTY: half-registered Edge,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/448068
+448518,Licenses expire: 180-day update missed,Mind the licensing clock,https://knowledge.broadcom.com/external/article/448518
+448522,Duplicate trusted certificate breaks Lifecycle,How it all connects,https://knowledge.broadcom.com/external/article/448522
+448618,Runtime internal certificate expired (9.1.0),Meet the fleet; How it all connects; Follow the signposts,https://knowledge.broadcom.com/external/article/448618
+448638,Host with expired evaluation cannot be licensed,Mind the licensing clock,https://knowledge.broadcom.com/external/article/448638
+448643,Network and flow collection: NSX added by IP,How it all connects,https://knowledge.broadcom.com/external/article/448643
+448839,Installer does not trust the offline depot,Follow the signposts,https://knowledge.broadcom.com/external/article/448839
+448885,Password remediation: 127-character UI limit,Follow the signposts,https://knowledge.broadcom.com/external/article/448885
+448888,Runtime bootstrap needs vCenter on 443,Meet the fleet,https://knowledge.broadcom.com/external/article/448888
+448933,"ESX: leftover offline depot ""AlreadyExists""","Upgrading to VCF 9.1, the right way round; Follow the signposts",https://knowledge.broadcom.com/external/article/448933
+449013,Duplicate key: vCenter certificate chain,How it all connects,https://knowledge.broadcom.com/external/article/449013
+449075,ops_precheck 401: 9.0 fleet appliance still on,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/449075
+449122,Renewal with new serial: Change Capacity,Mind the licensing clock,https://knowledge.broadcom.com/external/article/449122
+449131,9.1 SDDC Manager-vCenter service account missing,Follow the signposts,https://knowledge.broadcom.com/external/article/449131
+449148,Domain lock held by a stuck password task,"Upgrading to VCF 9.1, the right way round; Follow the signposts",https://knowledge.broadcom.com/external/article/449148
+449159,SDDC Manager NTP change not written to ntp.conf,Meet the fleet,https://knowledge.broadcom.com/external/article/449159
+449290,vCenter adapter reverts to the collector group,How it all connects,https://knowledge.broadcom.com/external/article/449290
+449628,VCF Automation target needs a specific services runtime version,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/449628
+449684,TEST_BEFORE_REMEDIATE failure,Follow the signposts,https://knowledge.broadcom.com/external/article/449684
+449686,ESXI lock plus out-of-band root change,Follow the signposts,https://knowledge.broadcom.com/external/article/449686
+449907,FQDN required in certificate SAN (9.1),Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/449907
+449937,"Component Powered Off, no Actions menu",How it all connects,https://knowledge.broadcom.com/external/article/449937
+450375,Runtime service-account secrets stale after rotation,Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/450375
+450430,"Snapshot VCF Ops offline, then bring it online","Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/450430
+450561,SFTP backup user must be user@domain,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/450561
+450589,Remediate disconnected NSX and Avi service accounts,Follow the signposts,https://knowledge.broadcom.com/external/article/450589
+450972,Back-in-time releases: 5.2.4 cannot go to 9.1.0,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/450972
+451010,"vmsp_upgrade: false ""IP pool exhausted""","Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/451010
+451125,Compute manager 7058 after a root CA change,How it all connects,https://knowledge.broadcom.com/external/article/451125
+451249,Duplicate key: CA imported by hand,How it all connects,https://knowledge.broadcom.com/external/article/451249
+451344,Compute manager 7059: vCenter 9.0 into NSX 4.2,How it all connects,https://knowledge.broadcom.com/external/article/451344
+451550,Stale svc-vcf-ESX account blocks re-commission,Follow the signposts,https://knowledge.broadcom.com/external/article/451550
+451560,SoS access_denied: restart commonsvcs,Follow the signposts,https://knowledge.broadcom.com/external/article/451560
+451644,"""Invalid VCF Operations instance"": SDDC Manager upgraded first","Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/451644
+451758,"False ""logs are getting dropped"" (9.1)",Follow the signposts,https://knowledge.broadcom.com/external/article/451758
+451990,License Server detection fails on DNS,Meet the fleet,https://knowledge.broadcom.com/external/article/451990
+452077,Race with the 9.0 daily inventory sync,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/452077
+452095,License Server networking and DNS,Meet the fleet; Mind the licensing clock,https://knowledge.broadcom.com/external/article/452095
+452124,Runtime moved or Storage-vMotioned: VCFMS-HEALTH-002,Meet the fleet,https://knowledge.broadcom.com/external/article/452124
+452677,VCF Ops APUAT precheck interrupted by a reboot,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/452677
+452764,"No key upgrade: ""No data available to upgrade""",Mind the licensing clock,https://knowledge.broadcom.com/external/article/452764
+452951,ESX early-boot PSOD: Sub-NUMA Clustering,Follow the signposts,https://knowledge.broadcom.com/external/article/452951
+453026,"Disconnected: ""License Expired"" after 180 days without usage",Mind the licensing clock,https://knowledge.broadcom.com/external/article/453026
+453116,Depot OAuth server unreachable,Follow the signposts,https://knowledge.broadcom.com/external/article/453116
+453149,Usage report due date passed,Mind the licensing clock,https://knowledge.broadcom.com/external/article/453149
+453510,Thumbprint cert mode blocks license push to hosts,Mind the licensing clock,https://knowledge.broadcom.com/external/article/453510
+453517,"""No licenses are assignable"": toggle integration",Mind the licensing clock,https://knowledge.broadcom.com/external/article/453517
+453736,Salt master to vCenter on TCP 4505/4506,Meet the fleet,https://knowledge.broadcom.com/external/article/453736
+453758,vpxd panic from long snapshot chains,Follow the signposts,https://knowledge.broadcom.com/external/article/453758
+453793,Ops node certificate SAN validation (9.1),Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/453793
+453800,vCenter to License Server: sustained TLS on 443,Meet the fleet,https://knowledge.broadcom.com/external/article/453800
+453809,CaSA has no MASTER: Fleet sync breaks (9.0),How it all connects; Follow the signposts,https://knowledge.broadcom.com/external/article/453809
+454179,"503, identity broker not reachable: IP conflict",How it all connects,https://knowledge.broadcom.com/external/article/454179
+454287,Licenses could not be synchronized with vCenters,Mind the licensing clock,https://knowledge.broadcom.com/external/article/454287
+454432,9.1.1: sixteen packs must be upgraded,How it all connects,https://knowledge.broadcom.com/external/article/454432
+454434,9.1.1: MP Builder packs re-save and re-install,How it all connects,https://knowledge.broadcom.com/external/article/454434
+454467,"""A vCenter upgrade is already running"": cancel script","Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/454467
+454593,PAK upload: No space left on device,Follow the signposts,https://knowledge.broadcom.com/external/article/454593
+454943,VVF: management services are optional,Meet the fleet,https://knowledge.broadcom.com/external/article/454943
+455225,"lcm-debug.log: prechecks, bundles, depot",Follow the signposts,https://knowledge.broadcom.com/external/article/455225
+455244,9.1 runtime bootstrap thumbprint mismatch,Follow the signposts,https://knowledge.broadcom.com/external/article/455244
+455296,"VCF Health ""Not configured"": management-services adapter",Meet the fleet,https://knowledge.broadcom.com/external/article/455296
+455559,"""Upgrade All"" broke VCF Automation","Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/455559
+455733,NSX SSO after a broker certificate change,Meet the fleet,https://knowledge.broadcom.com/external/article/455733
+455842,Simple runtime footprint after 9.1.1,Meet the fleet,https://knowledge.broadcom.com/external/article/455842
+456013,9.1 cluster create: NSX OIDC 403,Follow the signposts,https://knowledge.broadcom.com/external/article/456013
+456305,Runtime internal certificate overdue (9.1.1),Follow the signposts,https://knowledge.broadcom.com/external/article/456305
+456430,NSX VCF SSO Access Denied (9.1.1),Meet the fleet,https://knowledge.broadcom.com/external/article/456430
+456790,15-minute backups keep VCFA prechecks queued,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/456790
+457245,Identity broker precheck needs the 9.1.1 runtime,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/457245

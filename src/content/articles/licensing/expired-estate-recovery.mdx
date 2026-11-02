@@ -1,0 +1,62 @@
+---
+title: "Recovering an expired estate when VCF Operations is the thing that's down"
+description: "The chicken-and-egg case: licenses have expired, hosts have disconnected, and the VCF Operations instance that would fix it can't start on unlicensed hosts. The documented way out uses a temporary evaluation host. A community shortcut exists for labs."
+category: licensing
+order: 10
+versions: ["9.0", "9.1"]
+level: Deep dive
+pubDate: 2026-11-02
+kbs: [428053, 440685, 443240, 448638, 404155]
+sources:
+  - title: "Recovering licensing when VCF Operations is unavailable (9.0)"
+    url: "https://knowledge.broadcom.com/external/article/428053"
+    by: "Broadcom KB"
+  - title: "License Server VM fails to power on with License expired (9.1)"
+    url: "https://knowledge.broadcom.com/external/article/440685"
+    by: "Broadcom KB"
+  - title: "How to apply a license to an ESX 9 host without VCF Operations"
+    url: "https://fojta.wordpress.com/2025/09/17/how-to-apply-license-to-esx-9-host-without-vcf-operations/"
+    by: "Tomas Fojta"
+  - title: "ESXCLI licensing namespace (9.0)"
+    url: "https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_licensing.html"
+    by: "Broadcom Developer"
+---
+
+<InShort>
+If licenses expire and the 90-day window passes, hosts disconnect and VMs can't power on. If VCF Operations, or the 9.1 License Server, runs on those same hosts, it can't start to fix the problem. The documented recovery is to install a **temporary ESX host in evaluation mode**, run VCF Operations (and in 9.1 the License Server) there, register the vCenter, and push a refreshed license (<KB id={428053} />, <KB id={440685} />). There is no supported way to license a 9.x vCenter or host without VCF Operations (<KB id={404155} />).
+</InShort>
+
+<Compare rows={[
+  ["If licensing lapsed", "Re-enter a valid key in vCenter", "Get a refreshed license file into VCF Operations"],
+  ["If the licensing tool is down", "Not applicable: keys lived in vCenter", "Bring VCF Operations up on a temporary evaluation host"],
+  ["Per-host licensing tools", "vSphere Client key entry", "esxcli licensing entitlement commands (official namespace, used by community workaround)"],
+]} />
+
+## The documented recovery
+
+1. **Build a temporary ESX host** with a fresh evaluation period. Give it network access to the management VLANs, DNS and NTP.
+2. **Run VCF Operations on it.** Move or redeploy the appliance. In 9.1, do the same for the License Server. Check DNS A and PTR records and time.
+3. **Register the vCenter** in VCF Operations if it isn't already integrated.
+4. **Refresh and assign the license.** Run the connected update or the disconnected usage and license cycle, then assign. vCenter pushes entitlements to its hosts.
+5. **Confirm** under vSphere Client > Administration > Licensing > Assets, and that hosts reconnect.
+6. **Move VCF Operations back** to the management cluster and retire the temporary host.
+
+## The lab shortcut
+
+For nested labs left switched off past expiry, a community method extracts the ESX entitlement from the license file and adds it directly on each host with `esxcli licensing entitlement add --file`. It uses an official ESXCLI namespace but isn't a Broadcom procedure. Use it for labs only, and return to normal management through VCF Operations straight away.
+
+## Preventing it
+
+- **Don't let VCF Operations and the License Server be the only things that can fix a problem they depend on.** Know which hosts they run on and keep those licensed first.
+- **Watch evaluation hosts.** A host whose own evaluation expired can't take a subscription license and needs a reinstall or a case (<KB id={448638} />).
+- **Treat a stopped License Server as an incident** before the 180 days pass. An evaluation expiring while it's down causes exactly this (<KB id={443240} />).
+
+<Callout type="field">
+Write the recovery as a runbook before you need it: where the temporary host comes from, which VLANs it needs, who has console access to the Site ID, and how long a disconnected license cycle takes in practice. In a real outage, the slowest step is usually finding the person with portal access.
+</Callout>
+
+## Pitfalls
+
+- **Assuming running VMs are at risk.** They aren't stopped. Powered-off VMs and new workloads are the problem, so avoid restarts until it's fixed.
+- **Using the lab shortcut in production** to avoid the runbook. It isn't supported.
+- **Forgetting to retire the temporary host.** It will expire in turn.

@@ -1,0 +1,35 @@
+---
+import Base from '../../../layouts/Base.astro';
+// [5.x name, 9.0 name, 9.1 name, what changed]
+const rows: [string, string, string, string][] = [
+  ['Cloud Builder', 'VCF Installer', 'VCF Installer', 'Bring-up moved from a separate Cloud Builder appliance to the installer that ships in the SDDC Manager OVA. The installer can also converge an existing vSphere environment.'],
+  ['SDDC Manager UI', 'SDDC Manager, with most tasks surfaced in VCF Operations', 'SDDC Manager (UI deprecated)', 'SDDC Manager is still the lifecycle engine for ESX, vCenter and NSX. Day-2 tasks moved to VCF Operations and vCenter.'],
+  ['Aria Operations (optional)', 'VCF Operations (mandatory)', 'VCF Operations', 'Became the fleet console: monitoring, licensing, certificates, passwords and lifecycle.'],
+  ['Aria Suite Lifecycle (VCF-aware mode)', 'VCF Operations fleet management appliance', 'Fleet lifecycle and SDDC lifecycle services', 'The separate appliance disappears in 9.1. Lifecycle runs as services on the VCF services runtime.'],
+  ['Workspace ONE Access / vIDM', 'VCF Identity Broker (embedded or appliance)', 'Identity broker (embedded or instance mode)', 'No upgrade path from vIDM. Identity Broker is deployed new.'],
+  ['vCenter SSO per domain, or isolated domains', 'VCF SSO through Identity Broker', 'VCF SSO through Identity broker', 'One sign-on across the fleet, with scopes for fleet, cross-instance or instance.'],
+  ['Aria Operations for Logs', 'VCF Operations for logs (fresh deploy)', 'Log management service', 'No in-place upgrade. Up to 90 days of logs can be migrated in 9.0. In 9.1 it is no longer a separate appliance.'],
+  ['Aria Automation / vRA, VMware Cloud Director', 'VCF Automation', 'VCF Automation (side-by-side upgrade from 9.0)', 'VCD is not supported with VCF 9 and has no official migration path.'],
+  ['Aria Automation Config (SaltStack)', 'Configuration drift in VCF Operations', 'Salt RaaS and Salt Master services', 'Desired-state configuration is part of the management services.'],
+  ['Aria Operations for Networks', 'VCF Operations for networks', 'VCF Operations for networks', 'A rename. It is still an appliance.'],
+  ['HCX', 'HCX', 'VCF Operations HCX', 'A rename in the 9.1 component list. Lifecycle is through SDDC Manager.'],
+  ['SDDC Manager depot, Bundle Transfer Utility', 'SDDC Manager depot, fleet management binaries, VCF Download Tool', 'Software depot service, VCF Download Tool', 'Binaries for management components live in the depot service. Downloads need an activation code in 9.1.'],
+  ['License keys in SDDC Manager and vCenter', 'Licence file in VCF Operations', 'Licence file, plus a License Server appliance', 'Keys are gone for VCF and VVF. A signed file per VCF Operations covers the fleet. Usage reporting keeps it valid.'],
+  ['ESXi', 'ESX', 'ESX', 'The product name drops the "i".'],
+  ['Management domain and VI workload domains', 'Fleet, then VCF instance, then domains', 'Fleet, then VCF instance, then domains', 'A new layer above the domain. One fleet can hold several instances, each with its own SDDC Manager.'],
+  ['vLCM baselines or images', 'vLCM images only', 'vLCM images only', 'Baseline-managed clusters are not supported from 9.0. Move them to images before the upgrade.'],
+  ['(none)', 'VCF services platform (internal)', 'VCF services runtime / VCF management services (VCFMS, VMSP, VSP)', 'A Kubernetes runtime on dedicated nodes that hosts the management services.'],
+];
+---
+<Base title="5.x to 9.x glossary" description="Old names, new names, and what changed underneath, from VCF 5.x to 9.0 and 9.1.">
+  <p class="eyebrow"><a href="/vcf/" style="color:inherit;text-decoration:none">VCF notes</a> / <a href="/vcf/resources/" style="color:inherit;text-decoration:none">Resources</a></p>
+  <h1>5.x to 9.x glossary</h1>
+  <p class="lede">The rename list, with what changed underneath. Some entries are new names only, while others are completely different products doing the same job.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>VCF 5.x</th><th>VCF 9.0</th><th>VCF 9.1</th><th>What changed</th></tr></thead>
+      <tbody>{rows.map(([a, b, c, d]) => <tr><td>{a}</td><td>{b}</td><td>{c}</td><td class="small">{d}</td></tr>)}</tbody>
+    </table>
+  </div>
+  <p class="small muted">Sources: Broadcom TechDocs, "Components in VCF and vSphere Foundation" for 9.0 and 9.1, and the VCF 9.1 lifecycle management overview. See also <a href="/vcf/library/architecture/what-moved-from-sddc-manager/">What SDDC Manager still owns</a>.</p>
+</Base>

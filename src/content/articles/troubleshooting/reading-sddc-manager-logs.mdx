@@ -1,0 +1,90 @@
+---
+title: "Reading SDDC Manager and lifecycle logs: which file, and how to follow one ID"
+description: "SDDC Manager splits its work across a handful of services, each with its own log. In 9.1 a fleet task also crosses into the services runtime with a different task ID. Knowing which file to open, and how to follow an ID across the boundary, is most of the skill."
+category: troubleshooting
+order: 2
+versions: ["5.x", "9.0", "9.1"]
+level: Practitioner
+pubDate: 2026-11-02
+kbs: [415550, 423908, 415767, 420736, 447589, 414456, 388719, 402476]
+sources:
+  - title: "SDDC Manager log files"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html"
+    by: "Broadcom TechDocs"
+---
+
+<InShort>
+On SDDC Manager, everything is under `/var/log/vmware/vcf/`. **domainmanager** handles bring-up, domains, clusters and hosts, and in 9.x records fleet lifecycle task results. **operationsmanager** handles commissioning, passwords, certificates and backups. **lcm** handles prechecks, bundles and upgrades. **commonsvcs** handles tokens, SSH keys, inventory and the API. Find the failed subtask, open the right file, search for the ID, and read the **last "Caused by"** in the stack trace. In 9.1, a fleet task ID is not the same as the SDDC lifecycle task ID it triggered, so follow the trail rather than searching for one ID everywhere.
+</InShort>
+
+<Compare rows={[
+  ["Log root", "/var/log/vmware/vcf/", "The same, plus runtime pod logs for fleet and SDDC lifecycle"],
+  ["Upgrade log", "lcm/lcm-debug.log", "The same for core components. Fleet upgrades log in the runtime."],
+  ["Task IDs", "One task ID per workflow", "A fleet task ID and an SDDC lifecycle task ID for the same operation"],
+  ["Spec recovery", "Search domainmanager.log", "The same, or GET /v1/sddcs/{id}/spec (<a href='https://knowledge.broadcom.com/external/article/388719' target='_blank' rel='noopener'>KB 388719</a>)"],
+]} />
+
+## Which file
+
+| Subtask type | Log under /var/log/vmware/vcf/ |
+|---|---|
+| Bring-up, domains, clusters, add host, NSX or vCenter deploy, inventory sync | `domainmanager/domainmanager.log` |
+| Host commission, passwords, certificates, backups | `operationsmanager/operationsmanager.log` |
+| Prechecks, bundles, upgrades, depot | `lcm/lcm-debug.log` and `lcm/lcm-activity.log` |
+| Tokens, SSH host keys, credential API, inventory | `commonsvcs/vcf-commonsvcs.log` |
+| SoS output | `sddc-support/` |
+
+`domainmanager.log` often points onward: to the vCenter installer log for a vCenter deployment, to a brownfield folder for an inventory sync, or to the host's own `lifecycle.log` and `hostd.log`.
+
+## How to read a stack trace
+
+```bash
+# Find the reference token or task ID, with context
+grep -Ri "<reference-token>" /var/log/vmware/vcf/ | head
+grep -n -B 20 -A 60 "<reference-token>" /var/log/vmware/vcf/domainmanager/domainmanager.log | less
+```
+
+Look for the exception class, then scroll to the **last "Caused by"**. It is usually the actionable one:
+
+| Last cause | Usually means |
+|---|---|
+| `UnknownHostException` | DNS (<KB id={423908} />) |
+| `SocketException: No route to host` | Network path or uplinks (<KB id={415550} />) |
+| `InvalidLogin`, 403, `locked` | Credentials or account lockout (<KB id={420736} />) |
+| `PKIX path building failed` | Certificate trust (<KB id={415767} />) |
+| `Matching VCF release ... not found` in lcm-debug | Depot metadata or manifest (<KB id={447589} />) |
+
+## Following one ID across 9.1
+
+<Diagram viewBox="0 0 760 180" label="Following a fleet task into the runtime" caption="The fleet build service task and the SDDC build service task have different IDs. Each log records the other's ID, which is how you cross over.">
+  <rect class="box accent" x="10" y="60" width="200" height="70" rx="8"/>
+  <text class="t" x="110" y="90" text-anchor="middle">SDDC Manager</text>
+  <text class="s" x="110" y="110" text-anchor="middle">domainmanager log</text>
+  <rect class="box v9" x="280" y="60" width="200" height="70" rx="8"/>
+  <text class="t" x="380" y="90" text-anchor="middle">Fleet build service</text>
+  <text class="s" x="380" y="110" text-anchor="middle">vcf-fleet-lcm pod</text>
+  <rect class="box v9" x="550" y="60" width="200" height="70" rx="8"/>
+  <text class="t" x="650" y="90" text-anchor="middle">SDDC build service</text>
+  <text class="s" x="650" y="110" text-anchor="middle">vcf-sddc-lcm pod</text>
+  <line class="wire accent" x1="210" y1="95" x2="278" y2="95" marker-end="url(#arra)"/>
+  <line class="wire accent" x1="480" y1="95" x2="548" y2="95" marker-end="url(#arra)"/>
+  <text class="lbl" x="215" y="80">Fleet task ID</text>
+  <text class="lbl" x="485" y="80">SDDC task ID</text>
+  <text class="lbl" x="550" y="160">The failing call is at the end of this trail</text>
+</Diagram>
+
+1. On SDDC Manager, find the fleet task result: `grep "Fleet LCM Task ID:" domainmanager* | grep FAILED`. Note the failed step and component type.
+2. In the fleet build service pod log, search for that task ID. The payload names the SDDC lifecycle task it started.
+3. In the SDDC build service pod log, search for that second ID or the step name. The call that failed, such as a "No route to host", is there.
+
+The kubectl commands are in [services runtime and kubectl](/vcf/library/troubleshooting/services-runtime-kubectl/). Only failed tasks retry, and retries resume at the failed step.
+
+<Callout type="field">
+Paste the last "Caused by" line into the ticket summary, not just the UI message. "Deploy failed" tells the next engineer nothing. "UnknownHostException for nsx01b" tells them where to start.
+</Callout>
+
+## Pitfalls
+
+- **Searching every log for a generic word** like "error". Search for the ID or the exact message.
+- **Mixing time zones.** Logs are UTC. The UI shows local time.
+- **Reading only the first exception.** Wrappers repeat the same failure several times. The cause is at the bottom.
