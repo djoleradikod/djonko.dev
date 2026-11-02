@@ -53,7 +53,7 @@ jobs:
           npm run audit
       - name: Validate the Caddy config
         run: docker run --rm -v "$PWD/deploy/hetzner/Caddyfile:/etc/caddy/Caddyfile:ro" caddy:2 caddy validate --adapter caddyfile --config /etc/caddy/Caddyfile
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist
