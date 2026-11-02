@@ -4,12 +4,10 @@ import VersionBadges from '../../components/VersionBadges.astro';
 import { CATEGORIES } from '../../data/categories';
 import { SITE } from '../../data/site';
 import { allArticles, urlOf } from '../../lib/articles';
+import { readingPaths } from '../../lib/paths';
 const items = await allArticles();
 const latest = [...items].sort((a, b) => +(b.data.updated ?? b.data.pubDate) - +(a.data.updated ?? a.data.pubDate)).slice(0, 6);
-const startHere = [
-  'architecture/vcf9-mental-model', 'architecture/what-moved-from-sddc-manager', 'day-2/where-did-that-button-go',
-  'upgrades/planning-52-to-90', 'licensing/keys-to-license-files', 'troubleshooting/seven-step-triage',
-].map((id) => items.find((a) => a.id === id)).filter(Boolean);
+const paths = await readingPaths();
 ---
 <Base title={SITE.vcfName} description={SITE.vcfTagline}>
   <section class="hero">
@@ -18,20 +16,20 @@ const startHere = [
     <p class="lede">Short, dense notes on how VCF is built, upgraded, licensed, operated and fixed. Every note says plainly what changed between 5.x and 9.x, links the Broadcom KBs that matter, and credits its sources.</p>
   </section>
 
-  {startHere.length > 0 && (
-    <section>
-      <div class="section-head"><h2>Coming from VCF 5.x? Start here</h2></div>
-      <div class="grid">
-        {startHere.map((a) => (
-          <a class="card" href={urlOf(a!)}>
-            <h3>{a!.data.title}</h3>
-            <p>{a!.data.description}</p>
-            <div class="meta"><VersionBadges versions={a!.data.versions} /></div>
-          </a>
-        ))}
-      </div>
-    </section>
-  )}
+  <section>
+    <div class="section-head"><h2>Reading paths</h2><a class="small" href="/vcf/paths/">All paths</a></div>
+    <p class="muted" style="margin-top:-4px">Short sequences of notes for one job, in order. Progress is kept in your browser.</p>
+    <div class="grid">
+      {paths.map((p) => (
+        <a class="card" href={`/vcf/paths/${p.id}/`} data-path-steps={p.steps.join(' ')}>
+          <span class="kicker">{p.who}</span>
+          <h3>{p.title}</h3>
+          <p>{p.blurb}</p>
+          <div class="meta small muted"><span>{p.notes.length} notes · about {p.minutes} min</span> <span class="path-progress" hidden></span></div>
+        </a>
+      ))}
+    </div>
+  </section>
 
   <section>
     <div class="section-head"><h2>Library</h2><a class="small" href="/vcf/library/">All {items.length} notes</a></div>

@@ -1,0 +1,42 @@
+---
+import Base from '../../../layouts/Base.astro';
+import VersionBadges from '../../../components/VersionBadges.astro';
+import { readingPaths, type ResolvedPath } from '../../../lib/paths';
+import { urlOf } from '../../../lib/articles';
+import { readingTime } from '../../../lib/posts';
+import { categoryById } from '../../../data/categories';
+
+export async function getStaticPaths() {
+  return (await readingPaths()).map((p) => ({ params: { id: p.id }, props: { p } }));
+}
+const { p } = Astro.props as { p: ResolvedPath };
+const ld = {
+  '@context': 'https://schema.org', '@type': 'ItemList', name: p.title, description: p.blurb, numberOfItems: p.notes.length,
+  itemListElement: p.notes.map((a, i) => ({ '@type': 'ListItem', position: i + 1, name: a.data.title, url: new URL(urlOf(a), Astro.site).href })),
+};
+---
+<Base title={p.title} description={`Reading path, ${p.notes.length} notes, about ${p.minutes} minutes. ${p.blurb}`} jsonLd={ld}>
+  <p class="eyebrow"><a href="/vcf/" style="color:inherit;text-decoration:none">VCF notes</a> / <a href="/vcf/paths/" style="color:inherit;text-decoration:none">Reading paths</a></p>
+  <h1>{p.title}</h1>
+  <p class="lede">{p.blurb}</p>
+  <p class="muted small">For: {p.who} · {p.notes.length} notes · about {p.minutes} minutes in total</p>
+  <p class="path-actions">
+    <a class="btn primary" id="path-go" href={urlOf(p.notes[0])}>Start with step 1</a>
+    <span class="small muted" id="path-status" aria-live="polite"></span>
+    <button type="button" class="btn" id="path-reset" hidden>Clear my progress</button>
+  </p>
+  <ol class="path-steps" data-path={p.id}>
+    {p.notes.map((a, i) => (
+      <li data-note={a.id}>
+        <a href={urlOf(a)}>
+          <span class="n" aria-hidden="true">{i + 1}</span>
+          <span class="body">
+            <span class="t">{a.data.title}</span>
+            <span class="d">{a.data.description}</span>
+            <span class="m small muted">{categoryById(a.data.category).short} · {readingTime(a.body)} min <VersionBadges versions={a.data.versions} /><span class="done-label" hidden> · Read</span></span>
+          </span>
+        </a>
+      </li>
+    ))}
+  </ol>
+</Base>

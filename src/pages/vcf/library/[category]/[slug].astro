@@ -9,6 +9,7 @@ import { SITE } from '../../../../data/site';
 import { personRef } from '../../../../lib/schema';
 import { mdxComponents } from '../../../../components/mdx';
 import Share from '../../../../components/Share.astro';
+import { pathsFor } from '../../../../lib/paths';
 
 export async function getStaticPaths() {
   const items = await allArticles();
@@ -22,6 +23,7 @@ interface Props { a: Article; prev?: Article; next?: Article }
 const { a, prev, next } = Astro.props;
 const { Content, headings } = await render(a);
 const cat = categoryById(a.data.category);
+const inPaths = await pathsFor(a.id);
 const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 const ld = {
@@ -31,7 +33,7 @@ const ld = {
 };
 ---
 <Base title={a.data.title} description={a.data.description} jsonLd={ld} ogType="article">
-  <article data-pagefind-body>
+  <article data-pagefind-body data-note={a.id}>
     <header class="article-head">
       <p class="eyebrow"><a href="/vcf/" style="color:inherit;text-decoration:none">VCF notes</a> / <a href={`/vcf/library/${cat.id}/`} style="color:inherit;text-decoration:none" data-pagefind-filter="category">{cat.short}</a></p>
       <h1>{a.data.title}</h1>
@@ -42,11 +44,14 @@ const ld = {
         <span>{SITE.author} · {SITE.role}</span>
       </div>
       {a.data.versions.map((v) => <span hidden data-pagefind-filter="version">{`VCF ${v}`}</span>)}
+      {inPaths.map(({ path, index }) => (
+        <p class="path-pos small" data-pagefind-ignore>Step {index + 1} of {path.notes.length} in the reading path <a href={`/vcf/paths/${path.id}/`}>{path.title}</a></p>
+      ))}
     </header>
     <div class="article-layout">
       <div class="prose">
         <Content components={mdxComponents} />
-        <div data-pagefind-ignore style="margin-top:2em">
+        <div class="note-end" data-pagefind-ignore style="margin-top:2em">
           {a.data.kbs.length > 0 && (
             <details class="drawer">
               <summary>Broadcom KBs in this note ({a.data.kbs.length})</summary>
@@ -63,6 +68,14 @@ const ld = {
               </ul></div>
             </details>
           )}
+          {inPaths.map(({ path, index, next }) => (
+            <nav class="path-next" aria-label={`Reading path: ${path.title}`}>
+              <span class="small muted">Reading path · {path.title} · step {index + 1} of {path.notes.length}</span>
+              {next
+                ? <a href={urlOf(next)}><span>Next in this path</span>{next.data.title}</a>
+                : <a href={`/vcf/paths/${path.id}/`}><span>End of the path</span>Back to {path.title}</a>}
+            </nav>
+          ))}
           <Share url={new URL(Astro.url.pathname, Astro.site).href} title={a.data.title} />
           <nav class="prev-next" aria-label="More in this category">
             {prev && <a href={urlOf(prev)}><span>Previous</span>{prev.data.title}</a>}
