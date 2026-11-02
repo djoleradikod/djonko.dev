@@ -1,0 +1,20 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { readingPaths } from '../../../lib/paths';
+const paths = await readingPaths();
+---
+<Base title="Reading paths" description="Short, ordered sequences of VCF notes for one job each: the VCF 9 model, upgrading 5.2 to 9.x, on call, licensing, and building a lab.">
+  <p class="eyebrow"><a href="/vcf/" style="color:inherit;text-decoration:none">VCF notes</a></p>
+  <h1>Reading paths</h1>
+  <p class="lede">Each path is a short sequence of notes for one job, in the order the questions come up. Your progress is kept in this browser, so you can stop and pick up where you left off.</p>
+  <div class="grid paths-grid">
+    {paths.map((p) => (
+      <a class="card path-card" href={`/vcf/paths/${p.id}/`} data-path-steps={p.steps.join(' ')}>
+        <span class="kicker">{p.who}</span>
+        <h3>{p.title}</h3>
+        <p>{p.blurb}</p>
+        <div class="meta small muted"><span>{p.notes.length} notes · about {p.minutes} min</span> <span class="path-progress" hidden></span></div>
+      </a>
+    ))}
+  </div>
+</Base>

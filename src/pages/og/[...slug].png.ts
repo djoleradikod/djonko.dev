@@ -3,6 +3,7 @@ import { renderCard, type Card } from '../../lib/og';
 import { SITE } from '../../data/site';
 import { CATEGORIES, categoryById } from '../../data/categories';
 import { allArticles, urlOf } from '../../lib/articles';
+import { readingPaths } from '../../lib/paths';
 import { allPosts, allProjects, postUrl, projectUrl, tagSlug } from '../../lib/posts';
 
 // One share image per indexable page: /og/<page path>.png ("/" is /og/index.png).
@@ -25,6 +26,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
     ['/blog/', { title: 'Write-ups, case studies and walkthroughs', eyebrow: 'Blog' }],
     ['/projects/', { title: 'Open tools for VCF Operations 9.1.1+', eyebrow: 'Projects' }],
   ];
+  pages.push(['/vcf/paths/', { title: 'Reading paths through the VCF notes', eyebrow: `${SITE.vcfName} · Paths` }]);
+  for (const p of await readingPaths()) pages.push([`/vcf/paths/${p.id}/`, { title: p.title, eyebrow: `${SITE.vcfName} · Reading path · ${p.notes.length} notes` }]);
   for (const c of CATEGORIES) pages.push([`/vcf/library/${c.id}/`, { title: c.title, eyebrow: SITE.vcfName }]);
   for (const a of await allArticles()) pages.push([urlOf(a), { title: a.data.title, eyebrow: `${SITE.vcfName} · ${categoryById(a.data.category).short}`, versions: a.data.versions }]);
   const posts = await allPosts();

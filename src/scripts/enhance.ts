@@ -193,3 +193,46 @@ if (tocLinks.length) {
   addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(mark); } }, { passive: true });
   mark();
 }
+
+// 7. Reading progress, kept only in this browser. A note counts as read once its end has been on
+//    screen. Path pages show which steps are done and link to the first unread one.
+const READ_KEY = 'djonko:read';
+const readSet = (): Set<string> => { try { return new Set(JSON.parse(localStorage.getItem(READ_KEY) || '[]')); } catch { return new Set(); } };
+const saveRead = (s: Set<string>) => { try { localStorage.setItem(READ_KEY, JSON.stringify([...s])); } catch { /* private mode: progress is not kept */ } };
+
+const note = document.querySelector<HTMLElement>('article[data-note]');
+const end = note?.querySelector('.note-end');
+if (note && end && 'IntersectionObserver' in window) {
+  const io = new IntersectionObserver((es) => {
+    if (!es.some((e) => e.isIntersecting)) return;
+    io.disconnect();
+    const s = readSet(); s.add(note.dataset.note!); saveRead(s);
+  });
+  io.observe(end);
+}
+
+const steps = document.querySelector<HTMLOListElement>('ol.path-steps');
+if (steps) {
+  const go = document.getElementById('path-go') as HTMLAnchorElement;
+  const status = document.getElementById('path-status')!;
+  const reset = document.getElementById('path-reset') as HTMLButtonElement;
+  const items = [...steps.querySelectorAll<HTMLLIElement>('li[data-note]')];
+  const paint = () => {
+    const s = readSet();
+    items.forEach((li) => { const done = s.has(li.dataset.note!); li.classList.toggle('done', done); li.querySelector<HTMLElement>('.done-label')!.hidden = !done; });
+    const n = items.filter((li) => li.classList.contains('done')).length;
+    const next = items.findIndex((li) => !li.classList.contains('done'));
+    reset.hidden = n === 0;
+    status.textContent = n ? `${n} of ${items.length} read` : '';
+    if (n === items.length) { go.textContent = 'Path complete: start again'; go.href = items[0].querySelector('a')!.href; }
+    else if (n) { go.textContent = `Continue with step ${next + 1}`; go.href = items[next].querySelector('a')!.href; }
+  };
+  reset.addEventListener('click', () => { const s = readSet(); items.forEach((li) => s.delete(li.dataset.note!)); saveRead(s); go.textContent = 'Start with step 1'; go.href = items[0].querySelector('a')!.href; paint(); });
+  paint();
+}
+document.querySelectorAll<HTMLElement>('[data-path-steps]').forEach((card) => {
+  const ids = card.dataset.pathSteps!.split(' '); const s = readSet();
+  const n = ids.filter((id) => s.has(id)).length;
+  const out = card.querySelector<HTMLElement>('.path-progress');
+  if (out && n) { out.textContent = n === ids.length ? '· Complete' : `· ${n} of ${ids.length} read`; out.hidden = false; }
+});
