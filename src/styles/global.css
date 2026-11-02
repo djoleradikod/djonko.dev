@@ -337,7 +337,7 @@ a.badge:hover { border-color: var(--ink-3); color: var(--ink); }
 .tool-meta { display: flex; flex-wrap: wrap; gap: 4px; }
 .tool .know { font-size: 0.9rem; color: var(--ink-2); border-left: 3px solid var(--line); padding-left: 10px; }
 .tool-links { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin-top: auto; padding-top: 6px; font-size: 0.9rem; }
-.tool-links .btn { padding: 6px 12px; font-size: 0.9rem; }
+.tool-links .btn { padding: 6px 12px; font-size: 0.9rem; max-width: 100%; flex-wrap: wrap; row-gap: 0; }
 .badge.mk-broadcom { color: var(--v9); border-color: color-mix(in srgb, var(--v9) 35%, transparent); background: var(--v9-soft); }
 .badge.mk-fling { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 35%, transparent); background: var(--warn-soft); }
 .badge.mk-opensource { color: var(--accent-ink); border-color: color-mix(in srgb, var(--accent) 35%, transparent); background: var(--accent-soft); }
@@ -395,3 +395,5 @@ kbd { font: 600 0.8em var(--mono); background: var(--surface-2); border: 1px sol
 }
 /* Long inline paths and identifiers break rather than push the page wider. */
 :not(pre) > code { overflow-wrap: anywhere; }
+/* Long product and module names (VMware.CloudFoundation.Reporting) wrap instead of overflowing. */
+h1, h2, h3, h4, .list .t, .tool p { overflow-wrap: break-word; }
