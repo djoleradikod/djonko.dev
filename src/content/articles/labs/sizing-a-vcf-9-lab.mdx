@@ -23,7 +23,7 @@ sources:
 ---
 
 <InShort>
-With **simple (single-node) deployment modes**, one instance of each 9.0 component adds up to about **48 vCPU, 194 GB of memory and 3.2 TB provisioned**, of which about 330 GB is actually used. **VCF Automation** is the constraint: a 24 vCPU, 96 GB VM, which needs a physical host with at least **12 cores and 24 threads**. Its memory can't be reduced. A fuller nested fleet with a four-node management domain and a three-node workload domain, as Holodeck builds it, needs about **30 cores, 325 GB of memory and 1.1 TB of disk**. Memory runs out first, so look at **NVMe memory tiering** before buying more RAM.
+With **simple (single-node) deployment modes**, one instance of each 9.0 component adds up to about **48 vCPU, 194 GB of memory and 3.2 TB provisioned**, of which about 330 GB is used. **VCF Automation** is the constraint: a 24 vCPU, 96 GB VM, which needs a physical host with at least **12 cores and 24 threads**. Its memory can't be reduced. A fuller nested fleet with a four-node management domain and a three-node workload domain, as Holodeck builds it, needs about **30 cores, 325 GB of memory and 1.1 TB of disk**. Memory runs out first, so look at **NVMe memory tiering** before buying more RAM.
 </InShort>
 
 <Compare rows={[

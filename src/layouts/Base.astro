@@ -78,7 +78,7 @@ const links = [
         <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">JD</span>{SITE.name}</a>
         <nav class="nav" aria-label="Main">
           {nav.map((n) => <a href={n.href} aria-current={path.startsWith(n.href) ? 'page' : undefined}>{n.label}</a>)}
-          <a class="icon-btn" href="/search/" aria-label="Search" title="Search" aria-current={path.startsWith('/search/') ? 'page' : undefined}>
+          <a class="icon-btn" id="qs-open" href="/search/" aria-label="Search" title="Search (press / or Ctrl+K)" aria-keyshortcuts="/ Control+K Meta+K" aria-current={path.startsWith('/search/') ? 'page' : undefined}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
           </a>
           <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
@@ -102,6 +102,16 @@ const links = [
     <dialog id="zoom" class="zoom" aria-label="Enlarged image">
       <button type="button" class="zoom-close" aria-label="Close">×</button>
       <figure><img alt="" /><figcaption hidden></figcaption></figure>
+    </dialog>
+    <dialog id="qs" class="qs" aria-label="Search the site">
+      <form method="get" action="/search/" role="search" class="qs-bar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <label class="sr-only" for="qs-input">Search notes, posts, tools and KBs</label>
+        <input id="qs-input" name="q" type="search" autocomplete="off" spellcheck="false" placeholder="Search notes, tools, KB numbers" role="combobox" aria-expanded="false" aria-controls="qs-list" aria-autocomplete="list" />
+        <button type="button" class="qs-esc" data-qs-close aria-label="Close search">Esc</button>
+      </form>
+      <ul id="qs-list" class="qs-list" role="listbox" aria-label="Results"></ul>
+      <p class="qs-foot small muted"><span id="qs-status" aria-live="polite">Type to search. Arrow keys move, Enter opens.</span> <a id="qs-all" href="/search/">All results and filters</a></p>
     </dialog>
     <script>import '../scripts/enhance.ts';</script>
     {cloudflareToken && <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: cloudflareToken })}></script>}

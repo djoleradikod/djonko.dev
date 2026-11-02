@@ -65,7 +65,7 @@ In 9.0 there is no verification or confirmation step: registration file out, lic
 
 ## When registration fails
 
-- **Check reachability from every node**, not just the primary: `curl -v telnet://vcf.broadcom.com:443` and the same for `eapi.broadcom.com` (<KB id={431546} />, <KB id={404593} />).
+- **Check reachability from every node**, including the primary: `curl -v telnet://vcf.broadcom.com:443` and the same for `eapi.broadcom.com` (<KB id={431546} />, <KB id={404593} />).
 - **A 407** means proxy credentials. **A 401 `invalid_client`** means the activation code expired or is wrong: generate a new one (<KB id={435664} />).
 - **Greyed-out registration options** usually mean you are not logged in as the local `admin` (<KB id={416864} />).
 - **If the network can't be fixed quickly**, register in disconnected mode now and switch later. Disconnected mode needs no activation code (<KB id={432201} />).

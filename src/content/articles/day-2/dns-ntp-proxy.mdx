@@ -20,7 +20,7 @@ sources:
 ---
 
 <InShort>
-In 5.x, DNS and NTP were configured in SDDC Manager, and SDDC Manager was the main thing that needed to reach the internet. In 9.x, DNS and NTP are set per instance in VCF Operations, with fleet-level settings in 9.1. Several new components also depend on them: cloud proxies, the License Server, the services runtime and the identity broker. Each has its own outbound path through a proxy or firewall. The rules are the same as ever, applied more strictly. Every FQDN needs matching **lowercase** forward and reverse records. Every node needs the **same time**. Every outbound path is tested **from the address that will really use it**.
+In 5.x, DNS and NTP were configured in SDDC Manager, and SDDC Manager was the main thing that needed to reach the internet. In 9.x, DNS and NTP are set per instance in VCF Operations, with fleet-level settings in 9.1. Several new components also depend on them: cloud proxies, the License Server, the services runtime and the identity broker. Each has its own outbound path through a proxy or firewall. The rules are the same as ever, applied more strictly. Every FQDN needs matching **lowercase** forward and reverse records. Every node needs the **same time**. Every outbound path is tested **from the address that will use it**.
 </InShort>
 
 <Compare rows={[

@@ -79,7 +79,7 @@ This is where most projects slip. Give each item an owner and a date:
 
 ## Step 4: treat every phase as a checkpoint
 
-There is no single rollback for VCF. Each component is backed up before its step, and each step is a point you can return to. This matters most just before deploying 9.1 management services, which cannot be undone. See <a href="/vcf/library/upgrades/rollback-checkpoints/">Rollback in practice</a>.
+There is no single rollback for VCF. Each component is backed up before its step, and each step is a point you can return to. This matters most immediately before deploying 9.1 management services, which cannot be undone. See <a href="/vcf/library/upgrades/rollback-checkpoints/">Rollback in practice</a>.
 
 <Callout type="field">
 The plan that survives contact with the customer has three columns per step: the action, the evidence that it worked (a screenshot, a health check or a task ID), and the rollback point if it didn't. Writing the evidence column first catches missing prerequisites while there is still time to fix them.

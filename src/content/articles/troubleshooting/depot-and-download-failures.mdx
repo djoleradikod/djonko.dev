@@ -17,7 +17,7 @@ sources:
 ---
 
 <InShort>
-In 5.x and 9.0, SDDC Manager downloaded bundles with a download token. In 9.1, the **fleet depot** runs on the services runtime, authenticates with a **depot activation code** (<KB id={443647} />), and its traffic leaves from **runtime node addresses**. Allow outbound 443 from every runtime node to `eapi.broadcom.com`, `dl.broadcom.com`, `vvs.broadcom.com` and `vsanhealth.vmware.com`, not just from SDDC Manager (<KB id={443166} />). Offline depots fail on structure and metadata: the manifest must be fresh and at the root, and the download tool's store must point at the root too.
+In 5.x and 9.0, SDDC Manager downloaded bundles with a download token. In 9.1, the **fleet depot** runs on the services runtime, authenticates with a **depot activation code** (<KB id={443647} />), and its traffic leaves from **runtime node addresses**. Allow outbound 443 from every runtime node to `eapi.broadcom.com`, `dl.broadcom.com`, `vvs.broadcom.com` and `vsanhealth.vmware.com`, as well as from SDDC Manager (<KB id={443166} />). Offline depots fail on structure and metadata: the manifest must be fresh and at the root, and the download tool's store must point at the root too.
 </InShort>
 
 <Compare rows={[
