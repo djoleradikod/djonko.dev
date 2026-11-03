@@ -1,10 +1,10 @@
 ---
-import Base from '../../../layouts/Base.astro';
-import VersionBadges from '../../../components/VersionBadges.astro';
-import { readingPaths, type ResolvedPath } from '../../../lib/paths';
-import { urlOf } from '../../../lib/articles';
-import { readingTime } from '../../../lib/posts';
-import { categoryById } from '../../../data/categories';
+import Base from '../../../../layouts/Base.astro';
+import VersionBadges from '../../../../components/VersionBadges.astro';
+import { readingPaths, type ResolvedPath } from '../../../../lib/paths';
+import { urlOf } from '../../../../lib/articles';
+import { readingTime } from '../../../../lib/posts';
+import { categoryById } from '../../../../data/categories';
 
 export async function getStaticPaths() {
   return (await readingPaths()).map((p) => ({ params: { id: p.id }, props: { p } }));
@@ -24,6 +24,7 @@ const ld = {
     <a class="btn primary" id="path-go" href={urlOf(p.notes[0])}>Start with step 1</a>
     <span class="small muted" id="path-status" aria-live="polite"></span>
     <button type="button" class="btn" id="path-reset" hidden>Clear my progress</button>
+    <a class="btn" href={`/vcf/paths/${p.id}/print/`}>Print the whole path</a>
   </p>
   <ol class="path-steps" data-path={p.id}>
     {p.notes.map((a, i) => (

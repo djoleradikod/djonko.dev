@@ -424,3 +424,25 @@ h1, h2, h3, h4, .list .t, .tool p { overflow-wrap: break-word; }
 @media print { .related, .report { display: none !important; } }
 tr:target td { background: var(--surface-2); }
 .cites { margin: 0; padding-left: 1.1em; } .cites li { margin: 0 0 4px; }
+
+/* A reading path as one printable document */
+.print-cover { padding-bottom: 12px; border-bottom: 1px solid var(--line); margin-bottom: 28px; }
+.print-toc { padding-left: 1.4em; }
+.print-toc li { margin: 4px 0; }
+.print-toc-h { font-size: 1.1rem; margin-top: 20px; }
+.print-note { padding-top: 12px; margin-bottom: 40px; border-top: 3px solid var(--accent); }
+.print-note-h { font-size: 1.6rem; margin: 4px 0 8px; }
+.print-kbs { border-top: 1px solid var(--line); padding-top: 8px; }
+@media print {
+  .print-cover { break-after: page; border: 0; }
+  .print-note { break-before: page; border-top: 0; margin: 0; }
+  .print-note .prose h2, .print-note .prose h3 { break-after: avoid; }
+  .print-note figure, .print-note pre { break-inside: avoid; }
+  .print-doc .anchor { display: none; }
+}
+@media print {
+  .table-wrap { overflow: visible !important; }
+  tr, .compare .cols > * { break-inside: avoid; }
+  .compare .cap, thead { break-after: avoid; }
+}
+.print-meta { overflow-wrap: anywhere; }
