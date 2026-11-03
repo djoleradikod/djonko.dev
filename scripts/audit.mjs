@@ -17,6 +17,7 @@ try { ({ chromium } = require('playwright')); } catch { ({ chromium } = await im
 const axeSource = readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
 
 const ROOT = 'dist';
+let counting = false, served = 0;
 const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.avif': 'image/avif', '.xml': 'application/xml', '.pdf': 'application/pdf', '.wasm': 'application/wasm', '.mp4': 'video/mp4', '.webm': 'video/webm', '.vtt': 'text/vtt', '.txt': 'text/plain' };
 const server = createServer((req, res) => {
   let p = normalize(decodeURIComponent(new URL(req.url, 'http://x').pathname));
@@ -24,8 +25,13 @@ const server = createServer((req, res) => {
   if (p.startsWith('/media/')) f = join('media', p.slice(7));
   if (existsSync(f) && statSync(f).isDirectory()) f = join(f, 'index.html');
   if (!existsSync(f)) { res.writeHead(404, { 'Content-Type': 'text/html' }); res.end(readFileSync(join(ROOT, '404.html'))); return; }
+  const body = readFileSync(f);
+  // Page weight is counted here, where the files are served, rather than from the browser's
+  // response events: the browser drops large bodies from its buffer, which made the count unreliable.
+  // Only what the page itself loads: the offline worker's own fetches have Sec-Fetch-Dest: empty.
+  if (counting && /\.(html|css|m?js)$/.test(f) && /^(document|style|script)$/.test(req.headers['sec-fetch-dest'] ?? 'document')) served += body.length;
   res.writeHead(200, { 'Content-Type': TYPES[extname(f)] ?? 'application/octet-stream', 'X-Frame-Options': 'SAMEORIGIN' });
-  res.end(readFileSync(f));
+  res.end(body);
 }).listen(0);
 const base = `http://127.0.0.1:${server.address().port}`;
 
@@ -51,14 +57,12 @@ for (const path of pages) {
     const ctx = await browser.newContext({ colorScheme: scheme, viewport: { width: 1280, height: 900 } });
     const page = await ctx.newPage();
     const errors = [];
-    let bytes = 0;
-    let loaded = false; // responses after DOMContentLoaded are lazy (e.g. the diagram library) and do not count
-    page.once('domcontentloaded', () => { loaded = true; });
+    // Files served before DOMContentLoaded count; later ones are lazy (e.g. the diagram library).
+    served = 0; counting = scheme === 'light';
+    page.once('domcontentloaded', () => { counting = false; });
     page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
     page.on('pageerror', (e) => errors.push(e.message));
-    page.on('response', async (r) => {
-      const t = r.headers()['content-type'] ?? '';
-      if (!loaded && /html|css|javascript/.test(t)) { try { bytes += (await r.body()).length; } catch {} }
+    page.on('response', (r) => {
       if (r.status() >= 400 && !r.url().endsWith('favicon.ico')) errors.push(`HTTP ${r.status()} ${r.url().replace(base, '')}`);
     });
     await page.goto(base + path, { waitUntil: 'networkidle' });
@@ -71,7 +75,7 @@ for (const path of pages) {
     for (const e of errors.filter((e) => !/youtube|vimeo|cloudflareinsights|plausible/.test(e))) problems.push(`${path} [${scheme}] console: ${e}`);
     for (const b of broken) problems.push(`${path} [${scheme}] broken image: ${b}`);
     if (scheme === 'light') {
-      weights.push([path, Math.round(bytes / 1024)]);
+      weights.push([path, Math.round(served / 1024)]);
       // Phone width: the page itself must not scroll sideways. Wide tables and code may scroll
       // inside their own box; anything else that sticks out is reported by its selector.
       await page.setViewportSize({ width: 360, height: 800 }); // a little under 375, to leave room for wider fonts on other systems
