@@ -44,7 +44,9 @@ djonko.dev {
 		header @cards Cache-Control "public, max-age=86400"
 		@pagefind path /pagefind/*
 		header @pagefind Cache-Control "public, max-age=3600"
-		@pages not path /_astro/* /og/* /downloads/* /pagefind/*
+		@sw path /sw.js
+		header @sw Cache-Control "no-cache"
+		@pages not path /_astro/* /og/* /downloads/* /pagefind/* /sw.js
 		header @pages Cache-Control "public, max-age=300, must-revalidate"
 
 		# deploy.sh writes .br and .gz copies next to text files; serve them without compressing per request.

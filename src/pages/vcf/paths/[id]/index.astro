@@ -26,6 +26,10 @@ const ld = {
     <button type="button" class="btn" id="path-reset" hidden>Clear my progress</button>
     <a class="btn" href={`/vcf/paths/${p.id}/print/`}>Print the whole path</a>
   </p>
+  <p class="path-actions">
+    <button type="button" class="btn" data-offline-save={JSON.stringify([`/vcf/paths/${p.id}/`, `/vcf/paths/${p.id}/print/`, ...p.notes.map(urlOf)])}>Save this path for offline reading</button>
+    <span class="small muted" data-offline-status aria-live="polite"></span>
+  </p>
   <ol class="path-steps" data-path={p.id}>
     {p.notes.map((a, i) => (
       <li data-note={a.id}>
