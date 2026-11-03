@@ -446,3 +446,12 @@ tr:target td { background: var(--surface-2); }
   .compare .cap, thead { break-after: avoid; }
 }
 .print-meta { overflow-wrap: anywhere; }
+
+/* Search box inside a page (home, VCF hub) */
+.page-search { position: relative; display: flex; align-items: center; max-width: 640px; margin: 18px 0 8px; }
+.page-search svg { position: absolute; left: 14px; color: var(--ink-3); pointer-events: none; }
+.page-search input { width: 100%; padding: 12px 44px 12px 42px; font-size: 1rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); color: var(--ink); }
+.page-search input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.page-search .hint { position: absolute; right: 12px; }
+@media (max-width: 480px) { .page-search .hint { display: none; } .page-search input { padding-right: 12px; } }
+@media print { .page-search { display: none; } }

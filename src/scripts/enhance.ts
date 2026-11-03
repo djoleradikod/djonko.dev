@@ -78,7 +78,7 @@ if (qs) {
   const list = qs.querySelector<HTMLUListElement>('#qs-list')!;
   const status = qs.querySelector<HTMLElement>('#qs-status')!;
   const all = qs.querySelector<HTMLAnchorElement>('#qs-all')!;
-  let pf: { search: (q: string) => Promise<{ results: { data: () => Promise<PfResult> }[] }>; options?: (o: object) => Promise<void> } | null = null;
+  let pf: { search: (q: string) => Promise<{ results: { score?: number; data: () => Promise<PfResult> }[] }>; options?: (o: object) => Promise<void> } | null = null;
   let failed = false, seq = 0, active = -1;
 
   const load = async () => {
@@ -98,6 +98,18 @@ if (qs) {
     input.setAttribute('aria-activedescendant', els[active].id);
     els[active].scrollIntoView({ block: 'nearest' });
   };
+  // Shorter queries built from an error message: drop tokens with digits, paths, addresses and IDs,
+  // and common words. Returns groups to try in order: all the words, then runs of three neighbouring
+  // words, then pairs (an error's key phrase is usually two or three words that belong together).
+  const loosen = (q: string): string[][] => {
+    const STOP = new Set(['error', 'failed', 'failure', 'could', 'unable', 'there', 'which', 'while', 'with', 'from', 'that', 'this', 'when', 'were', 'have', 'been', 'please', 'check', 'contact', 'returned', 'occurred']);
+    const words = q.replace(/["'`()[\]{}<>,;]/g, ' ').split(/\s+/)
+      .filter((w) => w.length >= 4 && !/[0-9\/\\@=:_]/.test(w) && !/\.[a-z]{2,}$/i.test(w))
+      .map((w) => w.replace(/[.!?]+$/, '').toLowerCase()).filter((w) => w.length >= 4 && !STOP.has(w));
+    const w = [...new Set(words)].slice(0, 8);
+    const runs = (n: number) => w.length > n ? w.slice(0, w.length - n + 1).map((_, i) => w.slice(i, i + n).join(' ')) : [];
+    return [[w.join(' ')], runs(3), runs(2)].filter((g) => g.length && g[0]);
+  };
   const clean = (u: string) => u.replace(/\/index\.html$/, '/').replace(/\.html$/, '/');
   const section = (u: string) => u.split('/')[1] === 'vcf' ? (u.startsWith('/vcf/tools') ? 'Tools' : u.startsWith('/vcf/resources') ? 'Resources' : 'VCF notes')
     : u.startsWith('/blog') ? 'Blog' : u.startsWith('/projects') ? 'Projects' : 'Page';
@@ -108,7 +120,18 @@ if (qs) {
     if (!q) { list.replaceChildren(); input.setAttribute('aria-expanded', 'false'); status.textContent = 'Type to search. Arrow keys move, Enter opens.'; return; }
     const p = await load();
     if (!p) { status.textContent = 'Quick search is not available here. Press Enter for the search page.'; return; }
-    const res = await p.search(q);
+    // A pasted error message rarely matches word for word: it carries host names, IDs and paths.
+    // When the full text finds nothing, search again on its distinctive words.
+    let res = await p.search(q), used = '';
+    if (!res.results.length && q.split(/\s+/).length > 3) {
+      // Try every candidate and keep the one whose best page scores highest: a run of words that
+      // appears together in a heading or summary beats words scattered across a long page.
+      let top = 0;
+      for (const alt of loosen(q).flat()) {
+        const r = await p.search(alt); const sc = r.results[0]?.score ?? 0;
+        if (sc > top) { top = sc; res = r; used = alt; }
+      }
+    }
     const pages = await Promise.all(res.results.slice(0, 8).map((r) => r.data()));
     if (mine !== seq) return;
     // One row per matching section, up to three per page, so a page like the tools catalogue can
@@ -142,7 +165,7 @@ if (qs) {
     }));
     input.setAttribute('aria-expanded', String(top.length > 0));
     const n = res.results.length;
-    status.textContent = top.length ? `${n} page${n === 1 ? '' : 's'} match` : 'No results. Try fewer words or a KB number.';
+    status.textContent = top.length ? (used ? `No page has the whole text. ${n} match "${used}".` : `${n} page${n === 1 ? '' : 's'} match`) : 'No results. Try fewer words or a KB number.';
     active = -1; if (top.length) setActive(0);
   };
   let timer = 0;
@@ -152,7 +175,18 @@ if (qs) {
     else if (e.key === 'ArrowUp') { e.preventDefault(); setActive(active - 1); }
     else if (e.key === 'Enter' && active >= 0 && items()[active]) { e.preventDefault(); location.href = items()[active].href; }
   });
-  const open = () => { if (!qs.open) { qs.showModal(); input.select(); load(); } };
+  const open = (text?: string) => {
+    if (text !== undefined) { input.value = text; }
+    if (!qs.open) { qs.showModal(); load(); }
+    if (text !== undefined) { input.focus(); input.setSelectionRange(text.length, text.length); run(); } else input.select();
+  };
+  // Search boxes in a page (home, VCF hub) work as a form to /search/ without JavaScript. With it,
+  // typing or clicking in one opens quick search and carries the text over.
+  document.querySelectorAll<HTMLInputElement>('input[data-qs-trigger]').forEach((box) => {
+    box.addEventListener('input', () => { const v = box.value; box.value = ''; open(v); });
+    box.addEventListener('click', () => open(box.value));
+    box.form?.addEventListener('submit', (e) => { e.preventDefault(); open(box.value); });
+  });
   document.getElementById('qs-open')?.addEventListener('click', (e) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
     e.preventDefault(); open();
