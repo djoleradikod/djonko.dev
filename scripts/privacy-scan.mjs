@@ -7,12 +7,16 @@ const roots = process.argv.slice(2).length ? process.argv.slice(2) : ['src', 'pu
 const exts = new Set(['.astro', '.mdx', '.md', '.ts', '.js', '.mjs', '.json', '.html', '.xml', '.css', '.svg', '.txt', '.csv', '.sh', '.ps1', '.py', '.yaml', '.yml', '.vtt']);
 const skipDirs = new Set(['node_modules', '.git', 'pagefind', '_astro']);
 
+// A preview build for a LAN address (SITE_URL=http://<ip>:<port>) carries that address in every
+// page's canonical and share links. It is the build's own address, so it is not a finding.
+const ownHost = (() => { try { return new URL(process.env.SITE_URL ?? '').hostname; } catch { return ''; } })();
+
 const rules = [
   { name: 'proprietary marking', re: /proprietary|confidential|internal[ -]only|do not distribute/gi },
   { name: 'email address', re: /[A-Za-z0-9._%+-]+@(?!vsphere\.local\b)[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g,
     allow: m => /@(domain|example\.(com|org|net)|rainpole\.io)$/i.test(m) || /^(user|svc-li-vc-[^@]*|sso_user)@/i.test(m) },
   { name: 'IPv4 address', re: /\b(?:\d{1,3}\.){3}\d{1,3}(?:\/\d{1,2})?\b/g,
-    allow: m => /^(198\.51\.100\.|127\.0\.0\.1|0\.0\.0\.0|172\.1[67]\.0\.0\/|198\.18\.0\.0\/|x\.x\.x\.x)/.test(m) || /^\d+\.\d+\.\d+\.\d+$/.test(m) && isVersionLike(m) },
+    allow: m => m === ownHost || /^(198\.51\.100\.|127\.0\.0\.1|0\.0\.0\.0|172\.1[67]\.0\.0\/|198\.18\.0\.0\/|x\.x\.x\.x)/.test(m) || /^\d+\.\d+\.\d+\.\d+$/.test(m) && isVersionLike(m) },
   { name: 'internal hostname', re: /\b[a-z0-9-]+\.(?:corp|lan|intra|internal|home)\b/gi },
   { name: 'private names and terms', re: /\b(djole|tvucepinu|kucni|upskill|vsphere - jay)\b/gi },
 ];

@@ -33,7 +33,10 @@ const csp = [
   "font-src 'self' data:",
   `connect-src 'self'${cloudflareToken ? ' https://cloudflareinsights.com' : ''}${plausibleDomain ? ` ${origin(plausibleSrc)}` : ''}`,
   "frame-src 'self' https://www.youtube-nocookie.com https://player.vimeo.com",
-  "object-src 'none'", "base-uri 'self'", "form-action 'self'", 'upgrade-insecure-requests',
+  "object-src 'none'", "base-uri 'self'", "form-action 'self'",
+  // Only for an HTTPS build. On a plain-HTTP preview (a LAN address) it would rewrite every
+  // stylesheet and script request to https:// and the page would load unstyled.
+  ...(String(Astro.site ?? '').startsWith('https:') ? ['upgrade-insecure-requests'] : []),
 ].join('; ');
 const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 const links = [
