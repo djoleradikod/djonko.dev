@@ -1,0 +1,74 @@
+---
+// One reading path as a single document: every note in order, with a cover and a contents list,
+// laid out for printing or "Save as PDF". Kept out of search engines and the site search, because
+// each note already has its own page.
+import { render } from 'astro:content';
+import Base from '../../../../layouts/Base.astro';
+import VersionBadges from '../../../../components/VersionBadges.astro';
+import { readingPaths, type ResolvedPath } from '../../../../lib/paths';
+import { urlOf } from '../../../../lib/articles';
+import { readingTime } from '../../../../lib/posts';
+import { kbsOf } from '../../../../lib/related';
+import { kbInfo } from '../../../../data/kb';
+import { SITE } from '../../../../data/site';
+import { mdxComponents } from '../../../../components/mdx';
+
+export async function getStaticPaths() {
+  return (await readingPaths()).map((p) => ({ params: { id: p.id }, props: { p } }));
+}
+const { p } = Astro.props as { p: ResolvedPath };
+const notes = await Promise.all(p.notes.map(async (a) => ({ a, Content: (await render(a)).Content })));
+const pathUrl = new URL(`/vcf/paths/${p.id}/`, Astro.site).href;
+const built = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<Base title={`${p.title} (print)`} description={`All ${p.notes.length} notes of the reading path "${p.title}" in one document, for printing or saving as PDF.`} noindex>
+  <div class="print-doc">
+    <p class="no-print path-actions">
+      <button type="button" class="btn primary" id="print-now">Print or save as PDF</button>
+      <a class="btn" href={`/vcf/paths/${p.id}/`}>Back to the path</a>
+      <span class="small muted">{p.notes.length} notes, about {p.minutes} minutes. Diagrams and code are included; images print at page width.</span>
+    </p>
+
+    <header class="print-cover">
+      <p class="eyebrow">{SITE.vcfName} · Reading path</p>
+      <h1>{p.title}</h1>
+      <p class="lede">{p.blurb}</p>
+      <p class="small">For: {p.who}</p>
+      <p class="small muted print-meta">{SITE.author} · {SITE.role} · {pathUrl} · copy made <span id="print-date">{built}</span></p>
+      <p class="small muted">{SITE.disclaimer}</p>
+      <h2 class="print-toc-h">Contents</h2>
+      <ol class="print-toc">
+        {notes.map(({ a }, i) => <li><a href={`#step-${i + 1}`}>{a.data.title}</a> <span class="small muted">· {readingTime(a.body)} min</span></li>)}
+      </ol>
+    </header>
+
+    {notes.map(({ a, Content }, i) => {
+      const kbs = kbsOf(a);
+      return (
+        <section class="print-note" id={`step-${i + 1}`} data-step={i + 1} aria-labelledby={`step-${i + 1}-h`}>
+          <p class="eyebrow">Step {i + 1} of {p.notes.length}</p>
+          <h2 class="print-note-h" id={`step-${i + 1}-h`}>{a.data.title}</h2>
+          <p class="lede">{a.data.description}</p>
+          <p class="small muted print-meta"><VersionBadges versions={a.data.versions} level={a.data.level} /> · {new URL(urlOf(a), Astro.site).href}</p>
+          <div class="prose"><Content components={mdxComponents} /></div>
+          {kbs.length > 0 && (
+            <p class="small print-kbs"><strong>KBs:</strong> {kbs.map((k, j) => <>{j > 0 && ', '}<a href={kbInfo(k).url}>{k}</a>{kbInfo(k).topic && ` (${kbInfo(k).topic})`}</>)}</p>
+          )}
+        </section>
+      );
+    })}
+  </div>
+  <script is:inline>
+    (() => {
+      // Each note was written as its own page, so heading ids repeat across notes. Prefix them per
+      // step so in-page links and the section links keep pointing at the right note.
+      document.querySelectorAll('.print-note').forEach((s) => {
+        const pre = `s${s.dataset.step}-`;
+        s.querySelectorAll('.prose [id]').forEach((el) => { el.id = pre + el.id; });
+        s.querySelectorAll('.prose a[href^="#"]').forEach((el) => { const h = el.getAttribute('href'); if (h.length > 1) el.setAttribute('href', `#${pre}${h.slice(1)}`); });
+      });
+      document.getElementById('print-date').textContent = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+      document.getElementById('print-now').addEventListener('click', () => window.print());
+    })();
+  </script>
+</Base>
