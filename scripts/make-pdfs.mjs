@@ -40,10 +40,10 @@ for (const job of JOBS) {
   mkdirSync(dirname(job.out), { recursive: true });
   await page.pdf({
     path: job.out, format: 'A4', printBackground: true, preferCSSPageSize: !!job.bare,
-    margin: job.bare ? undefined : { top: '14mm', bottom: '16mm', left: '12mm', right: '12mm' },
+    margin: job.bare ? undefined : { top: '11mm', bottom: '13mm', left: '11mm', right: '11mm' },
     displayHeaderFooter: !job.bare,
     headerTemplate: '<span></span>',
-    footerTemplate: `<div style="font:8px system-ui,sans-serif;color:#666;width:100%;padding:0 12mm;display:flex;justify-content:space-between"><span>${job.title} · djonko.dev${job.path}</span><span>Page <span class="pageNumber"></span> of <span class="totalPages"></span></span></div>`,
+    footerTemplate: `<div style="font:8px system-ui,sans-serif;color:#666;width:100%;padding:0 11mm;display:flex;justify-content:space-between"><span>${job.title} · djonko.dev${job.path}</span><span>Page <span class="pageNumber"></span> of <span class="totalPages"></span></span></div>`,
   });
   console.log(`wrote ${job.out} (${(statSync(job.out).size / 1024).toFixed(0)} KB)`);
   await page.close();
