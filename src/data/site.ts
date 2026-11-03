@@ -22,6 +22,9 @@ export const SITE = {
   mediaBase: (import.meta.env.PUBLIC_MEDIA_URL as string | undefined) || '/media',
   // GitHub owner of the tool repositories (<slug>-for-vcf-operations).
   githubOwner: 'djoleradikod',
+  // Public repository of this site, for "Report a problem" links that open a GitHub issue.
+  // Leave empty (PUBLIC_SOURCE_REPO=) to send readers to the contact page instead.
+  sourceRepo: (import.meta.env.PUBLIC_SOURCE_REPO as string | undefined) ?? 'djoleradikod/djonko.dev',
   // Optional privacy-friendly analytics. Leave empty for none.
   analytics: {
     cloudflareToken: (import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN as string | undefined) || '',
@@ -43,3 +46,9 @@ export const sameAs = () => [SITE.links.linkedin, SITE.links.github].filter(Bool
 /** Resolve a media path (e.g. 'video/triage.mp4') against the media origin. Absolute URLs pass through. */
 export const mediaUrl = (path: string) =>
   /^https?:\/\//.test(path) || path.startsWith('/') ? path : `${SITE.mediaBase.replace(/\/$/, '')}/${path}`;
+
+/** A link that opens a new issue on the site's repository, with an issue form's fields filled in. Empty when there is no public repository. */
+export function issueUrl(fields: Record<string, string>): string {
+  if (!SITE.sourceRepo) return '/contact/';
+  return `https://github.com/${SITE.sourceRepo}/issues/new?${new URLSearchParams(fields)}`;
+}
