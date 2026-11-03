@@ -1,0 +1,101 @@
+---
+import Base from '../layouts/Base.astro';
+import { allArticles, urlOf } from '../lib/articles';
+import { readingPaths } from '../lib/paths';
+const notes = await allArticles();
+const paths = await readingPaths();
+const titles = Object.fromEntries([
+  ...notes.map((a) => [urlOf(a), a.data.title]),
+  ...paths.flatMap((p) => [[`/vcf/paths/${p.id}/`, `Reading path: ${p.title}`], [`/vcf/paths/${p.id}/print/`, `Reading path, printable: ${p.title}`]]),
+  ['/', 'Home'], ['/vcf/', 'VCF notes'], ['/vcf/library/', 'Library'], ['/vcf/tools/', 'Tools for VCF 9.x'],
+  ['/vcf/resources/kb-index/', 'KB index'], ['/vcf/resources/glossary/', 'Glossary'], ['/vcf/resources/triage-cheat-sheet/', 'Triage cheat sheet'],
+]);
+const core = ['/vcf/', '/vcf/library/', '/vcf/paths/', '/vcf/tools/', '/vcf/resources/', '/vcf/resources/kb-index/', '/vcf/resources/glossary/', '/vcf/resources/triage-cheat-sheet/'];
+const all = [...core, ...notes.map(urlOf)];
+---
+<Base title="Offline reading" description="Keep notes and reading paths on this device, for data centres and change windows without internet access." noindex>
+  <p class="eyebrow"><a href="/vcf/" style="color:inherit;text-decoration:none">VCF notes</a></p>
+  <h1>Offline reading</h1>
+  <p id="off-banner" class="callout-off" hidden role="status"><strong>You are offline.</strong> <span id="off-missing"></span> The pages below are saved on this device and open without a connection.</p>
+  <p class="lede">Data halls, jump hosts and change windows often have no internet. Every page you open here is kept on this device, and you can save more ahead of time. Saved copies stay in this browser only and are refreshed whenever you open the page online.</p>
+
+  <div id="off-unsupported" hidden><p class="muted">This browser does not support offline storage for websites, or it is turned off (private windows often do this). Use <a href="/vcf/paths/">a printable reading path</a> instead.</p></div>
+
+  <section id="off-actions" aria-labelledby="off-save-h">
+    <h2 id="off-save-h">Save ahead of time</h2>
+    <p class="path-actions">
+      <button type="button" class="btn primary" data-offline-save={JSON.stringify(all)}>Save all {notes.length} notes and the reference pages</button>
+      <span class="small muted" data-offline-status aria-live="polite"></span>
+    </p>
+    <ul class="list">
+      {paths.map((p) => (
+        <li class="off-path">
+          <span class="t">{p.title}</span>
+          <span class="small muted">{p.notes.length} notes</span>
+          <span class="off-row">
+            <button type="button" class="btn" data-offline-save={JSON.stringify([`/vcf/paths/${p.id}/`, `/vcf/paths/${p.id}/print/`, ...p.notes.map(urlOf)])}>Save this path<span class="sr-only">: {p.title}</span></button>
+            <span class="small muted" data-offline-status aria-live="polite"></span>
+          </span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section aria-labelledby="off-list-h">
+    <h2 id="off-list-h">Saved on this device</h2>
+    <p class="small muted" id="off-usage"></p>
+    <ul class="list" id="off-list"></ul>
+    <p id="off-empty" class="muted" hidden>Nothing saved yet.</p>
+    <p><button type="button" class="btn" id="off-clear" hidden>Remove all saved copies</button></p>
+  </section>
+
+  <script is:inline type="application/json" id="off-titles" set:html={JSON.stringify(titles)} />
+  <script is:inline>
+    (async () => {
+      const titles = JSON.parse(document.getElementById('off-titles').textContent);
+      const banner = document.getElementById('off-banner');
+      if (!navigator.onLine || location.pathname !== '/offline/') {
+        banner.hidden = false;
+        if (location.pathname !== '/offline/') document.getElementById('off-missing').textContent = `${location.pathname} was not saved on this device.`;
+      }
+      if (!('caches' in window) || !('serviceWorker' in navigator)) {
+        document.getElementById('off-unsupported').hidden = false;
+        document.getElementById('off-actions').hidden = true;
+        return;
+      }
+      const list = document.getElementById('off-list'), empty = document.getElementById('off-empty'), clear = document.getElementById('off-clear'), usage = document.getElementById('off-usage');
+      async function render() {
+        const names = (await caches.keys()).filter((k) => k.startsWith('djonko-'));
+        const pages = [];
+        for (const n of names) for (const r of await (await caches.open(n)).keys()) {
+          const u = new URL(r.url);
+          if (u.origin === location.origin && u.pathname.endsWith('/') && u.pathname !== '/offline/') pages.push(u.pathname);
+        }
+        const uniq = [...new Set(pages)].sort((a, b) => (titles[a] ?? a).localeCompare(titles[b] ?? b));
+        list.replaceChildren(...uniq.map((p) => {
+          const li = document.createElement('li'), a = document.createElement('a'), t = document.createElement('span');
+          a.href = p; t.className = 't'; t.textContent = titles[p] ?? p; a.append(t); li.append(a); return li;
+        }));
+        empty.hidden = uniq.length > 0; clear.hidden = uniq.length === 0;
+        if (navigator.storage?.estimate) {
+          const { usage: u } = await navigator.storage.estimate();
+          usage.textContent = `${uniq.length} pages saved, using about ${Math.max(1, Math.round((u ?? 0) / 1e6))} MB on this device.`;
+        }
+      }
+      clear.addEventListener('click', async () => {
+        for (const k of await caches.keys()) if (k.startsWith('djonko-')) await caches.delete(k);
+        // Keep this page available offline.
+        try { await (await caches.open('djonko-offline-v1')).add('/offline/'); } catch {}
+        render();
+      });
+      document.addEventListener('offline-saved', render);
+      render();
+    })();
+  </script>
+</Base>
+<style>
+  .callout-off { padding: 10px 14px; border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: var(--radius); background: var(--surface); }
+  .off-path { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; padding: 12px 2px; align-items: center; }
+  .off-path .t { font-weight: 600; }
+  .off-row { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+</style>

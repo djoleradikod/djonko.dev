@@ -263,6 +263,25 @@ the welcome email). In CI, set `DEPLOY_BLACKNIGHT=true` and the `BN_*` secrets.
 Docker host:
 `SITE_URL=https://preview.example PUBLIC_NOINDEX=1 docker compose -f deploy/docker/docker-compose.yml up -d --build`.
 
+## Offline reading (service worker)
+
+`public/sw.js` keeps every page a reader opens, plus anything they save from `/offline/` or a reading
+path, so it opens without a connection. Pages are network first, so an online reader always gets the
+current version; hashed files under `/_astro/` are cache first. Every host config here serves
+`/sw.js` with `Cache-Control: no-cache`, so a fix reaches readers on their next visit.
+
+If it ever misbehaves, switch it off for everyone by replacing `public/sw.js` with:
+
+```js
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', (e) => e.waitUntil((async () => {
+  for (const k of await caches.keys()) await caches.delete(k);
+  await self.registration.unregister();
+})()));
+```
+
+and deploying. Remove the registration in `src/scripts/enhance.ts` (section 8) at the same time.
+
 ## Before launch
 
 - Until the domain is bought, build with `SITE_URL=<the address you use>`, so canonical links point at that

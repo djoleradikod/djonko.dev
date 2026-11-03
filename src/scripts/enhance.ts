@@ -236,3 +236,35 @@ document.querySelectorAll<HTMLElement>('[data-path-steps]').forEach((card) => {
   const out = card.querySelector<HTMLElement>('.path-progress');
   if (out && n) { out.textContent = n === ids.length ? '· Complete' : `· ${n} of ${ids.length} read`; out.hidden = false; }
 });
+
+// 8. Offline reading: a service worker keeps every page opened here, so it opens again without a
+//    connection (see public/sw.js and /offline/). Buttons with [data-offline-save] save a list of
+//    pages ahead of time and report progress in the [data-offline-status] element next to them.
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
+  document.querySelectorAll<HTMLButtonElement>('[data-offline-save]').forEach((btn) => {
+    const status = btn.parentElement?.querySelector<HTMLElement>('[data-offline-status]');
+    btn.addEventListener('click', async () => {
+      const urls = JSON.parse(btn.dataset.offlineSave!) as string[];
+      btn.disabled = true;
+      if (status) status.textContent = 'Preparing…';
+      navigator.storage?.persist?.().catch(() => {});
+      const reg = await navigator.serviceWorker.ready;
+      const onMsg = (e: MessageEvent) => {
+        const d = e.data || {};
+        if (d.type !== 'save-progress' || d.total !== urls.length) return;
+        if (status) status.textContent = `Saved ${d.done} of ${d.total}${d.failed ? `, ${d.failed} failed` : ''}`;
+        if (d.done + d.failed === d.total) {
+          navigator.serviceWorker.removeEventListener('message', onMsg);
+          btn.disabled = false;
+          if (status && !d.failed) status.textContent = `Saved ${d.total} pages. They open without a connection.`;
+          document.dispatchEvent(new CustomEvent('offline-saved'));
+        }
+      };
+      navigator.serviceWorker.addEventListener('message', onMsg);
+      reg.active?.postMessage({ type: 'save', urls });
+    });
+  });
+} else {
+  document.querySelectorAll<HTMLButtonElement>('[data-offline-save]').forEach((btn) => { btn.disabled = true; });
+}
