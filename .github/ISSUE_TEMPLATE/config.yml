@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Broadcom support
+    url: https://support.broadcom.com/
+    about: For a problem with your own VCF environment, open a case with Broadcom. This repository only covers the website.

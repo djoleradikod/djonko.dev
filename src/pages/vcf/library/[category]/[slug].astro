@@ -10,6 +10,8 @@ import { personRef } from '../../../../lib/schema';
 import { mdxComponents } from '../../../../components/mdx';
 import Share from '../../../../components/Share.astro';
 import { pathsFor } from '../../../../lib/paths';
+import { kbCitations, relatedNotes } from '../../../../lib/related';
+import { issueUrl } from '../../../../data/site';
 
 export async function getStaticPaths() {
   const items = await allArticles();
@@ -24,6 +26,10 @@ const { a, prev, next } = Astro.props;
 const { Content, headings } = await render(a);
 const cat = categoryById(a.data.category);
 const inPaths = await pathsFor(a.id);
+const related = await relatedNotes(a, [prev, next, ...inPaths.map((p) => p.next)]);
+const cites = await kbCitations();
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+const report = issueUrl({ template: 'correction.yml', title: `Correction: ${a.data.title}`, note: pageUrl });
 const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 const ld = {
@@ -56,7 +62,10 @@ const ld = {
             <details class="drawer">
               <summary>Broadcom KBs in this note ({a.data.kbs.length})</summary>
               <div class="body"><ul>
-                {a.data.kbs.map((id) => { const k = kbInfo(id); return <li><a href={k.url} target="_blank" rel="noopener">KB {id}</a>{k.topic && ` · ${k.topic}`}</li>; })}
+                {a.data.kbs.map((id) => {
+                  const k = kbInfo(id); const others = (cites.get(id) ?? []).length - 1;
+                  return <li><a href={k.url} target="_blank" rel="noopener">KB {id}</a>{k.topic && ` · ${k.topic}`}{others > 0 && <> · <a class="small" href={`/vcf/resources/kb-index/#kb-${id}`}>{others === 1 ? '1 other note' : `${others} other notes`}</a></>}</li>;
+                })}
               </ul></div>
             </details>
           )}
@@ -76,7 +85,16 @@ const ld = {
                 : <a href={`/vcf/paths/${path.id}/`}><span>End of the path</span>Back to {path.title}</a>}
             </nav>
           ))}
-          <Share url={new URL(Astro.url.pathname, Astro.site).href} title={a.data.title} />
+          {related.length > 0 && (
+            <section class="related" aria-labelledby="related-h">
+              <h2 id="related-h">Related notes</h2>
+              <ul class="list">
+                {related.map((r) => <li><a href={urlOf(r)}><span class="t">{r.data.title}</span><span class="d">{r.data.description}</span></a></li>)}
+              </ul>
+            </section>
+          )}
+          <Share url={pageUrl} title={a.data.title} />
+          {report && <p class="small muted report">Found something wrong or out of date? <a href={report} target={report.startsWith("http") ? "_blank" : undefined} rel="noopener">Report a problem with this note</a>.</p>}
           <nav class="prev-next" aria-label="More in this category">
             {prev && <a href={urlOf(prev)}><span>Previous</span>{prev.data.title}</a>}
             {next && <a class="next" href={urlOf(next)}><span>Next</span>{next.data.title}</a>}

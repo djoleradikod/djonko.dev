@@ -1,0 +1,34 @@
+name: Correction to a note
+description: Something in a note is wrong, out of date, or unclear.
+title: "Correction: "
+labels: [correction]
+body:
+  - type: input
+    id: note
+    attributes:
+      label: Note
+      description: The address of the page. The "Report a problem" link at the end of each note fills this in.
+      placeholder: https://djonko.dev/vcf/library/...
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What is wrong
+      description: Quote the sentence or step, and say what you saw instead.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version where you saw it
+      placeholder: For example VCF 9.0.1, SDDC Manager 9.0.1.0
+  - type: textarea
+    id: source
+    attributes:
+      label: Source
+      description: A Broadcom KB, a documentation page or release notes that support the change, if you have one.
+  - type: markdown
+    attributes:
+      value: |
+        Issues are public. Leave out host names, IP addresses, customer names, log extracts with identifiers, and anything covered by a support case or an NDA.
