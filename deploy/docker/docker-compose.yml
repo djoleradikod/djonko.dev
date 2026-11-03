@@ -10,7 +10,9 @@ services:
     image: vcf-field-notes:latest
     restart: unless-stopped
     ports:
-      - "127.0.0.1:8080:8080"   # only local; publish through Caddy or a tunnel
+      # Local only by default; publish through Caddy or a tunnel. For a LAN preview:
+      #   BIND=0.0.0.0 PORT=8080 SITE_URL=http://<server-ip>:8080 PUBLIC_NOINDEX=1 docker compose ... up -d --build
+      - "${BIND:-127.0.0.1}:${PORT:-8080}:8080"
 
   # Optional: public exposure without opening router ports.
   # Create a tunnel in the Cloudflare dashboard, map your hostname to http://vcf-field-notes:8080,

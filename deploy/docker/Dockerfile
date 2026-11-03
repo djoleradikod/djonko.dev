@@ -1,6 +1,6 @@
 # Build and serve VCF Field Notes as a static site.
 # Usage: docker build -f deploy/docker/Dockerfile --build-arg SITE_URL=https://notes.example.org -t vcf-field-notes .
-FROM node:20-slim AS build
+FROM node:22-slim AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
