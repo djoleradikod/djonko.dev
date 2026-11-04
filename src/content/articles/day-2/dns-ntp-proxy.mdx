@@ -40,7 +40,7 @@ In 5.x, DNS and NTP were configured in SDDC Manager, and SDDC Manager was the ma
 ## NTP
 
 - **Symptoms of drift:** VCF SSO reporting "JWT token is expired" (<KB id={409353} />), upgrades stuck part way, and intermittent 401 errors between components.
-- **Installer quirks:** an NTP server that answers slowly may need `iburst` to pass validation (<KB id={438528} />). Some formats are rejected (<KB id={439240} />). The installer must reach NTP when deploying VCF Operations (<KB id={444431} />).
+- **Installer quirks:** an NTP server that answers slowly may need `iburst` to pass validation (<KB id={438528} />). Some formats are rejected (<KB id={439240} />). An incorrect NTP server in the fleet lifecycle settings makes the VCF Operations and cloud proxy install fail (<KB id={444431} />).
 - **Changes that don't stick:** an SDDC Manager NTP change not written to `ntp.conf` is a known issue (<KB id={449159} />). Verify on the appliance after any change.
 
 ## Proxy and firewall
