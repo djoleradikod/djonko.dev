@@ -750,11 +750,11 @@
  },
  {
   "kb": 426469,
-  "topic": "Live Recovery plugin: FQDN certificate",
+  "topic": "Live Recovery plugin \"no healthy upstream\": certificate on a short name",
   "decks": [
    "How it all connects"
   ],
-  "url": "https://knowledge.broadcom.com/external/article/426469"
+  "url": "https://knowledge.broadcom.com/external/article/426469/vlsr-plugin-is-not-accessible-from-vcent.html"
  },
  {
   "kb": 426872,
@@ -1783,14 +1783,6 @@
   "url": "https://knowledge.broadcom.com/external/article/443723"
  },
  {
-  "kb": 443737,
-  "topic": "Cloud proxy registration validation, companion article",
-  "decks": [
-   "Upgrading to VCF 9.1, the right way round"
-  ],
-  "url": "https://knowledge.broadcom.com/external/article/443737"
- },
- {
   "kb": 443763,
   "topic": "NSX Global Managers before Local Managers",
   "decks": [
@@ -1923,11 +1915,11 @@
  },
  {
   "kb": 444431,
-  "topic": "Installer cannot reach NTP deploying VCF Ops",
+  "topic": "VCF Operations install fails on an incorrect NTP server (9.1)",
   "decks": [
    "Meet the fleet"
   ],
-  "url": "https://knowledge.broadcom.com/external/article/444431"
+  "url": "https://knowledge.broadcom.com/external/article/444431/install-vcf-operations-and-vcf-cloud-pro.html"
  },
  {
   "kb": 444466,
@@ -1971,14 +1963,6 @@
    "Follow the signposts"
   ],
   "url": "https://knowledge.broadcom.com/external/article/444986"
- },
- {
-  "kb": 444992,
-  "topic": "Interop data timeout: vvs.broadcom.com blocked",
-  "decks": [
-   "Upgrading to VCF 9.1, the right way round"
-  ],
-  "url": "https://knowledge.broadcom.com/external/article/444992"
  },
  {
   "kb": 445084,
@@ -2668,15 +2652,6 @@
    "Meet the fleet"
   ],
   "url": "https://knowledge.broadcom.com/external/article/453800"
- },
- {
-  "kb": 453809,
-  "topic": "CaSA has no MASTER: Fleet sync breaks (9.0)",
-  "decks": [
-   "How it all connects",
-   "Follow the signposts"
-  ],
-  "url": "https://knowledge.broadcom.com/external/article/453809"
  },
  {
   "kb": 454179,
