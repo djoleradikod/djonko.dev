@@ -1,67 +1,96 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
 import VersionBadges from '../../components/VersionBadges.astro';
+import SearchBox from '../../components/SearchBox.astro';
 import { CATEGORIES } from '../../data/categories';
 import { SITE } from '../../data/site';
+import { KB_INDEX } from '../../data/kb';
+import { TOOLS } from '../../data/tools';
 import { allArticles, urlOf } from '../../lib/articles';
 import { readingPaths } from '../../lib/paths';
-import SearchBox from '../../components/SearchBox.astro';
+import { fmtDate } from '../../lib/posts';
+
 const items = await allArticles();
 const latest = [...items].sort((a, b) => +(b.data.updated ?? b.data.pubDate) - +(a.data.updated ?? a.data.pubDate)).slice(0, 6);
 const paths = await readingPaths();
+const byId = new Map(items.map((a) => [a.id, a]));
+const start = [
+  { icon: 'tree-structure', label: 'New to VCF 9', note: byId.get('architecture/vcf9-mental-model') },
+  { icon: 'list-checks', label: 'Something is broken', href: '/vcf/resources/triage-cheat-sheet/', title: 'The VCF 9.x triage cheat sheet' },
+  { icon: 'arrow-circle-up', label: 'Planning an upgrade', href: '/vcf/paths/upgrade-52-to-9/', title: `Reading path: ${paths.find((p) => p.id === 'upgrade-52-to-9')?.title}` },
+];
+const reference = [
+  { icon: 'toolbox', href: '/vcf/tools/', t: 'Tools for VCF 9.x', d: `${TOOLS.length} official, Fling and community tools, grouped by job.` },
+  { icon: 'list-checks', href: '/vcf/resources/triage-cheat-sheet/', t: 'Triage cheat sheet', d: 'Eight checks in order. Prints on two pages.' },
+  { icon: 'book-open-text', href: '/vcf/resources/kb-index/', t: 'KB index', d: `${KB_INDEX.length} public KBs, each with the notes that cite it.` },
+  { icon: 'translate', href: '/vcf/resources/glossary/', t: '5.x to 9.x glossary', d: 'Old names, new names, and what changed underneath.' },
+];
 ---
 <Base title={SITE.vcfName} description={SITE.vcfTagline}>
-  <section class="hero">
-    <p class="eyebrow">{SITE.vcfName}</p>
-    <h1>Field notes for running VMware Cloud Foundation, 5.x and 9.x</h1>
-    <p class="lede">Short, dense notes on how VCF is built, upgraded, licensed, operated and fixed. Every note says plainly what changed between 5.x and 9.x, links the Broadcom KBs that matter, and credits its sources.</p>
-    <SearchBox />
+  <section class="hub-hero">
+    <div>
+      <p class="eyebrow">{SITE.vcfName}</p>
+      <h1>Field notes for running VMware Cloud Foundation 5.x and 9.x</h1>
+      <p class="lede">Short notes on how VCF is built, upgraded, licensed, operated and fixed. Each one sets the 5.x and 9.x answers side by side and links the KBs behind them.</p>
+      <SearchBox />
+    </div>
+    <nav class="start" aria-labelledby="start-h">
+      <h2 id="start-h">Where to start</h2>
+      <ul>
+        {start.map((s) => {
+          const href = s.note ? urlOf(s.note) : s.href;
+          const title = s.note ? s.note.data.title : s.title;
+          return href && <li><a href={href}><span class="focus-ic"><Icon name={s.icon} size={20} /></span><span><span class="start-l">{s.label}</span><span class="start-t">{title}</span></span><Icon name="arrow-right" size={16} class="start-go" /></a></li>;
+        })}
+      </ul>
+    </nav>
   </section>
 
-  <section>
-    <div class="section-head"><h2>Reading paths</h2><a class="small" href="/vcf/paths/">All paths</a></div>
-    <p class="muted" style="margin-top:-4px">Short sequences of notes for one job, in order. Progress is kept in your browser.</p>
-    <div class="grid">
+  <section class="block" aria-labelledby="paths-h">
+    <div class="block-head"><h2 class="block-h" id="paths-h">Reading paths</h2><a href="/vcf/paths/">All paths <Icon name="arrow-right" size={14} /></a></div>
+    <p class="block-sub">Notes in order for one job. Progress is kept in your browser.</p>
+    <div class="paths">
       {paths.map((p) => (
-        <a class="card" href={`/vcf/paths/${p.id}/`} data-path-steps={p.steps.join(' ')}>
-          <span class="kicker">{p.who}</span>
+        <a class="path-card" href={`/vcf/paths/${p.id}/`} data-path-steps={p.steps.join(' ')}>
+          <span class="who">{p.who}</span>
           <h3>{p.title}</h3>
           <p>{p.blurb}</p>
-          <div class="meta small muted"><span>{p.notes.length} notes · about {p.minutes} min</span> <span class="path-progress" hidden></span></div>
+          <span class="segs" aria-hidden="true">{p.steps.map(() => <i></i>)}</span>
+          <span class="path-meta num">{p.notes.length} notes · about {p.minutes} min <span class="path-progress" hidden></span></span>
         </a>
       ))}
     </div>
   </section>
 
-  <section>
-    <div class="section-head"><h2>Library</h2><a class="small" href="/vcf/library/">All {items.length} notes</a></div>
-    <div class="grid">
+  <section class="block" aria-labelledby="lib-h">
+    <div class="block-head"><h2 class="block-h" id="lib-h">Library</h2><a href="/vcf/library/">All {items.length} notes <Icon name="arrow-right" size={14} /></a></div>
+    <ul class="areas-index">
       {CATEGORIES.map((c) => (
-        <a class="card" href={`/vcf/library/${c.id}/`}>
-          <h3>{c.title}</h3>
-          <p>{c.blurb}</p>
-          <div class="meta"><span class="badge">{items.filter((a) => a.data.category === c.id).length} notes</span></div>
-        </a>
-      ))}
-    </div>
-  </section>
-
-  <section>
-    <div class="section-head"><h2>Reference</h2><a class="small" href="/vcf/resources/">All resources</a></div>
-    <div class="grid">
-      <a class="card" href="/vcf/tools/"><h3>Tools for VCF 9.x</h3><p>Official, Fling and community tools for planning, deploying, upgrading, diagnosing and automating VCF 9, each linked to its publisher.</p></a>
-      <a class="card" href="/vcf/resources/triage-cheat-sheet/"><h3>Triage cheat sheet</h3><p>Eight checks in order, each with a command, what good looks like and what to do next. Two printable pages.</p></a>
-      <a class="card" href="/vcf/resources/kb-index/"><h3>KB index</h3><p>The public Broadcom KBs these notes rely on, each with a one-line topic. Searchable and filterable.</p></a>
-      <a class="card" href="/vcf/resources/glossary/"><h3>5.x to 9.x glossary</h3><p>Old names, new names, and what changed underneath.</p></a>
-    </div>
-  </section>
-
-  <section>
-    <div class="section-head"><h2>Recently updated</h2></div>
-    <ul class="list">
-      {latest.map((a) => (
-        <li><a href={urlOf(a)}><span class="t">{a.data.title}</span><VersionBadges versions={a.data.versions} /><span class="d">{a.data.description}</span></a></li>
+        <li><a href={`/vcf/library/${c.id}/`}>
+          <Icon name={c.icon} size={22} />
+          <span class="ai-t">{c.short}</span>
+          <span class="ai-n num">{items.filter((a) => a.data.category === c.id).length}</span>
+          <span class="ai-d">{c.blurb}</span>
+        </a></li>
       ))}
     </ul>
+  </section>
+
+  <section class="block" aria-labelledby="ref-h">
+    <div class="block-head"><h2 class="block-h" id="ref-h">Reference</h2><a href="/vcf/resources/">All resources <Icon name="arrow-right" size={14} /></a></div>
+    <div class="ref-row">
+      {reference.map((r) => <a href={r.href}><Icon name={r.icon} size={22} /><h3>{r.t}</h3><p>{r.d}</p></a>)}
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="new-h">
+    <h2 class="block-h" id="new-h">Recently updated</h2>
+    <ol class="dated">
+      {latest.map((a) => {
+        const d = a.data.updated ?? a.data.pubDate;
+        return <li><a href={urlOf(a)}><time class="num" datetime={d.toISOString()}>{fmtDate(d)}</time><span class="t">{a.data.title}</span><VersionBadges versions={a.data.versions} /></a></li>;
+      })}
+    </ol>
   </section>
 </Base>

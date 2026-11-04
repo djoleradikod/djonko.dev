@@ -269,6 +269,7 @@ document.querySelectorAll<HTMLElement>('[data-path-steps]').forEach((card) => {
   const n = ids.filter((id) => s.has(id)).length;
   const out = card.querySelector<HTMLElement>('.path-progress');
   if (out && n) { out.textContent = n === ids.length ? '· Complete' : `· ${n} of ${ids.length} read`; out.hidden = false; }
+  card.querySelectorAll<HTMLElement>('.segs i').forEach((seg, k) => seg.classList.toggle('on', s.has(ids[k])));
 });
 
 // 8. Offline reading: a service worker keeps every page opened here, so it opens again without a
