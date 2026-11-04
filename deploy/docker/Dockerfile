@@ -11,6 +11,7 @@ ENV SITE_URL=$SITE_URL PUBLIC_NOINDEX=$PUBLIC_NOINDEX
 RUN npm run build   # includes the privacy scan and link check
 
 FROM nginx:1.27-alpine
+LABEL org.opencontainers.image.title="djonko.dev"
 COPY deploy/docker/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 8080
