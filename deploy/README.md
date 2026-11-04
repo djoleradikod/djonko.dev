@@ -263,6 +263,40 @@ the welcome email). In CI, set `DEPLOY_BLACKNIGHT=true` and the `BN_*` secrets.
 Docker host:
 `SITE_URL=https://preview.example PUBLIC_NOINDEX=1 docker compose -f deploy/docker/docker-compose.yml up -d --build`.
 
+## Home server preview that follows `main`
+
+`deploy/home-server/` turns any always-on Linux box into a private preview that keeps itself current.
+Once it is installed, nobody needs to log in to the box again: every merge to `main` is live there
+within five minutes.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/djoleradikod/djonko.dev/main/deploy/home-server/install.sh | PORT=8090 bash
+```
+
+What it does:
+
+- writes the settings to `~/.config/djonko/preview.env` (port, address, branch);
+- installs `djonko-update` in `~/.local/bin` and a systemd user timer that runs it every five minutes;
+- each run fetches `main`, and only when the commit is new, or the site has stopped answering, rebuilds
+  and checks that the home page loads before it records the deploy;
+- builds with Docker when the user can run it (the container restarts with the machine), otherwise with
+  Node 22 and a small `python3 -m http.server` user service, keeping the last three builds;
+- will not start on a port another program already holds, and leaves every other service alone;
+- turns on lingering so the timer runs while nobody is logged in, and opens the port to the local
+  subnet in ufw when `sudo` needs no password (otherwise it prints the one command to run).
+
+Day to day:
+
+| Task | Command |
+|---|---|
+| See the last runs | `journalctl --user -u djonko-update -n 50` |
+| Deploy now | `djonko-update --force` |
+| Change port or address | edit `~/.config/djonko/preview.env`, then `djonko-update --force` |
+| Stop | `systemctl --user disable --now djonko-update.timer`, then `docker compose -p djonko down` (without Docker: `systemctl --user disable --now djonko-serve`) |
+
+The checkout in `~/djonko.dev` belongs to the updater, so local edits there are discarded on the next run.
+Builds are marked noindex.
+
 ## Offline reading (service worker)
 
 `public/sw.js` keeps every page a reader opens, plus anything they save from `/offline/` or a reading
