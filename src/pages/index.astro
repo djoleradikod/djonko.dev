@@ -1,25 +1,47 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import FleetModel from '../components/home/FleetModel.astro';
 import { SITE } from '../data/site';
 import { CATEGORIES } from '../data/categories';
 import { KB_INDEX } from '../data/kb';
+import { TOOLS } from '../data/tools';
 import { allArticles, urlOf } from '../lib/articles';
-import { allPosts, allProjects, postUrl, projectUrl, fmtDate } from '../lib/posts';
+import { allPosts, allProjects, postUrl, fmtDate } from '../lib/posts';
+import { readingPaths } from '../lib/paths';
 import { personLd } from '../lib/schema';
+import triageSheet from '../assets/home/triage-sheet.png';
 
 const notes = await allArticles();
 const posts = await allPosts();
 const projects = await allProjects();
+const paths = await readingPaths();
 const latest = [
-  ...posts.map((p) => ({ title: p.data.title, d: p.data.description, date: p.data.updated ?? p.data.pubDate, href: postUrl(p), kind: 'Blog' })),
-  ...notes.map((a) => ({ title: a.data.title, d: a.data.description, date: a.data.updated ?? a.data.pubDate, href: urlOf(a), kind: 'VCF note' })),
-].sort((a, b) => +b.date - +a.date).slice(0, 5);
+  ...posts.map((p) => ({ title: p.data.title, date: p.data.updated ?? p.data.pubDate, href: postUrl(p), kind: 'Blog' })),
+  ...notes.map((a) => ({ title: a.data.title, date: a.data.updated ?? a.data.pubDate, href: urlOf(a), kind: 'VCF note' })),
+].sort((a, b) => +b.date - +a.date).slice(0, 6);
+
+const perArea = CATEGORIES.map((c) => ({ ...c, n: notes.filter((a) => a.data.category === c.id).length }));
+// Four rows from the comparison table in the note "The VCF 9 mental model", shown as a sample of a note.
+const peek: [string, string, string][] = [
+  ['Top-level unit', 'One SDDC Manager and its domains.', 'The fleet: one VCF Operations and one VCF Automation over one or more instances.'],
+  ['Where you start', 'The SDDC Manager UI.', 'VCF Operations, with SDDC Manager underneath it.'],
+  ['Identity', 'vCenter SSO per domain, and vIDM for Aria.', 'VCF Identity Broker, scoped to the fleet, several instances or one.'],
+  ['Upgrade order', 'SDDC Manager first, then each domain.', 'VCF Operations and the fleet first, then each instance.'],
+];
+const makers = [
+  { label: 'Broadcom', n: TOOLS.filter((t) => t.maker === 'broadcom').length },
+  { label: 'Flings', n: TOOLS.filter((t) => t.maker === 'fling').length },
+  { label: 'Community and open source', n: TOOLS.filter((t) => ['community', 'opensource'].includes(t.maker)).length },
+];
+const modules = ['Meet the fleet', 'Upgrading to VCF 9.1, the right way round', 'How it all connects', 'Mind the licensing clock', 'Follow the signposts'];
 
 const focus = [
-  { t: 'Architecture and design reviews', d: 'The VCF 9 fleet, instance and domain model, identity, management services, and how a 5.x estate maps onto it.', href: '/vcf/library/architecture/' },
-  { t: 'Upgrades from 5.x to 9.x', d: 'Readiness assessments, target builds, the order that matters, and runbooks with real go/no-go and rollback points.', href: '/vcf/library/upgrades/' },
-  { t: 'Operations and troubleshooting', d: 'Day-2 operating models, a repeatable triage method, and escalations that arrive with the evidence attached.', href: '/vcf/library/troubleshooting/' },
-  { t: 'Enablement and technical leadership', d: 'Workshops, lunch-and-learns, runbooks and decision records that leave a team able to run the platform without me.', href: '/vcf/library/leadership/' },
+  { icon: 'tree-structure', t: 'Architecture and design reviews', d: 'The VCF 9 fleet, instance and domain model, identity and management services, and how a 5.x estate maps onto it.', href: '/vcf/library/architecture/' },
+  { icon: 'arrow-circle-up', t: 'Upgrades from 5.x to 9.x', d: 'Readiness assessments, target builds, the order that matters, and runbooks with real go/no-go and rollback points.', href: '/vcf/library/upgrades/' },
+  { icon: 'lifebuoy', t: 'Operations and troubleshooting', d: 'Day-2 operating models, a repeatable triage method, and escalations that arrive with the evidence attached.', href: '/vcf/library/troubleshooting/' },
+  { icon: 'chalkboard-teacher', t: 'Enablement and technical leadership', d: 'Workshops, runbooks and decision records that leave a team able to run the platform without me.', href: '/vcf/library/leadership/' },
 ];
 const ld = [
   personLd(Astro.site),
@@ -27,77 +49,103 @@ const ld = [
 ];
 ---
 <Base jsonLd={ld}>
-  <section class="hero intro">
-    <div>
-      <p class="eyebrow">{SITE.author} · {SITE.role}</p>
+  <section class="home-hero">
+    <div class="home-hero-text">
+      <p class="eyebrow">{SITE.author}, {SITE.role}</p>
       <h1>I help teams design, upgrade and run VMware Cloud Foundation.</h1>
-      <p class="lede">I lead technical work on VCF 5.x and 9.x: architecture reviews, upgrade planning, day-2 operations and the hard escalations. I write down what I learn, teach it, and am building open tools for VCF Operations.</p>
+      <p class="lede">Architecture reviews, 5.x to 9.x upgrades, day-2 operations and hard escalations, written down so your team can run VCF itself.</p>
       <div class="actions">
-        <a class="btn primary" href="/vcf/">Read the VCF notes</a>
+        <a class="btn primary" href="/vcf/">Read the VCF notes <Icon name="arrow-right" size={16} /></a>
         <a class="btn" href="/about/">How I work</a>
-        <a class="btn" href="/contact/">Get in touch</a>
       </div>
-      <ul class="stats">
-        <li><strong>{notes.length}</strong><span>VCF field notes</span></li>
-        <li><strong>{CATEGORIES.length}</strong><span>topic areas</span></li>
-        <li><strong>{KB_INDEX.length}</strong><span>KBs indexed</span></li>
-        <li><strong>5</strong><span>workshop modules</span></li>
-      </ul>
+      {SITE.photo && <img class="photo" src={SITE.photo} alt={`Photo of ${SITE.author}`} width="72" height="72" />}
     </div>
-    {SITE.photo && <img class="photo" src={SITE.photo} alt={`Photo of ${SITE.author}`} width="156" height="156" />}
+    <FleetModel />
   </section>
 
-  <section>
-    <div class="section-head"><h2>What I do</h2></div>
-    <div class="grid two">
-      {focus.map((f) => <a class="card" href={f.href}><h3>{f.t}</h3><p>{f.d}</p></a>)}
+  <section class="figures" aria-label="The site in numbers">
+    <dl>
+      <div><dt>Field notes</dt><dd class="fig-n">{notes.length}</dd><dd class="fig-d">each with the 5.x and 9.x answer side by side</dd></div>
+      <div><dt>Reading paths</dt><dd class="fig-n">{paths.length}</dd><dd class="fig-d">notes in order for one job, from upgrade to on-call</dd></div>
+      <div><dt>Broadcom KBs indexed</dt><dd class="fig-n">{KB_INDEX.length}</dd><dd class="fig-d">with a one-line topic and the notes that cite them</dd></div>
+      <div><dt>Tools catalogued</dt><dd class="fig-n">{TOOLS.length}</dd><dd class="fig-d">for planning, upgrading, diagnosing and automating VCF 9</dd></div>
+    </dl>
+  </section>
+
+  <section class="block">
+    <h2 class="block-h">What I do</h2>
+    <div class="focus">
+      {focus.map((f) => (
+        <a href={f.href}>
+          <span class="focus-ic"><Icon name={f.icon} size={22} /></span>
+          <h3>{f.t}</h3>
+          <p>{f.d}</p>
+        </a>
+      ))}
     </div>
   </section>
 
-  <section>
-    <div class="section-head"><h2>Selected work</h2></div>
-    <div class="grid two">
-      <a class="card feature" href="/vcf/">
-        <span class="kicker">Knowledge base</span>
-        <h3>{SITE.vcfName}</h3>
-        <p>{notes.length} notes across {CATEGORIES.length} areas. Each one sets the VCF 5.x and 9.x answers side by side, links the Broadcom KBs that back it up, and credits its sources.</p>
+  <section class="block">
+    <h2 class="block-h">Selected work</h2>
+    <div class="bento">
+      <a class="tile tile-notes" href="/vcf/">
+        <div>
+          <h3>{SITE.vcfName}</h3>
+          <p>{notes.length} notes in {CATEGORIES.length} areas. Each one sets the 5.x and 9.x answers side by side, links the KBs behind it and credits its sources.</p>
+        </div>
+        <div class="peek" aria-hidden="true">
+          <div class="peek-cap"><span>What changed from 5.x</span><span class="muted">from the fleet model note</span></div>
+          <table>
+            <thead><tr><th></th><th class="v5">VCF 5.x</th><th class="v9">VCF 9.x</th></tr></thead>
+            <tbody>{peek.map(([t, a, b]) => <tr><td>{t}</td><td>{a}</td><td>{b}</td></tr>)}</tbody>
+          </table>
+        </div>
+        <ul class="areas" aria-label="Areas">{perArea.map((c) => <li>{c.short}<span>{c.n}</span></li>)}</ul>
       </a>
-      <a class="card" href="/talks/">
-        <span class="kicker">Enablement</span>
+      <a class="tile tile-talks" href="/talks/">
         <h3>A five-part VCF 9 workshop series</h3>
-        <p>Architecture, upgrades, integrations, licensing and troubleshooting, built once and delivered to engineers and to customers.</p>
+        <ol class="modules">{modules.map((m) => <li>{m}</li>)}</ol>
+        <span class="tile-go">Delivered to engineers and to customers <Icon name="arrow-right" size={15} /></span>
       </a>
-      <a class="card" href="/vcf/resources/triage-cheat-sheet/">
-        <span class="kicker">Method</span>
-        <h3>VCF 9.x triage cheat sheet</h3>
-        <p>Eight checks in order, each with a command, what a good result looks like and what to do when it is not. Prints on two pages.</p>
+      <a class="tile tile-sheet" href="/vcf/resources/triage-cheat-sheet/">
+        <div>
+          <h3>VCF 9.x triage cheat sheet</h3>
+          <p>Eight checks in order, each with a command, what good looks like and what to do when it is not.</p>
+        </div>
+        <Image src={triageSheet} alt="First page of the triage cheat sheet: eight numbered checks, each with a command and the expected result." widths={[280, 560]} sizes="(max-width: 820px) 60vw, 280px" />
       </a>
-      <a class="card" href="/vcf/tools/">
-        <span class="kicker">Catalogue</span>
+      <a class="tile tile-tools" href="/vcf/tools/">
         <h3>Tools for VCF 9.x</h3>
-        <p>The official, Fling and community tools worth knowing, grouped by job, with support status and a link to each publisher.</p>
+        <p>The tools worth knowing, grouped by job, with support status and a link to each publisher.</p>
+        <dl class="mini">{makers.map((m) => <div><dt>{m.label}</dt><dd class="num">{m.n}</dd></div>)}</dl>
       </a>
-      <a class="card" href="/projects/">
-        <span class="kicker">Open tools</span>
-        <h3>Tools for VCF Operations</h3>
-        <p>{projects.length ? `${projects.length} tool${projects.length > 1 ? 's' : ''} for VCF Operations 9.1.1 and later.` : 'Scripts, agents and management packs for VCF Operations 9.1.1 and later. The first ones are in development.'}</p>
+      <a class="tile tile-open" href="/projects/">
+        <span class="focus-ic"><Icon name="toolbox" size={22} /></span>
+        <div>
+          <h3>Open tools for VCF Operations</h3>
+          <p>{projects.length > 1 ? `${projects.length} scripts, agents and management packs` : 'Scripts, agents and management packs'} for VCF Operations 9.1.1 and later, least privilege by default. The first ones are in development.</p>
+          <ul class="ticks">
+            <li><Icon name="check" size={15} />Read-only service accounts</li>
+            <li><Icon name="check" size={15} />A compatibility matrix for each tool</li>
+            <li><Icon name="check" size={15} />Open source</li>
+          </ul>
+        </div>
       </a>
     </div>
   </section>
 
-  {projects.length > 0 && (
-    <section>
-      <div class="section-head"><h2>Projects</h2><a class="small" href="/projects/">All projects</a></div>
-      <ul class="list">
-        {projects.slice(0, 4).map((p) => <li><a href={projectUrl(p)}><span class="t">{p.data.displayName}</span><span class="status">{p.data.status}</span><span class="d">{p.data.summary}</span></a></li>)}
-      </ul>
-    </section>
-  )}
+  <section class="block">
+    <div class="block-head"><h2 class="block-h">Latest writing</h2><a href="/blog/">All posts <Icon name="arrow-right" size={14} /></a></div>
+    <ol class="dated">
+      {latest.map((i) => (
+        <li><a href={i.href}><time class="num" datetime={i.date.toISOString()}>{fmtDate(i.date)}</time><span class="t">{i.title}</span><span class="k">{i.kind}</span></a></li>
+      ))}
+    </ol>
+  </section>
 
-  <section>
-    <div class="section-head"><h2>Latest writing</h2><span class="small"><a href="/blog/">Blog</a> · <a href="/vcf/library/">All VCF notes</a></span></div>
-    <ul class="list">
-      {latest.map((i) => <li><a href={i.href}><span class="t">{i.title}</span><span class="small muted">{i.kind} · {fmtDate(i.date)}</span><span class="d">{i.d}</span></a></li>)}
-    </ul>
+  <section class="closing">
+    <h2>Working through a VCF 9 upgrade, or an escalation that will not close?</h2>
+    <p>Tell me where it stands and what has been tried so far.</p>
+    <a class="btn primary" href="/contact/">Contact</a>
   </section>
 </Base>

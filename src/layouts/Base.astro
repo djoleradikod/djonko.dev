@@ -1,5 +1,8 @@
 ---
+import '@fontsource-variable/geist';
+import '@fontsource-variable/geist-mono';
 import '../styles/global.css';
+import Icon from '../components/Icon.astro';
 import { SITE, indexable } from '../data/site';
 
 interface Props { title?: string; description?: string; noindex?: boolean; jsonLd?: object | object[]; ogType?: string; ogImage?: string }
@@ -67,7 +70,8 @@ const links = [
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={title ?? SITE.name} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="theme-color" content="#0f766e" />
+    <meta name="theme-color" content="#f6f7f9" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b0e13" media="(prefers-color-scheme: dark)" />
     {robotsOff && <meta name="robots" content="noindex" />}
     {ld.map((o) => <script type="application/ld+json" set:html={JSON.stringify(o)} />)}
     <script is:inline>
@@ -81,11 +85,11 @@ const links = [
         <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">JD</span>{SITE.name}</a>
         <nav class="nav" aria-label="Main">
           {nav.map((n) => <a href={n.href} aria-current={path.startsWith(n.href) ? 'page' : undefined}>{n.label}</a>)}
-          <a class="icon-btn" id="qs-open" href="/search/" aria-label="Search" title="Search (press / or Ctrl+K)" aria-keyshortcuts="/ Control+K Meta+K" aria-current={path.startsWith('/search/') ? 'page' : undefined}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <a class="icon-btn search-btn" id="qs-open" href="/search/" aria-label="Search" title="Search (press / or Ctrl+K)" aria-keyshortcuts="/ Control+K Meta+K" aria-current={path.startsWith('/search/') ? 'page' : undefined}>
+            <Icon name="magnifying-glass" size={16} /><span class="search-txt">Search</span><kbd aria-hidden="true">/</kbd>
           </a>
-          <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <button class="icon-btn theme-ic" id="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
+            <Icon name="moon" size={16} class="moon" /><Icon name="sun" size={16} class="sun" />
           </button>
         </nav>
       </div>
@@ -97,9 +101,44 @@ const links = [
     </main>
     <footer class="site-footer">
       <div class="wrap">
-        <div><strong>{SITE.author} · {SITE.role}</strong>{links.map((l) => <> · <a href={l.href} rel="me noopener" target="_blank">{l.label}</a></>)} · <a href="/contact/">Contact</a> · <a href="/rss.xml">RSS</a> · <a href="/offline/">Offline reading</a></div>
-        <div>{SITE.disclaimer}</div>
-        <div>{SITE.affiliation} KB links point to the public Broadcom knowledge base.</div>
+        <div class="foot-grid">
+          <div class="foot-brand">
+            <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">JD</span>{SITE.name}</a>
+            <p>{SITE.author}, {SITE.role}. Notes, tools and workshops for running VMware Cloud Foundation.</p>
+          </div>
+          <nav aria-label="VCF notes">
+            <h2>VCF notes</h2>
+            <ul>
+              <li><a href="/vcf/library/">Library</a></li>
+              <li><a href="/vcf/paths/">Reading paths</a></li>
+              <li><a href="/vcf/tools/">Tools for VCF 9.x</a></li>
+              <li><a href="/vcf/resources/kb-index/">KB index</a></li>
+              <li><a href="/vcf/resources/triage-cheat-sheet/">Triage cheat sheet</a></li>
+            </ul>
+          </nav>
+          <nav aria-label="Site">
+            <h2>Site</h2>
+            <ul>
+              <li><a href="/blog/">Blog</a></li>
+              <li><a href="/projects/">Projects</a></li>
+              <li><a href="/talks/">Talks</a></li>
+              <li><a href="/about/">About</a></li>
+              <li><a href="/contact/">Contact</a></li>
+            </ul>
+          </nav>
+          <nav aria-label="Elsewhere">
+            <h2>Elsewhere</h2>
+            <ul>
+              {links.map((l) => <li><a href={l.href} rel="me noopener" target="_blank">{l.label}</a></li>)}
+              <li><a href="/rss.xml">RSS feed</a></li>
+              <li><a href="/offline/">Offline reading</a></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="foot-legal">
+          <span>{SITE.disclaimer}</span>
+          <span>{SITE.affiliation} KB links point to the public Broadcom knowledge base.</span>
+        </div>
       </div>
     </footer>
     <dialog id="zoom" class="zoom" aria-label="Enlarged image">

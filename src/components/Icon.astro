@@ -1,0 +1,12 @@
+---
+// One icon from Phosphor (regular weight), inlined at build time so it costs no request.
+// Usage: <Icon name="magnifying-glass" size={18} />. Names: https://phosphoricons.com
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+interface Props { name: string; size?: number; label?: string; class?: string }
+const { name, size = 20, label, class: cls } = Astro.props;
+const raw = readFileSync(join(process.cwd(), 'node_modules/@phosphor-icons/core/assets/regular', `${name}.svg`), 'utf8');
+const inner = raw.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
+---
+<svg class:list={['ic', cls]} viewBox="0 0 256 256" width={size} height={size} fill="currentColor" xmlns="http://www.w3.org/2000/svg"
+  role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : 'true'} focusable="false" set:html={inner} />
