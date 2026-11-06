@@ -2,6 +2,7 @@
 // Two ways to use it:
 //   <Compare title="..." rows={[["Topic", "5.x text", "9.x text"], ...]} />
 //   <Compare title="..."><Fragment slot="v5">...</Fragment><Fragment slot="v9">...</Fragment></Compare>
+// The explicit roles keep this a table for screen readers when a phone stacks its rows (see global.css).
 interface Props { title?: string; rows?: [string, string, string][]; v5Label?: string; v9Label?: string }
 const { title = 'What changed from 5.x', rows, v5Label = 'VCF 5.x', v9Label = 'VCF 9.x' } = Astro.props;
 ---
@@ -9,9 +10,9 @@ const { title = 'What changed from 5.x', rows, v5Label = 'VCF 5.x', v9Label = 'V
   <div class="cap">{title}</div>
   {rows ? (
     <div class="table-wrap">
-      <table>
-        <thead><tr><th></th><th class="v5">{v5Label}</th><th class="v9">{v9Label}</th></tr></thead>
-        <tbody>{rows.map(([t, a, b]) => <tr><td>{t}</td><td set:html={a} /><td set:html={b} /></tr>)}</tbody>
+      <table role="table">
+        <thead role="rowgroup"><tr role="row"><td role="cell"></td><th role="columnheader" scope="col" class="v5">{v5Label}</th><th role="columnheader" scope="col" class="v9">{v9Label}</th></tr></thead>
+        <tbody role="rowgroup">{rows.map(([t, a, b]) => <tr role="row"><th role="rowheader" scope="row">{t}</th><td role="cell" class="v5" data-label={v5Label} set:html={a} /><td role="cell" class="v9" data-label={v9Label} set:html={b} /></tr>)}</tbody>
       </table>
     </div>
   ) : (

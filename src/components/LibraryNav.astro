@@ -1,0 +1,72 @@
+---
+// The library from inside a note: nine areas with note counts, the current area open and the current
+// note marked. Sidebar pattern borrowed from Starlight (MIT, docs/research/R1-reuse.md): native
+// <details> groups, no script needed to expand one.
+//
+// The whole panel is one <details>: open for the desktop rail, closed before first paint below 1100px
+// by the inline script here, so it opens with a tap on a phone and stays open without JavaScript.
+import { CATEGORIES, categoryById } from '../data/categories';
+import { allArticles, urlOf, type Article } from '../lib/articles';
+
+interface Props { current: Article }
+const { current } = Astro.props;
+const items = await allArticles();
+
+// Note titles are sentences. Before the colon is the name, unless two notes in the area would then share it.
+const shortTitle = (t: string) => { const i = t.indexOf(': '); return i >= 8 ? t.slice(0, i) : t; };
+const areas = CATEGORIES.map((c) => {
+  const notes = items.filter((a) => a.data.category === c.id);
+  const names = notes.map((n) => shortTitle(n.data.title));
+  return {
+    id: c.id, short: c.short, count: notes.length,
+    notes: notes.map((n, i) => ({
+      id: n.id, href: urlOf(n),
+      label: names.filter((x) => x === names[i]).length > 1 ? n.data.title : names[i],
+    })),
+  };
+});
+const area = categoryById(current.data.category);
+---
+<div class="lib-col" data-pagefind-ignore>
+  <details class="lib" id="lib" open>
+    <summary class="lib-sum">Library <span>{area.short}</span></summary>
+    <nav class="lib-nav" aria-label="VCF notes library">
+      <a class="lib-all" href="/vcf/library/">Library<span class="lib-n">{items.length}<span class="sr-only"> notes</span></span></a>
+      <ul>
+        {areas.map((c) => (
+          <li>
+            <details class={`lib-area${c.id === area.id ? ' here' : ''}`} open={c.id === area.id}>
+              <summary>{c.short}<span class="lib-n">{c.count}<span class="sr-only"> notes</span></span></summary>
+              <ul class="lib-notes">
+                <li><a href={`/vcf/library/${c.id}/`}>Overview</a></li>
+                {c.notes.map((n) => <li><a href={n.href} aria-current={n.id === current.id ? 'page' : undefined}>{n.label}</a></li>)}
+              </ul>
+            </details>
+          </li>
+        ))}
+      </ul>
+      <ul class="lib-more">
+        <li><a href="/vcf/paths/">Reading paths</a></li>
+        <li><a href="/vcf/tools/">Tools for VCF 9.x</a></li>
+        <li><a href="/vcf/resources/kb-index/">KB index</a></li>
+      </ul>
+    </nav>
+  </details>
+  <script is:inline>
+    window.railSync = function (el) {
+      var wide = matchMedia('(min-width:1100px)');
+      function sync() { el.open = wide.matches; }
+      sync();
+      wide.addEventListener('change', sync);
+    };
+    (function () {
+      var lib = document.getElementById('lib');
+      railSync(lib);
+      // Keep the current note in view when the list is taller than the rail.
+      var here = lib.querySelector('[aria-current="page"]');
+      if (!here || !lib.open) return;
+      var a = here.getBoundingClientRect(), b = lib.getBoundingClientRect();
+      if (a.bottom > b.bottom - 24) lib.scrollTop = a.top - b.top - b.height / 3;
+    })();
+  </script>
+</div>
