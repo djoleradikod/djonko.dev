@@ -1,96 +1,223 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
-import VersionBadges from '../../components/VersionBadges.astro';
 import SearchBox from '../../components/SearchBox.astro';
-import { CATEGORIES } from '../../data/categories';
+import { CATEGORIES, categoryById } from '../../data/categories';
+import { DECISION_NOTES, summaryLine } from '../../data/decisions';
+import { AXIS, CURRENT_RELEASE, MUST_APPEAR_IN_NOTE, NEXT_RELEASE, SUPPORT_ENDS, SUPPORT_NOTE } from '../../data/releases';
 import { SITE } from '../../data/site';
 import { KB_INDEX } from '../../data/kb';
 import { TOOLS } from '../../data/tools';
 import { allArticles, urlOf } from '../../lib/articles';
 import { readingPaths } from '../../lib/paths';
-import { fmtDate } from '../../lib/posts';
 
 const items = await allArticles();
-const latest = [...items].sort((a, b) => +(b.data.updated ?? b.data.pubDate) - +(a.data.updated ?? a.data.pubDate)).slice(0, 6);
 const paths = await readingPaths();
 const byId = new Map(items.map((a) => [a.id, a]));
+const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+const area = (a: { data: { category: string } }) => categoryById(a.data.category).short;
+const note = (id: string) => {
+  const a = byId.get(id);
+  if (!a) throw new Error(`The VCF hub names "${id}", which is not a published note.`);
+  return a;
+};
+
 const start = [
-  { icon: 'tree-structure', label: 'New to VCF 9', note: byId.get('architecture/vcf9-mental-model') },
-  { icon: 'list-checks', label: 'Something is broken', href: '/vcf/resources/triage-cheat-sheet/', title: 'The VCF 9.x triage cheat sheet' },
-  { icon: 'arrow-circle-up', label: 'Planning an upgrade', href: '/vcf/paths/upgrade-52-to-9/', title: `Reading path: ${paths.find((p) => p.id === 'upgrade-52-to-9')?.title}` },
+  { label: 'New to VCF 9', note: byId.get('architecture/vcf9-mental-model') },
+  { label: 'Something is broken', href: '/vcf/resources/triage-cheat-sheet/', title: 'The VCF 9.x triage cheat sheet' },
+  { label: 'Planning an upgrade', href: '/vcf/paths/upgrade-52-to-9/', title: `Reading path: ${paths.find((p) => p.id === 'upgrade-52-to-9')?.title}` },
 ];
+
+// Where things stand. The dates live in src/data/releases.ts; the note is what they answer to.
+const clock = note(SUPPORT_NOTE);
+const stale = MUST_APPEAR_IN_NOTE.filter((s) => !(clock.body ?? '').includes(s));
+if (stale.length) throw new Error(`src/data/releases.ts no longer matches ${SUPPORT_NOTE}. Not found in the note: ${stale.join(' | ')}`);
+const t0 = Date.parse(AXIS.from), t1 = Date.parse(AXIS.to);
+const at = (iso: string) => ((Date.parse(iso) - t0) / (t1 - t0)) * 100;
+const pct = (n: number) => `${n.toFixed(2)}%`;
+const ticks = AXIS.ticks.map((t) => ({ ...t, left: pct(at(t.iso)) }));
+
+// Recently changed: the notes with an `updated` date, newest first. Notes first published that day lead a tie.
+const changed = items
+  .filter((a) => a.data.updated)
+  .sort((a, b) => +b.data.updated! - +a.data.updated! || +b.data.pubDate - +a.data.pubDate || a.data.title.localeCompare(b.data.title));
+const lastDay = changed[0]?.data.updated;
+const sameDay = changed.filter((a) => +a.data.updated! === +lastDay!);
+const isNew = (a: (typeof changed)[number]) => +a.data.pubDate >= +a.data.updated!;
+const newCount = sameDay.filter(isNew).length;
+const recent = changed.slice(0, 8);
+
+const decisions = DECISION_NOTES.map(note);
 const reference = [
-  { icon: 'toolbox', href: '/vcf/tools/', t: 'Tools for VCF 9.x', d: `${TOOLS.length} official, Fling and community tools, grouped by job.` },
-  { icon: 'list-checks', href: '/vcf/resources/triage-cheat-sheet/', t: 'Triage cheat sheet', d: 'Eight checks in order. Prints on two pages.' },
-  { icon: 'book-open-text', href: '/vcf/resources/kb-index/', t: 'KB index', d: `${KB_INDEX.length} public KBs, each with the notes that cite it.` },
-  { icon: 'translate', href: '/vcf/resources/glossary/', t: '5.x to 9.x glossary', d: 'Old names, new names, and what changed underneath.' },
+  { href: '/vcf/tools/', t: 'Tools for VCF 9.x', d: `${TOOLS.length} official, Fling and community tools, grouped by job.` },
+  { href: '/vcf/resources/triage-cheat-sheet/', t: 'Triage cheat sheet', d: 'Eight checks in order. Prints on two pages.' },
+  { href: '/vcf/resources/kb-index/', t: 'KB index', d: `${KB_INDEX.length} public KBs, each with the notes that cite it.` },
+  { href: '/vcf/resources/glossary/', t: '5.x to 9.x glossary', d: 'Old names, new names, and what changed underneath.' },
 ];
 ---
-<Base title={SITE.vcfName} description={SITE.vcfTagline}>
-  <section class="hub-hero">
-    <div>
-      <p class="eyebrow">{SITE.vcfName}</p>
-      <h1>Field notes for running VMware Cloud Foundation 5.x and 9.x</h1>
-      <p class="lede">Short notes on how VCF is built, upgraded, licensed, operated and fixed. Each one sets the 5.x and 9.x answers side by side and links the KBs behind them.</p>
-      <SearchBox />
+<Base title={SITE.vcfName} description={SITE.vcfTagline} shell page="hub">
+  <div class="hub" id="content-start" tabindex="-1">
+    <div class="wrap hub-top">
+      <div>
+        <h1>Field notes for running VMware Cloud Foundation 5.x and 9.x</h1>
+        <p class="note-lede">Notes on how VCF is built, upgraded, licensed, operated and fixed. Where 5.x and 9.x differ they say how, and each one links the KBs and sources behind it.</p>
+        <SearchBox />
+      </div>
+      <nav class="hub-start" aria-labelledby="start-h">
+        <h2 id="start-h">Where to start</h2>
+        <ul>
+          {start.map((s) => {
+            const href = s.note ? urlOf(s.note) : s.href;
+            const title = s.note ? s.note.data.title : s.title;
+            return href && <li><a href={href}><span class="l">{s.label}</span><span class="t">{title}</span></a></li>;
+          })}
+        </ul>
+      </nav>
     </div>
-    <nav class="start" aria-labelledby="start-h">
-      <h2 id="start-h">Where to start</h2>
-      <ul>
-        {start.map((s) => {
-          const href = s.note ? urlOf(s.note) : s.href;
-          const title = s.note ? s.note.data.title : s.title;
-          return href && <li><a href={href}><span class="focus-ic"><Icon name={s.icon} size={20} /></span><span><span class="start-l">{s.label}</span><span class="start-t">{title}</span></span><Icon name="arrow-right" size={16} class="start-go" /></a></li>;
+
+    <section class="stand" aria-labelledby="stand-h">
+      <div class="wrap stand-in">
+        <div class="stand-side">
+          <h2 id="stand-h">Where things stand</h2>
+          <dl>
+            <div>
+              <dt>Current release</dt>
+              <dd class="stand-now">{CURRENT_RELEASE.name}</dd>
+              <dd><time datetime={CURRENT_RELEASE.iso}>{CURRENT_RELEASE.date}</time></dd>
+            </div>
+            <div>
+              <dt>Next release</dt>
+              <dd>{NEXT_RELEASE.name}. Planned "{NEXT_RELEASE.plan}"</dd>
+            </div>
+          </dl>
+          <p class="stand-src">
+            <a href={urlOf(clock)}>{clock.data.title}</a>
+            {clock.data.reviewed && <span>Sources checked {fmt(clock.data.reviewed)}.</span>}
+            {clock.data.reviewDue && <span>Next check due {fmt(clock.data.reviewDue)}.</span>}
+          </p>
+        </div>
+        <div class="stand-main">
+          <p class="stand-lead">{summaryLine(clock.data.description)}</p>
+          <table class="clock" role="table">
+            <caption class="sr-only">General support ends, drawn to scale from {AXIS.fromLabel}</caption>
+            <thead role="rowgroup">
+              <tr role="row">
+                <th role="columnheader" scope="col" class="clock-item">Release</th>
+                <th role="columnheader" scope="col" class="clock-cell clock-axis">
+                  <span class="sr-only">Timeline, to scale</span>
+                  <span class="clock-ticks" aria-hidden="true"><span>{AXIS.fromLabel}</span>{ticks.map((t) => <span style={`left:${t.left}`}>{t.label}</span>)}</span>
+                </th>
+                <th role="columnheader" scope="col" class="clock-date">General support ends</th>
+                <th role="columnheader" scope="col" class="clock-basis">Basis</th>
+              </tr>
+            </thead>
+            <tbody role="rowgroup">
+              {SUPPORT_ENDS.map((r) => (
+                <tr role="row">
+                  <th role="rowheader" scope="row" class="clock-item">{r.item}</th>
+                  <td role="cell" class="clock-cell">
+                    {ticks.map((t) => <i class="clock-g" style={`left:${t.left}`}></i>)}
+                    <span class="clock-track" aria-hidden="true">
+                      <i class={`clock-bar ${r.family}${r.unresolvedTo ? ' open' : ''}`} style={`width:${pct(at(r.end))}`}></i>
+                      {r.unresolvedTo && <i class="clock-span" style={`left:${pct(at(r.end))};width:${pct(at(r.unresolvedTo) - at(r.end))}`}></i>}
+                    </span>
+                  </td>
+                  <td role="cell" class="clock-date">{r.date}</td>
+                  <td role="cell" class="clock-basis">{r.anchor ? <a class="clock-unres" href={`${urlOf(clock)}#${r.anchor}`}>{r.basis}</a> : r.basis}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div class="stand-foot">
+            <ul class="clock-keys" aria-label="Key">
+              <li><i class="v5"></i>VCF 5.x</li>
+              <li><i class="v9"></i>VCF 9.x</li>
+              <li><i class="other"></i>vSphere 8</li>
+              <li><i class="dash"></i>Unresolved span</li>
+            </ul>
+            <p>Drawn to scale from {AXIS.fromLabel}. The end of the 9.1 bar uses the derived day, 12 Aug 2028; Broadcom states the month.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap hub-sec" aria-labelledby="new-h">
+      <div class="hub-rail">
+        <h2 id="new-h">Recently changed</h2>
+        {lastDay && <p>{sameDay.length} {sameDay.length === 1 ? 'note' : 'notes'} changed on {fmt(lastDay)}{newCount > 0 && `, ${newCount} of them new`}.</p>}
+      </div>
+      <ol class="hub-rows rows-new">
+        {recent.map((a, i) => {
+          const d = a.data.updated!;
+          const repeat = i > 0 && +recent[i - 1].data.updated! === +d;
+          return (
+            <li><a href={urlOf(a)}>
+              <time class:list={[repeat && 'rep']} datetime={d.toISOString().slice(0, 10)}>{fmt(d)}</time>
+              <span class="t">{a.data.title}{isNew(a) && <span class="badge chg-new">New</span>}</span>
+              <span class="k">{area(a)}</span>
+            </a></li>
+          );
         })}
+      </ol>
+    </section>
+
+    <section class="wrap hub-sec" aria-labelledby="dec-h">
+      <div class="hub-rail">
+        <h2 id="dec-h">Decision notes</h2>
+        <p>For when you have to choose a route, a target or a design.</p>
+      </div>
+      <ul class="hub-rows rows-dec">
+        {decisions.map((a) => (
+          <li><a href={urlOf(a)}>
+            <span class="t">{a.data.title}</span>
+            <span class="d">{summaryLine(a.data.description)}</span>
+            <span class="k">{area(a)}</span>
+          </a></li>
+        ))}
       </ul>
-    </nav>
-  </section>
+    </section>
 
-  <section class="block" aria-labelledby="paths-h">
-    <div class="block-head"><h2 class="block-h" id="paths-h">Reading paths</h2><a href="/vcf/paths/">All paths <Icon name="arrow-right" size={14} /></a></div>
-    <p class="block-sub">Notes in order for one job. Progress is kept in your browser.</p>
-    <div class="paths">
-      {paths.map((p) => (
-        <a class="path-card" href={`/vcf/paths/${p.id}/`} data-path-steps={p.steps.join(' ')}>
-          <span class="who">{p.who}</span>
-          <h3>{p.title}</h3>
-          <p>{p.blurb}</p>
-          <span class="segs" aria-hidden="true">{p.steps.map(() => <i></i>)}</span>
-          <span class="path-meta num">{p.notes.length} notes · about {p.minutes} min <span class="path-progress" hidden></span></span>
-        </a>
-      ))}
-    </div>
-  </section>
+    <section class="wrap hub-sec" aria-labelledby="paths-h">
+      <div class="hub-rail">
+        <h2 id="paths-h">Reading paths</h2>
+        <p>Notes in order for one job. Progress is kept in your browser.</p>
+        <a class="hub-all" href="/vcf/paths/">All paths <Icon name="arrow-right" size={14} /></a>
+      </div>
+      <ul class="hub-rows rows-path">
+        {paths.map((p) => (
+          <li><a href={`/vcf/paths/${p.id}/`} data-path-steps={p.steps.join(' ')}>
+            <span class="t">{p.title}</span>
+            <span class="k">{p.who}</span>
+            <span class="segs" aria-hidden="true">{p.steps.map(() => <i></i>)}</span>
+            <span class="k num">{p.notes.length} notes, about {p.minutes} min <span class="path-progress" hidden></span></span>
+          </a></li>
+        ))}
+      </ul>
+    </section>
 
-  <section class="block" aria-labelledby="lib-h">
-    <div class="block-head"><h2 class="block-h" id="lib-h">Library</h2><a href="/vcf/library/">All {items.length} notes <Icon name="arrow-right" size={14} /></a></div>
-    <ul class="areas-index">
-      {CATEGORIES.map((c) => (
-        <li><a href={`/vcf/library/${c.id}/`}>
-          <Icon name={c.icon} size={22} />
-          <span class="ai-t">{c.short}</span>
-          <span class="ai-n num">{items.filter((a) => a.data.category === c.id).length}</span>
-          <span class="ai-d">{c.blurb}</span>
-        </a></li>
-      ))}
-    </ul>
-  </section>
+    <section class="wrap hub-sec" aria-labelledby="lib-h">
+      <div class="hub-rail">
+        <h2 id="lib-h">Library</h2>
+        <a class="hub-all" href="/vcf/library/">All {items.length} notes <Icon name="arrow-right" size={14} /></a>
+      </div>
+      <ul class="hub-rows rows-area">
+        {CATEGORIES.map((c) => (
+          <li><a href={`/vcf/library/${c.id}/`}>
+            <span class="t">{c.short}<span class="n num">{items.filter((a) => a.data.category === c.id).length}<span class="sr-only"> notes</span></span></span>
+            <span class="d">{c.blurb}</span>
+          </a></li>
+        ))}
+      </ul>
+    </section>
 
-  <section class="block" aria-labelledby="ref-h">
-    <div class="block-head"><h2 class="block-h" id="ref-h">Reference</h2><a href="/vcf/resources/">All resources <Icon name="arrow-right" size={14} /></a></div>
-    <div class="ref-row">
-      {reference.map((r) => <a href={r.href}><Icon name={r.icon} size={22} /><h3>{r.t}</h3><p>{r.d}</p></a>)}
-    </div>
-  </section>
-
-  <section class="block" aria-labelledby="new-h">
-    <h2 class="block-h" id="new-h">Recently updated</h2>
-    <ol class="dated">
-      {latest.map((a) => {
-        const d = a.data.updated ?? a.data.pubDate;
-        return <li><a href={urlOf(a)}><time class="num" datetime={d.toISOString()}>{fmtDate(d)}</time><span class="t">{a.data.title}</span><VersionBadges versions={a.data.versions} /></a></li>;
-      })}
-    </ol>
-  </section>
+    <section class="wrap hub-sec hub-last" aria-labelledby="ref-h">
+      <div class="hub-rail">
+        <h2 id="ref-h">Reference</h2>
+        <a class="hub-all" href="/vcf/resources/">All resources <Icon name="arrow-right" size={14} /></a>
+      </div>
+      <ul class="hub-rows rows-area">
+        {reference.map((r) => <li><a href={r.href}><span class="t">{r.t}</span><span class="d">{r.d}</span></a></li>)}
+      </ul>
+    </section>
+  </div>
 </Base>

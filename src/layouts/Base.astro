@@ -5,10 +5,11 @@ import '../styles/global.css';
 import Icon from '../components/Icon.astro';
 import { SITE, indexable } from '../data/site';
 
-// `shell`: the page lays out its own docs shell (note pages). Header, main and footer widen to its edges,
-// the canvas turns white, and the skip link passes the library nav to reach the note itself.
-interface Props { title?: string; description?: string; noindex?: boolean; jsonLd?: object | object[]; ogType?: string; ogImage?: string; shell?: boolean }
-const { title, description = SITE.tagline, noindex = false, jsonLd, ogType = 'website', shell = false } = Astro.props;
+// `shell`: the page lays out its own width (notes, library, hub, home). Header, main and footer widen to its
+// edges, the canvas turns white, and the skip link goes to the element with id="content-start", past any
+// library nav. `page` adds page-<name> to the body for layouts that need their own rules.
+interface Props { title?: string; description?: string; noindex?: boolean; jsonLd?: object | object[]; ogType?: string; ogImage?: string; shell?: boolean; page?: string }
+const { title, description = SITE.tagline, noindex = false, jsonLd, ogType = 'website', shell = false, page } = Astro.props;
 const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} · ${SITE.role}`;
 const path = Astro.url.pathname;
 const nav = [
@@ -80,8 +81,8 @@ const links = [
       try { const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
     </script>
   </head>
-  <body class={shell ? 'docs' : undefined}>
-    <a class="skip" href={shell ? '#note-start' : '#main'}>Skip to content</a>
+  <body class={[shell && 'docs', page && `page-${page}`].filter(Boolean).join(' ') || undefined}>
+    <a class="skip" href={shell ? '#content-start' : '#main'}>Skip to content</a>
     <header class="site-header">
       <div class="wrap">
         <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">JD</span>{SITE.name}</a>

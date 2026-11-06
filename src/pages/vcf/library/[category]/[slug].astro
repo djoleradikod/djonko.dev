@@ -52,7 +52,7 @@ const ld = {
 <Base title={a.data.title} description={a.data.description} jsonLd={ld} ogType="article" shell>
   <div class="shell">
     <LibraryNav current={a} />
-    <article class="note-grid" id="note-start" tabindex="-1" data-pagefind-body data-note={a.id}>
+    <article class="note-grid" id="content-start" tabindex="-1" data-pagefind-body data-note={a.id}>
       <header class="note-head">
         <p class="note-crumbs"><a href="/vcf/">VCF notes</a> / <a href={`/vcf/library/${cat.id}/`} data-pagefind-filter="category">{cat.short}</a></p>
         <h1>{a.data.title}</h1>

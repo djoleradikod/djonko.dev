@@ -1,39 +1,29 @@
 ---
-// The VCF 9 model at a glance: fleet, instances, domains. Shown beside the home page introduction.
-// Same content as the diagram in the note "The VCF 9 mental model", drawn for a narrow column.
+// The VCF 9 model at a glance: fleet, instances, domains. The drawing on the blue sheet of the home page.
+// Same content as the diagram in the note "The VCF 9 mental model". Real text in CSS boxes rather than an
+// SVG, so it spans the width on a desktop, reflows on a phone and stays at reading size on both.
 ---
-<figure class="fleet-model">
-  <svg class="dg" viewBox="0 0 520 424" role="img" xmlns="http://www.w3.org/2000/svg"
-    aria-label="A VCF 9 fleet: VCF Operations and VCF Automation across the whole fleet, above two VCF instances. Each instance has a management domain with SDDC Manager, vCenter, NSX and a services runtime, and one or more workload domains.">
-    <rect class="zone" x="1.5" y="1.5" width="517" height="421" rx="14" />
-    <text class="lbl" x="22" y="30">Fleet</text>
-    <rect class="box accent" x="20" y="44" width="480" height="72" rx="10" />
-    <text class="t" x="38" y="73">VCF Operations · VCF Automation</text>
-    <text class="s" x="38" y="96">Console, licensing, identity and fleet lifecycle</text>
-    <path class="wire" d="M136 116 V138 M384 116 V138" />
-    <rect class="zone" x="20" y="138" width="232" height="266" rx="10" />
-    <text class="lbl" x="36" y="162">Instance 1</text>
-    <rect class="box v9" x="34" y="174" width="204" height="100" rx="8" />
-    <text class="t" x="50" y="199">Management domain</text>
-    <text class="s" x="50" y="221">SDDC Manager</text>
-    <text class="s" x="50" y="240">vCenter · NSX</text>
-    <text class="s" x="50" y="259">Services runtime</text>
-    <rect class="box" x="34" y="286" width="204" height="52" rx="8" />
-    <text class="t" x="50" y="309">Workload domain</text>
-    <text class="s" x="50" y="328">vCenter · NSX</text>
-    <rect class="box" x="34" y="346" width="204" height="44" rx="8" />
-    <text class="t" x="50" y="373">Workload domain</text>
-    <rect class="zone" x="268" y="138" width="232" height="266" rx="10" />
-    <text class="lbl" x="284" y="162">Instance 2</text>
-    <rect class="box v9" x="282" y="174" width="204" height="100" rx="8" />
-    <text class="t" x="298" y="199">Management domain</text>
-    <text class="s" x="298" y="221">SDDC Manager</text>
-    <text class="s" x="298" y="240">vCenter · NSX</text>
-    <text class="s" x="298" y="259">Services runtime</text>
-    <rect class="box" x="282" y="286" width="204" height="104" rx="8" />
-    <text class="t" x="298" y="309">Workload domains</text>
-    <text class="s" x="298" y="328">One vCenter each,</text>
-    <text class="s" x="298" y="347">NSX own or shared</text>
-  </svg>
+<figure class="fleet">
+  <div class="fleet-zone">
+    <span class="fleet-l">Fleet</span>
+    <div class="fleet-top"><b>VCF Operations · VCF Automation</b><span>Console, licensing, identity and fleet lifecycle</span></div>
+    <div class="fleet-insts">
+      <div class="fleet-inst i1">
+        <span class="fleet-l">Instance 1</span>
+        <div class="fleet-doms">
+          <div class="fleet-dom m"><b>Management domain</b>SDDC Manager<br />vCenter · NSX<br />Services runtime</div>
+          <div class="fleet-dom"><b>Workload domain</b>vCenter · NSX</div>
+          <div class="fleet-dom"><b>Workload domain</b></div>
+        </div>
+      </div>
+      <div class="fleet-inst i2">
+        <span class="fleet-l">Instance 2</span>
+        <div class="fleet-doms">
+          <div class="fleet-dom m"><b>Management domain</b>SDDC Manager<br />vCenter · NSX<br />Services runtime</div>
+          <div class="fleet-dom"><b>Workload domains</b>One vCenter each,<br />NSX own or shared</div>
+        </div>
+      </div>
+    </div>
+  </div>
   <figcaption>VCF 9 puts a fleet and instances above the domains you knew from 5.x. <a href="/vcf/library/architecture/vcf9-mental-model/">Read the note</a></figcaption>
 </figure>

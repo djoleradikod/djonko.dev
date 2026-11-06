@@ -1,15 +1,17 @@
 ---
-// The library from inside a note: nine areas with note counts, the current area open and the current
-// note marked. Sidebar pattern borrowed from Starlight (MIT, docs/research/R1-reuse.md): native
-// <details> groups, no script needed to expand one.
+// The library rail: nine areas with note counts, the current area open and the current page marked.
+// Sidebar pattern borrowed from Starlight (MIT, docs/research/R1-reuse.md): native <details> groups, no
+// script needed to expand one.
 //
 // The whole panel is one <details>: open for the desktop rail, closed before first paint below 1100px
 // by the inline script here, so it opens with a tap on a phone and stays open without JavaScript.
+//
+// On a note, pass `current`. On an area page, pass `area`. On the library index, pass neither.
 import { CATEGORIES, categoryById } from '../data/categories';
 import { allArticles, urlOf, type Article } from '../lib/articles';
 
-interface Props { current: Article }
-const { current } = Astro.props;
+interface Props { current?: Article; area?: string }
+const { current, area: areaId } = Astro.props;
 const items = await allArticles();
 
 // Note titles are sentences. Before the colon is the name, unless two notes in the area would then share it.
@@ -25,21 +27,22 @@ const areas = CATEGORIES.map((c) => {
     })),
   };
 });
-const area = categoryById(current.data.category);
+const openId = current?.data.category ?? areaId;
+const area = openId ? categoryById(openId) : undefined;
 ---
 <div class="lib-col" data-pagefind-ignore>
   <details class="lib" id="lib" open>
-    <summary class="lib-sum">Library <span>{area.short}</span></summary>
+    <summary class="lib-sum">Library <span>{area?.short ?? `All ${items.length} notes`}</span></summary>
     <nav class="lib-nav" aria-label="VCF notes library">
-      <a class="lib-all" href="/vcf/library/">Library<span class="lib-n">{items.length}<span class="sr-only"> notes</span></span></a>
+      <a class="lib-all" href="/vcf/library/" aria-current={openId ? undefined : 'page'}>Library<span class="lib-n">{items.length}<span class="sr-only"> notes</span></span></a>
       <ul>
         {areas.map((c) => (
           <li>
-            <details class={`lib-area${c.id === area.id ? ' here' : ''}`} open={c.id === area.id}>
+            <details class={`lib-area${c.id === openId ? ' here' : ''}`} open={c.id === openId}>
               <summary>{c.short}<span class="lib-n">{c.count}<span class="sr-only"> notes</span></span></summary>
               <ul class="lib-notes">
-                <li><a href={`/vcf/library/${c.id}/`}>Overview</a></li>
-                {c.notes.map((n) => <li><a href={n.href} aria-current={n.id === current.id ? 'page' : undefined}>{n.label}</a></li>)}
+                <li><a href={`/vcf/library/${c.id}/`} aria-current={!current && c.id === openId ? 'page' : undefined}>Overview</a></li>
+                {c.notes.map((n) => <li><a href={n.href} aria-current={n.id === current?.id ? 'page' : undefined}>{n.label}</a></li>)}
               </ul>
             </details>
           </li>

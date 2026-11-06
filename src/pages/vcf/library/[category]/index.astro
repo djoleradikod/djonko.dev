@@ -1,6 +1,7 @@
 ---
 import Base from '../../../../layouts/Base.astro';
 import ArticleList from '../../../../components/ArticleList.astro';
+import LibraryNav from '../../../../components/LibraryNav.astro';
 import { CATEGORIES } from '../../../../data/categories';
 import { allArticles } from '../../../../lib/articles';
 
@@ -10,23 +11,37 @@ export async function getStaticPaths() {
 }
 const { cat, items } = Astro.props;
 ---
-<Base title={cat.title} description={cat.blurb}>
-  <p class="eyebrow"><a href="/vcf/" style="color:inherit;text-decoration:none">VCF notes</a> / <a href="/vcf/library/" style="color:inherit;text-decoration:none">Library</a></p>
-  <h1>{cat.title}</h1>
-  <p class="lede">{cat.blurb}</p>
-  <div class="pill-row" role="group" aria-label="Filter by version" id="vf">
-    <button class="pill" aria-pressed="true" data-v="">All</button>
-    <button class="pill" aria-pressed="false" data-v="5.x">Mentions 5.x</button>
-    <button class="pill" aria-pressed="false" data-v="9.0">9.0</button>
-    <button class="pill" aria-pressed="false" data-v="9.1">9.1</button>
+<Base title={cat.title} description={cat.blurb} shell>
+  <div class="shell">
+    <LibraryNav area={cat.id} />
+    <div class="lib-main" id="content-start" tabindex="-1">
+      <header class="lib-head">
+        <p class="note-crumbs"><a href="/vcf/">VCF notes</a> / <a href="/vcf/library/">Library</a></p>
+        <h1>{cat.title}</h1>
+        <p class="note-lede">{cat.blurb}</p>
+      </header>
+      <div class="lib-filters">
+        <div class="pill-row" role="group" aria-label="Filter by version" id="vf">
+          <button class="pill" aria-pressed="true" data-v="">All</button>
+          <button class="pill" aria-pressed="false" data-v="5.x">Mentions 5.x</button>
+          <button class="pill" aria-pressed="false" data-v="9.0">9.0</button>
+          <button class="pill" aria-pressed="false" data-v="9.1">9.1</button>
+        </div>
+      </div>
+      {items.length ? (
+        <>
+          <div class="nr-head" aria-hidden="true"><span class="nr-lab">Note</span><span class="nr-lab">Versions</span><span class="nr-lab">Sources checked</span></div>
+          <ArticleList items={items} />
+        </>
+      ) : <p class="muted">Notes for this category are being written.</p>}
+    </div>
   </div>
-  {items.length ? <ArticleList items={items} /> : <p class="muted">Notes for this category are being written.</p>}
   <script is:inline>
     const g = document.getElementById('vf');
     g?.addEventListener('click', (e) => {
       const b = e.target.closest('button'); if (!b) return;
       g.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-      document.querySelectorAll('.list li').forEach((li) => { li.hidden = !!b.dataset.v && !li.dataset.versions.split(' ').includes(b.dataset.v); });
+      document.querySelectorAll('.note-rows li').forEach((li) => { li.hidden = !!b.dataset.v && !li.dataset.versions.split(' ').includes(b.dataset.v); });
     });
   </script>
 </Base>
