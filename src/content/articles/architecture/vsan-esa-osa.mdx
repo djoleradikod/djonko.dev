@@ -1,69 +1,176 @@
 ---
-title: "vSAN in 9.x: ESA as the default, OSA still supported"
-description: "ESA is where every new vSAN feature lands, but OSA is not being pushed out of 9.x. The real questions are hardware, migration path and which 9.x features you need."
+title: "vSAN on VCF 9.1: ESA or OSA for each kind of estate, and what to do about what's going"
+description: "Buy ESA for new hardware. Keep all-flash OSA where the hosts can't run ESA: nothing is flagged against it. Plan exits from OSA hybrid, OSA RDMA and vVols, and clear vVols before 9.1 because Dell and Broadcom disagree on when they go. Global dedupe is GA in 9.1 and blocks stretching."
 category: architecture
 order: 7
-versions: ["5.x", "9.0", "9.1"]
+versions: ["9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
 updated: 2026-11-06
-kbs: []
+reviewed: 2026-11-06
+kbs: [401070, 326717, 432894, 433469, 382163, 459135]
 sources:
-  - title: "Upgrading VCF 5.2 to 9.0: the top 10 questions answered (vSAN OSA)"
-    url: "https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/"
-    by: "VMware Cloud Foundation blog"
-  - title: "What's new in storage with VMware Cloud Foundation 9.0"
-    url: "https://www.starwindsoftware.com/blog/whats-new-in-storage-with-vmware-cloud-foundation-9-0/"
-    by: "StarWind"
-  - title: "vSphere and VCF 9 core storage: what's new"
-    url: "https://blogs.vmware.com/cloud-foundation/2025/06/19/vsphere-and-vcf-9-core-storage-whats-new/"
-    by: "VMware Cloud Foundation blog"
-  - title: "vSAN storage clusters in VCF 9.1"
+  - title: "vSAN product support notes, VCF 9.0"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsan.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "VCF 9.1 product support notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "What's new in vSAN, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vsan.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Stretching vSAN clusters in VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/stretching-clusters.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Sharing remote vSAN datastores, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsan-deployment-administration-and-monitoring/administering-vmware-vsan/expanding-and-managing-a-vsan-cluster/sharing-remote-vsan-datastores-with-hci-mesh.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "vSAN 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vsan-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "More Capacity with VMware vSAN Compression and Global Deduplication in VCF 9.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/07/vsan-compression-and-global-deduplication-in-vcf-9-1/"
+    by: "Pete Koehler, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-05-07
+  - title: "Optimize, Modernize and Protect Your Private Cloud Storage with vSAN in VCF 9.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/05/announcing_vsan_in_vcf_9-1/"
+    by: "Tom Nagelmeyer, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-05-05
+  - title: "Greater Flexibility and Security with VMware vSAN Storage Clusters in VCF 9.1"
     url: "https://blogs.vmware.com/cloud-foundation/2026/05/12/vsan-storage-clusters-in-vcf-9-1/"
+    by: "Pete Koehler, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-05-12
+  - title: "Driving down storage costs with lower hardware requirements for vSAN"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/11/14/driving-down-storage-costs-with-lower-hardware-requirements-for-vsan/"
+    by: "Pete Koehler, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-11-14
+  - title: "Performance recommendations for vSAN ESA"
+    url: "https://blogs.vmware.com/cloud-foundation/2023/01/01/performance-recommendations-for-vsan-esa/"
     by: "VMware Cloud Foundation blog"
-  - title: "VCF 5.2 release notes (vSAN Max, ESA stretched clusters)"
-    url: "https://docs.vmware.com/en/VMware-Cloud-Foundation/5.2/rn/vmware-cloud-foundation-52-release-notes/index.html"
-    by: "VMware"
-  - title: "What's new for vSAN with VCF 9.1 (podcast with Pete Koehler)"
-    url: "https://www.yellow-bricks.com/2026/05/11/118-whats-new-for-vsan-with-vcf-9-1-featuring-pete-koehler/"
+    kind: broadcom
+  - title: "Upgrading VCF 5.2 to 9.0: the top 10 questions answered"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/"
+    by: "Jonathan McDonald, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-12-18
+  - title: "Will vSAN OSA hybrid be available in future versions?"
+    url: "https://www.yellow-bricks.com/2026/09/29/will-vsan-osa-hybrid-be-available-in-future-versions/"
     by: "Duncan Epping"
+    kind: practitioner
+    date: 2026-09-29
+  - title: "vSAN Storage Rules policy capability: the 2026 update"
+    url: "https://www.yellow-bricks.com/2026/10/01/vsan-storage-rules-policy-capability-allows-to-set-dedupe-compression-encryption-per-vm-the-2026-update/"
+    by: "Duncan Epping"
+    kind: practitioner
+    date: 2026-10-01
+  - title: "Deprecated and removed features in VCF 9.1"
+    url: "https://vinfrastructure.it/2026/05/deprecated-and-removed-features-in-vcf-9-1/"
+    by: "Andrea Mauro"
+    kind: practitioner
+    date: 2026-05-16
+  - title: "Dell Unity: vVols support ending, upgrade and migration considerations"
+    url: "https://www.dell.com/support/kbdoc/en-us/000414330/dell-unity-vvols-support-ending-upgrade-and-migration-considerations"
+    by: "Dell"
+    kind: vendor
+    date: 2026-10-07
 ---
 
 <InShort>
-VCF 5.x introduced the Express Storage Architecture (ESA). 5.2 added vSAN Max and ESA stretched clusters. In 9.x, ESA is the default for new clusters and the base for every new capability: global deduplication, vSAN-to-vSAN snapshot replication, and storage clusters, which are the renamed vSAN Max. The Original Storage Architecture (OSA) is **not deprecated** in 9.0, and Broadcom says plainly that you can keep using qualifying OSA hardware through the upgrade. Decide on ESA by hardware and features, not by fear that OSA is about to disappear.
+**New hardware gets ESA.** All-flash OSA stays where the hosts can't run ESA, because nothing has been flagged against it. OSA hybrid and OSA over RDMA carry a Broadcom discontinuation notice with no release named, so budget their exits now. vVols are the urgent one: Dell says they stop working in 9.1 and Broadcom doesn't name a release, so clear them before upgrading to 9.1. Global deduplication is GA in 9.1, on ESA only, and a cluster with it enabled can't be stretched.
 </InShort>
 
-<Compare rows={[
-  ["Default for new clusters", "OSA. ESA available from 5.1 on qualifying hardware.", "ESA"],
-  ["OSA", "Fully supported", "Still supported. Not deprecated in 9.0."],
-  ["Disaggregated storage", "vSAN Max (5.2), built on ESA", "vSAN storage clusters. In 9.1, clusters can mount remote vSAN datastores of either architecture."],
-  ["Stretched clusters", "OSA, plus ESA stretched on ReadyNodes from 5.2", "ESA and OSA. Site maintenance mode, with OSA through RPQ."],
-  ["Space efficiency", "OSA deduplication and compression per disk group", "ESA global deduplication, introduced as limited availability in 9.0"],
-  ["Data protection", "External tools", "ESA snapshot-based replication between clusters through VMware Live Recovery"],
-  ["Principal storage alternatives", "VMFS on FC and NFS v3 for converted management domains (5.2)", "VMFS on FC and NFS v3 for greenfield management domains as well"],
-]} />
+| Your estate | Do this | What would change the answer |
+|---|---|---|
+| New hardware, any size | ESA on a certified ReadyNode bill of materials, with 25 GbE or faster | A stretched or 2-node design still gets ESA, without deduplication |
+| All-flash OSA on SAS or SATA devices | Stay on OSA through 9.1. ESA at the next refresh | A need for vSAN Data Protection or global dedupe brings the refresh forward. A notice against all-flash OSA would too |
+| All-flash OSA on NVMe devices listed for ESA | Convert if you have the spare capacity and want the ESA features. Otherwise stay | Too little slack to empty hosts in turn: buy one new ESA cluster and use mixed mode |
+| OSA hybrid | Add no capacity to it. Budget replacement with ESA | A named removal release sets the deadline |
+| OSA with RDMA | Test the cluster on TCP before the removal arrives | Failing the test means a network or architecture change: price it now |
+| vVols, on any architecture | Inventory them and move them before upgrading to 9.1 | Written confirmation from Broadcom, for your exact build, that vVols still work |
 
-## How to decide
-
-**Start with hardware.** ESA has much stricter requirements than OSA: NVMe-based ReadyNodes and fast networking. Check whether existing OSA hosts qualify. If they don't, the decision is already made for this hardware generation. Upgrade to 9.x on OSA and plan ESA with the next hardware refresh.
-
-**Then ask which 9.x features you need.** The features worth paying for are ESA-only: global deduplication, cluster-to-cluster snapshot replication with short recovery points, and the newer storage cluster capabilities. If none of them matter to the customer this year, OSA on supported hardware is a defensible design.
-
-**Then plan the move.** 9.1 makes migration much easier. OSA clusters, ESA clusters and compute-only vSphere clusters can now mount remote vSAN datastores of either architecture. You can mount a new ESA storage cluster from the old OSA cluster, vMotion or Storage vMotion the workloads across, and decommission the OSA cluster without a big-bang cut-over. The VCF blog describes both the HCI-to-HCI and the HCI-to-disaggregated patterns.
-
-## Related 9.x storage changes that affect designs
-
-- **vVols are deprecated.** Removal is planned in a later 9.x release. Do not design new vVols dependencies, and plan to move vVols workloads to VMFS or vSAN.
-- **NPIV is removed** in 9.0. Some storage features are also cut back: Storage DRS I/O load balancing and the per-datastore Storage I/O Control components are gone. Space-based balancing and SPBM limits remain.
-- **4Kn NVMe** devices are supported on ESA but not on OSA.
-- **NFS** gains space reclamation through the VAAI plugin and Kerberos encryption for NFS 4.1.
-
-<Callout type="field">
-In an upgrade assessment, settle hardware before ESA or OSA: check that every host, controller and firmware combination is on the 9.x compatibility list. What the hardware supports narrows the architecture choice.
+<Callout type="analysis" title="Whose reasoning this is">
+The table is this site's inference from the sources below. Broadcom publishes the notices and limits, and doesn't tell any estate which way to go.
 </Callout>
 
-## Pitfalls
+<Callout type="note" title="Corrected on 6 November 2026">
+This note said global deduplication was limited availability and that vVols removal was planned for a later 9.x. Deduplication is GA in 9.1, and Broadcom's KB says only "future" releases. It also called OSA not deprecated without saying that hybrid and RDMA are flagged as going, and said mixed mode lets OSA clusters run to end of life, which Broadcom's post doesn't say.
+</Callout>
 
-- **Assuming 9.x forces ESA.** It does not. Upgrading on OSA is a supported path.
-- **Turning on limited-availability features in production.** Global deduplication was limited availability in 9.0, gated by approval and not supported on stretched clusters. Check its current status in the release notes before designing around it.
-- **Missing vVols during discovery.** A vVols datastore found late in an upgrade project becomes a migration project of its own. Inventory storage types on day one of the assessment.
+## What's flagged, and how firmly
+
+| Feature | Broadcom's wording | Named release | Status in 9.1 |
+|---|---|---|---|
+| OSA hybrid | ["will be discontinued in a future VCF release"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsan.html) | None | Still available, per a [May write-up](https://vinfrastructure.it/2026/05/deprecated-and-removed-features-in-vcf-9-1/) of the 9.1 notes |
+| vSAN over RDMA on OSA | Same notice, same wording | None | The 9.1 notes add nothing |
+| All-flash OSA | No notice on either page | n/a | Supported |
+| vVols | "fully discontinued in future VCF/VVF releases" (<KB id={401070} />) | None from Broadcom. **9.1, says Dell** | Disputed, see below |
+
+The 9.0 vSAN notes were last updated on 2 November. The [9.1 support notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html), updated on 5 November, read "None" under vSAN, and the [vSAN 9.1.1.0 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vsan-9-1-1-0-release-notes.html) carry no deprecation text, so the 9.0 notices stand and nothing has been added or withdrawn. <AsOf date="2026-11-06" />
+
+Duncan Epping, a Chief Technologist at Broadcom writing on his own blog, [expects hybrid to go in a major upcoming version](https://www.yellow-bricks.com/2026/09/29/will-vsan-osa-hybrid-be-available-in-future-versions/). That is his expectation, and he says no release has been named. Staying on vSAN 8 doesn't buy time past 11 October 2027, when its general support ends (<KB id={459135} />).
+
+### The vVols conflict
+
+- **Broadcom:** <KB id={401070} /> deprecates vVols from 9.0, ends vVols certification for 9.0 at once, and gives no removal release. Customers who need vVols in 9.0 may get limited-time support, case by case, through their Broadcom contact. The 9.1 support notes and the vSAN 9.1.1.0 release notes don't mention vVols at all.
+- **Dell**, an array vendor with its own migration to manage: its [Unity KB](https://www.dell.com/support/kbdoc/en-us/000414330/dell-unity-vvols-support-ending-upgrade-and-migration-considerations), modified 7 October 2026, says that from 9.1 vVols "will be removed and no longer be functional even if an array supports vVols". It also suggests that Unity customers who want to keep using vVols don't upgrade to 9.0.
+- **A practitioner write-up** of the 9.1 notes, [dated 16 May](https://vinfrastructure.it/2026/05/deprecated-and-removed-features-in-vcf-9-1/), says vVols are still available in 9.1, without citing Broadcom for that item.
+
+<Callout type="analysis">
+These can't all be settled from public pages. Broadcom's silence in the 9.1 notes leans against removal in 9.1, but silence isn't a commitment, and a broken datastore costs far more than a migration done early. So treat vVols as a blocker for the 9.1 upgrade until Broadcom confirms otherwise in writing. Ask your array vendor too, since vVols depend on its VASA provider and Broadcom has ended certification.
+</Callout>
+
+Broadcom's KB describes no migration path. Dell names Storage vMotion as the route to VMFS, with XCOPY offload from 9.0, and advises moving one VM at a time. Inventory storage types on day one of an upgrade assessment, so a vVols datastore doesn't surface late.
+
+## Global deduplication and compression in 9.1
+
+Facts from Broadcom's [May post](https://blogs.vmware.com/cloud-foundation/2026/05/07/vsan-compression-and-global-deduplication-in-vcf-9-1/) unless linked otherwise:
+
+- **Where it runs.** ESA HCI clusters of 3 to 64 hosts, and storage clusters. It isn't supported on stretched or 2-node clusters, and it now works alongside data-at-rest encryption.
+- **The decision that is hard to reverse.** [TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/stretching-clusters.html) says an ESA or storage cluster can't be stretched if global deduplication is enabled. Turning deduplication off only pauses post-processing, and deduplicated data stays deduplicated. None of the pages opened for this note says whether a cluster can be stretched after that. If stretching is on the roadmap for a cluster, ask Broadcom before enabling it.
+- **Ratios.** The launch post says ["up to 8x"](https://blogs.vmware.com/cloud-foundation/2026/05/05/announcing_vsan_in_vcf_9-1/). That is a vendor ceiling, and the deduplication post gives no ratio figures at all. Size on a measured ratio or on 1:1, as the [vSAN entitlement](/vcf/library/value/vsan-entitlement/) note works through.
+- **Compression stays on.** ZSTD replaces LZ4 on ESA, and compression is, in Broadcom's words, "an always-on feature of the cluster".
+- **Upgraded clusters gain slowly.** The health service prompts a quick, non-disruptive disk format update, and existing data keeps the old algorithm until it is rewritten. Don't count on freed capacity on upgrade day.
+- **Check your policies.** Before 9.1, the ESA "No data reduction" rule disabled compression on the objects using that policy. From 9.1 it only [filters for datastores with compression disabled](https://www.yellow-bricks.com/2026/10/01/vsan-storage-rules-policy-capability-allows-to-set-dedupe-compression-encryption-per-vm-the-2026-update/), which is how OSA has always behaved. Epping doesn't say what happens to existing policies after an upgrade, so review any that use this rule first.
+
+Protection schemes and capacity arithmetic are in [vSAN ESA space efficiency](/vcf/library/value/vsan-esa-space-efficiency/).
+
+## Can your hosts run ESA?
+
+- **Devices.** <KB id={326717} /> says there is "currently no plan" to support SAS and SATA on ESA. Drives come from the ReadyNode bill of materials, at 1 DWPD or better (1 DWPD isn't supported on the vSAN-ESA-AF-8 profile), and switching models stays within the same server OEM. This site infers that hybrid hosts and SAS or SATA all-flash hosts have no conversion route without new devices.
+- **Network.** 10 GbE is the KB's minimum. Broadcom [highly recommends 25 GbE or more](https://blogs.vmware.com/cloud-foundation/2025/11/14/driving-down-storage-costs-with-lower-hardware-requirements-for-vsan/) for new builds, and that post describes 10 Gb as supported on the smallest ReadyNode profile, for sites with legacy switches and plans to move up.
+- **Recheck old rejections.** That same November 2025 post cut the minimums: HCI MED and LRG profiles fall to 256 GB and 512 GB of RAM, for every ESA release from 8.0. A host ruled out before then may pass now.
+- **Upgrading on OSA is supported.** Broadcom's [December 2025 post](https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/) says OSA isn't "going away" in 9.0, subject to a hardware and firmware compatibility check. It speaks of OSA as a whole, so read it with the hybrid and RDMA notices.
+
+## Moving from OSA to ESA
+
+<KB id={432894} /> rules out in-place conversion. The on-disk formats and data paths differ. It gives two routes: a new ESA cluster with Storage vMotion, or emptying existing hosts of VMs, deleting their disk groups and moving them into an ESA cluster. The second destroys whatever is left on those devices.
+
+9.1 adds [mixed mode](https://blogs.vmware.com/cloud-foundation/2026/05/12/vsan-storage-clusters-in-vcf-9-1/): OSA, ESA and compute-only clusters can mount remote datastores of either architecture, so an OSA cluster can mount a new ESA datastore and vMotion workloads across as desired. The same post suggests extending the life of old OSA clusters by repurposing them as compute for a vSAN storage cluster. Check these first, from the [9.1 sharing page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsan-deployment-administration-and-monitoring/administering-vmware-vsan/expanding-and-managing-a-vsan-cluster/sharing-remote-vsan-datastores-with-hci-mesh.html):
+
+- A datastore serves up to 10 client clusters and 128 hosts. A client mounts up to 5 remote datastores.
+- Air-gapped networks and clusters with multiple vSAN VMkernel ports aren't supported. All of a VM's objects must sit on one datastore.
+- Moving to a storage cluster instead means at least four hosts with 20 TiB each and under 5 ms to clients. An HCI cluster can't be converted into one without deactivating vSAN and reconfiguring the cluster.
+
+Raise two gaps with Broadcom. That page still lists mounting different architectures as unsupported beside a note saying 9.1 allows it. The blog and the [stretching page's table](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/stretching-clusters.html) support the note, so the list looks stale. And no page opened here says whether hybrid OSA is included, so confirm that before basing a hybrid exit on mixed mode.
+
+## ESA-only features and RDMA
+
+Two requirements outrank the hardware argument for staying on OSA. Broadcom's [9.1 what's new page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vsan.html) ties global deduplication and the new compression to ESA. <KB id={433469} /> says vSAN Data Protection isn't supported on OSA and that vSAN-to-vSAN replication needs an ESA target, though it covers 5.2 and 9.0 and doesn't mention 9.1.
+
+The RDMA notice names OSA only. VMware's [ESA performance page](https://blogs.vmware.com/cloud-foundation/2023/01/01/performance-recommendations-for-vsan-esa/), updated for May 2026, says ESA supports RoCE v2 and advises RDMA only after other performance work is done. <KB id={382163} /> suggests TCP where VMware admins and networking teams can't align operationally, and gives no procedure for switching over.
