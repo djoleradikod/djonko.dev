@@ -23,6 +23,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     ['/vcf/resources/kb-index/', { title: 'Broadcom KB index for VCF 9', eyebrow: `${SITE.vcfName} · Resources` }],
     ['/vcf/resources/triage-cheat-sheet/', { title: 'VCF 9.x triage cheat sheet', eyebrow: `${SITE.vcfName} · Resources`, versions: ['9.0', '9.1'] }],
     ['/vcf/resources/glossary/', { title: 'VCF 5.x to 9.x glossary', eyebrow: `${SITE.vcfName} · Resources`, versions: ['5.x', '9.0', '9.1'] }],
+    ['/vcf/resources/how-notes-are-checked/', { title: 'How these notes are checked', eyebrow: `${SITE.vcfName} · Resources` }],
     ['/blog/', { title: 'Write-ups, case studies and walkthroughs', eyebrow: 'Blog' }],
     ['/projects/', { title: 'Open tools for VCF Operations 9.1.1+', eyebrow: 'Projects' }],
   ];

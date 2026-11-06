@@ -87,7 +87,8 @@ const ld = {
               {(a.data.reviewed || a.data.reviewDue) && (
                 <p class="sources-checked">
                   {a.data.reviewed && `Checked against this note on ${fmt(a.data.reviewed)}. `}
-                  {a.data.reviewDue && `Next check due ${fmt(a.data.reviewDue)}.`}
+                  {a.data.reviewDue && `Next check due ${fmt(a.data.reviewDue)}. `}
+                  <a href="/vcf/resources/how-notes-are-checked/">How notes are checked</a>
                 </p>
               )}
               {a.data.sources.length > 0 && (
