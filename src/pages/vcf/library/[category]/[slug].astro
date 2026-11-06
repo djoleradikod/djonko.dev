@@ -59,7 +59,7 @@ const ld = {
         <p class="note-lede">{a.data.description}</p>
         <div class="note-meta">
           <span data-pagefind-ignore><VersionBadges versions={a.data.versions} level={a.data.level} /></span>
-          <span>{a.data.reviewed ? `Sources checked ${fmtShort(a.data.reviewed)}` : `Published ${fmtShort(a.data.updated ?? a.data.pubDate)}`}</span>
+          <span>{a.data.reviewed ? `Sources checked ${fmtShort(a.data.reviewed)}` : a.data.updated ? `Updated ${fmtShort(a.data.updated)}` : `Published ${fmtShort(a.data.pubDate)}`}</span>
           <span>{readingTime(a.body)} min read</span>
           <span class="note-author">{SITE.author}, {SITE.role}</span>
         </div>
