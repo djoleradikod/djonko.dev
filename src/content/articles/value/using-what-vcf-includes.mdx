@@ -1,76 +1,281 @@
 ---
-title: "Using what the VCF licence already includes before buying more"
-description: "A VCF 9 core licence covers log management, network flow analysis, cost and capacity analytics, self-service automation, Kubernetes and workload migration. Mapping those against tools bought separately is often the quickest saving available, and the one most often missed."
+title: "What Express, VVF, VCF Edge, VCF and the Advanced Services each include: a checked matrix"
+description: "One matrix, every cell sourced and dated, as of 6 Nov 2026. Express has no add-ons and no published feature list. VVF lacks NSX networking, Automation and HCX. Edge matches VCF under site limits. No Advanced Service is included, and Broadcom's documents disagree on some VVF add-ons."
 category: value
 order: 4
-versions: ["5.x", "9.0", "9.1"]
-level: Overview
+versions: ["9.1", "9.1.1"]
+level: Practitioner
 pubDate: 2026-11-02
-kbs: [401492]
+updated: 2026-11-06
+reviewed: 2026-11-06
+reviewDue: 2027-02-15
+kbs: [401492, 439411, 313548, 428834, 440126]
 sources:
-  - title: "VMware vSphere Foundation and VMware Cloud Foundation feature comparison (9.1)"
-    url: "https://www.vmware.com/docs/vmware-vsphere-foundation-feature-comparison"
-    by: "VMware"
-  - title: "VMware Cloud Foundation 9 FAQ"
-    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-0-general-faqs"
-    by: "VMware"
-  - title: "Licensing in VMware Cloud Foundation 9.0"
-    url: "https://blogs.vmware.com/cloud-foundation/2025/06/24/licensing-in-vmware-cloud-foundation-9-0/"
+  - title: "VMware Cloud Foundation 9.1.1 and vSphere Foundation 9.1.1: Feature Comparison & Upgrade Paths"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-feature-comparison-and-upgrade-paths"
+    by: "VMware by Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "VCF 9.1 Frequently Asked Questions"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "VMware by Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "Bill of Materials 9.1.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vmware-cloud-foundation-9-1-1-0-bill-of-material.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "vSphere Express"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-express.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Advanced Services"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vcf-advanced-services.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Add-on Licenses Included in Your VCF or vSphere Foundation Subscription"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/add-on-licenses-in-vcf-9-0.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Licensing Model"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "About Licensing (VCF Operations HCX, VCF 9.1.x)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/workload-mobility/vmware-hcx-user-guide-vcf-9-0/preparing-for-hcx-installations/hcx-activation-and-licensing/about-hcx-licensing.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "License Sharing for Portability (VCF 9.0 guide)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/license-sharing/license-sharing(1).html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "What's New, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Protection and Recovery 9.1 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/protection-and-recovery/9-1/release-notes/protection-and-recovery-91-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-05-12
+  - title: "VMware Cloud Foundation Edge Specific Program Documentation, June 2026"
+    url: "https://ftpdocs.broadcom.com/cadocs/0/VCF_Edge_SPD_June2026.pdf"
+    by: "Broadcom"
+    kind: broadcom
+  - title: "Broadcom Updates VMware Portfolio to Protect and Accelerate Private AI Cloud Deployments"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/11/04/broadcom-vcf-portfolio-updates/"
     by: "VMware Cloud Foundation blog"
-  - title: "NSX load balancer entitlement change in VCF 9"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "VMware NSX Load Balancer Entitlement Changes (KB 401492)"
     url: "https://knowledge.broadcom.com/external/article/401492/"
     by: "Broadcom KB"
-  - title: "VMware software solution product guide (VCF 5 components)"
-    url: "https://lenovopress.lenovo.com/lp1265-vmware-software-solution-product-guide"
-    by: "Lenovo Press"
+    kind: broadcom
+  - title: "NSX Load Balancer to VMware Avi Load Balancer Migration (KB 439411)"
+    url: "https://knowledge.broadcom.com/external/article/439411"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "Counting Cores for VCF and vSphere Foundation and TiBs for vSAN (KB 313548)"
+    url: "https://knowledge.broadcom.com/external/article/313548/vcf-subscription-portability-policy.html"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "Purchasing a Subscription for VMware Live Recovery (KB 428834)"
+    url: "https://knowledge.broadcom.com/external/article/428834"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "HCX Licensing Requirements for Migrating to VCF Environments (KB 440126)"
+    url: "https://knowledge.broadcom.com/external/article/440126/hcx-licensing-requirements-for-migrating.html"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "VMware returns to low-end server virtualization with vSphere Express"
+    url: "https://www.theregister.com/virtualization/2026/11/04/vmware-returns-to-low-end-server-virtualization-with-vsphere-express/5307466"
+    by: "The Register"
+    kind: press
+    date: 2026-11-04
+  - title: "vSphere Express guide"
+    url: "https://www.c4cgroup.co.uk/guides/vsphere-express/"
+    by: "C4C Group"
+    kind: vendor
+    date: 2026-11-04
+  - title: "VMware vSphere Express"
+    url: "https://www.software-express.de/hersteller/vmware/vsphere/express/"
+    by: "Software Express (reseller)"
+    kind: vendor
+    date: 2026-11-05
 ---
 
 <InShort>
-The VCF 9 licence covers more than vSphere, vSAN and NSX. **VCF Operations** (including log management, network flow analysis, capacity, cost and fleet management), **VCF Automation**, the **vSphere Kubernetes Service** and **HCX** are all part of the core entitlement. Many estates still pay separately for a logging platform, a monitoring tool, a migration tool or a Kubernetes distribution that overlaps with them. Before the next renewal of any of those, check whether the included component does the job well enough. Some things that used to be included are not: from 9.0, general-purpose load balancing needs Avi (<KB id={401492} />).
+A checked comparison: Broadcom's rendered tables, TechDocs, the bill of materials and the Edge contract terms, set side by side, <AsOf date="2026-11-06" />.
+
+- **vSphere Express:** ESX, vCenter, VCF Operations for licensing only and the license server, up to 128 cores per customer, with no add-ons. Broadcom publishes no full feature list.
+- **VVF:** adds VKS, log and cost management and 0.25 TiB of vSAN per core. It has no NSX networking, VCF Automation, network flow analysis, predictive capacity or compliance management, and HCX is not a component.
+- **VCF Edge:** the Feature Comparison marks it the same as VCF on every row but one (vSAN witness). The differences are contractual: Edge Locations only, 8 cores per CPU minimum, at least 10 sites in the first year, at most 256 cores per site.
+- **VCF:** everything marked in the table, except that firewalling and general-purpose load balancing need add-ons.
+- **Advanced Services:** none is included in any edition. Broadcom's documents disagree on whether VVF can buy vDefend and Tanzu.
 </InShort>
 
-<Compare rows={[
-  ["Operations, logs, network insight", "Aria Operations, Aria Operations for Logs and for Networks, each deployed and upgraded through Aria Suite Lifecycle", "Capabilities of VCF Operations, deployed and upgraded by fleet management"],
-  ["Self-service", "Aria Automation", "VCF Automation"],
-  ["Kubernetes", "Tanzu Kubernetes Grid", "vSphere Kubernetes Service"],
-  ["NSX load balancer", "Usable for any traffic", "Infrastructure and Supervisor layer 4 only. Application load balancing needs Avi."],
-]} />
+This note describes entitlement only. It isn't advice to buy, renew or leave, and it isn't legal or purchasing advice: your order document and the program documentation for your product decide what you hold. No Broadcom page opened for this note gives a price for any of these, so none appears here.
 
-## What the core licence covers
+## Source key
 
-The table summarises the 9.1 feature comparison and FAQ. Check the current Software Product Description for your contract, because entitlements change between releases.
+Every cell ends in one of these codes. The date is the page's own, and all were opened on 6 Nov 2026.
 
-| Capability | VCF | VVF | Often bought separately as |
+| Code | Source | Page date | Covers |
 |---|---|---|---|
-| Log management | Included | Included | Central syslog or log analytics |
-| Network flow analysis | Included | Not included | Flow and topology tools |
-| Capacity, right-sizing, cost | Included | Cost included. Check capacity features. | Capacity planning, showback |
-| Self-service automation | Included | Not included | Service catalogue, provisioning scripts |
-| Kubernetes (VKS) | Included | Included | Kubernetes distribution subscriptions |
-| Workload migration (HCX) | Included | Not stated | Migration tools and services |
-| ESA snapshots for operational recovery | Included | Not stated | Short-term snapshot tools (not a backup) |
+| FC | [Feature Comparison 9.1.1](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-feature-comparison-and-upgrade-paths), read as rendered pages, with page number | 4 Nov 2026 | VVF, Edge, VCF. No Express, no HCX row. |
+| FAQ | [VCF 9.1 FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs), with question number | 4 Nov 2026 | VCF and Edge. No Express. |
+| BOM | [Bill of Materials 9.1.1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vmware-cloud-foundation-9-1-1-0-bill-of-material.html) | 5 Nov 2026 | VCF, VVF, Express components. No Edge. |
+| EXP | [vSphere Express](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-express.html) | 2 Nov 2026 | Express |
+| AS | [Advanced Services](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vcf-advanced-services.html) | 5 Nov 2026 | VCF, VVF. No Edge, no Express. |
+| ADD | [Add-on Licenses](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/add-on-licenses-in-vcf-9-0.html) | 5 Nov 2026 | VCF, VVF |
+| HCX | [About Licensing](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/workload-mobility/vmware-hcx-user-guide-vcf-9-0/preparing-for-hcx-installations/hcx-activation-and-licensing/about-hcx-licensing.html), HCX user guide for VCF 9.1.x | 5 Nov 2026 | VCF, VVF |
+| SPD | [VCF Edge Specific Program Documentation](https://ftpdocs.broadcom.com/cadocs/0/VCF_Edge_SPD_June2026.pdf) | June 2026 | Edge |
+| POST | [Broadcom portfolio post](https://blogs.vmware.com/cloud-foundation/2026/11/04/broadcom-vcf-portfolio-updates/) | 4 Nov 2026 | Express, Advanced Services |
 
-Separately licensed, even with VCF: Avi Load Balancer, vDefend Firewall, VMware Live Recovery, Private AI Foundation, and vSAN capacity above the entitlement.
+The FC has no legend, so a blank cell is read here as "No". The BOM defines neither of its marks, so a dash is read here as absence and a "Yes" as the component belonging to that product's set, which is narrower than a promise of every feature on it.
 
-## How to find the overlap
+## The matrix
 
-1. List every infrastructure tool with a renewal in the next 18 months, with its cost and the jobs it does.
-2. For each job, name the VCF component that covers it and the gaps: retention periods, integrations, reporting, compliance evidence and the skills of the team running it.
-3. Run the included component alongside the existing tool for one cycle of the work it supports, such as one month of capacity reporting or one migration wave.
-4. Decide on evidence from that trial. Record what the included component cannot do, and whether that gap matters.
+"Conflict" means two Broadcom sources disagree; each one is explained in the next section. "Not stated" means no Broadcom page opened for this note says either way.
 
-The trial step is the one teams skip. A log platform that also feeds a security operations team, for example, may have retention and search requirements that VCF Operations log management was not built for. In that case the saving may be partial: send infrastructure logs to VCF Operations and keep the external platform for the security feed at a smaller ingest volume.
+| Capability | vSphere Express | VVF | VCF Edge | VCF |
+|---|---|---|---|---|
+| **Core compute** | | | | |
+| ESX and vCenter | Included. EXP | Included. BOM | Included. SPD, FAQ Q72 | Included. BOM |
+| vMotion, HA | Included. POST | Included. FC p5 | Included. FC p5 | Included. FC p5 |
+| Distributed Switch | Included. POST | Included. FC p8 | Included. FC p8 | Included. FC p8 |
+| vCenter Quick Patching, TPM 2.0, vTPM 2.0 | Included. POST | Included. FC p4 | Included. FC p4 | Included. FC p4 |
+| DRS | Not stated. EXP refers you to sales | Included. FC p4 | Included. FC p4 | Included. FC p4 |
+| ESX live patching | Not stated. EXP refers you to sales | Included. FC p4 | Included. FC p4 | Included. FC p4 |
+| Memory tiering, vGPU | Not stated. EXP refers you to sales | Included. FC p5 | Included. FC p5 | Included. FC p5 |
+| vSphere Replication | Optional component. EXP | Included. FC p5 | Included. FC p5 | Included. FC p5, FAQ Q78 |
+| **Storage** | | | | |
+| vSAN capacity in the licence | Not stated. Absent from the EXP component list | 0.25 TiB per core. ADD | 1 TiB per core. SPD | 1 TiB per core. ADD |
+| Extra vSAN TiB | No. EXP | Add-on. FC p17 | Add-on. FC p17 | Add-on. FC p17 |
+| vSAN ESA snapshots and replication | Not stated | Included. FC p7 | Included. FC p7 | **Conflict** (6). FC p7, FAQ Q78 |
+| Object storage | Not stated | No. FC p7 | Tech preview. FC p7 | Tech preview. FC p7 |
+| vSAN witness | No. BOM | **Conflict** (9). FC p6, BOM | Included. FC p6, SPD | **Conflict** (9). FC p6, BOM |
+| **Networking** | | | | |
+| NSX overlay, routing, VPN, NAT, VPCs | No. BOM | No. FC p8-9, BOM | Included. FC p8-9 | Included. FC p8-9 |
+| Distributed and gateway firewall | No add-ons. EXP | **Conflict** (1). FC p17, AS | Add-on (vDefend). FC p13 | Add-on (vDefend). FC p13, FAQ Q15 |
+| Load balancing, without Avi | Not stated | Foundation Load Balancer and Supervisor layer 4. FC p3, p9 | Those plus NSX LB for VCF appliances. FC p9 | Those plus NSX LB for VCF appliances. FC p9, KB 401492 |
+| Network flow analysis (VCF Operations for networks) | No. BOM | No. FC p15, BOM. Flow export only, FC p9 | Included. FC p15-16, SPD | Included. FC p15-16 |
+| **Operations** | | | | |
+| VCF Operations | Licensing use only. EXP | Included, reduced set. FC p13-15 | Included. FC p13-15 | Included. FC p13-15 |
+| Log management | No. BOM | Included. FC p14, BOM | Included. FC p14 | Included. FC p14 |
+| Cost management | No. EXP | Included. FC p14 | Included. FC p14 | Included. FC p14 |
+| Real-time monitoring, predictive capacity, right-sizing | No. EXP | No. FC p14 | Included. FC p14 | Included. FC p14 |
+| Compliance for VCF components, SecOps | No. EXP | No. FC p14-15 | Included. FC p14-15 | Included. FC p14-15, FAQ Q89 |
+| Certificate, password and drift management | No. EXP | No. FC p13 | Included. FC p13 | Included. FC p13 |
+| Fleet lifecycle | No. BOM | **Conflict** (8). FC p13, BOM | Included. FC p13 | Included. FC p13 |
+| VCF Operations orchestrator | No. BOM | Included. FC p15, BOM | Included. FC p15 | Included. FC p15 |
+| **Platform and automation** | | | | |
+| VCF Automation | No. BOM | No. FC p10-13, BOM | Included. FC p10-13, SPD | Included. FC p10-13 |
+| VKS and Supervisor | No. BOM | Included. FC p3, BOM | Included. FC p3, SPD | Included. FC p3 |
+| ArgoCD, secret store, regional Harbor, VKS multi-cluster | No. BOM | No. FC p3 | Included. FC p3 | Included. FC p3 |
+| HCX | No. BOM | Not a component. Evaluation only. BOM, HCX | Not stated. Absent from FC and SPD. FAQ Q15 lists it for VCF, and Q71 gives Edge "all the core components" without naming it | Included. FAQ Q15, HCX |
+| Private AI Services | No. BOM | No. FC p9, BOM | Only if on your order. SPD | **Conflict** (4). FC p9-10, FAQ Q15 |
+| Native disaster recovery orchestration | Not stated | **Conflict** (7). FC p6, POST | Marked. FC p6 | **Conflict** (7). FC p6, POST |
+| Licence portability to certified clouds | Not stated | Not stated | Not on Cloud Services as the SPD defines them. SPD | Conditions apply. FAQ Q23-24 |
+| **Advanced Services** | | | | |
+| VMware Live Recovery (on-premises cyber) | No. EXP | No. FC p17, AS | Add-on. FC p17 | Add-on. FC p17, AS |
+| VMware Live Recovery Cloud | No. EXP | No. FC p17 | Add-on. FC p17 | Add-on. FC p17 |
+| Compliance and Configuration Management | No. EXP | No. FC p17, AS | Add-on. FC p17 | Add-on. FC p17, AS |
+| HyperArmor | No. EXP | **Conflict** (3). FC p17 | Add-on. FC p17 | Add-on. FC p17, POST |
+| vDefend Firewall with ATP | No. EXP | **Conflict** (1). FC p17, AS | Add-on. FC p17 | Add-on. FC p17, AS |
+| Avi Load Balancer | No. EXP | Add-on. FC p17, AS | Add-on. FC p17 | Add-on. FC p17, AS |
+| TrueSource Data Services (includes DSM) | No. EXP | No. FC p17, BOM | Add-on. FC p17 | Add-on (5). FC p17, FAQ Q84, BOM |
+| TrueSource Spring Enterprise, Trusted Artifacts | No. EXP | No. FC p17 | Add-on. FC p17 | Add-on. FC p17 |
+| Tanzu Platform, Tanzu Data Intelligence | No. EXP | **Conflict** (2). FC p17-18, AS | Add-on. FC p17-18 | Add-on. FC p17-18, AS |
+| AgentMinder, Privileged Access Management | No. EXP | No. FC p18 | Add-on. FC p18 | Add-on. FC p18 |
+| Network Observability by Broadcom | No. EXP | No. FC p18, AS | Add-on. FC p18 | Add-on. FC p18, AS |
+| Automic Automation, ValueOps | No. EXP | No. FC p18 | Add-on. FC p18 | Add-on. FC p18 |
 
-## Included is not the same as free to run
+FC footnote 13 states that Advanced Services are bought separately and aren't part of core VCF or VVF. The [4 Nov post](https://blogs.vmware.com/cloud-foundation/2026/11/04/broadcom-vcf-portfolio-updates/) draws the same catalog as a figure, without the vSAN capacity row and with one VMware Live Recovery entry, and labels it for VCF only.
 
-Every included component runs on management capacity: cores, memory and vSAN storage in the management domain, plus the time to configure and patch it. In 9.x fleet management handles the patching, which removes most of the lifecycle effort Aria Suite Lifecycle needed in 5.x, but the compute cost remains. Count it when you compare. A component that replaces a SaaS tool may still cost less, but the comparison should include the hosts it runs on.
+## Where Broadcom's documents disagree
 
-<Callout type="warn" title="Load balancing after an upgrade">
-Estates that used the NSX load balancer for application traffic in 5.x need a plan before moving to 9.x entitlements. The KB limits the included load balancer to VCF infrastructure components and layer 4 for vSphere Supervisor. General-purpose and layer 7 load balancing moves to Avi, which is licensed separately.
+Get a written answer on these before relying on either reading. Each number matches a matrix cell.
+
+1. **vDefend on VVF.** FC p17 marks vDefend Firewall with ATP as available for VVF. The TechDocs Advanced Services page lists vDefend for VCF only.
+2. **Tanzu on VVF.** The same pages split the other way: FC p17-18 leaves VVF blank for Tanzu Platform and Tanzu Data Intelligence, and TechDocs lists both for VCF and vSphere Foundation.
+3. **HyperArmor.** FC p17 marks it for VVF. The post describes it as a defense layer for the ESX component of VCF. The TechDocs Advanced Services page doesn't list it yet.
+4. **Private AI and the PAIF-N add-on.** FC p9 and p16-17 mark Private AI for VCF with no condition, and FAQ Q15 lists Private AI Services in the VCF licence. FC p10 puts footnote 10, "Requires PAIF-N add-on", on the Private AI Services heading in VCF Automation. ADD says that from 3 Nov 2025 you "might also receive" a PAIF-N licence, based on your subscription. The Edge SPD settles it for Edge alone: the component is included only as your transaction document indicates.
+5. **Data Services Manager.** FAQ Q84 says it moved into TrueSource data services on 4 Nov, and the BOM marks the Data Services VCF service as add-on. TechDocs still lists it as its own add-on, and FC p10 names DSM among pre-bundled services with no add-on footnote. Under the Edge SPD, a Private AI entitlement carries DSM only for PostgreSQL with Private AI Services.
+6. **Replication and RPO.** FAQ Q78 (4 Nov) puts vSAN remote replication and vSphere Replication RPOs "as low as one minute" in the core VCF entitlement. [KB 428834](https://knowledge.broadcom.com/external/article/428834), scoped to Live Recovery 9.0.x and showing no date, says remote snapshot replication and RPOs under 5 minutes need Advanced Cyber Compliance. The FAQ and FC p7 are the newer 9.1 statements, but the BOM marks the Protection and Recovery VCF service as add-on and doesn't say which functions that covers.
+7. **Disaster recovery.** FC p6, titled 9.1.1, marks a Disaster Recovery row for VVF, Edge and VCF. The post calls disaster recovery a new native feature in VCF and VVF, planned for the next release, which it estimates for Q1FY27. VPC policy-based connectivity has the same split (FC p9 against the post). Ask which release a mark refers to.
+8. **Fleet lifecycle on VVF.** FC p13 says VVF customers use vLCM for lifecycle. The BOM lists fleet lifecycle and SDDC lifecycle components for VVF.
+9. **vSAN witness.** FC p6 marks "vSAN Witness Host/2 Node Support" for Edge only, and its 2-Node Cluster row marks all three. The BOM lists witness appliances for VCF and VVF. FAQ Q71 presents a locally deployed witness as what sets Edge apart. The SPD confirms a witness licence for Edge, limited to embedded hardware at an Edge Location.
+
+Four smaller mismatches don't change a cell:
+
+- **The name Live Recovery.** The [Protection and Recovery 9.1 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/protection-and-recovery/9-1/release-notes/protection-and-recovery-91-release-notes.html) (build date 12 May 2026) say VMware Live Recovery is now Protection and Recovery. The 4 Nov post, FC and TechDocs all sell VMware Live Recovery as an Advanced Service, so check which one an order line means. The BOM also marks Protection and Recovery Yes for VVF and Express, while FC and AS don't offer Live Recovery on VVF. EXP treats vSphere Replication as part of protection and recovery, which may explain the mark, but the BOM doesn't say.
+- **External DNS on VVF.** FC p3 marks it and FC p10 doesn't. The BOM says yes.
+- **The Express core limit.** The post says 128 cores "across all environments". EXP says 128 per customer, and that the console blocks allocation above 128 "per customer or site ID".
+- **vSAN rounding on VVF.** [KB 313548](https://knowledge.broadcom.com/external/article/313548/vcf-subscription-portability-policy.html) rounds 0.25 TiB per core up to a whole TiB, but its version list predates 9. ADD doesn't mention rounding. Despite its URL, that KB doesn't cover portability.
+
+<Callout type="note" title="How far to trust the FAQ">
+The FAQ carries a 4 Nov date and some older text. Q41 still calls 9.1 "upcoming". Q57 and Q61 give different minimum versions for import (8.0 U1 and 8.0 U3). Q34 allows iSCSI for both domains, while Q33 limits the management domain to vSAN, NFS or Fibre Channel and FC p7 marks iSCSI as supplemental only. Q86 retires Advanced Cyber Compliance, Q88 still describes it, and the [9.1 What's New page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new.html) still uses the old name.
+
+This note uses the FAQ alone in one place: portability eligibility (Q23 and Q24). The [License Sharing for Portability](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/license-sharing/license-sharing(1).html) page (9.0 guide, 2 Nov) covers the sharing steps and provider certification but not Q24's purchase-date and licensee conditions. The Edge limits in Q75 match the June 2026 SPD, and the [Licensing Model](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html) page (5 Nov) confirms the 8-core minimum, describing it as the difference in licensing model between Edge and VCF.
 </Callout>
 
-## Pitfalls
+## Marks that depend on something else
 
-- **Assuming VVF includes everything VCF does.** Network flow analysis, VCF Automation and NSX networking are VCF capabilities. Check the comparison before moving a cluster to VVF to save on cores.
-- **Deploying everything because it is included.** Each component adds management footprint and something else to patch. Deploy the ones that replace a cost or close a gap.
-- **Treating snapshots as backups.** ESA snapshots help with operational recovery. They live on the same cluster and do not replace an independent backup.
+A mark in the FC doesn't always mean the capability works with no further purchase. These rows are marked for VCF and Edge, yet the row text or a footnote makes them conditional:
+
+| FC row | Page | What it also needs |
+|---|---|---|
+| Security Profiles, Security Groups, DFW, Gateway Firewall | p13, p12 | vDefend (footnote 8) |
+| vSAN cyber recovery clusters | p6 | VMware Live Recovery (footnote 15) |
+| Avi Load Balancer integration in VCF Operations for networks | p16 | Avi add-on, stated in the row |
+| vDefend segmentation planning in VCF Operations for networks | p16 | vDefend add-on, stated in the row |
+| SDDC object automation for firewalls and Avi | p11 | vDefend and Avi (footnotes 8 and 9) |
+| Multi-tenant DR (VLR) in pre-bundled services | p10 | No footnote, but the BOM marks Protection and Recovery as add-on |
+
+Some cells work the other way. VVF's Workflow Orchestration cell on p13 shows only a footnote with no mark, and footnote 14 explains that the orchestrator is included with VVF and runs without VCF Automation. Host Profiles and Auto Deploy for Edge and VCF on p4 also show only footnote 3: compatible, but not integrated with fleet management.
+
+## vSphere Express: what is and isn't known
+
+Express is missing from the Feature Comparison and the FAQ, so its column rests on three Broadcom sources. EXP lists the mandatory components (ESX, vCenter, VCF Operations, license server) and the optional ones (vSphere Replication, VMware Tools, Remote Console). The post names five capabilities, introduced with "such as". EXP then says Express entitles you to "certain vSphere features" and tells you to consult your sales representative for the list. The BOM adds Protection and Recovery as a component and shows dashes for everything else in the Operations and Automation stack.
+
+EXP sets these limits: 128 cores per customer, default licence only with no splitting or sharing across sites, no add-ons, version 9 or later only, and VCF Operations for licensing only. The same page documents converging an Express estate to VCF, and extending it to VVF by applying the VVF licence.
+
+Exclusions come from parties with a commercial interest. [C4C Group](https://www.c4cgroup.co.uk/guides/vsphere-express/), which sells advice on buying and renewing enterprise technology, and reseller [Software Express](https://www.software-express.de/hersteller/vmware/vsphere/express/) both list DRS, memory tiering, SR-IOV, GPU and vGPU, Proactive HA, live patching, VCF Automation and Private AI as not included. C4C attributes this to reseller briefings and notes that Broadcom's announcement lists only what is included. Treat it as their claim until your sales representative confirms it in writing. [The Register](https://www.theregister.com/virtualization/2026/11/04/vmware-returns-to-low-end-server-virtualization-with-vsphere-express/5307466) reports that instances are discrete with no central management, that sales run through distributors, and that a spokesperson declined to give a price.
+
+## HCX on VVF
+
+The BOM shows a dash for VCF Operations HCX under VVF, and the HCX guide says a VVF site with no valid licence runs in Evaluation Mode, limited to 90 days and 20 migrations per migration type. Such a site can get feature inheritance from a paired VCF site, and [KB 440126](https://knowledge.broadcom.com/external/article/440126/hcx-licensing-requirements-for-migrating.html) describes a source site inheriting from a licensed VCF destination. FC p6 marks "Hot and Cold Migration to the Cloud" for VVF without naming HCX, so don't read that row as an HCX entitlement. The HCX page sits in the VCF 9.1.x documentation (5 Nov), though its URL path still says vcf-9-0.
+
+## Load balancing dates
+
+[KB 401492](https://knowledge.broadcom.com/external/article/401492/) limits the NSX load balancer from VCF 9.0 to VCF appliances and layer 4 for vSphere Supervisor. General-purpose load balancing leaves the VCF entitlement, and Broadcom recommends Avi. [KB 439411](https://knowledge.broadcom.com/external/article/439411) and FC footnote 12 let customers holding the equivalent Avi licences keep using NSX load balancing until 30 May 2027. FC footnote 12 adds that VVF customers are entitled to the Foundation Load Balancer for the use case its rows describe, and that VCF and Edge customers can use either that or the NSX load balancer.
+
+## Using the matrix against a tool list
+
+<Callout type="analysis" title="This site's reasoning, not Broadcom's">
+A mark says you hold the right to use a capability. It says nothing about whether that capability meets the requirement a separately bought tool serves today. Take each tool with a renewal date, find its row, and record retention, integrations, reporting and who owns it next to the answer. Included components also run on your management capacity, so their footprint belongs in any comparison.
+
+Finance can act on the first question: is it Included, Add-on, No or Conflict for the edition on our order? The architect answers the second: does it do the job?
+</Callout>
+
+| Separately bought tool | Row to check | Limit to check |
+|---|---|---|
+| Central syslog or log analytics | Log management | Whether retention and search suit any security team using the feed |
+| Flow and topology tools | Network flow analysis | VVF exports flows but has no analysis component |
+| Capacity planning, showback | Cost management, predictive capacity | VVF has cost but not predictive capacity |
+| Service catalogue, provisioning scripts | VCF Automation | Not on VVF or Express |
+| Kubernetes distribution | VKS and Supervisor | VVF lacks ArgoCD, secret store and multi-cluster lifecycle |
+| Migration tools | HCX | VVF evaluation limits, unless paired with a VCF site |
+| Short-term snapshot tools | vSAN ESA snapshots | Conflict 6. Snapshots on the same platform don't replace an independent backup |
+| Firewall or load balancer | Distributed and gateway firewall, Load balancing | NSX being included doesn't include either for general use |
+
+For the capacity arithmetic behind the vSAN row, see [the vSAN entitlement](/vcf/library/value/vsan-entitlement/). For core minimums, see [core counting and CPU choice](/vcf/library/value/core-counting-and-cpu-choice/).

@@ -1,81 +1,262 @@
 ---
-title: "VCF Automation 9.0 to 9.1: a side-by-side upgrade, not an in-place one"
-description: "VCF Automation moves to its own new cluster during the 9.1 upgrade. That changes what you prepare (addresses, an FQDN, passwords, certificates) and what you check when it stalls."
+title: "VCF Automation 9.1: which route from VCD, Aria Automation or a clean start"
+description: "VCD moves through VCD 10.6.2, the Environment Assessment Tool and the Migration Tool, with 9.1 as the target. Aria Automation 8.18.1 or later imports and upgrades side by side into a VM Apps organization. With neither, deploy new and start on All Apps. Routes, gates, order and failures."
 category: upgrades
 order: 6
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-kbs: [443723, 443988, 456790, 449628, 455559, 441246, 447155, 425489, 447667, 409610]
+updated: 2026-11-06
+reviewed: 2026-11-06
+kbs: [455238, 442369, 418816, 408990, 409610, 440630, 456708, 443720, 448993, 454245, 425489, 447667, 443723, 443988, 456790, 449628, 455559, 441260, 447155]
 sources:
-  - title: "Upgrade to VCF Automation 9.1"
+  - title: "VCF 9.1 general FAQs (Q43 to Q45)"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "Announcing VMware Cloud Director 10.6.2, enabling your migration to VCF 9.1"
+    url: "https://blogs.vmware.com/cloudprovider/2026/09/announcing-vmware-cloud-director-10-6-2-enabling-your-migration-to-vmware-cloud-foundation-9-1.html"
+    by: "VMware Cloud Provider blog"
+    kind: broadcom
+    date: 2026-09-02
+  - title: "VMware Cloud Director 10.6.2 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/cloud-director/vmware-cloud-director/10-6/release-notes/vmware-cloud-director-1062-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-03
+  - title: "EAT: the VMware Cloud Director Environment Assessment Tool"
+    url: "https://blogs.vmware.com/cloudprovider/2025/06/eat-the-vmware-cloud-director-environment-assessment-tool.html"
+    by: "VMware Cloud Provider blog"
+    kind: broadcom
+    date: 2025-06-02
+  - title: "VCD Edge Gateway Firewall Migration to VCF Automation"
+    url: "https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/vdefend/vdefend-firewall/9-1/edge-gateway-firewall-migration.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-10-13
+  - title: "Auditing and Remediation Workflow (edge gateway firewall migration)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/vdefend/vdefend-firewall/9-1/edge-gateway-firewall-migration/auditing-and-remediation-workflow.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-10-13
+  - title: "What's new in VCF Automation 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-automation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VCF Automation at Explore 2026 (session abstracts)"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/08/03/the-future-of-cloud-infrastructure-deep-dive-into-vmware-cloud-foundation-automation-at-explore-2026/"
+    by: "VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-08-03
+  - title: "VCF Automation 9.0 product support notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vcf-automation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Upgrading to VMware Cloud Foundation 9.1.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrading to VCF Automation 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/phase-3-import-and-upgrade-aria-automation-8-to-vcf-automation-9.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrade VCF Automation to 9.1"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/phase-3-import-and-upgrade-aria-automation-8-to-vcf-automation-9/upgrade-to-vcf-automation.html"
     by: "Broadcom TechDocs"
-  - title: "VCF Automation 9.0 to 9.1 upgrade: precheck and execution stages"
-    url: "https://blogs.vmware.com/cloud-foundation/2026/07/27/modernizing-infrastructure-a-deep-dive-into-the-vmware-cloud-foundation-automation-9-0-to-9-1-upgrade-precheck-and-execution-stages/"
-    by: "VMware Cloud Foundation blog"
+    kind: broadcom
+  - title: "Migrate VCF Automation Authentication from VMware Identity Manager to VCF Identity Broker"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/phase-3-import-and-upgrade-aria-automation-8-to-vcf-automation-9/migrate-vcf-automation-single-sign-on-configuration-from-vmware-identity-manager-to-vcf-identity-broker.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Bimodal Consumption Design for VM Apps and All Apps Workloads"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-automation-deployment-models-9-x/multi-tenancy-design-patterns/shared-tenancy-design.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Understanding the VCF Automation All Apps organization multi-tenancy model"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-automation-deployment-models-9-x/organization-consumption-model/understanding-vcf-automation-all-apps-organization-multi-tenancy-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
   - title: "VCF Automation deployment models (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-automation-deployment-models.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Start a new VCF fleet or instance with the VCF Installer wizard"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/deploy-a-new-vcf-fleet-or-a-new-vcf-instance.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Automation 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfautomation-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-03
+  - title: "Aria Automation 8.18.1 to VCF Automation 9.1 upgrade technical deep dive"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/07/27/modernizing-infrastructure-vmware-aria-automation-8-18-1-to-vmware-cloud-foundation-automation-9-1-upgrade-technical-deep-dive/"
+    by: "VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-07-27
+  - title: "VCF Automation 9.0 to 9.1 upgrade: precheck and execution stages"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/07/27/modernizing-infrastructure-a-deep-dive-into-the-vmware-cloud-foundation-automation-9-0-to-9-1-upgrade-precheck-and-execution-stages/"
+    by: "VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-07-27
   - title: "How to upgrade to VMware Cloud Foundation 9.0 (Aria Automation as a separate workstream)"
     url: "https://blogs.vmware.com/cloud-foundation/2025/09/25/how-to-upgrade-to-vmware-cloud-foundation-9-0/"
     by: "VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-09-25
+  - title: "When legacy multi-tenancy meets VCF Automation"
+    url: "https://www.virtual-allan.com/when-legacy-multi-tenancy-meets-vcf-automation-why-cloud-accounts-fail-after-migration/"
+    by: "Allan Kjaer"
+    kind: practitioner
+    date: 2026-04-21
 ---
 
 <InShort>
-From 5.x, Aria Automation 8.18 is imported into VCF Operations fleet management and upgraded to VCF Automation 9.0. Broadcom recommends running it as its own workstream, because custom integrations take time to validate. From 9.0 to 9.1, VCF Automation does **not** upgrade in place. Fleet lifecycle builds a new three-node cluster on its own Kubernetes runtime, backs up the 9.0 data, restores it into 9.1 and powers the old nodes off. You need a new FQDN, five addresses, strong passwords, consistent credentials on the source nodes, and certificates whose SANs cover every node.
+Choose by what you run today. **VCD:** Broadcom now documents a tool-assisted migration with VCF Automation 9.1 as the target. It needs VCD 10.6.2 and the Environment Assessment Tool, and the guide comes by email. **Aria Automation 8.18.1 or later:** import it into VCF Operations and let the upgrade build a new cluster. Your environment becomes a VM Apps organization. **Neither:** deploy new, after the platform upgrade if you like, and start on All Apps. **Both VCD and Aria Automation:** no public page covers this, so raise it with Broadcom before you design anything.
 </InShort>
 
-<Compare rows={[
-  ["Product", "Aria Automation 8.x, managed by Aria Suite Lifecycle", "VCF Automation. 9.1 runs it on a dedicated Kubernetes cluster of its own appliances."],
-  ["Upgrade style", "In place through Aria Suite Lifecycle", "8.18 to 9.0: import, then upgrade. 9.0 to 9.1: side-by-side build, migrate, power off the old nodes."],
-  ["Identity", "Workspace ONE Access (vIDM)", "VCF Identity Broker. There is no vIDM migration (<a href='https://knowledge.broadcom.com/external/article/409610' target='_blank' rel='noopener'>KB 409610</a>)."],
-  ["VCD tenants", "VMware Cloud Director, a separate product", "VCD is not supported with VCF 9 and has no official migration path. VCF Automation is the strategic replacement."],
-]} />
+<Callout type="note" title="Corrected on 6 November 2026">
+Earlier versions of this note said VCD had no official path. [FAQ Q44](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) now calls it "a supported, documented, and UI-based tool-assisted path".
+</Callout>
 
-## The stages
+## Pick your route
 
-1. **Initialization and staging.**
-2. **Create the automation cluster.** A `vcf-automation` folder is created, the runtime template is deployed, and a temporary bootstrap VM builds three nodes.
-3. **Discover the cluster.**
-4. **Component upgrade.** Back up the 9.0 cluster, scale it down, take a final backup and transfer it, restore on 9.1, power off the old nodes and finalize the database.
-5. **Install backend services,** including the migration back end.
-6. **Inventory sync and clean-up.**
+| You run today | Route | Where you land | First gate |
+|---|---|---|---|
+| VCD 10.6.x | Migration Tool in VCF Automation 9.1 | Not stated publicly. The sources point to All Apps (see below). | Run the assessment tool and upgrade to VCD 10.6.2 |
+| VCD 10.4 or 10.5 | The same, after reaching 10.6.x | The same | [The release notes](https://techdocs.broadcom.com/us/en/vmware-cis/cloud-director/vmware-cloud-director/10-6/release-notes/vmware-cloud-director-1062-release-notes.html) list upgrades to 10.6.2 only from 10.6.x |
+| Aria Automation 8.18.1 or later | Import, then side-by-side upgrade straight to 9.1 | [VM Apps organization](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-automation-deployment-models-9-x/multi-tenancy-design-patterns/shared-tenancy-design.html), first in the new instance | Import into VCF Operations, new addresses and FQDN |
+| VCF Automation 9.0.x | Side-by-side upgrade to 9.1 | Your existing organizations | New addresses and FQDN, consistent credentials |
+| Neither product | New deployment, in the VCF Installer or as a Day-N operation | [All Apps, Broadcom's recommendation for greenfield](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-automation-deployment-models-9-x/multi-tenancy-design-patterns/shared-tenancy-design.html) | Supervisors, plus a services runtime with five addresses and its own FQDN |
+| VCD and Aria Automation together | Undocumented in public | Unknown | See "What would change the answer" |
 
-The old nodes are only powered off. Delete them once you are satisfied.
+Two dates frame the plan. [KB 456708](https://knowledge.broadcom.com/external/article/456708) lists end of service for VCF 5.2.x, vCenter 8.x, NSX 4.x and Aria Automation 8.18.x on 11 October 2027, and for VCD 10.6.2 on 12 August 2028. After those dates it promises no technical support and no new patches. <AsOf date="2026-11-06" />
 
-## What to prepare
+<Callout type="analysis" title="This site's reading: the VCD date buys time only on 9.1">
+VCD 10.6.2 outlives VCF 5.2.x by 10 months, and its release notes say it supports VCF 9.1.1 with vSphere 9.1.1 and NSX 9.1.1. So the platform and the tenant move can be two projects: bring the infrastructure under VCD to 9.1.1 by October 2027, then finish moving tenants by August 2028. Check the Interoperability Matrix for your exact builds before you rely on this, because this is inference from those two pages and no Broadcom page sets out that plan. Aria Automation has no such margin, since 8.18.x ends with VCF 5.2.x.
+</Callout>
 
-- **Addresses.** For VCF Automation 9.1.0.0 to 9.1.0.300, a dedicated CIDR with five addresses (a /29 in the examples). From 9.1.0.400, five unique addresses that need not be contiguous: three for nodes and two spare. Keep them separate from the management services runtime.
-- **A dedicated FQDN,** lowercase, resolving outside the node addresses.
-- **Passwords.** The upgrade passwords for `vmware-system-user` and admin need at least 15 characters, mixed case, a digit and a special character from the documented set.
-- **Placement.** The 9.0 cluster must be in the management domain. Until fleet lifecycle, SDDC lifecycle and SDDC Manager are all at 9.1.1.0200, it must also sit on the management datastore.
-- **Topology.** A single-node extra-large Aria Automation 8.18 must be scaled to three nodes first.
-- **FIPS blockers.** An IPAM endpoint that skips certificate checks, an Aria Operations integration endpoint or plain LDAP will block the FIPS compatibility check.
+## Route 1: from VCD
 
-## The prechecks, in order
+### What Broadcom documents
 
-Connectivity (FQDN, SSH on 22, ciphers, SSH authentication), then source validation, then health (nodes, services, database, TLS chain, Postgres disk latency), then topology (datastores, IP pool inside the CIDR, DNS, addresses already in use), then application (FIPS endpoints). When one fails, the stage name tells you where to look.
+- **Three steps.** [The 2 September post](https://blogs.vmware.com/cloudprovider/2026/09/announcing-vmware-cloud-director-10-6-2-enabling-your-migration-to-vmware-cloud-foundation-9-1.html) lists them: run the assessment tool, request the 10.6.2 migration documentation, connect the Migration Service to VCD. [KB 455238](https://knowledge.broadcom.com/external/article/455238/vmware-cloud-director-migration-option-t.html) adds that the tool is required and that you upgrade to 10.6.2 before the transition.
+- **The assessment tool.** It [runs on VCD 10.4, 10.5 and 10.6](https://blogs.vmware.com/cloudprovider/2025/06/eat-the-vmware-cloud-director-environment-assessment-tool.html) from a cell, collects structural metadata and writes an Excel report you can edit before sending. Nothing uploads automatically. The 2 September post says to resubmit if your last submission is more than six months old.
+- **The upgrade.** Into 10.6.2 from 10.6.0 or 10.6.1, including their patch releases (the post leaves out the first 10.6.0 patch; the release notes include it).
+- **The migration UI.** Providers work in VCF Services, Migration Tool, Migrate, and [run an evaluation](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/vdefend/vdefend-firewall/9-1/edge-gateway-firewall-migration/auditing-and-remediation-workflow.html) for infrastructure, organization or workload.
+- **HCX.** [KB 442369](https://knowledge.broadcom.com/external/article/442369/vmware-cloud-director-106x-and-hcx-9x-co.html) says HCX 9.x has no direct VCD integration. To reach VCF Automation 9.1 with it, install HCX 9.1 at both ends, register it to the vCenter 8.x under VCD, and move VMs to a Namespace over the vCenter-to-vCenter connection.
 
-## Known failures worth recognising
+The guide itself comes only by email, and this note uses public pages only, so it says nothing about the guide's contents.
+
+### What to check before you commit to a date
+
+| Check | What Broadcom says | What to do first |
+|---|---|---|
+| Container Service, Data Solutions and Object Storage extensions | "RPQ only" in the [post](https://blogs.vmware.com/cloudprovider/2026/09/announcing-vmware-cloud-director-10-6-2-enabling-your-migration-to-vmware-cloud-foundation-9-1.html) | Get the RPQ answer before committing a date |
+| VCD Availability, vRealize Orchestrator | Supported, per the post | Confirm your versions in the matrix |
+| vRealize Operations | "Not Supported", per the post | Plan a replacement |
+| VCD management and content packs | [Incompatible with 10.6.2](https://techdocs.broadcom.com/us/en/vmware-cis/cloud-director/vmware-cloud-director/10-6/release-notes/vmware-cloud-director-1062-release-notes.html), with no direct workaround. <KB id={418816} /> says VCF Operations 9.x has no compatible pack either. | Find other monitoring **before** the 10.6.2 upgrade, as the release notes require |
+| Edge gateway firewall | [One unsupported rule](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/vdefend/vdefend-firewall/9-1/edge-gateway-firewall-migration.html) rejects or skips the whole gateway's firewall migration | Audit for IPv6, non-L4 protocols, context profiles and user-defined services. Rules made in NSX Manager are skipped, disabled firewalls lose the configuration update, and distributed-only gateways are skipped. |
+| VCD 10.6.2 upgrade failures | [Known issues](https://techdocs.broadcom.com/us/en/vmware-cis/cloud-director/vmware-cloud-director/10-6/release-notes/vmware-cloud-director-1062-release-notes.html): PostgreSQL certificate without the database IP in its SAN, FIPS mode on, upgrade from the Broadcom repository, duplicate key on `pk_api_externalservice` | Fix the certificate, deactivate FIPS for the upgrade and use an update package. The duplicate key issue has no listed workaround, so test on a copy. |
+| VCF Operations pairing | [Release notes](https://techdocs.broadcom.com/us/en/vmware-cis/cloud-director/vmware-cloud-director/10-6/release-notes/vmware-cloud-director-1062-release-notes.html): "A strict 1:1 relationship" with VCF Automation, and upgrading VCF Operations to 9.1.1 with this release means deploying a VCF 9 fleet | Decide the fleet layout in design |
+| Any VCD cloud account in Aria Automation | [No longer supported](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vcf-automation.html) from 9.0 | Remove the dependency before upgrading Aria Automation |
+
+### Where tenants land
+
+<Callout type="analysis" title="Inference: expect All Apps">
+No public page states the mapping. The firewall page migrates gateway rules to Transit Gateway firewall policies, KB 442369 names a Namespace as the HCX target, and the [All Apps design page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-automation-deployment-models-9-x/organization-consumption-model/understanding-vcf-automation-all-apps-organization-multi-tenancy-model.html) ties Namespaces to All Apps organizations on Supervisors. So plan for Supervisors and VPC networking at the target, and confirm against the guide. If it says otherwise, this section is wrong and the target sizing changes.
+</Callout>
+
+### An order to work from
+
+Broadcom publishes the three steps above. The sequence below is this site's own, built around them, and each linked item is the documented part.
+
+1. **Inventory.** Extensions, management packs, HCX use, and firewall rules against the list above.
+2. **Run the assessment tool now,** on whatever 10.4 to 10.6 build you have. It counts your organizations, VDCs, networks and edge gateways, which the plan needs anyway.
+3. **Replace VCD monitoring,** then [upgrade VCD to 10.6.2](https://knowledge.broadcom.com/external/article/455238/vmware-cloud-director-migration-option-t.html). Re-run the assessment tool, because the report records the system version.
+4. **Request the guide** by email, [once the assessment is done](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs). Read it before the next step: the steps below may change once you have.
+5. **Upgrade the platform** to VCF 9.1.1, in [the published order](/vcf/library/upgrades/planning-52-to-90/). The release notes name 9.1.1 as what 10.6.2 supports, so don't stop at 9.1.0 with VCD still running on it.
+6. **Stand up the target:** VCF Automation 9.1 and, under the All Apps reading, Supervisors.
+7. **Clean up in VCD, then evaluate.** [Fix rules in VCD and regenerate the plan](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/vdefend/vdefend-firewall/9-1/edge-gateway-firewall-migration/auditing-and-remediation-workflow.html) until each gateway module reads Completed, with none Skipped or Rejected.
+8. **Migrate.** The public firewall page fixes only part of the order: [provider and organization infrastructure first, then IPSets to Network Security Groups, then firewall rules](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/vdefend/vdefend-firewall/9-1/edge-gateway-firewall-migration.html). The rest belongs to the guide.
+9. **Retire VCD** before 12 August 2028.
+
+## Route 2: from Aria Automation
+
+### What Broadcom documents
+
+The [9.1 upgrade guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/phase-3-import-and-upgrade-aria-automation-8-to-vcf-automation-9.html) offers two entries: import 8.x and upgrade to 9.1, or upgrade 9.0.x directly. [8.18.1 is the minimum](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/phase-3-import-and-upgrade-aria-automation-8-to-vcf-automation-9/upgrade-to-vcf-automation.html), so 9.0 isn't a required stop. It is a blue-green build: a new cluster on its own services runtime, data moved across, traffic switched, source nodes shut down.
+
+- **Position in the upgrade.** In the [5.2.x sequence](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) Aria Automation is step 9, after SDDC Manager, management services and the License Server, and ahead of NSX, vCenter and ESX.
+- **Downtime.** For 8.18.1, [Broadcom's deep dive](https://blogs.vmware.com/cloud-foundation/2026/07/27/modernizing-infrastructure-vmware-aria-automation-8-18-1-to-vmware-cloud-foundation-automation-9-1-upgrade-technical-deep-dive/) says downtime starts at stage 9 of 16, when the source powers off. It calls the pre-upgrade snapshots the rollback point. The upgrade guide says the old nodes are shut down and you can delete them once they're no longer needed.
+- **Addresses.** For targets 9.1.0.0 to 9.1.0.300, a dedicated CIDR, with /29 as Broadcom's example: eight addresses, of which VCF Automation needs five (three for nodes, two as a lifecycle buffer). From 9.1.0.400, five unique addresses that need not be contiguous. The runtime can't share the management services CIDR or FQDN.
+- **FQDN.** One new lowercase runtime FQDN, resolving outside the node addresses. The existing FQDN carries over. From 8.18.x the old node addresses become VIPs. From 9.0.x they are freed.
+- **Passwords.** At least 15 characters with upper case, lower case, a digit and one of `@ ! # $ % ? ^`, with no dictionary words or parts of the username.
+- **Certificates.** SANs must cover the FQDNs and IPs of all nodes and the load balancer or VIP.
+- **Binaries.** From 8.18.x, the 9.1.x install binaries for VCF Automation and the migration service engine. From 9.0.x, the upgrade binary for VCF Automation and the engine's install binary.
+- **Topology and placement.** Scale a single extra-large 8.18.x node to three nodes first. If the instance isn't on the primary datastore, upgrading to 9.1.1.0200 or later needs fleet lifecycle, SDDC lifecycle and SDDC Manager at 9.1.1.0200 or later.
+- **Sizing.** Medium stays Medium, Extra Large becomes Large.
+- **Identity.** Aria Suite Lifecycle stops managing VCF Automation but keeps managing VMware Identity Manager, so keep both. [Move authentication to the Identity Broker](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/phase-3-import-and-upgrade-aria-automation-8-to-vcf-automation-9/migrate-vcf-automation-single-sign-on-configuration-from-vmware-identity-manager-to-vcf-identity-broker.html) after the upgrade. Only when that is complete are they no longer needed for VCF Automation.
+- **Several instances.** [FAQ Q45](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs): all can upgrade, but only one can be fully integrated with VCF Operations. You upgrade and patch the others individually.
+
+The [9.0 to 9.1 stages](https://blogs.vmware.com/cloud-foundation/2026/07/27/modernizing-infrastructure-a-deep-dive-into-the-vmware-cloud-foundation-automation-9-0-to-9-1-upgrade-precheck-and-execution-stages/) are initialization and staging, create the cluster, discover it, component upgrade (backup, shut down source services, final transfer, restore, power off the old nodes, finalize Postgres), install back-end services including the VCD migrator, then inventory sync and clean-up. Prechecks run in dependency order: connectivity, source validation, health, topology, application. Start troubleshooting at the first group that fails.
+
+### What to decide
+
+**Do you need All Apps?** The upgrade gives you VM Apps. [KB 409610](https://knowledge.broadcom.com/external/article/409610), scoped to 9.0, says there is no supported path from Classic and VM Apps to All Apps, and that an identity broker instance using All Apps must be a greenfield setup. For 9.1, the [design page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-automation-deployment-models-9-x/multi-tenancy-design-patterns/shared-tenancy-design.html) describes running both side by side and adopting All Apps progressively.
+
+<Callout type="analysis" title="This site's advice">
+Upgrade into VM Apps and treat All Apps as a separate build, so content moves by being rebuilt on your schedule. Leave tenancy redesign out of the upgrade. Allan Kjaer's [April post](https://www.virtual-allan.com/when-legacy-multi-tenancy-meets-vcf-automation-why-cloud-accounts-fail-after-migration/), a practitioner's account, argues some legacy multi-tenant designs need rebuilding and recommends piloting the organization models first. If you run several classic tenants on one vCenter, take that seriously, because two VM Apps organizations can't share one (<KB id={408990} />).
+</Callout>
+
+### Failures with a public fix
 
 | Message or symptom | Meaning | KB |
 |---|---|---|
-| `[VCFMS-PRECHECK-GENERIC-001]` on the SSH check | Credentials were corrupted or expired at import | <KB id={443723} /> |
-| `The source system is not a VCF Automation (VCFA) 9.x product` | `vmware-system-user` password differs between nodes | <KB id={443988} /> |
-| `vmsp_run_vcfa_prechecks` failed, tasks queued | 15-minute backups keep the precheck waiting | <KB id={456790} /> |
-| `requires VCF services runtime version 9.1.#` | The plan targets a runtime you haven't installed. Add it and download its INSTALL binary. | <KB id={449628} /> |
-| Backup precheck times out after hours | "Upgrade All" upgraded the migration engine alongside VCF Automation | <KB id={455559} /> |
-| `vmsp_upgrade_vcfa failed` but the new cluster works | An orchestration timeout. Verify pods and the UI before retrying anything. | <KB id={441246} /> |
-| VCF Automation 9.0 missing from fleet management after the upgrade | An inventory migration gap. Re-import it using the "Import 8.x appliance" option. | <KB id={447155} /> |
-| Endpoints fail TLS after the upgrade | The truststore is not migrated. Re-trust the endpoints. | <KB id={425489} />, <KB id={447667} /> |
+| `VCFMS-PRECHECK-GENERIC-001` on the SSH check | Automation was imported with damaged or expired credentials | <KB id={443723} /> |
+| `The source system is not a VCF Automation (VCFA) 9.x product` | An SSH password was changed on one node only. Reset it on all of them. | <KB id={443988} /> |
+| `vmsp_run_vcfa_prechecks` failed, tasks queued | 15-minute backups keep the precheck waiting. The KB moves them to every 4 hours. | <KB id={456790} /> |
+| `requires VCF services runtime version 9.1.#` | The plan's runtime version isn't the one the target needs. Update the plan to the version named in the error and download its INSTALL binary. | <KB id={449628} /> |
+| Backup precheck times out after six hours or more | Going from 9.1.x to 9.1.1, the migration engine was upgraded first, which "Upgrade All" can trigger. Upgrade VCF Automation first, or target 9.1.1.0100, which fixes it. | <KB id={455559} /> |
+| `vmsp_upgrade_vcfa failed` at Power Off Source Cluster | Cluster VMs were moved to another vCenter folder. Match the folder path and retry. | <KB id={441260} /> |
+| VCF Automation 9.0 missing from fleet management | An inventory migration gap. Add it with the "Import 8.x appliance" option. | <KB id={447155} /> |
+| Endpoint certificate precheck or TLS errors from 8.18.1 | Implicitly trusted endpoint certificates were never stored, and the upgrade moves only the database | <KB id={425489} /> |
+| FIPS precheck blocks the upgrade | IPAM skipping certificate checks, plain LDAP, or an Aria Operations endpoint | <KB id={447667} /> |
 
-<Callout type="field">
-Run the VCF Automation upgrade on its own day, after the core platform is stable. If it overruns, it should not be holding up vCenter or ESX work, and its rollback story (the old nodes, powered off) is easiest to use when nothing else changed the same day.
+Three problems show up only after the upgrade. Native AWS, Azure and GCP management is [off by default in VM Apps organizations](https://knowledge.broadcom.com/external/article/448993) from 9.1.1. From 8.18.x the switch can only be made after the upgrade; from 9.0 or 9.1 it can be made before or after. Custom actions [can disappear](https://knowledge.broadcom.com/external/article/454245) on 9.1.0 and 9.1.1, with the fix due in 9.1.1.0200. Classic tenants' Orchestrator endpoints may [not remap to the embedded Orchestrator](https://knowledge.broadcom.com/external/article/443720/embedded-orchestrator-integration-shows.html). Put all three on the post-upgrade test list.
+
+## Route 3: starting with neither
+
+[The VCF Installer](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/deploy-a-new-vcf-fleet-or-a-new-vcf-instance.html) can deploy VCF Automation or skip it for a Day-N deployment, and the [upgrade guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) also allows Day-N after an upgrade. The [deployment models](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-automation-deployment-models.html) are a single small node for proof of concept and development, with no application-level HA, or three medium or large nodes for production.
+
+<Callout type="analysis" title="This site's advice">
+On a 5.x upgrade with nothing to carry over, defer it. TechDocs allows that, and it keeps five addresses, a runtime and an organization design out of the platform project. Deploy it when a tenant or self-service requirement exists, and start with All Apps unless you know you need VM Apps.
 </Callout>
 
-## Pitfalls
+## Where Broadcom's pages disagree
 
-- **"Upgrade All".** Upgrade VCF Automation first and the migration engine after it.
-- **Changing one node's password** while troubleshooting. Keep `vmware-system-user` identical on every node.
-- **Forgetting the integrations.** Cloud accounts, IPAM, ITSM and identity all need checking after the move. Build the test list from the 9.0 configuration before you start.
+| Question | One page says | Another says | Treat it as |
+|---|---|---|---|
+| Is VCD migration in place? | [What's New](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-automation.html): "in-place migration" | [Explore abstract](https://blogs.vmware.com/cloud-foundation/2026/08/03/the-future-of-cloud-infrastructure-deep-dive-into-vmware-cloud-foundation-automation-at-explore-2026/): "greenfield deployments and in-place migrations". KB 442369 moves VMs vCenter to vCenter. | Open. Ask which applies to your topology, and what downtime to expect. The post doesn't say. |
+| Does VCF 9 support VCD? | <KB id={418816} /> (undated): VCF 9.x Operations and Automation do not | [10.6.2 notes](https://techdocs.broadcom.com/us/en/vmware-cis/cloud-director/vmware-cloud-director/10-6/release-notes/vmware-cloud-director-1062-release-notes.html): supports VCF 9.1.1, vSphere 9.1.1 and NSX 9.1.1 | Inference: VCD can run on 9.1.1 infrastructure, without VCF Operations monitoring it. Confirm in the matrix. |
+| Assessment or upgrade first? | [KB 455238](https://knowledge.broadcom.com/external/article/455238/vmware-cloud-director-migration-option-t.html): names the upgrade before the tool, with no stated sequence | [Post](https://blogs.vmware.com/cloudprovider/2026/09/announcing-vmware-cloud-director-10-6-2-enabling-your-migration-to-vmware-cloud-foundation-9-1.html): the assessment is step 1 | Do both: it runs on older builds, so run it before and after |
+| Where to send the request? | [FAQ Q44](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) and the post's text give one address. Subject: "Requesting VCD to VCFA Migration Documentation". | The post's mail link opens a different address. Its subject is written "VCF A". | Use the address printed in Q44, which is also the one in the assessment post, and the FAQ's subject. |
+| Can All Apps and VM Apps share a vCenter? | <KB id={408990} /> (lists 9.0, 9.1 and 9.1.1): no | [9.1 design page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-automation-deployment-models-9-x/multi-tenancy-design-patterns/shared-tenancy-design.html): yes with the "Mixed Tenancy Mode" flag, VM Apps first | Open. Get Broadcom's answer in writing before designing on the flag, and meanwhile plan separate endpoints. |
+| Is the Aria upgrade in place? | <KB id={440630} />: "in-place upgrade" | [Upgrade guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/phase-3-import-and-upgrade-aria-automation-8-to-vcf-automation-9.html): blue-green, new nodes | The procedure builds new nodes, so plan for that. |
+| Aria Automation on its own schedule? | [September 2025 post, on 9.0](https://blogs.vmware.com/cloud-foundation/2025/09/25/how-to-upgrade-to-vmware-cloud-foundation-9-0/): often an independent workstream | [9.1 sequence](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html): step 9, ahead of NSX, vCenter and ESX, "strictly following the upgrade order" | Give it its own change window and test plan, in the documented position. Ask Broadcom before moving it later. |
+
+## What would change the answer
+
+- **You run VCD and Aria Automation together.** Each VCF Operations pairs 1:1 with VCF Automation, and an upgraded Aria Automation becomes the instance's first organization. No public page says whether VCD can migrate into that same instance. This one decides fleet count, so ask first.
+- **The RPQ comes back negative** for Container Service, Data Solutions or Object Storage. Those tenants' services need a replacement before the VCD route is viable for them.
+- **The guide contradicts this note's All Apps reading.** Re-size the target from the guide.
+- **You can't reach 9.1.1 by 11 October 2027.** VCD's August 2028 date then doesn't help, because the platform under it is out of support first.
+
+Related: [the 5.2 to 9.x planning note](/vcf/library/upgrades/planning-52-to-90/) and [the vIDM to Identity Broker note](/vcf/library/upgrades/vidm-to-identity-broker/).
