@@ -1,11 +1,12 @@
 ---
 title: "A seven-step triage for any VCF 9.x failure"
-description: "Most time lost on VCF tickets is lost before the real work starts: reading the wrong log, retrying the wrong thing, or escalating without evidence. A fixed order of seven steps removes most of that, whatever failed."
+description: "Seven steps in a fixed order for any VCF failure: capture the IDs, find the layer, read the message, check for locks, check DNS, NTP, disk and reachability, recover in scope, then escalate with evidence."
 category: troubleshooting
 order: 1
 versions: ["5.x", "9.0", "9.1"]
 level: Overview
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [409353, 439473, 385749, 402476, 444466, 443789, 435569, 440630]
 sources:
   - title: "Troubleshooting VMware Cloud Foundation or vSphere Foundation deployments (9.1)"
@@ -25,7 +26,7 @@ sources:
 6. **Recover in scope**: retry the precheck or the task, not the whole workflow.
 7. **Escalate with evidence**: bundle, IDs, timestamps and what was tried.
 
-The order matters more than the content. Steps 1 to 5 take minutes. They usually find the cause, or at least make step 7 short.
+Keep to the order. Steps 1 to 5 take minutes. They can find the cause, and if they don't, they make step 7 short.
 </InShort>
 
 <Compare rows={[
@@ -78,11 +79,11 @@ Before touching anything, copy the task ID, the reference ID or token, the faile
   <text class="s" x="570" y="170" text-anchor="middle">UI: Build > Lifecycle > VCF Instances</text>
 </Diagram>
 
-Error prefixes help: `VCFMS-` points at the services runtime, `VCFA-` at VCF Automation, and an `IAM_401_INVALID_TOKEN` usually at time sync.
+Error prefixes help: `VCFMS-` points at the services runtime, `VCFA-` at VCF Automation, and an `IAM_401_INVALID_TOKEN` can point at time sync.
 
 ## 3. Read the message
 
-Open the failed subtask and read the whole message, including the resolution text. Many 9.x errors say exactly what to fix. Then open the matching log and find the exception's **last "Caused by"**. See [reading SDDC Manager logs](/vcf/library/troubleshooting/reading-sddc-manager-logs/).
+Open the failed subtask and read the whole message, including the resolution text. A 9.x error can say exactly what to fix. Then open the matching log and find the exception's **last "Caused by"**. See [reading SDDC Manager logs](/vcf/library/troubleshooting/reading-sddc-manager-logs/).
 
 ## 4. Check for locks
 
@@ -93,7 +94,7 @@ Is anything else running on the same domain, host or component: a precheck, a ba
 - **DNS:** forward and reverse, lowercase, from the component that failed.
 - **NTP:** drift causes token errors such as "JWT token is expired" (<KB id={409353} />).
 - **Disk:** on SDDC Manager, vCenter, VCF Operations and the runtime.
-- **Reachability:** from the address that makes the call. In 9.1 that is often a runtime node.
+- **Reachability:** from the address that makes the call. In 9.1 that can be a runtime node.
 
 The DNS part is quick to script. This read-only check runs from any Linux shell, including SDDC Manager. It flags a missing forward or reverse record, a reverse record that points at a different name, and mixed-case names.
 
@@ -119,7 +120,7 @@ Fix the cause, then retry the smallest thing: **Retry Precheck**, **Retry Task**
 | Always | Task and reference IDs, time of failure, and what you tried since |
 
 <Callout type="field">
-Write the seven steps into the ticket template as headings. It makes junior engineers faster, it makes handovers between shifts painless, and it gives the support engineer everything in the first message.
+Write the seven steps into the ticket template as headings. That gives a junior engineer an order to follow, the next shift a clean handover, and the support engineer the evidence in the first message.
 </Callout>
 
 ## Rules that hold everywhere
@@ -127,4 +128,4 @@ Write the seven steps into the ticket template as headings. It makes junior engi
 - Snapshot before any database change.
 - One operation at a time on a given scope.
 - Health before retry. Retry before rebuild.
-- During upgrades, check the order first (<KB id={440630} />). Many "errors" are a step done too early.
+- During upgrades, check the order first (<KB id={440630} />). An "error" can be a step done too early.

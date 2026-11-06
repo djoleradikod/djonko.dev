@@ -6,6 +6,7 @@ order: 7
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [409610, 390634, 444734, 444003, 457245, 437258]
 sources:
   - title: "Update sequence for VCF 9.0 and compatible VMware products"
@@ -35,7 +36,7 @@ Workspace ONE Access (vIDM) 3.3.x has no in-place upgrade to 9.x. It stays manag
 
 ## A sequence that works
 
-1. **Inventory what uses vIDM.** List the products, directories, groups, role mappings and any third-party applications federated through it. Some customers find vIDM fronting more than VMware products.
+1. **Inventory what uses vIDM.** List the products, directories, groups, role mappings and any third-party applications federated through it. Check whether vIDM fronts more than VMware products.
 2. **Decide mode and scope.** Embedded, appliance (9.0) or instance mode (9.1), and fleet-wide, cross-instance or single-instance SSO. See <a href="/vcf/library/architecture/identity-broker/">Identity in VCF 9</a>.
 3. **Prepare the identity provider side.** Create the directory connection or OIDC or SAML application, and the groups that will map to VCF roles.
 4. **Deploy and configure VCF SSO** from VCF Operations, Fleet Management, Identity and Access. The page needs a working management domain cloud proxy (<KB id={437258} />).
@@ -49,7 +50,7 @@ A 9.0 appliance-mode broker is migrated into 9.1 instance mode during the upgrad
 After any transition, check that VCF Operations has recorded the broker in the right mode. A stale "embedded" record makes the broker appear unavailable (<KB id={444003} />).
 
 <Callout type="field">
-Identity cut-overs fail on authorisation, not authentication. Users can sign in but see nothing because group-to-role mappings didn't carry over. Write the role mapping table first, and test with a non-admin account from each role.
+Test authorisation as well as authentication in a cut-over: users can sign in but see nothing if group-to-role mappings didn't carry over. Write the role mapping table first, and test with a non-admin account from each role.
 </Callout>
 
 ## Pitfalls

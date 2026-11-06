@@ -1,44 +1,64 @@
 ---
 title: "VCF Operations and cloud proxy problems: cluster state, disk, DNS and haproxy"
-description: "VCF Operations is now the console for the whole fleet, so its problems look like platform problems. Most of them reduce to disk on the analytics nodes, the cluster's own state, or DNS seen from the cloud proxies."
+description: "VCF Operations is now the console for the whole fleet, so its problems look like platform problems. Check disk on the analytics nodes, the cluster's own state, and DNS seen from the cloud proxies."
 category: troubleshooting
 order: 8
 versions: ["9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
-kbs: [410759, 446447, 318768, 454593, 436047, 448522, 426042, 443900, 437258, 443018, 440916]
+updated: 2026-11-06
+reviewed: 2026-11-06
+kbs: [410759, 446447, 318768, 454593, 436047, 402329, 448522, 426042, 443900, 437258, 443018, 440916]
 sources:
-  - title: "VCF Operations 9.1 known issues"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/known-issues/vcfoperations-91-known-issues.html"
+  - title: "Fleet Management"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Manage Your Private Cloud with VCF Operations"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/overview-of-vmware-cloud-foundation-9/what-is-vmware-cloud-foundation-and-vmware-vsphere-foundation/vcf-operations-overview/managing-your-private-cloud-in-vcf-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrading to VCF Operations 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Create Snapshots of the VCF Operations Nodes Before You Upgrade"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/create-a-snapshot.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
 ---
 
 <InShort>
-Three areas cover most VCF Operations tickets. **Disk on the analytics nodes**: a full root or `/storage/db` stops analytics, and the fix is a **new disk on every node**, not expanding an existing one (<KB id={318768} />, <KB id={454593} />). **Cluster state**: stuck at "Waiting for Analytics", which is recovered through the admin UI by taking the cluster offline and online in order (<KB id={446447} />). **Cloud proxies and DNS**: proxies going offline every few hours, or 503s through haproxy, almost always trace back to name resolution (<KB id={426042} />, <KB id={443900} />). Never revert VCF Operations to a snapshot to undo a failed change (<KB id={436047} />).
+Check three areas first. **Disk on the analytics nodes**: a full `/storage/db` stops analytics, and the fix is a **new disk on every analytics node**, not expanding an existing one (<KB id={318768} />, <KB id={454593} />). A full root partition is a separate case (<KB id={410759} />). **Cluster state**: stuck at "Waiting for Analytics", which is recovered by taking the cluster offline in the admin UI, restarting each node in turn from vCenter, then bringing it online (<KB id={446447} />). **Cloud proxies and DNS**: proxies going offline every few hours, or 503s through haproxy, point to name resolution (<KB id={426042} />, <KB id={443900} />). Before reverting VCF Operations to a snapshot, check the set was taken offline and includes the cloud proxies: [the rollback note](/vcf/library/upgrades/rollback-checkpoints/) separates the documented revert after a failed upgrade from other cases (<KB id={402329} />, <KB id={436047} />).
 </InShort>
 
+<Callout type="note" title="Corrected on 6 November 2026">
+This note said never to revert VCF Operations to a snapshot, citing KB 436047. That KB reports one environment and contains no such rule, and other Broadcom KBs tell you to revert after specific upgrade failures.
+</Callout>
+
 <Compare rows={[
-  ["Role", "Aria Operations: optional monitoring", "VCF Operations: the fleet console for lifecycle, licensing, certificates and passwords"],
-  ["Collectors", "Remote collectors and cloud proxies", "Cloud proxies. 9.1 needs a unified cloud proxy in the first instance."],
+  ["Role", "Aria Operations: monitoring", "VCF Operations: the fleet console for lifecycle, licensing, certificates and passwords"],
+  ["Collectors", "Cloud proxies", "Cloud proxies. TechDocs requires one in the first VCF Instance for the 9.1 upgrade."],
   ["Admin UI", "https://primary/admin", "The same, for cluster state"],
-  ["Impact of an outage", "Monitoring gap", "Monitoring gap plus no lifecycle, certificate or licensing actions"],
+  ["Impact of an outage (this site's inference)", "Monitoring gap", "Monitoring gap plus no lifecycle, certificate or licensing actions"],
 ]} />
 
 ## Analytics nodes
 
 | Symptom | Cause and fix |
 |---|---|
-| Cluster stuck "Waiting for Analytics" | Root partition full, for example from an outbound plugin writing to a temp folder (<KB id={410759} />). Otherwise a generic start failure: snapshot, force offline, restart nodes one by one, bring online (<KB id={446447} />). |
-| "data retrieve is not initialized yet" | `/storage/db` low. Take the cluster offline, add a new disk of the same size to every node, bring it online (<KB id={318768} />). |
+| Cluster stuck "Waiting for Analytics" | Root partition full, for example from an outbound plugin writing to a temp folder (<KB id={410759} />). Or inter-node communication or GemFire heartbeat failures: snapshot, take offline (force only if that fails), restart nodes one by one, bring online (<KB id={446447} />). |
+| "data retrieve is not initialized yet" | `/storage/db` low. Take the cluster offline, add a new disk to every analytics node so all keep the same capacity, bring it online (<KB id={318768} />). |
 | PAK upload fails with "ensure there is an active connection" | Out of disk during staging (<KB id={454593} />). |
 | "Service or view is not available" on Build > Lifecycle after 9.1 upgrade | A duplicate thumbprint in Trusted Certificates (<KB id={448522} />). |
 
 ```bash
 # On each analytics node
 df -h / /storage/db /storage/log
-systemctl status analytics.service
-# Cluster role check: there must be a MASTER
-curl -sk https://<node>/casa/cluster/status
 ```
 
 ## Cloud proxies
@@ -46,17 +66,17 @@ curl -sk https://<node>/casa/cluster/status
 | Symptom | Cause and fix |
 |---|---|
 | Proxy offline every 4 to 8 hours | haproxy can't resolve the VCF Operations node names. Run `nslookup` for each node from the proxy (<KB id={426042} />). |
-| Periodic 503s, `NOSRV` in haproxy logs | haproxy's resolver caches stale DNS. Apply the KB, and recheck after a 9.0 to 9.1 upgrade, because the config can revert (<KB id={443900} />). |
+| Periodic 503s, `NOSRV` in haproxy logs | haproxy's built-in resolver fails to resolve or refresh backend hostnames. Apply the KB, and recheck after a 9.0 to 9.1 upgrade, because the config can revert (<KB id={443900} />). |
 | SSO page won't load, proxy shows "Outdated life status" | haproxy hung, DNS, or a certificate chain mismatch with the primary (<KB id={437258} />). |
-| "Disk space on cloud proxy is low" with a huge catalina log | A corrupt health status file (<KB id={443018} />). |
+| "Disk space on cloud proxy is low" with a huge catalina log | A corrupt or empty health status file (<KB id={443018} />). |
 | "VCF Operations lost connection to SDDC Manager" | An expired token on the diagnostics adapter. Recreate it (<KB id={440916} />). |
 
-<Callout type="field">
-Treat VCF Operations like vCenter now: image-level backups, disk monitoring, and a change window for upgrades. Many teams still think of it as "the monitoring tool". In 9.x it holds licensing and lifecycle for the whole fleet.
+<Callout type="analysis">
+This is this site's advice. Treat VCF Operations like vCenter now: image-level backups, disk monitoring, and a change window for upgrades. In 9.x it holds licensing and lifecycle for the whole fleet.
 </Callout>
 
 ## Pitfalls
 
 - **Expanding an existing VMDK** on analytics nodes. Add a new disk, identically sized, to all of them.
-- **Reverting to a snapshot.** It has duplicated adapters thousands of times in documented cases.
+- **Reverting without the cloud proxies.** One public report describes a vCenter adapter duplicating thousands of times after a revert in an environment whose proxies had no backups or snapshots. Broadcom didn't determine the exact cause (<KB id={436047} />).
 - **Testing DNS from your laptop.** Test from the proxy, against every node.

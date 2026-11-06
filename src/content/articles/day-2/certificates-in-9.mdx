@@ -1,11 +1,12 @@
 ---
 title: "Certificates in 9.x: CA setup, replacement and auto-renewal"
-description: "Certificate management moved from SDDC Manager to VCF Operations and gained auto-renewal. Most problems come down to preconditions: the right CA template, a 1:1 CSR, SANs that match the registered hostname, and a renewal mode that applies to the certificate in use."
+description: "Certificate management moved from SDDC Manager to VCF Operations and gained auto-renewal. Check the preconditions first: the right CA template, a 1:1 CSR, SANs that match the registered hostname, and a renewal mode that applies to the certificate in use."
 category: day-2
 order: 2
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [427937, 414058, 425527, 410412, 443150, 401865, 447766, 449554, 344201, 385107, 438122, 427237, 317900, 431963, 441506, 425964]
 sources:
   - title: "Automatic certificate renewal in VCF 9"
@@ -31,7 +32,7 @@ In 9.x, certificates for both management components and VCF instances are manage
   ["CAs", "Microsoft CA or OpenSSL CA integrated with SDDC Manager, or an external CA through CSR", "Microsoft AD CS, the fleet CA (management components), VMCA (infrastructure and ESX), and OpenSSL on SDDC Manager (infrastructure only)"],
   ["Renewal", "Manual", "Auto-renewal toggle. 60 days before expiry in 9.0.2+, for components that support non-disruptive replacement."],
   ["Visibility", "Per-domain certificate lists", "Fleet-wide inventory with alerts. Expect a collection lag after setup: certificates up to 6 hours, accounts up to 30 hours."],
-  ["SAN tolerance", "Often lenient", "9.1 checks that the SAN matches the registered hostname, and removed the CN fallback for log forwarders"],
+  ["SAN tolerance", "Less strict than 9.1", "9.1 checks that the SAN matches the registered hostname, and removed the CN fallback for log forwarders"],
 ]} />
 
 ## Setting up a CA that will actually renew

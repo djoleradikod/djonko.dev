@@ -6,6 +6,7 @@ order: 10
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [443166, 453116, 447632, 448839, 416358, 420374, 443647, 421477, 446454, 442857, 447589, 440282]
 sources:
   - title: "VCF 9.1 release notes: depot and download changes"
@@ -59,7 +60,7 @@ curl -I -v https://eapi.broadcom.com
 | Download tool lists zero ESX install binaries | ESX is published as UPGRADE, not INSTALL (<KB id={442857} />). |
 
 <Callout type="field">
-Put the depot path in the network design document as its own flow: source addresses (the runtime pool), destinations, ports, proxy and TLS inspection exemptions. Most depot tickets are firewall requests that were written for 5.x.
+Put the depot path in the network design document as its own flow: source addresses (the runtime pool), destinations, ports, proxy and TLS inspection exemptions. A firewall request written for 5.x won't cover this flow.
 </Callout>
 
 ## Pitfalls

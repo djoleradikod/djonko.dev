@@ -1,62 +1,187 @@
 ---
-title: "Rollback in practice: no single undo button, so treat backups as checkpoints"
-description: "VCF has never had a whole-platform rollback, and 9.x adds steps that cannot be reversed at all. Here is how to design checkpoints, what each component's way back looks like, and which recovery actions are safe to take during the window."
+title: "Rollback section for a VCF 9.1.x change plan: checkpoint, revert status and fallback per component"
+description: "A table to paste into the plan. VCF Operations: snapshot offline, proxies included; reverting after a failed upgrade is documented. NSX: file backup only, never VM snapshots. Management services have no documented way back and VCF Automation only a support-led rollback for one failure, so fix forward with support."
 category: upgrades
 order: 10
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-kbs: [450430, 445418, 452677, 452077, 451010, 443718, 440807, 444168, 449148, 454467, 442134, 446672]
+updated: 2026-11-06
+reviewed: 2026-11-06
+kbs: [450430, 436047, 402329, 342576, 429013, 445418, 452677, 452077, 440630, 433822, 313288, 311902, 454467, 442134, 446672, 451010, 443718, 440807, 444168, 449148, 448384]
 sources:
+  - title: "Create Snapshots of the VCF Operations Nodes Before You Upgrade"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/create-a-snapshot.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrading to VMware Cloud Foundation 9.1.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrade VCF Operations to 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/install-a-software-update.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrading to VCF Operations 9.1 (cloud proxies)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Component Backup and Restore of VMware Cloud Foundation"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrade SDDC Manager to 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/apply-cloud-foundation-5-2-update-bundle.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Prerequisites for Upgrading the VCF Core Components"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/upgrade-prequisites.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Restore SDDC Manager from a File-Based Backup"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/restoring-vmware-cloud-foundation/file-based-restore-for-sddc-manager-vcenter-server-and-nsx-t-data-center/vcf-52-restore-sddc-manager/restore-sddc-manager-from-a-file-based-backup.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Restore a vCenter Instance from a File-Based Backup"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/restoring-vmware-cloud-foundation/file-based-restore-for-sddc-manager-vcenter-server-and-nsx-t-data-center/restore-vcenter-server/restore-the-management-domain-vcenter-server.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Prepare for Restoring an NSX Manager Cluster Node"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/restoring-vmware-cloud-foundation/file-based-restore-for-sddc-manager-vcenter-server-and-nsx-t-data-center/restore-nsx-t-manager/prepare-for-restoring-nsx-t-manager.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Redeploy VCF Management Services for VCF Instance Backup and Restore"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/-vmware-cloud-foundation-instance-recovery/recovery-task-library/vcf-management-services-restore-tasks/redeploy-and-restore-vcf-management-services-components.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrading to VCF Automation 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/phase-3-import-and-upgrade-aria-automation-8-to-vcf-automation-9.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrade VCF Automation to 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/phase-3-import-and-upgrade-aria-automation-8-to-vcf-automation-9/upgrade-to-vcf-automation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrade ESX to 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/upgrade-esxi-for-vmware-cloud-foundation-5-2-1.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrade a vSphere Distributed Switch to a Later Version (vSphere 9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-0/vsphere-networking/basic-networking-with-vnetwork-distributed-switches/upgrade-a-vsphere-distributed-switch-to-a-later-version.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-10-19
+  - title: "About the vSAN Disk Format (vSAN 8.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vsan/vsan/8-0/vsan-administration/upgrading-the-vsan-cluster/about-the-virtual-san-disk-format.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-09
+  - title: "VCF Operations what's new, 9.1 release notes (vCenter RDU stages)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
   - title: "Upgrading VCF 5.2 to 9.0: the top 10 questions answered (rollback)"
     url: "https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/"
-    by: "VMware Cloud Foundation blog"
+    by: "Jonathan McDonald, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-12-18
+  - title: "How to Upgrade to VMware Cloud Foundation 9.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/06/18/how-to-upgrade-to-vmware-cloud-foundation-9-1/"
+    by: "Jonathan McDonald, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-06-18
+  - title: "VCF Automation 9.0 to 9.1 upgrade precheck and execution stages"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/07/27/modernizing-infrastructure-a-deep-dive-into-the-vmware-cloud-foundation-automation-9-0-to-9-1-upgrade-precheck-and-execution-stages/"
+    by: "Mohammed Aakhil, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-07-27
+  - title: "VMware vCenter Virtual Hardware Gets an Upgrade in vSphere with VCF 9.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/12/vcenter-virtual-hardware-upgrade/"
+    by: "Féidhlim O'Leary, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-05-12
   - title: "The VCF 9.1 upgrade, step by step: what actually happens"
     url: "https://www.wwt.com/blog/the-vcf-91-upgrade-step-by-step-what-actually-happens"
     by: "WWT"
-  - title: "Upgrade ESX to 9.1 (batches and retry)"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/upgrade-esxi-for-vmware-cloud-foundation-5-2-1.html"
-    by: "Broadcom TechDocs"
+    kind: vendor
 ---
 
 <InShort>
-Broadcom's own answer is that there is no single rollback for VCF. Each serial step is a checkpoint. You back up the component before it is upgraded, and if the step fails, you return that component to its pre-step state. 9.x keeps that model and adds two hard edges. Once 9.1 management services are deployed, the 9.0 fleet appliance cannot be reinstated. VCF Automation's old nodes are only powered off, not upgraded, so they are a fallback only until you delete them. Most failed steps don't need a rollback at all. They need the right *retry*, at the right level.
+Broadcom documents no whole-platform rollback, so the plan needs one line per component. **VCF Operations:** snapshot every node and cloud proxy with the cluster offline. Reverting those snapshots after a failed upgrade is documented, so "never revert" was wrong. **NSX:** file backup only, because VM snapshots on NSX Managers and Edges are unsupported. **Management services:** no Broadcom page opened for this note gives a way back after they are deployed. **VCF Automation:** one KB gives a rollback for one failure, and only through support (<KB id={448384} />). Plan to fix forward with support for both. **VDS and vSAN on-disk format:** one-way, and both sit near the end of Broadcom's order.
 </InShort>
 
-<Compare rows={[
-  ["Model", "Component checkpoints: snapshot or back up SDDC Manager, back up vCenter and NSX", "The same, plus VCF Operations offline snapshots and fleet backups"],
-  ["Irreversible steps", "Few. vSAN on-disk format and VDS upgrades.", "Also: deploying management services (9.1), and decommissioning the 9.0 fleet appliance"],
-  ["Retry", "SDDC Manager task retry", "Retry at the failed step in VCF Operations. Underlying tasks carry a retryable flag (9.1)."],
-  ["vCenter", "In-place upgrade, restored from file-based backup", "Reduced-downtime upgrade: before switchover the source stays authoritative, and you can cancel"],
-]} />
+<Callout type="note" title="Corrected on 6 November 2026">
+This note called NSX restore support-led, but TechDocs publishes the procedure. It also presented VCF Automation's old nodes as a fallback and the fleet appliance limit as Broadcom's: no page opened documents the first, and the second is WWT's wording.
+</Callout>
 
-## Checkpoints per component
+## The table for your plan
 
-| Component | Before the step | Way back |
+**Documented** means a Broadcom page opened on 6 November 2026 describes that way back. **Reasoned** means it is this site's inference, so get it confirmed in your Broadcom pre-upgrade review before relying on it. Rows follow the order in [Upgrading to VCF 9.1.x](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html), leaving out components this note doesn't cover. Two rows merge steps: Identity Broker comes just before VCF Automation with the other two just after it, and NSX Edges come after ESX. <AsOf date="2026-11-06" />
+
+| Component | Checkpoint and how | Way back | Fallback if a step fails |
+|---|---|---|---|
+| Fleet management appliance (from 9.0.x) | Reasoned: VM snapshot before the VCF Operations upgrade. TechDocs lists no snapshot for it. | **Documented** for one failure: revert the environment "including VCF Ops and LCM" (<KB id={452077} />). This note reads LCM as this appliance. | Keep the powered-off VM. It is decommissioned after the inventory transfer and [deleting it is manual](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/install-a-software-update.html). Delete it after the fleet is on 9.1 (<KB id={440630} />). |
+| VCF Operations cluster | Cluster offline in the admin UI, memoryless unquiesced snapshot of each node, back online before installing ([TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/create-a-snapshot.html)). Image-based backup too. | **Documented:** revert all VMs, power on, bring online (<KB id={402329} />, <KB id={445418} />, <KB id={452677} />). | If the cluster drops offline during the PAK install, take it online and use [Finish Installation](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/install-a-software-update.html). Otherwise revert, or restore the image backup. |
+| Cloud proxies | Same offline snapshot (<KB id={342576} />). The TechDocs snapshot page doesn't mention proxies. | **Documented:** reverted with the cluster (<KB id={402329} />). | A failed automatic proxy upgrade is [fixed with the CLI](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore.html). |
+| SDDC Manager | SFTP file backup plus a snapshot ([TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/apply-cloud-foundation-5-2-update-bundle.html)). Make it cold, as the [core prerequisites](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/upgrade-prequisites.html) specify. | **Reasoned** for the snapshot: TechDocs requires one and gives no revert steps. **Documented** for the backup: [new appliance from OVA, then restore](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/restoring-vmware-cloud-foundation/file-based-restore-for-sddc-manager-vcenter-server-and-nsx-t-data-center/vcf-52-restore-sddc-manager/restore-sddc-manager-from-a-file-based-backup.html). | Retry, then revert the snapshot if the step never completed. |
+| VCF management services | Fresh backups, with the snapshots from the rows above still in place. | **Reasoned:** none once deployed. WWT states [no supported path](https://www.wwt.com/blog/the-vcf-91-upgrade-step-by-step-what-actually-happens); TechDocs doesn't address it. <KB id={452077} /> does revert when the "Deploy VCF Management Components" step fails. | Fix forward with support. A later failed state has a [redeploy procedure](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/-vmware-cloud-foundation-instance-recovery/recovery-task-library/vcf-management-services-restore-tasks/redeploy-and-restore-vcf-management-services-components.html) needing a recent backup. |
+| VCF Automation (9.0 to 9.1) | [File-based backup](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation.html). The workflow also [starts a full source backup](https://blogs.vmware.com/cloud-foundation/2026/07/27/modernizing-infrastructure-a-deep-dive-into-the-vmware-cloud-foundation-automation-9-0-to-9-1-upgrade-precheck-and-execution-stages/). | **Documented** for one failure, through support only: a failure at "Power Off Source Cluster" from a datastore path mismatch rolls back to 9.0, and the KB says this isn't a standalone user task (<KB id={448384} />). Otherwise none documented. Blue-green: old nodes [shut down automatically](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/phase-3-import-and-upgrade-aria-automation-8-to-vcf-automation-9.html) and their IPs are freed. | Keep the old nodes until validated. Ask support before powering them on, because those IPs may be reused. |
+| Identity Broker, Operations for networks, Log Management | [Backup method per component](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation.html): networks image-based, the others file-based. Log data isn't in the backup and must be archived. | **Reasoned:** restore that backup. No upgrade revert was found for these. | Retry first (see below). |
+| NSX Manager and Edges | Manual file backup, confirmed on the SFTP target. **No VM snapshots** (<KB id={433822} />). Edge config is [inside the Manager backup](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation.html), and that table lists NSX Manager as file-based only, though the core prerequisites sentence also allows image-based backups of it. | **Documented:** new appliance from an OVA of the exact same version, then restore (<KB id={433822} />). TechDocs publishes the [restore procedure](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/restoring-vmware-cloud-foundation/file-based-restore-for-sddc-manager-vcenter-server-and-nsx-t-data-center/restore-nsx-t-manager/prepare-for-restoring-nsx-t-manager.html). The KB doesn't detail Edge rollback; TechDocs lists a separate Edge restore topic. | Retry. Version drift after a manual NSX upgrade is fixed with a version sync (<KB id={440807} />). |
+| vCenter | File-based or image-based backup. RDU creates a new VM at a newer hardware version, 17 instead of 10, and hardware upgrades [can't be reversed](https://blogs.vmware.com/cloud-foundation/2026/05/12/vcenter-virtual-hardware-upgrade/). | **Documented:** RDU cancel before switchover (<KB id={313288} />, written for 8.0), source recovery after it (<KB id={311902} />, lists 9.1). In place: [new appliance, restore](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/restoring-vmware-cloud-foundation/file-based-restore-for-sddc-manager-vcenter-server-and-nsx-t-data-center/restore-vcenter-server/restore-the-management-domain-vcenter-server.html) using the failed version's ISO. | From 9.0.x, if RDU fails at preparation on a certificate download, fix the source's proxy settings. If policy rules that out, the KB gives in-place via SDDC Manager as the workaround (<KB id={442134} />). Stuck cancel: <KB id={454467} />. |
+| ESX | Hosts healthy, image validated. No checkpoint to revert. | **Reasoned** [forward only](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/upgrade-esxi-for-vmware-cloud-foundation-5-2-1.html): the page offers retries and new batches, and no rollback. | In a parallel upgrade, other hosts continue. Put failed hosts in a new batch. |
+| vSphere Distributed Switch | Export the switch configuration. | **Documented one-way:** [can't revert](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-0/vsphere-networking/basic-networking-with-vnetwork-distributed-switches/upgrade-a-vsphere-distributed-switch-to-a-later-version.html) (vSphere 9.0 page). | If the upgrade fails, import the export. |
+| vSAN on-disk format | VM backups. No checkpoint reverses it. | **Documented one-way** on the [vSAN 8.0 page](https://techdocs.broadcom.com/us/en/vmware-cis/vsan/vsan/8-0/vsan-administration/upgrading-the-vsan-cluster/about-the-virtual-san-disk-format.html): once upgraded, "you cannot roll back software on the hosts". **Reasoned** for 9.1: the VCF 9.1 page is silent. | None. It comes near the end of the order, so hold it until the hosts have run on 9.1 for a while. |
+
+## VCF Operations: three situations the old notes blurred
+
+| Situation | Status | Plan |
 |---|---|---|
-| VCF Operations | Take the cluster offline, snapshot every node, bring it back online, then install (<KB id={450430} />) | Revert all node snapshots together |
-| SDDC Manager | SFTP file backup confirmed, plus a VM snapshot | Revert the snapshot, or restore from backup |
-| vCenter | File-based backup | RDU: cancel before switchover (<KB id={454467} />). In place: restore from backup. |
-| NSX | NSX backup confirmed | Restore is a support-led process. Prevent rather than cure. |
-| ESX | Hosts healthy, image validated | Failed hosts don't block the others. Remediate them in a new batch. |
-| Management services (9.1) | Backups of everything above, plus the 9.0 fleet appliance | None after deployment |
-| VCF Automation (9.0 to 9.1) | Healthy 9.0 cluster and backups | The old nodes, powered off, until you delete them |
+| Planned offline snapshot before an upgrade | Documented in TechDocs, <KB id={450430} /> and <KB id={342576} /> | Take it on the widest scope below. |
+| Revert after a failed upgrade | Documented. <KB id={445418} /> (expired root password) and <KB id={452677} /> (interrupted precheck) both say revert. | Collect a full support bundle first if support will be involved, then revert all VMs. |
+| Revert after some other failed change, such as a disk expansion | Reasoned. No article found prohibits or endorses it. <KB id={436047} /> reports one such case going badly. | Only with a full offline set including proxies, and ask support first if you don't have one. |
 
-Delete snapshots when each checkpoint is confirmed good. Long-lived snapshots on management appliances cause problems of their own.
+The old "never revert" line came from <KB id={436047} />. It covers one environment, where a revert after a failed disk expansion was followed by a vCenter adapter duplicating thousands of times. Broadcom says the exact cause wasn't determined, and notes the proxies had no backups or snapshots. Its fix was a full restore from an older backup, and it doesn't advise against reverting.
 
-## Retry before rollback
+Sources disagree on what to snapshot. <KB id={450430} /> says "all primary nodes", TechDocs says each node in the cluster, and <KB id={342576} /> says all nodes "including Cloud Proxies". Use the last. <KB id={402329} /> reverts the proxies too, and that needs a snapshot to exist. That KB lists Aria Operations as its environment and names no version, so <KB id={342576} /> (which lists VCF Operations 9.x) and the 9.1 failure KBs are what carry it forward.
 
-Most 9.x failures are recoverable in place, as long as you choose the right level:
+Two limits go in the plan:
 
-- **Fix the cause, then use Retry Task.** Lifecycle tasks resume at the failed step. In 9.1 the underlying task has a retryable flag. When it is false, a reset is needed, and that is a support action (<KB id={451010} />).
-- **"Stuck" isn't always stuck.** If the work finished but the status didn't update, restarting the fleet and SDDC build and upgrade pods clears it (<KB id={443718} />).
-- **Version drift after manual actions** is fixed with a version sync on SDDC Manager, not a re-upgrade (<KB id={440807} />).
-- **Stale plans and locks** can be cleared through documented API calls or database edits, after a snapshot (<KB id={444168} />, <KB id={449148} />).
-- **RDU keeps failing?** Fall back to a standard in-place vCenter upgrade (<KB id={442134} />, <KB id={446672} />).
+- **72 hours.** <KB id={342576} /> says snapshots older than that cause performance issues, and TechDocs says to delete them after the upgrade. Delete too soon and you lose the way back for the next phase, so write the removal time down per phase.
+- **SSO after a revert.** <KB id={342576} /> rates the risk of breaking the VCF SSO integration high on 9.0.x and slight on 9.1 and newer.
 
-Revert to a checkpoint when the KB says so, for example after an expired root password (<KB id={445418} />), an interrupted precheck (<KB id={452677} />) or an inventory sync race (<KB id={452077} />), or when the window is closing and the fix is unknown.
+<Callout type="analysis">
+This is inference: a failed 9.0.x to 9.1 upgrade reverts to 9.0.x, and the KB doesn't say whether the source or target version sets the risk. Plan for the high figure. <KB id={429013} /> restores the link by rotating the client secret, or by unjoining and rejoining if you can give up existing role assignments, so allow time for it.
+</Callout>
 
-<Diagram viewBox="0 0 820 200" label="Decision flow: a step fails; if the cause is known and the task is retryable, fix and retry; if the status is stale, refresh services; if the KB says revert or the window is closing, revert to the checkpoint; otherwise collect evidence and escalate." caption="Decide at the level of the failed step, not the whole upgrade.">
+## Retry before reverting
+
+Each of these is one KB's specific failure, so match the symptom before using it.
+
+- **Log Management, Salt master or other VSP component failed but shows the new version:** apply the KB's task patch, then check the retryable flag. When it is false, contact support (<KB id={451010} />).
+- **Log Management stuck at "Install VCF services runtime":** deleting the fleet and SDDC build and upgrade pods clears it (<KB id={443718} />).
+- **vCenter and NSX upgrade option greyed out by stale target version metadata:** delete the stale domain release entry through the SDDC Manager API (<KB id={444168} />).
+- **Switchover blocked by a lock:** delete the lock row, with an SDDC Manager snapshot first, as the KB requires (<KB id={449148} />).
+- **Daily inventory sync collided with the upgrade:** this one has no retry. Revert to the 9.0.x snapshots and start again at least 10 minutes after the sync (<KB id={452077} />).
+
+From 5.2 the [vCenter upgrade must be RDU](https://blogs.vmware.com/cloud-foundation/2026/06/18/how-to-upgrade-to-vmware-cloud-foundation-9-1/), so don't write in-place as your fallback on that path. <KB id={446672} /> does mention a standard upgrade, for vCenter 8.0 to 9.0, so ask support if you need it. In the optimized window, NSX Manager [is upgraded before switchover](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html). Cancelling the vCenter upgrade at that point doesn't undo NSX, by this site's reading.
+
+<Diagram viewBox="0 0 820 200" label="Decision flow: a step fails; if the cause is known and the task is retryable, fix and retry; if the status is stale, refresh services; if the KB says revert or the window is closing, revert to the checkpoint; otherwise collect evidence and escalate." caption="Decide at the level of the failed step.">
   <rect class="box warn" x="10" y="74" width="130" height="50" rx="8" /><text class="t" x="24" y="104">Step failed</text>
   <rect class="box accent" x="200" y="10" width="200" height="50" rx="8" /><text class="t" x="214" y="32">Cause known?</text><text class="s" x="214" y="50">and task retryable</text>
   <rect class="box" x="200" y="74" width="200" height="50" rx="8" /><text class="t" x="214" y="96">Work done, status</text><text class="s" x="214" y="114">stale?</text>
@@ -69,12 +194,4 @@ Revert to a checkpoint when the KB says so, for example after an expired root pa
   <path class="wire accent" d="M400 35 L458 35" marker-end="url(#arra)" /><path class="wire" d="M400 99 L458 99" marker-end="url(#arr)" /><path class="wire" d="M400 163 L458 163" marker-end="url(#arr)" />
 </Diagram>
 
-<Callout type="field">
-Agree the "go back" criteria with the customer before the window. For example: "If SDDC Manager is not upgraded by 02:00, we revert the snapshot and stop." Making that decision at 02:00 under pressure is how windows overrun into business hours.
-</Callout>
-
-## Pitfalls
-
-- **Snapshots as backups.** A snapshot is a checkpoint for minutes or hours, not a backup.
-- **Running database fixes from a KB without a snapshot.** Every KB that edits a database says to snapshot first, for good reason.
-- **Retrying the whole upgrade.** Retry the failed step. Re-running an earlier step on a partly upgraded system creates new problems.
+Broadcom's [Jonathan McDonald](https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/) treats each serial upgrade as a checkpoint and says to assess and roll back, or call support if the window is running out. That post covers 5.2 to 9.0, names NSX, vCenter and ESX without giving a procedure, and describes his own practice. The TechDocs ESX page gives no rollback, so don't read it as one. Pair this table with the gates in [go or no-go](/vcf/library/leadership/go-no-go-and-rollback/), and put a time on each revert decision. A constructed example: "If SDDC Manager isn't on 9.1 by 02:00, revert its snapshot and stop." For the disk and proxy symptoms that lead to a VCF Operations revert, see [VCF Operations and cloud proxy problems](/vcf/library/troubleshooting/vcf-operations-and-cloud-proxies/).

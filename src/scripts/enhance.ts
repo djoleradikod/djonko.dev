@@ -223,9 +223,20 @@ if (tocLinks.length) {
     const current = byId.get((heads.filter((h) => h.getBoundingClientRect().top < line).at(-1) ?? heads[0]).id);
     if (current === last) return;
     last?.removeAttribute('aria-current'); current?.setAttribute('aria-current', 'location'); last = current;
+    // A note's list can be taller than its sticky rail. Keep the current entry in view inside the rail.
+    const rail = current?.closest<HTMLElement>('.note-toc');
+    if (current && rail && rail.scrollHeight > rail.clientHeight) {
+      const a = current.getBoundingClientRect(), b = rail.getBoundingClientRect();
+      if (a.top < b.top || a.bottom > b.bottom) rail.scrollTop += a.top - b.top - b.height / 2;
+    }
   };
   addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(mark); } }, { passive: true });
   mark();
+  // Below the rail width the list is an inline disclosure: choosing a section closes it.
+  document.querySelector<HTMLDetailsElement>('details.note-toc')?.addEventListener('click', (e) => {
+    const d = e.currentTarget as HTMLDetailsElement;
+    if ((e.target as HTMLElement).closest('a') && !matchMedia('(min-width:1100px)').matches) d.open = false;
+  });
 }
 
 // 7. Reading progress, kept only in this browser. A note counts as read once its end has been on

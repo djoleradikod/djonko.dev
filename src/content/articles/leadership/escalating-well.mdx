@@ -1,11 +1,12 @@
 ---
-title: "Escalating well: support cases that get answered on the first reply"
-description: "A support case is a handover to an engineer who has never seen your environment. The cases that get fixed fastest share a pattern: one clear problem statement, exact identifiers, the right bundle, and an honest list of what was already tried."
+title: "Escalating well: writing a support case an engineer can act on"
+description: "A support case is a handover to an engineer who has never seen your environment. Give them one clear problem statement, exact identifiers, the right bundle, and an honest list of what was already tried."
 category: leadership
 order: 3
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [385749, 402476, 140731]
 sources:
   - title: "Uploading diagnostic information to Broadcom support"
@@ -17,7 +18,7 @@ sources:
 Write the case for a reader who has five minutes and no context. Lead with **one sentence**: what fails, where, since when, and the impact. Then the **identifiers**: task or reference IDs, exact error text, time with time zone, versions. Then the **evidence**: the right bundle for the layer that failed, uploaded as the KB describes (<KB id={140731} />). Then **what you tried**, including what made it worse. Set severity by business impact, not frustration, and name one contact who can make changes.
 </InShort>
 
-<Compare v5Label="Slow case" v9Label="Fast case" title="Same problem, two cases" rows={[
+<Compare v5Label="Thin case" v9Label="Complete case" title="Same problem, two cases" rows={[
   ["Summary", "Upgrade failed, please help", "9.0 to 9.1: SDDC lifecycle step vmsp_upgrade fails with InvalidLogin since 14:05 UTC. Management domain upgrade blocked."],
   ["Identifiers", "Screenshot of the UI", "Task ID, reference ID, exact message, versions"],
   ["Evidence", "Everything, or nothing", "sos with the management services option, plus the fleet lifecycle bundle"],

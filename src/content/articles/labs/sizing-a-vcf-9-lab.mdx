@@ -1,11 +1,12 @@
 ---
-title: "Sizing a VCF 9 lab: what the smallest working fleet needs, and what runs out first"
-description: "The minimum VCF 9.0 lab with VCF Operations and Automation fits in roughly 48 vCPU and 194 GB of memory with simple deployment modes. VCF Automation sets the floor for host cores, and memory is always the first resource to run out."
+title: "Sizing a VCF 9 lab: what the smallest working fleet needs, and what to buy first"
+description: "The minimum VCF 9.0 lab with VCF Operations and Automation fits in roughly 48 vCPU and 194 GB of memory with simple deployment modes. VCF Automation sets the floor for host cores. Buy memory first, or NVMe capacity for memory tiering."
 category: labs
 order: 2
 versions: ["9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: []
 sources:
   - title: "Minimal resources for deploying VCF 9.0 in a lab"
@@ -23,7 +24,7 @@ sources:
 ---
 
 <InShort>
-With **simple (single-node) deployment modes**, one instance of each 9.0 component adds up to about **48 vCPU, 194 GB of memory and 3.2 TB provisioned**, of which about 330 GB is used. **VCF Automation** is the constraint: a 24 vCPU, 96 GB VM, which needs a physical host with at least **12 cores and 24 threads**. Its memory can't be reduced. A fuller nested fleet with a four-node management domain and a three-node workload domain, as Holodeck builds it, needs about **30 cores, 325 GB of memory and 1.1 TB of disk**. Memory runs out first, so look at **NVMe memory tiering** before buying more RAM.
+With **simple (single-node) deployment modes**, one instance of each 9.0 component adds up to about **48 vCPU, 194 GB of memory and 3.2 TB provisioned**, of which about 330 GB is used. **VCF Automation** is the constraint: a 24 vCPU, 96 GB VM, which needs a physical host with at least **12 cores and 24 threads**. Its memory can't be reduced. A fuller nested fleet with a four-node management domain and a three-node workload domain, as Holodeck builds it, needs about **30 cores, 325 GB of memory and 1.1 TB of disk**. Plan memory first, and look at **NVMe memory tiering** before buying more RAM.
 </InShort>
 
 <Compare rows={[
@@ -50,7 +51,7 @@ Figures from William Lam's measurements on 9.0. In 9.1, fleet management is repl
 ## What to buy, in order
 
 1. **Memory** first, or NVMe capacity for memory tiering.
-2. **Cores**: at least 12 cores and 24 threads if VCF Automation is in scope. Many 8-core consumer systems won't run it.
+2. **Cores**: at least 12 cores and 24 threads if VCF Automation is in scope. An 8-core consumer system won't run it.
 3. **NVMe storage**: thin provisioning hides most of the 3.2 TB, but vSAN ESA and snapshots add up.
 4. **10 GbE** if you go physical with more than one host.
 

@@ -6,6 +6,7 @@ order: 4
 versions: ["9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [440630, 450430, 441122, 440449, 448888, 446831, 443106, 441333, 446929, 452059, 452077, 443216]
 sources:
   - title: "Deploy VCF management services (9.1)"
@@ -55,7 +56,7 @@ Upgrading 9.0 to 9.1, or 5.2 straight to 9.1, follows this sequence: upgrade VCF
 
 ## What happens during the step
 
-<Diagram viewBox="0 0 820 150" label="SDDC Manager deploys a temporary bootstrap VM, which builds the services runtime; fleet lifecycle is installed and imports legacy components and VCF Operations; Salt and the License Server are installed." caption="The stages where most failures are reported, in order.">
+<Diagram viewBox="0 0 820 150" label="SDDC Manager deploys a temporary bootstrap VM, which builds the services runtime; fleet lifecycle is installed and imports legacy components and VCF Operations; Salt and the License Server are installed." caption="The stages where the KBs below report failures, in order.">
   <rect class="box v9" x="10" y="30" width="150" height="70" rx="8" /><text class="t" x="22" y="56">Bootstrap VM</text><text class="s" x="22" y="76">from SDDC Manager</text><text class="s" x="22" y="92">needs vCenter 443</text>
   <rect class="box v9" x="175" y="30" width="150" height="70" rx="8" /><text class="t" x="187" y="56">Build runtime</text><text class="s" x="187" y="76">control plane,</text><text class="s" x="187" y="92">workers</text>
   <rect class="box accent" x="340" y="30" width="150" height="70" rx="8" /><text class="t" x="352" y="56">Import legacy</text><text class="s" x="352" y="76">components and</text><text class="s" x="352" y="92">VCF Operations</text>
@@ -76,7 +77,7 @@ Upgrading 9.0 to 9.1, or 5.2 straight to 9.1, follows this sequence: upgrade VCF
 | Import fails right after midnight, or another fixed time | A race with the 9.0 lifecycle daily inventory sync | <KB id={452077} /> |
 | Failed or duplicate components afterwards | A partial run left entries behind | <KB id={441333} /> |
 
-The pattern behind most of them is the same. The runtime is a new set of source addresses on the network, and it needs the same reachability to vCenter, VCF Operations and the depot that SDDC Manager had. Firewall rules written for SDDC Manager don't cover it (<KB id={443216} />).
+Several of them share one pattern. The runtime is a new set of source addresses on the network, and it needs the same reachability to vCenter, VCF Operations and the depot that SDDC Manager had. Firewall rules written for SDDC Manager don't cover it (<KB id={443216} />).
 
 <Callout type="warn" title="Before you click Install">
 Take and verify backups of VCF Operations, SDDC Manager and the 9.0 fleet appliance. This is the last point at which the 9.0 management layout can be restored.

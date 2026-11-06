@@ -6,6 +6,7 @@ order: 2
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [313548]
 sources:
   - title: "Counting cores for VMware Cloud Foundation and vSphere Foundation"
@@ -34,7 +35,7 @@ VCF and VVF count **physical cores** on every licensed host, with a minimum of *
 
 ## The three rules that decide the count
 
-**The floor.** Any CPU with fewer than 16 cores is billed as 16. Single-socket 12-core hosts and dual-socket 8-core hosts pay for cores they do not have. Edge sites and small branch clusters are where this shows up most, because they tend to use small CPUs.
+**The floor.** Any CPU with fewer than 16 cores is billed as 16. Single-socket 12-core hosts and dual-socket 8-core hosts pay for cores they do not have. Check edge sites and small branch clusters first if they use small CPUs.
 
 **Disabled cores count.** The KB is explicit that the counting script needs all cores enabled, and that licensing is based on the physical cores present. Buying a 32-core CPU and disabling half of it to save licence cost does not work.
 
@@ -68,7 +69,7 @@ Three things stand out. The 12-core build pays for 48 cores that do not exist, a
 In April 2025 the trade press reported a 72-core minimum per order line, citing a distributor memo. Broadcom's published documentation, including the counting KB, states only the 16-core per CPU rule, and a Broadcom spokesperson told the German publication iX that the 16-core minimum had not changed. Treat any minimum order quantity as a commercial term and confirm it with your reseller for the specific quote.
 
 <Callout type="warn">
-Run the counting script against the real hosts before renewal. Estates that grew by adding hosts with whatever CPU was available often contain a few small-CPU hosts that are billed at the 16-core floor. Replacing or retiring them can reduce the count without touching the workloads.
+Run the counting script against the real hosts before renewal. An estate that grew by adding hosts with whatever CPU was available can contain small-CPU hosts billed at the 16-core floor. Replacing or retiring them can reduce the count without touching the workloads.
 </Callout>
 
 ## Pitfalls

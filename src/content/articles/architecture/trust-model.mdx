@@ -1,11 +1,12 @@
 ---
 title: "The trust model: certificates, CAs and who trusts whom"
-description: "Most cross-component failures in VCF are trust failures: a certificate the other side no longer accepts, or a service account it no longer recognises. Knowing which issuer signs what, and who stores whose thumbprint, shortens every one of those tickets."
+description: "A cross-component failure in VCF can be a trust failure: a certificate the other side no longer accepts, or a service account it no longer recognises. This note maps which issuer signs what and who stores whose thumbprint, so you can find what went stale."
 category: architecture
 order: 9
 versions: ["5.x", "9.0", "9.1"]
 level: Deep dive
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [427937, 441515, 449907, 444734, 450375, 443511, 431963, 441506]
 sources:
   - title: "Automatic certificate renewal in VCF 9"
@@ -51,20 +52,20 @@ If you use a VMware-issued CA, distribute its root to administrator workstations
 
 ## How trust is recorded
 
-Trust is recorded in more places than people expect, and every one of them can go stale:
+Trust is recorded in several places, and every one of them can go stale:
 
 - **Trust stores.** Each appliance trusts a set of CA roots. In 9.1 the services runtime distributes trust through a `platform-trust` configmap. A missing intermediate CA there silently breaks the VCF Operations to log management integration (<KB id={441515} />).
 - **Thumbprints.** NSX stores the vCenter thumbprint for its compute manager registration. VCF Operations adapters and VCF Automation cloud accounts store the thumbprints of what they connect to. Replace a vCenter certificate, and each of these needs re-trusting (<KB id={431963} />, <KB id={441506} />).
 - **Service account credentials.** These are stored by the caller and rotated by VCF. Change one out of band and the caller fails. For example, a 9.1 SDDC lifecycle account that drifts breaks upgrades and inventory sync (<KB id={450375} />), and a drifted NSX integration account breaks the VCF Operations NSX adapter (<KB id={443511} />).
 
-## The 9.1 rules that catch people out
+## The 9.1 rules to plan for
 
 - **FQDN SANs are mandatory.** Certificates that identify a node only by IP address, or that are missing node FQDNs, block migration of management components into fleet lifecycle during the 9.1 upgrade (<KB id={449907} />).
 - **The identity broker certificate must not carry an IP SAN** during the 9.0 to 9.1 transition (<KB id={444734} />).
 - **Auto-renewal has preconditions.** It must be turned on at the instance level. Native vCenter auto-renewal works only when vCenter's certificate mode is VMCA, not `custom` (<KB id={427937} />).
 
 <Callout type="field">
-A good habit after any certificate change: list everything that stores the old certificate or its thumbprint, then walk the list. For a vCenter replacement that means NSX compute managers, VCF Operations adapters, VCF Automation cloud accounts, backup tools and any third-party integration. Most "it broke after the cert change" tickets are an item missing from that list.
+A good habit after any certificate change: list everything that stores the old certificate or its thumbprint, then walk the list. For a vCenter replacement that means NSX compute managers, VCF Operations adapters, VCF Automation cloud accounts, backup tools and any third-party integration. If something breaks after the change, look first for an item missing from that list.
 </Callout>
 
 ## Pitfalls

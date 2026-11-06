@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build && pagefind --site dist && npm run check",
-    "check": "node scripts/privacy-scan.mjs && node scripts/check-content.mjs",
+    "check": "node scripts/privacy-scan.mjs && node scripts/check-content.mjs && node scripts/check-review.mjs",
     "preview": "astro preview",
     "deploy:pages": "npm run build && npx wrangler@3 pages deploy dist --project-name djonko-dev",
     "deploy:hetzner": "deploy/hetzner/deploy.sh",

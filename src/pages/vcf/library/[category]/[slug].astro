@@ -9,7 +9,9 @@ import { SITE } from '../../../../data/site';
 import { personRef } from '../../../../lib/schema';
 import { mdxComponents } from '../../../../components/mdx';
 import Share from '../../../../components/Share.astro';
+import LibraryNav from '../../../../components/LibraryNav.astro';
 import { pathsFor } from '../../../../lib/paths';
+import { readingTime } from '../../../../lib/posts';
 import { kbCitations, relatedNotes } from '../../../../lib/related';
 import { issueUrl } from '../../../../data/site';
 
@@ -30,83 +32,120 @@ const related = await relatedNotes(a, [prev, next, ...inPaths.map((p) => p.next)
 const cites = await kbCitations();
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 const report = issueUrl({ template: 'correction.yml', title: `Correction: ${a.data.title}`, note: pageUrl });
-const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
-const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+const hasSources = a.data.sources.length > 0 || a.data.kbs.length > 0;
+const toc = [
+  ...headings.filter((h) => h.depth === 2 || h.depth === 3).map((h) => ({ depth: h.depth, slug: h.slug, text: h.text })),
+  ...(hasSources ? [{ depth: 2, slug: 'note-sources', text: 'Sources' }] : []),
+];
+const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const fmtShort = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+const SOURCE_KIND = {
+  broadcom: 'Broadcom', practitioner: 'Practitioner', press: 'Press report', analyst: 'Analyst',
+  sponsored: 'Commissioned or sponsored', vendor: 'Other vendor', tracker: 'Third-party tracker', reference: 'Reference',
+} as const;
 const ld = {
   '@context': 'https://schema.org', '@type': 'TechArticle', headline: a.data.title, description: a.data.description,
   author: personRef(Astro.site), mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).href, datePublished: a.data.pubDate.toISOString(),
   dateModified: (a.data.updated ?? a.data.pubDate).toISOString(), proficiencyLevel: a.data.level,
 };
 ---
-<Base title={a.data.title} description={a.data.description} jsonLd={ld} ogType="article">
-  <article data-pagefind-body data-note={a.id}>
-    <header class="article-head">
-      <p class="eyebrow"><a href="/vcf/" style="color:inherit;text-decoration:none">VCF notes</a> / <a href={`/vcf/library/${cat.id}/`} style="color:inherit;text-decoration:none" data-pagefind-filter="category">{cat.short}</a></p>
-      <h1>{a.data.title}</h1>
-      <p class="lede">{a.data.description}</p>
-      <div class="meta">
-        <span data-pagefind-ignore><VersionBadges versions={a.data.versions} level={a.data.level} /></span>
-        <span>{fmt(a.data.updated ?? a.data.pubDate)}</span>
-        <span>{SITE.author} · {SITE.role}</span>
-      </div>
-      {a.data.versions.map((v) => <span hidden data-pagefind-filter="version">{`VCF ${v}`}</span>)}
-      {inPaths.map(({ path, index }) => (
-        <p class="path-pos small" data-pagefind-ignore>Step {index + 1} of {path.notes.length} in the reading path <a href={`/vcf/paths/${path.id}/`}>{path.title}</a></p>
-      ))}
-    </header>
-    <div class="article-layout">
-      <div class="prose">
+<Base title={a.data.title} description={a.data.description} jsonLd={ld} ogType="article" shell>
+  <div class="shell">
+    <LibraryNav current={a} />
+    <article class="note-grid" id="note-start" tabindex="-1" data-pagefind-body data-note={a.id}>
+      <header class="note-head">
+        <p class="note-crumbs"><a href="/vcf/">VCF notes</a> / <a href={`/vcf/library/${cat.id}/`} data-pagefind-filter="category">{cat.short}</a></p>
+        <h1>{a.data.title}</h1>
+        <p class="note-lede">{a.data.description}</p>
+        <div class="note-meta">
+          <span data-pagefind-ignore><VersionBadges versions={a.data.versions} level={a.data.level} /></span>
+          <span>{a.data.reviewed ? `Sources checked ${fmtShort(a.data.reviewed)}` : a.data.updated ? `Updated ${fmtShort(a.data.updated)}` : `Published ${fmtShort(a.data.pubDate)}`}</span>
+          <span>{readingTime(a.body)} min read</span>
+          <span class="note-author">{SITE.author}, {SITE.role}</span>
+        </div>
+        {a.data.versions.map((v) => <span hidden data-pagefind-filter="version">{`VCF ${v}`}</span>)}
+        {inPaths.length > 0 && (
+          <p class="note-path" data-pagefind-ignore>
+            {inPaths.map(({ path, index }, n) => <>{n > 0 && '; '}{`${n > 0 ? 'step' : 'Step'} ${index + 1} of ${path.notes.length} in the reading path `}<a href={`/vcf/paths/${path.id}/`}>{path.title}</a></>)}
+          </p>
+        )}
+      </header>
+      {toc.length > 2 && (
+        <details class="toc note-toc" id="note-toc" open data-pagefind-ignore>
+          <summary>On this page <span>{toc.length}</span></summary>
+          <p class="toc-h">On this page</p>
+          <nav aria-label="On this page"><ul>{toc.map((h) => <li class={`d${h.depth}`}><a href={`#${h.slug}`}>{h.text}</a></li>)}</ul></nav>
+        </details>
+      )}
+      {toc.length > 2 && <script is:inline>railSync(document.getElementById('note-toc'));</script>}
+      <div class="prose note-body">
         <Content components={mdxComponents} />
-        <div class="note-end" data-pagefind-ignore style="margin-top:2em">
-          {a.data.kbs.length > 0 && (
-            <details class="drawer">
-              <summary>Broadcom KBs in this note ({a.data.kbs.length})</summary>
-              <div class="body"><ul>
-                {a.data.kbs.map((id) => {
-                  const k = kbInfo(id); const others = (cites.get(id) ?? []).length - 1;
-                  return <li><a href={k.url} target="_blank" rel="noopener">KB {id}</a>{k.topic && ` · ${k.topic}`}{others > 0 && <> · <a class="small" href={`/vcf/resources/kb-index/#kb-${id}`}>{others === 1 ? '1 other note' : `${others} other notes`}</a></>}</li>;
-                })}
-              </ul></div>
-            </details>
-          )}
-          {a.data.sources.length > 0 && (
-            <details class="drawer">
-              <summary>Sources and further reading ({a.data.sources.length})</summary>
-              <div class="body"><ul>
-                {a.data.sources.map((s) => <li><a href={s.url} target="_blank" rel="noopener">{s.title}</a>{s.by && ` · ${s.by}`}</li>)}
-              </ul></div>
-            </details>
+        <div class="note-end" data-pagefind-ignore>
+          {hasSources && (
+            <section class="sources" aria-label="Sources">
+              <h2 id="note-sources">Sources</h2>
+              {(a.data.reviewed || a.data.reviewDue) && (
+                <p class="sources-checked">
+                  {a.data.reviewed && `Checked against this note on ${fmt(a.data.reviewed)}. `}
+                  {a.data.reviewDue && `Next check due ${fmt(a.data.reviewDue)}.`}
+                </p>
+              )}
+              {a.data.sources.length > 0 && (
+                <ul class="src-list">
+                  {a.data.sources.map((s) => (
+                    <li class={`src${s.kind === 'sponsored' ? ' sponsored' : ''}`}>
+                      {s.kind && <span class="src-kind">{SOURCE_KIND[s.kind]}</span>}
+                      <a class="src-title" href={s.url} target="_blank" rel="noopener">{s.title}</a>
+                      {s.by && <span class="src-by">{s.by}</span>}
+                      {s.date && <time class="src-date" datetime={s.date.toISOString().slice(0, 10)}>{fmtShort(s.date)}</time>}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {a.data.kbs.length > 0 && (
+                <>
+                  <h3 class="kb-h">Broadcom KBs in this note</h3>
+                  <ul class="kb-list">
+                    {a.data.kbs.map((id) => {
+                      const k = kbInfo(id); const others = (cites.get(id) ?? []).length - 1;
+                      return (
+                        <li>
+                          <a class="kb-id" href={k.url} target="_blank" rel="noopener">KB {id}</a>
+                          <span>{k.topic}</span>
+                          {others > 0 && <a class="kb-more" href={`/vcf/resources/kb-index/#kb-${id}`}>{others === 1 ? '1 other note' : `${others} other notes`}</a>}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </>
+              )}
+            </section>
           )}
           {inPaths.map(({ path, index, next }) => (
             <nav class="path-next" aria-label={`Reading path: ${path.title}`}>
-              <span class="small muted">Reading path · {path.title} · step {index + 1} of {path.notes.length}</span>
               {next
-                ? <a href={urlOf(next)}><span>Next in this path</span>{next.data.title}</a>
-                : <a href={`/vcf/paths/${path.id}/`}><span>End of the path</span>Back to {path.title}</a>}
+                ? <a href={urlOf(next)}><span>Next in {path.title}, step {index + 2} of {path.notes.length}</span>{next.data.title}</a>
+                : <a href={`/vcf/paths/${path.id}/`}><span>You have reached the end of this reading path</span>Back to {path.title}</a>}
             </nav>
           ))}
+          <nav class="prev-next" aria-label="More in this category">
+            {prev && <a href={urlOf(prev)}><span>Previous in {cat.short}</span>{prev.data.title}</a>}
+            {next && <a class="next" href={urlOf(next)}><span>Next in {cat.short}</span>{next.data.title}</a>}
+          </nav>
           {related.length > 0 && (
-            <section class="related" aria-labelledby="related-h">
-              <h2 id="related-h">Related notes</h2>
-              <ul class="list">
-                {related.map((r) => <li><a href={urlOf(r)}><span class="t">{r.data.title}</span><span class="d">{r.data.description}</span></a></li>)}
+            <section class="related" aria-label="Related notes">
+              <h2>Related notes</h2>
+              <ul class="related-list">
+                {related.map((r) => <li><a href={urlOf(r)}>{r.data.title}</a></li>)}
               </ul>
             </section>
           )}
-          <Share url={pageUrl} title={a.data.title} />
-          {report && <p class="small muted report">Found something wrong or out of date? <a href={report} target={report.startsWith("http") ? "_blank" : undefined} rel="noopener">Report a problem with this note</a>.</p>}
-          <nav class="prev-next" aria-label="More in this category">
-            {prev && <a href={urlOf(prev)}><span>Previous</span>{prev.data.title}</a>}
-            {next && <a class="next" href={urlOf(next)}><span>Next</span>{next.data.title}</a>}
-          </nav>
+          <div class="note-foot">
+            {report && <p class="report">Found something wrong or out of date? <a href={report} target={report.startsWith("http") ? "_blank" : undefined} rel="noopener">Report a problem with this note</a>.</p>}
+            <Share url={pageUrl} title={a.data.title} />
+          </div>
         </div>
       </div>
-      {toc.length > 2 && (
-        <aside class="toc" data-pagefind-ignore>
-          <p>On this page</p>
-          <ul>{toc.map((h) => <li class={`d${h.depth}`}><a href={`#${h.slug}`}>{h.text}</a></li>)}</ul>
-        </aside>
-      )}
-    </div>
-  </article>
+    </article>
+  </div>
 </Base>

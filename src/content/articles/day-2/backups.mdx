@@ -6,6 +6,7 @@ order: 4
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [417255, 450561, 456790, 439473, 447314, 442696, 436904, 450430]
 sources:
   - title: "VCF 9.1: automating VCF backup scheduling with the Fleet LCM API"
@@ -59,7 +60,7 @@ A backup no one has restored is a hope, not a control. Two restores are worth pr
 Before upgrades, VCF Operations has its own snapshot ritual: take the cluster offline, snapshot every node, bring it online, then upgrade (<KB id={450430} />).
 
 <Callout type="field">
-Add "last successful backup per component" to the weekly operations report, as one line per component with a date. It costs five minutes, and it is the first question in any recovery.
+Add "last successful backup per component" to the weekly operations report, as one line per component with a date. A recovery starts from that date.
 </Callout>
 
 ## Pitfalls

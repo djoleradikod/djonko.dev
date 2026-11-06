@@ -6,6 +6,7 @@ order: 2
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [415550, 423908, 415767, 420736, 447589, 414456, 388719, 402476]
 sources:
   - title: "SDDC Manager log files"
@@ -44,9 +45,9 @@ grep -Ri "<reference-token>" /var/log/vmware/vcf/ | head
 grep -n -B 20 -A 60 "<reference-token>" /var/log/vmware/vcf/domainmanager/domainmanager.log | less
 ```
 
-Look for the exception class, then scroll to the **last "Caused by"**. It is usually the actionable one:
+Look for the exception class, then scroll to the **last "Caused by"**. It points to the actionable cause:
 
-| Last cause | Usually means |
+| Last cause | Points to |
 |---|---|
 | `UnknownHostException` | DNS (<KB id={423908} />) |
 | `SocketException: No route to host` | Network path or uplinks (<KB id={415550} />) |

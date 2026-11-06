@@ -6,6 +6,7 @@ order: 6
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [397782]
 sources:
   - title: "Clarifying minimum required ESX hosts for VCF deployments"
@@ -26,7 +27,7 @@ sources:
 ---
 
 <InShort>
-In 5.x, **consolidated** meant running workloads in the management domain, separated by resource pools. **Standard** meant a dedicated management domain plus workload domains. Both patterns still exist in 9.x. The bigger footprint decision now is the deployment model of each management component, Simple or HA, because that decides how many hosts the management cluster needs. The short rule from the field: with NSX in HA, plan for four hosts. With NSX Simple, three hosts on vSAN or two on external storage is the documented floor.
+In 5.x, **consolidated** meant running workloads in the management domain, separated by resource pools. **Standard** meant a dedicated management domain plus workload domains. Both patterns still exist in 9.x. The bigger footprint decision now is the deployment model of each management component, Simple or HA, because that decides how many hosts the management cluster needs. The short rule: with NSX in HA, plan for four hosts. With NSX Simple, three hosts on vSAN or two on external storage is the documented floor.
 </InShort>
 
 <Compare rows={[

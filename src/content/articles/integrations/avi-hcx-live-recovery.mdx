@@ -6,6 +6,7 @@ order: 10
 versions: ["5.x", "9.0", "9.1"]
 level: Overview
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [442998, 437447, 454432, 417767, 426469, 382440, 321631, 440630]
 sources:
   - title: "Licensing in VMware Cloud Foundation 9.0 (products still on keys)"
@@ -41,7 +42,7 @@ The official order puts **VCF Operations first, then vSphere Replication, then A
 | Site Recovery and Replication | "no healthy upstream" after a vCenter update | Reconfigure the appliances with FQDNs (<KB id={382440} />) |
 
 <Callout type="field">
-For each add-on, write a one-line integration contract: what it registers in vCenter, what it needs from NSX or SDDC Manager, which licence it uses, and where it sits in the upgrade order. Add-ons are where upgrade plans most often have a gap.
+For each add-on, write a one-line integration contract: what it registers in vCenter, what it needs from NSX or SDDC Manager, which licence it uses, and where it sits in the upgrade order. Without it, an upgrade plan can leave a gap at the add-ons.
 </Callout>
 
 ## Pitfalls

@@ -1,69 +1,200 @@
 ---
-title: "Bringing existing vSphere into VCF 9: convergence, import and VVF"
-description: "Not every VCF 9 estate starts from a green field. Existing vSphere can become a new fleet's management domain, or join an existing fleet as a workload domain. The checks that decide whether it works are mostly about versions, topology and switches."
+title: "vSphere 8 into VCF 9.1: converge, import or neither, with Broadcom's conflicting answers reconciled"
+description: "With a VCF instance already running, import from vCenter 8.0 U3a and ESX 8.0 U3. With no fleet, converge. ELM, baselines or SDDC Manager: neither yet. Aim at 9.1.1, since 9.1.0 only imports U3j and U3k and blocks NSX 4.2.4 or later. FAQ Q57's 8.0 U1 import floor matches the 9.0 docs and conflicts with 9.1."
 category: upgrades
 order: 9
-versions: ["5.x", "9.0", "9.1"]
+versions: ["9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-kbs: [450972, 430524, 384976, 440630]
+updated: 2026-11-06
+reviewed: 2026-11-06
+reviewDue: 2027-02-15
+kbs: [450972, 448135, 429205, 430524, 445210, 388859, 459135]
 sources:
+  - title: "Import an Existing vCenter to Create a Workload Domain (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/import-an-existing-vcenter-to-create-a-workload-domain.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Import an Existing vCenter to Create a Workload Domain (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/building-your-private-cloud-infrastructure/working-with-workload-domains/import-an-existing-vcenter-to-create-a-workload-domain.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Converging Existing Virtual Infrastructure to a VCF or a vSphere Foundation Platform"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/converging-your-existing-vsphere-infrastructure-to-a-vcf-or-vvf-platform-.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Supported and Not Supported Configurations to Converge to VCF"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/converging-your-existing-vsphere-infrastructure-to-a-vcf-or-vvf-platform-/supported-and-not-supported-configurations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Supported Components and Scenarios to Converge to VCF"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/converging-your-existing-vsphere-infrastructure-to-a-vcf-or-vvf-platform-/supported-scenarios-to-converge-to-vcf.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Paths to Building 9.1.x Environments"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/overview-of-deploy--converge--and-upgrade.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "What's New in VCF Installer (9.1.0 release notes)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-installer.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware Cloud Foundation 9.1 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware vCenter 8.0 Update 3k Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/release-notes/vcenter-server-update-and-patch-release-notes/vsphere-vcenter-server-80u3k-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-10-28
+  - title: "VMware Cloud Foundation 9.1 General FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "vSphere and VCF 9.1 'Back-in-Time' Release Support (KB 450972)"
+    url: "https://knowledge.broadcom.com/external/article/450972"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "Back-in-Time Upgrade Restriction for vSphere 8.0 Update 3j and later, NSX 4.2.4 and later (KB 448135)"
+    url: "https://knowledge.broadcom.com/external/article/448135/backintime-upgrade-restriction-for-vsphe.html"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "Overriding version of NSX Manager while converging or importing (KB 429205)"
+    url: "https://knowledge.broadcom.com/external/article/429205"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "Upgrading a Brownfield-imported domain fails on an unsupported NSX path (KB 430524)"
+    url: "https://knowledge.broadcom.com/external/article/430524"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "Importing a vCenter fails: not compatible with NSX 9.1.0.0 (KB 445210)"
+    url: "https://knowledge.broadcom.com/external/article/445210/importing-a-vcenter-as-a-new-wld-into-vc.html"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "Add missing ESXi root credentials into SDDC Manager (KB 388859)"
+    url: "https://knowledge.broadcom.com/external/article/388859"
+    by: "Broadcom KB"
+    kind: broadcom
   - title: "How to converge a VMware vSphere environment to VMware Cloud Foundation 9.0"
     url: "https://blogs.vmware.com/cloud-foundation/2026/02/05/how-to-converge-a-vmware-vsphere-environment-to-vmware-cloud-foundation-9-0/"
     by: "VMware Cloud Foundation blog"
-  - title: "VCF 5.2 Import Tool (vcf_brownfield.py)"
-    url: "https://docs.vmware.com/en/VMware-Cloud-Foundation/5.2/vcf-admin/GUID-44CBCB85-C001-41B2-BBB4-E71928B8D955.html"
-    by: "VMware"
-  - title: "Automated VCF 5.2 import lab deployment script"
-    url: "https://williamlam.com/2024/07/automated-vmware-cloud-foundation-vcf-5-2-import-lab-deployment-script.html"
+    kind: broadcom
+    date: 2026-02-05
+  - title: "End of General Support for vSphere 8.0 (KB 459135)"
+    url: "https://knowledge.broadcom.com/external/article/459135/end-of-general-support-for-vsphere-80.html"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "VCF 9.1: vSphere back-in-time support for upgrade, converge and import"
+    url: "https://williamlam.com/2026/07/vcf-9-1-vsphere-back-in-time-support-for-upgrade-converge-and-import.html"
     by: "William Lam"
-  - title: "VCF 9 convergence upgrade for vSphere 8.x with LCM 8.18P2"
-    url: "https://www.mindwatering.com/SupportRef.nsf/AllByCat/AC63AFEAEADFD4D085258D2C005D8E1E"
-    by: "Mindwatering"
-  - title: "VCF 9 deployment guide: NSX requirements (import prerequisites)"
-    url: "https://vcf9-deployment-guide.pages.dev/requirements/nsx"
-    by: "Community guide"
+    kind: practitioner
+    date: 2026-07-21
+  - title: "VCF 9.1: understanding converge and import scenarios for vCenter without NSX"
+    url: "https://williamlam.com/2026/08/vcf-9-1-understanding-vcf-converge-import-scenarios-for-vcenter-server-without-nsx.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-08-24
+  - title: "10 exciting enhancements in VCF 9.1.1"
+    url: "https://williamlam.com/2026/09/10-exciting-enhancements-in-vmware-cloud-foundation-9-1-1.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-09-03
 ---
 
 <InShort>
-VCF 5.2 introduced the **Import Tool** (`vcf_brownfield.py`, run on SDDC Manager). It could **convert** a vSphere environment into a management domain, or **import** a vCenter as a VI workload domain. In 9.x the same two outcomes are built in. The **VCF Installer** converges existing vSphere, VCF Operations, vCenter and NSX into a new fleet, deploying whatever is missing. An existing fleet can **import** a vCenter as a workload domain from VCF Operations, deploying NSX if needed. Success depends on version pairs, which include back-in-time rules, and on topology: no Enhanced Linked Mode, supported distributed switches, and storage and network settings that pass validation.
+**Decide by what you already run, then aim at 9.1.1.** A VCF instance at 9.0 or later means import. No fleet means converge. Enhanced Linked Mode, baselines or an SDDC Manager on the vCenter means neither yet. For the floor, use vCenter 8.0 U3a, ESX 8.0 U3 and NSX 4.2.1 from the 9.1 TechDocs, and ignore the 8.0 U1 in FAQ Q57. <AsOf date="2026-11-06" />
 </InShort>
 
-<Compare rows={[
-  ["Tool", "Import Tool on SDDC Manager: convert (management domain) or import (VI workload domain)", "VCF Installer convergence (new fleet), or import into an existing fleet from VCF Operations"],
-  ["What gets added", "SDDC Manager, with optional NSX deployment", "Whatever is missing: SDDC Manager, NSX, VCF Operations components"],
-  ["Principal storage", "vSAN, plus VMFS on FC and NFS v3 for converted management domains", "The same options, with storage validated during the assessment"],
-  ["Common blockers", "Unsupported topologies listed in the Import Tool considerations", "Enhanced Linked Mode, down-level VDS, version pairs, NSX below 4.1.0.2"],
-  ["Lifecycle after onboarding", "SDDC Manager", "VCF Operations and SDDC Manager, as for any 9.x domain"],
-]} />
+| You start with | Route | Reason |
+|---|---|---|
+| No VCF 9 fleet, one vCenter at the floor, no ELM | **Converge** | It becomes the management domain of a new VCF Instance. |
+| A VCF instance at 9.0 or later | **Import** | It becomes a workload domain and keeps its current builds. |
+| A fleet, and this vCenter should be its own instance with its own management domain | **Converge** | TechDocs allows a new instance in "a new or an existing VCF fleet". |
+| Several standalone vCenters, no fleet | **Converge one, import the rest** | FAQ Q65 and the TechDocs converge page describe this split. |
+| vCenter below 8.0 U3a, or ESX below 8.0 U3 | **Neither yet** | Patch first, to a build chosen from the table below. |
+| ELM, no NSX | **Neither yet** | TechDocs: upgrade the vCenters to 9.1.x (the import page says 9.0 or later), break ELM, then converge or import. |
+| ELM with NSX registrations | **Neither** | Listed as not supported. The page offers no route. |
+| Baselines, DRS not fully automated, no VDS, Cisco virtual switch or vCenter HA | **Neither yet** | All are refused on both routes. Fix them first. |
+| vCenter already connected to SDDC Manager (VCF 5.2) | **Neither: upgrade** | Refused on both routes. <KB id={450972} /> marks converge and import N/A for VCF 5.2 and lists upgrade only. |
+| vSphere Foundation 9.1 with VCF management services deployed | **Neither** | The paths page says convergence of this state to VCF 9.1 "is not supported". |
 
-## Version rules worth checking first
+Leaving vSphere 8 alone is also an answer for now: General Support for ESXi, vCenter and vSAN 8.x ends on 11 October 2027 (<KB id={459135} />).
 
-For the 9.0 releases, the VCF blog gives these minimums:
-
-- **Aria Suite Lifecycle** at 8.18 Patch 2 or later, and **Aria Operations** upgraded to VCF Operations 9.x.
-- **9.0.0** needs vCenter and ESX at 9.0. It does not support NSX in convergence.
-- **9.0.1 and later** accept vCenter 8.0 U1a or later and ESX 8.0 U1a or later. With NSX, NSX must be 4.1.0.2 or later.
-
-For 9.1.0 sources, the back-in-time rules apply (<KB id={450972} />). vSphere 8.0 U3 to U3i can upgrade, converge or import. 8.0 U3j and U3k can only **import**, which onboards the environment into a 9.1 fleet without changing its builds. Upgrade and converge for those builds arrive in a later 9.1.x patch.
-
-## The assessment is the project
-
-1. **Assess.** Versions, Enhanced Linked Mode (must be removed), VDS versions, storage type, network settings and host defaults that must match VCF expectations.
-2. **Remediate** what validation flags. This takes most of the time.
-3. **Convert or import.** The run itself is the short part.
-4. **Bring lifecycle in line.** Imported domains are then upgraded through VCF like any other. Hosts that were added to SDDC Manager through brownfield import may need out-of-band steps, documented in <KB id={384976} />. A known failure when upgrading imported domains is covered in <KB id={430524} />.
-
-## VVF and VCF
-
-vSphere Foundation can converge into a VCF fleet as well. In 9.1, the management services are mandatory for VCF but optional for VVF (<KB id={440630} />). A VVF estate without them has no unified fleet management for passwords, certificates or backup. That is a strong argument for deploying them when the licence allows.
-
-<Callout type="field">
-Convergence projects stall on assumptions, not on tools: "we don't use ELM" (they do), "all switches are the same version" (they aren't), "NSX is only in the lab" (it isn't). Gather the facts with a script before the scoping call, not after.
+<Callout type="note" title="Corrected on 6 November 2026">
+This note said upgrade and converge for 8.0 U3j and U3k would arrive in a later patch. VCF 9.1.1 (3 September 2026) has since opened the upgrade path. It also listed NSX below 4.1.0.2 as the blocker. That figure is from the VCF blog's 9.0.1 guidance of 5 February 2026, and the 9.1 floor is NSX 4.2.1.
 </Callout>
 
-## Pitfalls
+## Which build you may start from
 
-- **Assuming 9.0.0 behaviour.** Convergence rules changed in 9.0.1 and again in 9.1. Read the release notes for your exact target.
-- **Breaking Enhanced Linked Mode on the day.** Unlinking vCenters has its own impact on users, roles and tools. Do it in an earlier change.
-- **Treating import as an upgrade.** Import onboards the environment at its current versions. Upgrades are separate steps afterwards.
+| vCenter and ESX source | Target 9.1.0 (11 May 2026) | Target 9.1.1 (3 Sep 2026) |
+|---|---|---|
+| 8.0 U3a to U3i | Upgrade, converge, import | Upgrade, converge, import |
+| 8.0 U3j (27 May 2026) | Import only | Upgrade named in TechDocs. Converge by inference. |
+| 8.0 U3k (29 Jul 2026) | Import only | Upgrade per Lam and KB 448135. TechDocs doesn't name it. Converge by inference. |
+
+The 9.1.0 column comes from <KB id={450972} />, which covers only that target. The 11 May date is the converge page's; the 9.1 release notes header reads 12 May, which changes no row here. Later builds of 8.0 hit the same rule: a target must be released after the source. The Interoperability Matrix is the final word. It's an interactive tool this review could not read, so check your exact build pair there.
+
+<Callout type="analysis" title="Aim at 9.1.1">
+This is this site's reasoning. Per KB 448135, 9.1.1 removes the U3j, U3k and NSX 4.2.4 blocks that 9.1.0 has. The import page also says 9.1.1 stops turning on NSX for distributed port groups, while 9.1.0.x activates it and with it the Distributed Firewall on every port group in the imported cluster, with allow-all default rules. The 9.1.1 release notes say you can converge directly at that version. If your fleet is already on 9.1.0, import is the only route for U3j and U3k until the fleet moves.
+</Callout>
+
+## Who says what
+
+| Question | Sources | Trust |
+|---|---|---|
+| **Import floor** | FAQ Q57: 8.0 U1. FAQ Q61, Q62: 8.0 U3 and NSX 4.2. KB 450972: 8.0U3. Lam (21 Jul): 8.0 U3a. 9.1 import page: vCenter 8.0 U3a, ESX 8.0 U3. | **9.1 import page.** The 9.0 import page still reads "8.0 Update 1 or later", so Q57 looks like 9.0 text carried over (inference). |
+| **Converge floor** | FAQ Q57: 8.0 U3. FAQ Q59: "vCenter U3". KB 450972: 8.0U3. What's New: 8.0 U3a. Converge page's upgrade example: vCenter U3a with ESX U3. | **vCenter 8.0 U3a, ESX 8.0 U3.** What's New sets the vCenter figure. The example illustrates the upgrade date rule and isn't a stated floor, but it pairs U3a with ESX U3, as the import page does. The FAQ's "U3" reads as shorthand (inference). |
+| **NSX floor** | FAQ Q60 to Q62 and What's New: 4.2. Import table and converge scenarios page: 4.2.1. Lam (24 Aug): 4.1.x must go to 4.2.x first. | **4.2.1.** It satisfies every source. |
+| **8.0 U3j, U3k to 9.1.1** | KB 450972: unsupported for 9.1.0, later patch planned. KB 448135: 9.1.1 "effectively resolves" the block for U3j and later. Lam (3 Sep): U3J-U3K gets a path, and the post never uses the word converge. Converge page: U3j to 9.1.1 is a "supported upgrade", U3k absent. U3k notes (28 Oct): "future 9.1.x release". | **KB 448135 for upgrade.** Treat converge from these builds as implied until the Matrix confirms it. A reader comment on Lam's post reports a U3k vCenter upgrade to 9.1.1 working, which is one report. |
+| **vCenter 8 with no NSX** | What's New: "only by manually upgrading your vCenter instance to version 9.1". Import and converge pages, FAQ Q63 and Lam: VCF deploys NSX for you. | **Import and converge pages.** The vCenter upgrade is needed only if you want NSX 9.1. |
+| **Converge destination** | KB 450972: a new fleet. FAQ Q65: "a new VCF fleet/instance". Converge page: new or existing fleet. | **Converge page.** |
+| **ESX password management after import** | KB 450972 and Lam (21 Jul): imported hosts gain it. Import and converge pages: not available through the VCF Operations console, with KB 388859 as the workaround. | **The TechDocs pages.** Plan for the KB 388859 step. |
+| **Undoing the wrong NSX** | Lam: revert doesn't apply to management domains. KB 430524: covers a brownfield-imported domain and doesn't mention management domains. | **Lam, as the only source that addresses it.** Treat converge as having no documented undo. |
+
+<Callout type="analysis" title="Order of trust where they disagree">
+This ranking is this site's judgement. Start with the Matrix for a specific build pair, since TechDocs and the KBs both defer to it. Next come the 9.1 TechDocs workflow pages, updated 5 November. Then use KBs for one failure or mechanism; this review could read no updated date on KB 450972 or KB 448135, and KB 450972 covers 9.1.0 only. Lam's posts come next for what changed and when, and Broadcom's own 8.0 U3k release notes link to his back-in-time post. The FAQ comes last. It's dated 4 November, but Q57 contradicts Q61 in the same document.
+</Callout>
+
+## What each route does
+
+| | Converge | Import |
+|---|---|---|
+| Tool | VCF Installer | VCF Operations |
+| Existing NSX | Kept at its current version, 4.2.1 or later | Kept. Unprepared clusters stay unprepared. |
+| No NSX | Deployed, 1 or 3 managers, and all eligible clusters prepared | Deployed, 3 managers for vCenter below 9.0, and all eligible clusters prepared |
+| Later upgrades | Only to releases newer than your earliest component | The same rule |
+| NSX Manager wrong afterwards | No documented undo | <KB id={430524} />: remove the domain and re-import |
+
+Both routes take the whole vCenter, and partial import of clusters is not supported. On both, TechDocs says the earliest component sets the effective VCF version, so 9.1 features wait until everything reaches 9.1.x. KB 430524 deletes the NSX Manager VM, removes the domain from inventory and gives no rollback steps. Do the checks below first.
+
+## The NSX trap when vCenter has no NSX
+
+Both routes deploy the newest NSX compatible with your vCenter, regardless of where you plan to upgrade. The forward-only rule then applies: an NSX released after a VCF release can't upgrade to that release. Lam's example is vCenter 8.0 U3c receiving NSX 4.2.4.1, which has no path to 9.1.0. <KB id={448135} /> lists NSX 4.2.4 and later as blocked for 9.1.0.x and says the 9.1.1 bill of materials resolves it.
+
+So the trap now mainly hits a 9.1.0 target. It can return whenever an NSX 4.2.x build is newer than your target. Lam said on 24 August that a future 9.1.x release would choose from supported bills of materials instead. The TechDocs pages updated on 5 November still describe "latest compatible", so assume the old behaviour until release notes say otherwise.
+
+Before running either workflow, look up that NSX version in the Matrix and compare its release date with your target's. If it's newer, pick one:
+
+- **Change the target to 9.1.1**, if KB 448135 covers your NSX build. This needs no configuration edit and no extra NSX deployment.
+- **Override the version** with <KB id={429205} /> on either route. It edits service configuration, and the pre-check fails if the install bundle is missing from the depot.
+- **Deploy NSX yourself first**, on a version with a path, and register vCenter as a compute manager. Lam says the workflow reuses it and host preparation isn't needed.
+- **Upgrade vCenter to 9.1 first**, leaving ESX on 8. The import page requires this for NSX 9.1, and Lam confirms the ESX part in a comment.
+
+### Sharing the management NSX
+
+The import page says "NSX 9.1 does not support vCenter 8.0 Update 3a or later". So a vCenter 8 import can't share a 9.1 fleet's NSX 9.1. <KB id={445210} /> shows the resulting pre-check failure, with 8.0 U3e against NSX 9.1.0.0, and its resolution lists a dedicated NSX 4.2, a vCenter upgrade to 9.1, and upgrading the management NSX to 9.1.0.0100 before the import. It numbers these as steps without saying whether they are alternatives. Budget a three-node NSX Manager cluster for a vCenter 8 import with no NSX, because the import page keeps single-node for vCenter 9.0 and later.

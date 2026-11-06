@@ -9,12 +9,25 @@ const articles = defineCollection({
     description: z.string().max(320),
     category: z.enum(CATEGORY_IDS),
     order: z.number(),
-    versions: z.array(z.enum(['5.x', '9.0', '9.1'])).min(1),
+    versions: z.array(z.enum(['5.x', '9.0', '9.1', '9.1.1'])).min(1),
     level: z.enum(['Overview', 'Practitioner', 'Deep dive']),
     pubDate: z.coerce.date(),
     updated: z.coerce.date().optional(),
+    // The day the note's sources were last opened and its dated claims checked against them.
+    // It says the facts were checked, not who checked them or that the author has run the steps.
+    reviewed: z.coerce.date().optional(),
+    // Set when something in the note is known to date soon, such as an announced release.
+    reviewDue: z.coerce.date().optional(),
     kbs: z.array(z.number()).default([]),
-    sources: z.array(z.object({ title: z.string(), url: z.string().url(), by: z.string().optional() })).default([]),
+    sources: z.array(z.object({
+      title: z.string(),
+      url: z.string().url(),
+      by: z.string().optional(),
+      // What kind of evidence this is, so a reader can weigh it. Commissioned research is 'sponsored'.
+      kind: z.enum(['broadcom', 'practitioner', 'press', 'analyst', 'sponsored', 'vendor', 'tracker', 'reference']).optional(),
+      // The source's own publication or update date, as it shows on the page.
+      date: z.coerce.date().optional(),
+    })).default([]),
     draft: z.boolean().default(false),
   }),
 });

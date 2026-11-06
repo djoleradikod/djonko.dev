@@ -1,11 +1,12 @@
 ---
 title: "Runbooks that get used: short, ordered, verifiable, and owned"
-description: "Most runbooks fail because they describe the system rather than tell someone what to do at 2 a.m. A runbook that gets used has a trigger, numbered steps with a check after each, a stop rule, and an owner who updates it after every use."
+description: "A runbook tells someone what to do at 2 a.m. and links to the explanation elsewhere. Give it a trigger, numbered steps with a check after each, a stop rule, and an owner who updates it after every use."
 category: leadership
 order: 7
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: []
 sources:
   - title: "Diátaxis: how-to guides"
@@ -17,7 +18,7 @@ sources:
 A runbook is a **how-to**, not an explanation. It starts with **when to use it** and what you need before starting. Each step is one action with a **check** that proves it worked. It says **when to stop** and who to call. It links to background rather than containing it. And it has an **owner** and a **last-used date**. VCF 9 moved a lot of UI paths, so every 5.x runbook needs a review against the new consoles before the upgrade, not after.
 </InShort>
 
-<Compare v5Label="Description" v9Label="Runbook" title="Two documents people confuse" rows={[
+<Compare v5Label="Description" v9Label="Runbook" title="Two different documents" rows={[
   ["Purpose", "Explain how the system works", "Get a specific task done safely"],
   ["Shape", "Paragraphs, diagrams", "Numbered steps, each with a check"],
   ["Reader", "Someone learning", "Someone under time pressure"],
@@ -50,7 +51,7 @@ Owner: <name/role>   Last used: <date>   Last reviewed: <date>
 - **New components**: the License Server and the services runtime need their own runbooks, at least for power events and health checks.
 
 <Callout type="field">
-After every use, the person who ran the runbook fixes one thing in it, even a typo. Runbooks that are improved by their users stay accurate. Runbooks maintained by a separate documentation effort drift.
+After every use, the person who ran the runbook fixes one thing in it, even a typo. The people who use a runbook see what has gone stale, so have them maintain it instead of a separate documentation effort.
 </Callout>
 
 ## Pitfalls

@@ -1,11 +1,12 @@
 ---
-title: "DNS, NTP and proxy: the three dependencies behind a large share of tickets"
-description: "VCF 9 adds more names, more clocks and more outbound paths than 5.x had. Get these three right and a whole class of ticket never gets opened."
+title: "DNS, NTP and proxy: the names, clocks and outbound paths VCF 9 depends on"
+description: "VCF 9 adds more names, more clocks and more outbound paths than 5.x had. Keep one table of FQDNs and addresses, generate the DNS checks from it, and write firewall rules for the whole runtime pool, because 9.1 depot downloads leave from runtime node addresses."
 category: day-2
 order: 6
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [404501, 435717, 440331, 426042, 443900, 451990, 452095, 409353, 438528, 439240, 444431, 449159, 443166, 447542, 442978, 442735, 444267, 432021, 447366, 409220, 429451]
 sources:
   - title: "Modernizing infrastructure: VCF 5.2.x to 9.1 upgrade guide (DNS)"
@@ -65,7 +66,7 @@ chronyc tracking 2>/dev/null | grep -E 'System time|Leap' || ntpq -p
 ```
 
 <Callout type="field">
-Keep one table per instance listing every FQDN, IP address, role and owner, and generate the DNS checks from it. It becomes the source of truth for firewall requests, certificate SANs and upgrade planning. Most of the upgrade prechecks are checks against that table.
+Keep one table per instance listing every FQDN, IP address, role and owner, and generate the DNS checks from it. It becomes the source of truth for firewall requests, certificate SANs and upgrade planning. Use it to clear the upgrade prechecks on names and addresses.
 </Callout>
 
 ## Pitfalls

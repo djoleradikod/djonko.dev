@@ -6,6 +6,7 @@ order: 7
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: []
 sources:
   - title: "VMware Cloud Foundation helps you optimally size VMs"
@@ -39,7 +40,7 @@ Two caps apply. An oversized recommendation never cuts more than **50%**, and an
 
 ## Demand or allocation
 
-The default capacity model is **demand**: clusters are judged by what VMs use. Under it, reclaiming vCPUs from an oversized VM frees no CPU capacity, because the VM was not using it. The saving appears when the cluster is sized by **allocation**, which uses configured resources and overcommit ratios such as 8 vCPUs per core. Some organisations plan growth by allocation even when Operations reports by demand, usually because application owners request VM sizes from a catalogue. Know which model your capacity plan uses, because it decides whether right-sizing frees hosts.
+The default capacity model is **demand**: clusters are judged by what VMs use. Under it, reclaiming vCPUs from an oversized VM frees no CPU capacity, because the VM was not using it. The saving appears when the cluster is sized by **allocation**, which uses configured resources and overcommit ratios such as 8 vCPUs per core. You may plan growth by allocation even when Operations reports by demand, for example when application owners request VM sizes from a catalogue. Know which model your capacity plan uses, because it decides whether right-sizing frees hosts.
 
 Memory is different. Oversized memory is held by the VM whether it uses it or not, unless the host reclaims it under pressure. Cutting it frees capacity under both models, and in memory-bound clusters that is where host savings come from.
 

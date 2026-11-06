@@ -6,6 +6,7 @@ order: 3
 versions: ["5.x", "9.0", "9.1"]
 level: Overview
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [397782, 443240, 437258, 443680, 440630]
 sources:
   - title: "VCF Operations deployment models (VCF 9.1)"
@@ -27,7 +28,7 @@ VCF Operations is the renamed and expanded Aria Operations. In 9.x it is mandato
 </InShort>
 
 <Compare rows={[
-  ["Status", "Optional. Aria Operations was deployed through Aria Suite Lifecycle, usually in VCF-aware mode.", "Mandatory. Deployed by the VCF Installer, or added during the 5.2 upgrade."],
+  ["Status", "Optional. Aria Operations was deployed through Aria Suite Lifecycle, which can run in VCF-aware mode.", "Mandatory. Deployed by the VCF Installer, or added during the 5.2 upgrade."],
   ["Job", "Monitoring, capacity and alerting. It connected to workload domains to collect data.", "The fleet console: monitoring, plus lifecycle (Build), licensing, certificates, passwords, identity and log search."],
   ["Licensing", "None. Keys lived in SDDC Manager and vCenter.", "Holds the licence file and assigns licences to vCenter. In 9.1 it works with a separate License Server appliance."],
   ["Collection", "Remote collectors and cloud proxies, optional per site.", "Cloud proxies are required for instance integration, and in 9.1 before management services can be deployed."],
@@ -65,7 +66,7 @@ Plan at least one cloud proxy per instance. Put it on the management network, gi
 ## What happens when it is down
 
 <Callout type="field">
-Write this into the operations runbook before go-live, because it is the first question a customer asks after their first outage.
+Write this into the operations runbook before go-live, so the answer is ready at the first outage.
 </Callout>
 
 - **Workloads:** unaffected.

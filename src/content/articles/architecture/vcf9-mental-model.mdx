@@ -1,11 +1,12 @@
 ---
 title: "The VCF 9 mental model: fleet, instance and domain"
-description: "VCF 5.x thought in domains. VCF 9 adds two layers above them, and most of the confusion in early 9.x projects comes from not seeing those layers."
+description: "VCF 5.x thought in domains. VCF 9 adds two layers above them: a fleet shares one VCF Operations and one VCF Automation, and each instance is a management domain with its own SDDC Manager, plus its workload domains. Settle which layer a question is about first."
 category: architecture
 order: 1
 versions: ["5.x", "9.0", "9.1"]
 level: Overview
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [440630, 443240]
 sources:
   - title: "Fleet deployment models (VCF 9.1)"
@@ -99,8 +100,8 @@ When a 9.x ticket or design question is vague, the first thing to settle is whic
 
 ## Design questions to settle early
 
-- **How many fleets?** Usually one. A second fleet makes sense for hard separation, such as sovereignty, a separate operator team or a separate licence entitlement. A second site alone is not a reason for one.
-- **How many instances?** An instance is a failure and lifecycle boundary with its own SDDC Manager. Separate sites or regions often justify a second instance. Separate business units usually justify a workload domain instead.
+- **How many fleets?** Start with one. A second fleet makes sense for hard separation, such as sovereignty, a separate operator team or a separate licence entitlement. A second site alone is not a reason for one.
+- **How many instances?** An instance is a failure and lifecycle boundary with its own SDDC Manager. Separate sites or regions can justify a second instance. For separate business units, consider a workload domain instead.
 - **Where will the first instance live?** It carries the fleet services, so put it on the most resilient site you have.
 - **What identity scope?** Fleet-wide SSO is the simplest. Cross-instance or single-instance scopes limit the blast radius but add brokers to run. See <a href="/vcf/library/architecture/identity-broker/">Identity in VCF 9</a>.
 

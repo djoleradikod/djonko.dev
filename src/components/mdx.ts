@@ -12,5 +12,6 @@ import Download from './Download.astro';
 import Pdf from './Pdf.astro';
 import Mermaid from './Mermaid.astro';
 import Steps from './Steps.astro';
+import AsOf from './AsOf.astro';
 
-export const mdxComponents = { Compare, InShort, Callout, Diagram, KB, Figure, Img, Gallery, Video, Download, Pdf, Mermaid, Steps };
+export const mdxComponents = { Compare, InShort, Callout, Diagram, KB, Figure, Img, Gallery, Video, Download, Pdf, Mermaid, Steps, AsOf };

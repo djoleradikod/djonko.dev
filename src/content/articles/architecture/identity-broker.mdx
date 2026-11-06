@@ -6,6 +6,7 @@ order: 5
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [409610, 437258, 444003, 444734, 432503, 420836, 444757]
 sources:
   - title: "Deployment models for VCF SSO (9.0)"
@@ -26,7 +27,7 @@ sources:
 ---
 
 <InShort>
-In 5.x, infrastructure users signed in through vCenter SSO. That was usually one `vsphere.local` domain in Enhanced Linked Mode, plus isolated domains where needed. Aria products used Workspace ONE Access (vIDM). VCF 9 introduces the **VCF Identity Broker**, which federates to your identity provider and gives vCenter, NSX, VCF Operations and VCF Automation a single sign-on. SDDC Manager is the exception: it is not part of VCF SSO. There is **no migration from vIDM**, so the broker is always a new deployment. Choose its mode and scope deliberately, because the broker is a single point of failure for authentication within its scope.
+In 5.x, infrastructure users signed in through vCenter SSO. That could be one `vsphere.local` domain in Enhanced Linked Mode, plus isolated domains where needed. Aria products used Workspace ONE Access (vIDM). VCF 9 introduces the **VCF Identity Broker**, which federates to your identity provider and gives vCenter, NSX, VCF Operations and VCF Automation a single sign-on. SDDC Manager is the exception: it is not part of VCF SSO. There is **no migration from vIDM**, so the broker is always a new deployment. Choose its mode and scope deliberately, because the broker is a single point of failure for authentication within its scope.
 </InShort>
 
 <Compare rows={[

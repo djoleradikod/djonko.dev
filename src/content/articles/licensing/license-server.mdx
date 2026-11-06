@@ -1,11 +1,12 @@
 ---
 title: "The 9.1 License Server: what it is, what it needs, and what happens when it's down"
-description: "In 9.1 licenses no longer live inside VCF Operations. They live on a small, hardened License Server appliance that VCF Operations manages. It has no internet access and few dependencies, but the ones it has (DNS case, time, the right deployment path) cause most of its tickets."
+description: "In 9.1 licenses no longer live inside VCF Operations. They live on a small, hardened License Server appliance that VCF Operations manages. It has no internet access and few dependencies. Get those right: DNS case, time and the right deployment path."
 category: licensing
 order: 5
 versions: ["9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [440471, 443082, 441251, 441526, 445428, 442564, 424533, 444094, 441175]
 sources:
   - title: "License Server overview (9.1)"
@@ -63,7 +64,7 @@ The **License Server Health** view in VCF Operations is the first place to look.
 - **Don't delete the VM on its own.** A License Server deleted from vCenter without decommissioning in the console leaves an orphaned registration (<KB id={444094} />).
 
 <Callout type="field">
-On upgrade projects, the most common License Server problem is that it was never deployed, because the upgrade was done out of order. "One or more vCenter instances are not connected to a license server" is the tell (<KB id={440471} />). See [licensing through upgrades](/vcf/library/licensing/licensing-through-upgrades/).
+On an upgrade, confirm the License Server was deployed, because an upgrade done out of order can leave it missing. "One or more vCenter instances are not connected to a license server" is the tell (<KB id={440471} />). See [licensing through upgrades](/vcf/library/licensing/licensing-through-upgrades/).
 </Callout>
 
 ## Pitfalls

@@ -1,11 +1,12 @@
 ---
 title: "Where the money goes in a VCF 9 estate, and which levers move it"
-description: "VCF 9 is licensed per physical core, with vSAN capacity counted in raw TiB. Most savings come from carrying fewer cores and less raw disk for the same work. This note maps each cost to the lever that changes it and to the note that covers the lever."
+description: "VCF 9 is licensed per physical core, with vSAN capacity counted in raw TiB. Subscription savings come from carrying fewer cores and less raw disk for the same work. This note maps each cost to the lever that changes it and to the note that covers the lever."
 category: value
 order: 1
 versions: ["5.x", "9.0", "9.1"]
 level: Overview
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [313548]
 sources:
   - title: "Counting cores for VMware Cloud Foundation and vSphere Foundation"
@@ -27,7 +28,7 @@ A VCF 9 subscription is priced per **physical core**, with at least 16 cores cou
 </InShort>
 
 <Compare rows={[
-  ["Unit of licence", "Per core from the 2024 subscription change, with a 16-core minimum per CPU. Earlier 5.x estates often held per-CPU or per-component keys.", "Per core, 16-core minimum per CPU, delivered as one licence file"],
+  ["Unit of licence", "Per core from the 2024 subscription change, with a 16-core minimum per CPU. Earlier 5.x estates could hold per-CPU or per-component keys.", "Per core, 16-core minimum per CPU, delivered as one licence file"],
   ["vSAN included", "1 TiB per VCF core, 0.25 TiB per VVF core", "The same entitlement, pooled across vCenters"],
   ["Cheaper memory", "Memory tiering was a tech preview in vSphere 8.0 U3", "NVMe memory tiering is supported from 9.0"],
   ["Space reduction", "OSA deduplication per disk group. ESA compression only.", "ESA global deduplication: limited availability in 9.0, generally available in 9.1"],
@@ -49,7 +50,7 @@ The table below lists the recurring costs of a VCF estate in rough order of size
 
 ## Why fewer cores is the main lever
 
-Because the licence counts cores and not memory, VMs or storage performance, the subscription grows with the number of hosts you need. Most clusters are sized by whichever resource runs out first. In many virtualised estates that resource is memory, not CPU, which means cores are bought and licensed to carry DIMMs. Memory tiering, right-sizing and reclamation all attack that pattern from different directions. Each one lowers the memory or CPU you need to provision, and the saving only reaches the licence bill when it lets you remove or not buy a host.
+Because the licence counts cores and not memory, VMs or storage performance, the subscription grows with the number of hosts you need. A cluster is sized by whichever resource runs out first. Where that resource is memory, cores are bought and licensed to carry DIMMs. Memory tiering, right-sizing and reclamation all attack that pattern from different directions. Each one lowers the memory or CPU you need to provision, and the saving only reaches the licence bill when it lets you remove or not buy a host.
 
 The second point follows from the first. A saving that stays inside an existing cluster, such as reclaiming 200 GB of memory from idle VMs, has no licence value until it changes a purchase. Record reclaimed capacity against the next growth request or hardware refresh, so the saving turns into hosts not bought.
 

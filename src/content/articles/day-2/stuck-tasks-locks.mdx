@@ -1,11 +1,12 @@
 ---
 title: "Stuck tasks and resource locks: retry, cancel, and only then clean up"
-description: "\"Resource is already locked\" is one of the most common VCF tickets, and one of the most often mishandled. The supported order is: find the owner, cancel through the API, fix what made it fail, and only then touch a lock row, with a snapshot and preferably with Support."
+description: "\"Resource is already locked\" can mean a failed workflow left its lock behind. The supported order is: find the owner, cancel through the API, fix what made it fail, and only then touch a lock row, with a snapshot and preferably with Support."
 category: day-2
 order: 10
 versions: ["5.x", "9.0", "9.1"]
 level: Deep dive
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [444986, 439473, 449148, 447314, 422426, 429753, 435569, 443718, 433018, 424242]
 sources:
   - title: "SDDC Manager API: Tasks (retry and cancel)"
@@ -20,7 +21,7 @@ sources:
 ---
 
 <InShort>
-SDDC Manager serialises changes with resource locks. A workflow that dies without finishing can leave its lock behind, and every later change to that domain, host or credential then fails with `Resource is already locked by OPERATIONS_MANAGER service` or `Error in acquiring resource locks`. The most common owner is a **failed password task** (<KB id={444986} />). The supported order is: **cancel** the owning task through the API, **fix** the reason it failed, and only then, with a snapshot, **delete** a stale lock row. If you skip the fix, the lock comes back (<KB id={449148} />). In 9.1, fleet and SDDC lifecycle tasks run on the services runtime and have their own supported restart script (<KB id={435569} />).
+SDDC Manager serialises changes with resource locks. A workflow that dies without finishing can leave its lock behind, and every later change to that domain, host or credential then fails with `Resource is already locked by OPERATIONS_MANAGER service` or `Error in acquiring resource locks`. A **failed password task** can be the owner (<KB id={444986} />). The supported order is: **cancel** the owning task through the API, **fix** the reason it failed, and only then, with a snapshot, **delete** a stale lock row. If you skip the fix, the lock comes back (<KB id={449148} />). In 9.1, fleet and SDDC lifecycle tasks run on the services runtime and have their own supported restart script (<KB id={435569} />).
 </InShort>
 
 <Compare rows={[
@@ -33,7 +34,7 @@ SDDC Manager serialises changes with resource locks. A workflow that dies withou
 
 ## The order of operations
 
-<Diagram viewBox="0 0 760 210" label="Order of operations for a stale lock" caption="Each step to the right is riskier than the one before. Most tickets end at step two or three.">
+<Diagram viewBox="0 0 760 210" label="Order of operations for a stale lock" caption="Each step to the right is riskier than the one before. Go no further than you need to.">
   <rect class="box plain" x="10" y="60" width="130" height="70" rx="8"/>
   <text class="t" x="75" y="90" text-anchor="middle">1. Find</text>
   <text class="s" x="75" y="110" text-anchor="middle">owner task</text>
@@ -81,7 +82,7 @@ Password tasks are re-run, not retried: cancel the failed one and start a new ro
 
 ### 3. Fix what made it fail
 
-A lock is a symptom. The usual causes are a locked NSX service account, an ESX root password changed outside SDDC Manager, a hung backup, or a DNS failure. If you remove the lock without fixing the account, the next automatic rotation fails and leaves a new one (<KB id={449148} />).
+A lock is a symptom. Causes to look for are a locked NSX service account, an ESX root password changed outside SDDC Manager, a hung backup, or a DNS failure. If you remove the lock without fixing the account, the next automatic rotation fails and leaves a new one (<KB id={449148} />).
 
 ### 4. Remove a stale lock row, if the KB says so
 
@@ -104,7 +105,7 @@ When you hand over a stuck-task ticket, write down four things: the task ID, the
 
 ## Pitfalls
 
-- **Deleting the lock first.** It feels fastest and often works once. Then the next rotation fails at 2 a.m.
+- **Deleting the lock first.** It feels fastest and can appear to work. If the cause is still there, the next rotation fails.
 - **Retrying a password task with the generic API.** It is not supported. Cancel it and start a new operation.
 - **Restarting all services as a reflex.** It can kill a task that was still progressing and leave a worse partial state. Find out what is running first.
 - **Deleting runtime VMs to "reset" 9.1 lifecycle.** The runtime is a Kubernetes cluster with state. Use the scripts and KBs.

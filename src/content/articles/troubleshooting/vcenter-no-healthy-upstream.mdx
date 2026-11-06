@@ -1,11 +1,12 @@
 ---
-title: "\"No healthy upstream\" on vCenter: certificates, full partitions, and the usual suspects"
-description: "\"No healthy upstream\" means vCenter's reverse proxy has nothing healthy behind it. That is a symptom, not a cause. In practice the causes are a short list: an expired certificate, a full partition, a crashed vpxd, or a service that never started after a reboot."
+title: "\"No healthy upstream\" on vCenter: certificates, full partitions and stopped services"
+description: "\"No healthy upstream\" means vCenter's reverse proxy has nothing healthy behind it. That is a symptom, not a cause. Check for an expired certificate, a full partition, a crashed vpxd, or a service that never started after a reboot."
 category: troubleshooting
 order: 7
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [344201, 385107, 427237, 434671, 399535, 410118, 453758, 344917]
 sources:
   - title: "vCenter services fail due to expired certificates"
@@ -17,12 +18,12 @@ sources:
 ---
 
 <InShort>
-The vSphere Client sits behind a proxy (Envoy). "No healthy upstream" means the services behind it aren't responding. Find out which, then why. The order that resolves most cases: **check partitions** (`df -h`, especially `/storage/log` and `/storage/seat`), **check certificates** (the VECS expiry loop), **check services** (`service-control --status --all`), then read the log of the first service that failed. The fix is almost never "reboot again".
+The vSphere Client sits behind a proxy (Envoy). "No healthy upstream" means the services behind it aren't responding. Find out which, then why. Work in this order: **check partitions** (`df -h`, especially `/storage/log` and `/storage/seat`), **check certificates** (the VECS expiry loop), **check services** (`service-control --status --all`), then read the log of the first service that failed. Rebooting again won't clear an expired certificate or a full disk.
 </InShort>
 
 <Compare rows={[
   ["Symptom", "No healthy upstream, 503", "The same"],
-  ["Most common causes", "Expired certificates, full partitions", "The same, plus host syslog filling /storage/log when hosts point at vCenter"],
+  ["Causes to check first", "Expired certificates, full partitions", "The same, plus host syslog filling /storage/log when hosts point at vCenter"],
   ["Tools", "vCert, VDT, service-control", "The same tools"],
   ["VCF impact", "SDDC Manager workflows fail on the domain", "Also fleet lifecycle, licensing and SSO for that vCenter"],
 ]} />
@@ -58,7 +59,7 @@ The VCF Diagnostic Tool for vCenter runs a broader set of checks in one go (<KB 
 | vpxd crashes with "Excessive depth in document" | A VM with hundreds of snapshots in its chain. Identify it, consolidate on the host, start vpxd (<KB id={453758} />) |
 
 <Callout type="field">
-Add vCenter certificate expiry and partition usage to the same monthly report as backups. Every cause in the table above announces itself weeks in advance. None of them should be discovered by a user seeing "no healthy upstream".
+Add vCenter certificate expiry and partition usage to the same monthly report as backups, so you see an expiring certificate or a filling partition before a user sees "no healthy upstream".
 </Callout>
 
 ## Pitfalls

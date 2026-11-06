@@ -1,89 +1,214 @@
 ---
-title: "From 25-character keys to license files: the 9.x licensing model in one page"
-description: "VCF 5.x licensing was a key typed into a product. VCF 9.x licensing is a signed file, issued by the VCF Business Services console to a registered VCF Operations instance and assigned to vCenter. Everything else in 9.x licensing follows from that change."
+title: "From 25-character keys to license files: where each VCF add-on goes, and in what order"
+description: "The VCF license file carries the primary license, vSAN TiB and Private AI Foundation only. vDefend 9.1 and Avi 32.1.1 use separate signed files through License Hub, Live Recovery depends on the order line, and no document checked states DSM's route since 4 Nov 2026. A checked map and work order."
 category: licensing
 order: 1
-versions: ["5.x", "9.0", "9.1"]
-level: Overview
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
+level: Practitioner
 pubDate: 2026-11-02
-kbs: [437242, 404155, 406836, 452764]
+updated: 2026-11-06
+reviewed: 2026-11-06
+reviewDue: 2027-02-15
+kbs: [376866, 404155, 406836, 427391, 428834, 429032, 437242, 438925, 452764]
 sources:
-  - title: "Licensing overview (9.0)"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/licensing-overview.html"
-    by: "Broadcom TechDocs"
-  - title: "Licensing overview (9.1)"
+  - title: "Licensing Overview (VCF 9.1.x)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Licensing Model (VCF 9.1.x)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Add-on Licenses Included in Your VCF or vSphere Foundation Subscription"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/add-on-licenses-in-vcf-9-0.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1 Licensing: Private License Files"
+    url: "https://vcf.broadcom.com/vcf/clm/assets/VCF-9.1-Licensing-Private-License-Files.pdf"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-08-24
+  - title: "VCF 9.1 Frequently Asked Questions"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "VMware by Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "VCF 9.1.1 and vSphere Foundation 9.1.1: Feature Comparison & Upgrade Paths"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-feature-comparison-and-upgrade-paths"
+    by: "VMware by Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "Advanced Services (VCF 9.1.x)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vcf-advanced-services.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware vDefend 9.1 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/vdefend/vdefend-firewall/9-1/release-notes/vmware-vdefend-91-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-10-13
+  - title: "VMware vDefend 9.1.1 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/vdefend/vdefend-firewall/9-1/release-notes/vmware-vdefend-911-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-10-13
+  - title: "License Hub 2.0 for VMware vDefend and Avi Load Balancer Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/vdefend/license-hub/2-0/release-notes/license-hub-20-for-vmware-vdefend-and-avi-load-balancer-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-10-29
+  - title: "License Management for Avi Load Balancer (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/avi-load-balancer/avi-load-balancer-vmware-cloud-foundation/9-1/build-and-deploy-avi-91/license-management-for-avi-load-balancer.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-10-01
+  - title: "Avi Load Balancer Licensing Tiers (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/avi-load-balancer/avi-load-balancer-vmware-cloud-foundation/9-1/nsx-advanced-load-balancer-editions.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-06-18
+  - title: "Assign Licenses to Protection and Recovery using Offline Mode (Fleet Disaster Recovery)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-fleet-disaster-recovery/fleet-disaster-recovery-task-library/implementation-of-vsphere-replication-for-the-management-domain/configure-failover-of-the-sddc-management-components-for-the-management-domain/protected-site-configuration-tasks/assign-licenses-to.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware Data Services Manager 9.1 guide (PDF)"
+    url: "https://techdocs.broadcom.com/content/dam/broadcom/techdocs/us/en/pdf/vmware/dsm/vmwdsm/vmware-data-services-manager-9-1.pdf"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-25
+  - title: "VMware Data Services Manager 9.1: Automating the Modern Databases that Drive AI and Private Cloud"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/05/vmware-data-services-manager-9-1-automating-the-modern-databases-that-drive-ai-and-private-cloud/"
+    by: "VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-05-05
+  - title: "Manage license keys (Tanzu Hub 10.4)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/tanzu-hub/10-4/tnz-hub/foundations-manage-license-keys.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-15
   - title: "Licensing in VMware Cloud Foundation 9.0"
     url: "https://blogs.vmware.com/cloud-foundation/2025/06/24/licensing-in-vmware-cloud-foundation-9-0/"
     by: "VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-06-24
   - title: "VCF 9.1 licensing: programmatic, centralized and built to scale"
     url: "https://blogs.vmware.com/cloud-foundation/2026/05/18/vcf-9-1-licensing-programmatic-centralized-and-built-to-scale/"
     by: "VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-05-18
 ---
 
 <InShort>
-In 9.x there are no keys to type into vCenter. You buy a subscription, and the **VCF Business Services console** (vcf.broadcom.com) turns it into a **default license** with your purchased capacity. A **VCF Operations** instance registers with the console and receives a signed **license file**. You then assign a **primary license** (VCF or VVF) to each **vCenter**, and everything connected to that vCenter is licensed through it. Usage is reported back at least every 180 days. VCF Operations is mandatory for this: vCenter 9 has no field for a key (<KB id={404155} />).
+A checked comparison of Broadcom's documents, <AsOf date="2026-11-06" />. A VCF 9.x subscription doesn't turn every key into one file.
+
+- **In the VCF file:** the VCF or VVF primary license, vSAN TiB and Private AI Foundation with NVIDIA cores. Assign the primary to vCenter first.
+- **In a separate signed file:** vDefend 9.1 and Avi 32.1.1. Convert the key on the Support Portal, then license through License Hub and the Avi Cloud Console.
+- **Depends on the order line:** Live Recovery. A standalone SRM line is a 25-character key, and subscriptions run through the Live Recovery console.
+- **Not stated:** Data Services Manager, which moved into TrueSource on 4 Nov. No Broadcom page opened for this note gives its route, so get it in writing before you plan around it.
+- **Still a key:** Tanzu Platform, added in Tanzu Hub.
 </InShort>
 
-<Compare rows={[
-  ["What you hold", "25-character keys, per component or one VCF solution key (from 5.1.1)", "A subscription in the console, issued as a signed license file"],
-  ["Where it lives", "In each product (vCenter, NSX, vSAN, SDDC Manager)", "VCF Operations. In 9.1, on a dedicated License Server appliance managed by VCF Operations."],
-  ["What you assign to", "Each component separately", "vCenter. 9.1 adds optional overrides on hosts and vSAN clusters."],
-  ["Reporting", "None", "Usage reported, and licenses refreshed, at least every 180 days"],
-  ["Evaluation", "60 days", "90 days"],
-  ["Upgrade of keys", "Not applicable", "None. A subscription carries 9.x licenses and 8.x keys side by side (<a href='https://knowledge.broadcom.com/external/article/452764' target='_blank' rel='noopener'>KB 452764</a>)."],
-]} />
-
-## The moving parts
-
-<Diagram viewBox="0 0 760 230" label="Licensing flow in 9.x" caption="The console issues, VCF Operations holds and assigns, vCenter enforces. In 9.1 the License Server holds the file on VCF Operations' behalf.">
-  <rect class="box plain" x="10" y="80" width="170" height="70" rx="8"/>
-  <text class="t" x="95" y="110" text-anchor="middle">Business Services</text>
-  <text class="s" x="95" y="130" text-anchor="middle">console (Site ID)</text>
-  <rect class="box accent" x="240" y="80" width="170" height="70" rx="8"/>
-  <text class="t" x="325" y="110" text-anchor="middle">VCF Operations</text>
-  <text class="s" x="325" y="130" text-anchor="middle">registered instance</text>
-  <rect class="box v9" x="240" y="170" width="170" height="44" rx="8"/>
-  <text class="s" x="325" y="197" text-anchor="middle">9.1: License Server</text>
-  <rect class="box plain" x="470" y="80" width="130" height="70" rx="8"/>
-  <text class="t" x="535" y="110" text-anchor="middle">vCenter</text>
-  <text class="s" x="535" y="130" text-anchor="middle">primary license</text>
-  <rect class="box plain" x="630" y="40" width="120" height="44" rx="8"/>
-  <text class="s" x="690" y="67" text-anchor="middle">ESX hosts</text>
-  <rect class="box plain" x="630" y="100" width="120" height="44" rx="8"/>
-  <text class="s" x="690" y="127" text-anchor="middle">NSX, vSAN</text>
-  <rect class="box plain" x="630" y="160" width="120" height="44" rx="8"/>
-  <text class="s" x="690" y="187" text-anchor="middle">VCF Automation</text>
-  <line class="wire accent" x1="180" y1="105" x2="238" y2="105" marker-end="url(#arra)"/>
-  <line class="wire dash" x1="238" y1="128" x2="182" y2="128" marker-end="url(#arr)"/>
-  <text class="lbl" x="185" y="72">license file</text>
-  <text class="lbl" x="185" y="166">usage</text>
-  <line class="wire" x1="325" y1="150" x2="325" y2="168"/>
-  <line class="wire accent" x1="410" y1="115" x2="468" y2="115" marker-end="url(#arra)"/>
-  <line class="wire" x1="600" y1="100" x2="628" y2="62" marker-end="url(#arr)"/>
-  <line class="wire" x1="600" y1="115" x2="628" y2="122" marker-end="url(#arr)"/>
-  <line class="wire" x1="600" y1="130" x2="628" y2="182" marker-end="url(#arr)"/>
-</Diagram>
-
-- **Default license.** Capacity from every active subscription of the same product in a Site ID pools into one default license. Each VCF core includes 1 TiB of vSAN.
-- **Splitting.** One allocation cannot serve two VCF Operations instances. To license several instances, split the default license in the console so each gets its own share (<KB id={437242} />).
-- **Primary and add-on.** VCF and VVF are primary licenses and must be assigned first. vSAN capacity beyond the included amount, and Private AI Foundation, are add-ons in the same file. NSX and HCX are no longer licensed separately.
-- **Still on keys.** vDefend Firewall, Avi Load Balancer, Tanzu Platform and Data Services Manager keep license keys. VMware Live Recovery is SaaS.
-
-## What this changes for operations
-
-1. **VCF Operations becomes infrastructure.** If it is down for long enough, licensing cannot be refreshed. Plan its availability and backups accordingly.
-2. **A calendar item appears.** Every instance has a usage-reporting deadline. See [the 180-day cycle](/vcf/library/licensing/180-day-cycle/).
-3. **Licensing has a network path.** Connected mode needs outbound HTTPS from every VCF Operations node. See [connected or disconnected](/vcf/library/licensing/connected-vs-disconnected/).
-4. **Mixed estates are normal during migration.** 8.x components keep their keys while 9.x components use the file (<KB id={406836} />).
-
-<Callout type="field">
-On a 5.x to 9.x project, give licensing its own workstream with an owner on the customer side who has access to the console for the right Site ID. The technical steps take an hour. Getting the right person with the right portal access can take two weeks.
+<Callout type="note" title="Corrected on 6 November 2026">
+This note used to say vDefend, Avi, Tanzu Platform and DSM all keep keys and that Live Recovery is SaaS, as Broadcom's June 2025 post did. vDefend 9.1 and Avi 32.1.1 have since moved to signed files, Live Recovery now has an on-premises offering, and DSM's route has been an open question since 4 Nov.
 </Callout>
 
-## Pitfalls
+## How a key estate becomes a file estate
 
-- **Trying to upgrade keys in the support portal.** There is nothing to upgrade. The 9.x license comes from the console.
-- **Registering against the wrong Site ID.** It produces false expiry banners and failed updates. See [licensing errors decoded](/vcf/library/licensing/licensing-errors-decoded/).
-- **Treating a monitoring-only VCF Operations as a licensing authority.** It does not need to be registered, and should not be, unless it will license vCenters.
+In 5.x you hold 25-character keys and type them into products. In 9.x, [FAQ Q12 and Q14](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) say license files from the VCF Business Services console go into VCF Operations and are assigned to vCenters. vCenter 9 has no key field (<KB id={404155} />). This route documents no key conversion: attempts to upgrade 8.x keys on the Support Portal return "No data available to upgrade" (<KB id={452764} />), and FAQ Q10 lets 5.x environments keep their keys beside 9.1.
+
+Capacity pools by product and Site ID into a default license. Broadcom's [Private License Files guide](https://vcf.broadcom.com/vcf/clm/assets/VCF-9.1-Licensing-Private-License-Files.pdf) gives the arithmetic: 500 VCF cores also bring 500 TiB of vSAN in a separate license, and a 200 TiB add-on takes that license to 700 TiB. In 9.1 the file sits with a [license server beside VCF Operations](/vcf/library/licensing/license-server/). Connected mode [sends usage and fetches a new file every 24 hours](https://blogs.vmware.com/cloud-foundation/2026/05/18/vcf-9-1-licensing-programmatic-centralized-and-built-to-scale/), and disconnected mode [repeats the exchange by hand](/vcf/library/licensing/180-day-cycle/) at least every 180 days.
+
+The [9.1 overview](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview.html) names only two add-ons the console manages. Everything else has its own route.
+
+<Diagram viewBox="0 0 760 282" label="Three licensing routes in VCF 9.1" caption="DSM and Tanzu Platform are left out: DSM's route isn't stated in the documents checked, and Tanzu Platform takes a key in Tanzu Hub.">
+  <text class="lbl" x="10" y="18">VCF file: primary, vSAN TiB, PAIF-N</text>
+  <rect class="box accent" x="10" y="26" width="165" height="56" rx="8"/>
+  <text class="t" x="92" y="50" text-anchor="middle">Business Services</text>
+  <text class="s" x="92" y="68" text-anchor="middle">console, Site ID</text>
+  <rect class="box accent" x="205" y="26" width="165" height="56" rx="8"/>
+  <text class="t" x="287" y="50" text-anchor="middle">VCF Operations</text>
+  <text class="s" x="287" y="68" text-anchor="middle">and license server</text>
+  <rect class="box accent" x="400" y="26" width="165" height="56" rx="8"/>
+  <text class="t" x="482" y="50" text-anchor="middle">vCenter</text>
+  <text class="s" x="482" y="68" text-anchor="middle">primary, then add-ons</text>
+  <rect class="box plain" x="595" y="26" width="155" height="56" rx="8"/>
+  <text class="t" x="672" y="50" text-anchor="middle">ESX, vSAN</text>
+  <text class="s" x="672" y="68" text-anchor="middle">through vCenter</text>
+  <line class="wire accent" x1="175" y1="54" x2="203" y2="54" marker-end="url(#arra)"/>
+  <line class="wire accent" x1="370" y1="54" x2="398" y2="54" marker-end="url(#arra)"/>
+  <line class="wire accent" x1="565" y1="54" x2="593" y2="54" marker-end="url(#arra)"/>
+  <text class="lbl" x="10" y="106">Separate file: vDefend 9.1, Avi 32.1.1</text>
+  <rect class="box v9" x="10" y="114" width="165" height="56" rx="8"/>
+  <text class="t" x="92" y="138" text-anchor="middle">Support Portal</text>
+  <text class="s" x="92" y="156" text-anchor="middle">convert the key</text>
+  <rect class="box v9" x="205" y="114" width="165" height="56" rx="8"/>
+  <text class="t" x="287" y="138" text-anchor="middle">Avi Cloud Console</text>
+  <text class="s" x="287" y="156" text-anchor="middle">allocate, activate</text>
+  <rect class="box v9" x="400" y="114" width="165" height="56" rx="8"/>
+  <text class="t" x="482" y="138" text-anchor="middle">License Hub</text>
+  <text class="s" x="482" y="156" text-anchor="middle">on-premises</text>
+  <rect class="box plain" x="595" y="114" width="155" height="56" rx="8"/>
+  <text class="t" x="672" y="138" text-anchor="middle">NSX, Avi</text>
+  <text class="s" x="672" y="156" text-anchor="middle">Manager, Controller</text>
+  <line class="wire" x1="175" y1="142" x2="203" y2="142" marker-end="url(#arr)"/>
+  <line class="wire" x1="370" y1="142" x2="398" y2="142" marker-end="url(#arr)"/>
+  <line class="wire" x1="565" y1="142" x2="593" y2="142" marker-end="url(#arr)"/>
+  <text class="lbl" x="10" y="194">Live Recovery, by order line</text>
+  <rect class="box v5" x="10" y="202" width="165" height="56" rx="8"/>
+  <text class="t" x="92" y="226" text-anchor="middle">Support Portal</text>
+  <text class="s" x="92" y="244" text-anchor="middle">standalone SRM key</text>
+  <rect class="box v5" x="205" y="202" width="165" height="56" rx="8"/>
+  <text class="t" x="287" y="226" text-anchor="middle">Live Recovery</text>
+  <text class="s" x="287" y="244" text-anchor="middle">console, offline key</text>
+  <rect class="box plain" x="400" y="202" width="165" height="56" rx="8"/>
+  <text class="t" x="482" y="226" text-anchor="middle">Site pair</text>
+  <text class="s" x="482" y="244" text-anchor="middle">applied in the product</text>
+  <line class="wire" x1="370" y1="230" x2="398" y2="230" marker-end="url(#arr)"/>
+  <path class="wire" d="M92 258 V272 H482 V260" marker-end="url(#arr)"/>
+</Diagram>
+
+## What each add-on does
+
+Entitlement sits in [the checked matrix](/vcf/library/value/using-what-vcf-includes/). This table covers delivery only.
+
+| Add-on | How 9.1 delivers it | What changes from a 5.x key | How firm |
+|---|---|---|---|
+| vSAN TiB | VCF file. [Applies to every vSAN cluster](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/add-on-licenses-in-vcf-9-0.html) under the vCenter, or to one cluster by override from 9.1 | No key. Add-on TiB pools with the TiB included in VCF | Documented |
+| Private AI Foundation | VCF file, counted in cores | No key. TechDocs says that from 3 Nov 2025 you "might also receive" it, so check the console | Documented; entitlement in [conflict 4](/vcf/library/value/using-what-vcf-includes/) |
+| vDefend Firewall | [Signed file through License Hub](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/vdefend/vdefend-firewall/9-1/release-notes/vmware-vdefend-91-release-notes.html) from vDefend 9.1. Usage due from the hub every 180 days | Key must be converted on the Support Portal before assignment | Documented |
+| Avi Load Balancer | [Signed file](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/avi-load-balancer/avi-load-balancer-vmware-cloud-foundation/9-1/build-and-deploy-avi-91/license-management-for-avi-load-balancer.html) from 32.1.1, through License Hub, or registered directly if a Controller can't run a hub. The console issues an activation code when connected and a signed file when disconnected | Same conversion, with a 90-day grace period to move to the new format on the upgrade to 32.1.1 | Documented. The [Licensing Tiers page](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/avi-load-balancer/avi-load-balancer-vmware-cloud-foundation/9-1/nsx-advanced-load-balancer-editions.html) (18 June) still says "License key" |
+| Live Recovery, standalone SRM (VCF-SRM) | 25-character key from the Support Portal, entered in the product (<KB id={429032} />, <KB id={427391} />). It doesn't appear in the console | Key stays, but needs reassigning after a major upgrade (<KB id={376866} />, 8.x to 9.0) | Documented for 9.0 |
+| Live Recovery, subscription | Live Recovery console, or an [offline key tied to one site pair](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-fleet-disaster-recovery/fleet-disaster-recovery-task-library/implementation-of-vsphere-replication-for-the-management-domain/configure-failover-of-the-sddc-management-components-for-the-management-domain/protected-site-configuration-tasks/assign-licenses-to.html) (<KB id={428834} />, 9.0.x; console scope in <KB id={429032} />) | Advanced Cyber Compliance runs to the end of its term, then the buyer can move to Live Recovery (FAQ Q86) | Route for the on-premises line (FAQ Q87 and the [feature comparison](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-feature-comparison-and-upgrade-paths) p17, both 4 Nov) not found in the pages opened |
+| Data Services Manager | Not stated in the pages opened, since the [FAQ Q84](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) move to TrueSource data services | Pre-9.0: "No license enforcement" (<KB id={406836} />). 9.1 checks the vCenter license | Open |
+| Tanzu Platform | Key for Elastic Application Runtime, [validated and added in Tanzu Hub](https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/tanzu-hub/10-4/tnz-hub/foundations-manage-license-keys.html) | No change documented | Hub 10.4 only |
+
+Three of those rows need a closer reading.
+
+**DSM.** The June 2025 post put it on keys, and the [May 2026 post](https://blogs.vmware.com/cloud-foundation/2026/05/05/vmware-data-services-manager-9-1-automating-the-modern-databases-that-drive-ai-and-private-cloud/) says only that it's licensed apart from core VCF. The [DSM 9.1 guide](https://techdocs.broadcom.com/content/dam/broadcom/techdocs/us/en/pdf/vmware/dsm/vmwdsm/vmware-data-services-manager-9-1.pdf) (25 Sep, p124-125) has alerts that read the vCenter license: `LicenseInsufficient` means the license doesn't include DSM, and the fix for `VCENTER_LICENSE_INVALID` is a VCF primary on that vCenter. A search of that guide found no procedure for entering a DSM license. The [Advanced Services page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vcf-advanced-services.html) (5 Nov) still lists VMware Data Services Manager and doesn't mention TrueSource, while the feature comparison (4 Nov, p17) lists TrueSource Data Services among the add-ons.
+
+**vDefend on the way through.** The [9.1.1 notes](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/vdefend/vdefend-firewall/9-1/release-notes/vmware-vdefend-911-release-notes.html) give two expiry behaviours. After evaluation or trial expiry, a firewall in an unlicensed state "allows all traffic". After a subscription expires, there are 90 days' grace, and then rules keep protecting workloads but you can't create or edit them. They don't say which one applies to an upgrade with an unconverted key.
+
+**Live Recovery keys.** Keys generated on or after 20 April 2026 fail as "Invalid license key" on older appliances. <KB id={438925} /> sets the minimums: 9.0.2.4 from the 9.0.1 to 9.0.2.3 line, 9.0.5.1 from 9.0.3 to 9.0.5, and 9.1.0.0100 for Protection and Recovery 9.1.0.0. If you renew during the migration, you can hit this before you touch anything else.
+
+## The order of work
+
+Steps 1, 2 and 7 are this site's advice. The others follow the sources above, and the [upgrade note](/vcf/library/licensing/licensing-through-upgrades/) has the core sequence in full.
+
+1. **Sort the order document by route,** using the table. Name who can sign in to each of the Business Services console, Support Portal, Avi Cloud Console and Live Recovery console for the right Site ID.
+2. **Ask Broadcom in writing** how DSM under TrueSource and the on-premises Live Recovery line are delivered. Do this before the change window.
+3. **Convert vDefend and Avi keys, and stand up License Hub,** before those products reach vDefend 9.1 or Avi 32.1.1. Broadcom dates both changes from those versions, so this site reads a stop at VCF 9.0 as keeping the keys; confirm that for your order. Broadcom's notes name both License Hub 5.1.2 and 2.0, so check which your NSX release needs.
+4. **Bring up VCF Operations 9, register it and add licenses to the license server.** Upgraded components [go into evaluation](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) (FAQ Q11), which [lasts up to 90 days](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html).
+5. **Assign the primary to each vCenter, then the add-ons.** The add-on page requires that order. If you run several VCF Operations instances, split in the console first: one allocation can't serve two instances (<KB id={437242} />). That KB's split step names only the default license, so check the vSAN license separately.
+6. **Check Live Recovery on each site pair.** Reassign the key if the state shows evaluation or expired, and check the appliance version against <KB id={438925} />. Offline keys are created per site pair, and closing the request window invalidates the change request key.
+7. **Put every clock in one calendar.** A disconnected VCF Operations and a License Hub each have their own 180-day usage cycle, in different consoles.
+
+<Callout type="analysis" title="This site's reading">
+The phrase "license file" now covers two unrelated estates with separate consoles, appliances and reporting. A project plan with one licensing line will miss the second. Treat the DSM rows as a question for Broadcom: the guide's alerts suggest the product reads its state from vCenter, but that's inference and doesn't tell you what the console will issue.
+</Callout>
+
+This isn't legal or purchasing advice. Your order document and Broadcom's program documentation decide what you hold.

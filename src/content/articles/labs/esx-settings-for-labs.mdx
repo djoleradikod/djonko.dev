@@ -6,6 +6,7 @@ order: 6
 versions: ["9.0", "9.1"]
 level: Deep dive
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: []
 sources:
   - title: "VCF 9.1: comprehensive ESX configuration workarounds for lab deployments"
@@ -20,13 +21,13 @@ sources:
 ---
 
 <InShort>
-Lab hardware is rarely on the compatibility guide, so VCF 9 needs help to run on it. The common adjustments fall into four groups: **CPU** (entropy and NVMe tiering behaviour on consumer AMD processors), **NICs** (hardware offloads on some consumer 10 GbE cards), **nested vSAN** (SCSI reservations, unmap pass-through, device monitoring and swap) and **vSAN compression** on CPU-constrained hosts. Each is an advanced setting with a documented reason. Use them in labs only, and keep a list so they never appear in a production build.
+Lab hardware may not be on the compatibility guide, so VCF 9 can need help to run on it. The common adjustments fall into four groups: **CPU** (entropy and NVMe tiering behaviour on consumer AMD processors), **NICs** (hardware offloads on some consumer 10 GbE cards), **nested vSAN** (SCSI reservations, unmap pass-through, device monitoring and swap) and **vSAN compression** on CPU-constrained hosts. Each is an advanced setting with a documented reason. Use them in labs only, and keep a list so they never appear in a production build.
 </InShort>
 
 <Compare v5Label="Lab" v9Label="Production" title="Where these belong" rows={[
   ["Hardware", "Consumer CPUs, mini PCs, mixed vendors", "Hardware on the compatibility guide"],
   ["Advanced settings", "Accepted, with notes", "Only under a KB or support direction"],
-  ["vSAN", "Often nested, on top of physical vSAN", "Physical devices on the compatibility guide"],
+  ["vSAN", "Can be nested, on top of physical vSAN", "Physical devices on the compatibility guide"],
 ]} />
 
 ## The settings, by group
@@ -50,7 +51,7 @@ esxcli system settings advanced list -o /VSAN/GuestUnmap
 ```
 
 <Callout type="field">
-Keep lab-only settings in one script with a header that says "LAB ONLY", and never in a host profile or a configuration template shared with production. The day someone copies a lab kickstart into a customer build is the day these settings become a support case.
+Keep lab-only settings in one script with a header that says "LAB ONLY", and never in a host profile or a configuration template shared with production. A lab kickstart copied into a production build would turn these settings into a support case.
 </Callout>
 
 ## Pitfalls

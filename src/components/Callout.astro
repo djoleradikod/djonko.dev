@@ -1,6 +1,9 @@
 ---
-interface Props { type?: 'note' | 'warn' | 'field'; title?: string }
+// 'field' is advice from practice in general. It makes no claim that the author saw the thing happen.
+// 'analysis' marks reasoning of this site's own, as opposed to what a vendor or source states. It always
+// carries the Analysis tag, whatever its title says, so a reader can tell it from documented fact.
+interface Props { type?: 'note' | 'warn' | 'field' | 'analysis'; title?: string }
 const { type = 'note', title } = Astro.props;
-const label = title ?? ({ note: 'Note', warn: 'Watch out', field: 'From the field' } as const)[type];
+const label = title ?? ({ note: 'Note', warn: 'Watch out', field: 'In practice', analysis: "This site's reasoning, not a documented fact" } as const)[type];
 ---
-<aside class={`callout ${type === 'warn' ? 'warn' : ''}`}><span class="label">{label}</span><slot /></aside>
+<aside class={`callout ${type}`}><span class="label">{type === 'analysis' && <span class="callout-tag">Analysis</span>}<span>{label}</span></span><slot /></aside>
