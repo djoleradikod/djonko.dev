@@ -6,6 +6,7 @@ order: 7
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: []
 sources:
   - title: "Upgrading VCF 5.2 to 9.0: the top 10 questions answered (vSAN OSA)"
@@ -33,7 +34,7 @@ VCF 5.x introduced the Express Storage Architecture (ESA). 5.2 added vSAN Max an
 </InShort>
 
 <Compare rows={[
-  ["Default for new clusters", "OSA in most estates. ESA available from 5.1 on qualifying hardware.", "ESA"],
+  ["Default for new clusters", "OSA. ESA available from 5.1 on qualifying hardware.", "ESA"],
   ["OSA", "Fully supported", "Still supported. Not deprecated in 9.0."],
   ["Disaggregated storage", "vSAN Max (5.2), built on ESA", "vSAN storage clusters. In 9.1, clusters can mount remote vSAN datastores of either architecture."],
   ["Stretched clusters", "OSA, plus ESA stretched on ReadyNodes from 5.2", "ESA and OSA. Site maintenance mode, with OSA through RPQ."],
@@ -44,7 +45,7 @@ VCF 5.x introduced the Express Storage Architecture (ESA). 5.2 added vSAN Max an
 
 ## How to decide
 
-**Start with hardware.** ESA has much stricter requirements than OSA: NVMe-based ReadyNodes and fast networking. Existing OSA hosts often do not qualify. If they don't, the decision is already made for this hardware generation. Upgrade to 9.x on OSA and plan ESA with the next hardware refresh.
+**Start with hardware.** ESA has much stricter requirements than OSA: NVMe-based ReadyNodes and fast networking. Check whether existing OSA hosts qualify. If they don't, the decision is already made for this hardware generation. Upgrade to 9.x on OSA and plan ESA with the next hardware refresh.
 
 **Then ask which 9.x features you need.** The features worth paying for are ESA-only: global deduplication, cluster-to-cluster snapshot replication with short recovery points, and the newer storage cluster capabilities. If none of them matter to the customer this year, OSA on supported hardware is a defensible design.
 
@@ -58,7 +59,7 @@ VCF 5.x introduced the Express Storage Architecture (ESA). 5.2 added vSAN Max an
 - **NFS** gains space reclamation through the VAAI plugin and Kerberos encryption for NFS 4.1.
 
 <Callout type="field">
-In upgrade assessments, the vSAN question that matters is rarely ESA or OSA. It is whether every host, controller and firmware combination is on the 9.x compatibility list. Run the hardware check first. The architecture conversation is quick once you know what the hardware supports.
+In an upgrade assessment, settle hardware before ESA or OSA: check that every host, controller and firmware combination is on the 9.x compatibility list. What the hardware supports narrows the architecture choice.
 </Callout>
 
 ## Pitfalls

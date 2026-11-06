@@ -6,6 +6,7 @@ order: 10
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: []
 sources:
   - title: "Why VCF 9.0 improves IT operations and management"
@@ -23,7 +24,7 @@ sources:
 ---
 
 <InShort>
-The SRE book defines **toil** as work that is manual, repetitive, automatable, has no lasting value and grows with the size of the estate. In VCF 5.x a large share of platform administration fitted that definition: replacing certificates component by component, rotating passwords by hand, patching each management product through its own tool, and managing licence keys. VCF 9 brings most of it into **VCF Operations**: fleet lifecycle from one screen, certificate auto-renewal through a CA, password expiry alerts and updates, a single licence file, and diagnostic findings that match the estate against known issues. The time this frees is a real saving, but only if you measure it before and after.
+The SRE book defines **toil** as work that is manual, repetitive, automatable, has no lasting value and grows with the size of the estate. In VCF 5.x several administration tasks fitted that definition: replacing certificates component by component, rotating passwords by hand, patching each management product through its own tool, and managing licence keys. VCF 9 brings most of it into **VCF Operations**: fleet lifecycle from one screen, certificate auto-renewal through a CA, password expiry alerts and updates, a single licence file, and diagnostic findings that match the estate against known issues. The time this frees is a real saving, but only if you measure it before and after.
 </InShort>
 
 <Compare rows={[
@@ -38,7 +39,7 @@ The SRE book defines **toil** as work that is manual, repetitive, automatable, h
 
 Toil grows with the estate, which is why it matters for cost. Ten vCenters with certificates that expire on different dates generate ten pieces of work a cycle. The SRE book's guidance is to measure toil, keep it under a fixed share of each engineer's time, and spend the rest on engineering that removes more of it. The same approach works for a platform team.
 
-The tasks below are the usual recurring work in a VCF estate. The 9.x column shows what changes, and the last column shows what still needs a person.
+The tasks below are recurring work in a VCF estate. The 9.x column shows what changes, and the last column shows what still needs a person.
 
 | Task | What VCF 9 does | Still needs a person for |
 |---|---|---|

@@ -6,6 +6,7 @@ order: 4
 versions: ["9.0", "9.1"]
 level: Deep dive
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [435258, 448522, 444151, 448618, 454179, 441205, 449937, 443327]
 sources:
   - title: "Service is not available at this time when accessing an SDDC Manager instance"
@@ -58,7 +59,7 @@ Build > Lifecycle in VCF Operations is assembled from **plugins**: the SDDC Mana
 The page needs four things at once: management services running, Salt RaaS and Salt master running, the VCF adapter **Collecting**, and the management vCenter on 9.1.0 or later (<KB id={443327} />). A component that shows "Powered Off" with no actions after the upgrade is a stale hostname in the lifecycle database (<KB id={449937} />).
 
 <Callout type="field">
-For any Lifecycle UI ticket, ask for a HAR file from the browser and `web-vcf.log` at the same time. Together they show which plugin failed and why, which is usually the whole diagnosis.
+For any Lifecycle UI ticket, ask for a HAR file from the browser and `web-vcf.log` at the same time. Together they show which plugin failed and why.
 </Callout>
 
 ## Pitfalls

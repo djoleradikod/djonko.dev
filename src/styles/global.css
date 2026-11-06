@@ -191,6 +191,9 @@ a.card:active { transform: translateY(1px); }
 .callout.warn { border-color: var(--warn); background: var(--warn-soft); }
 .callout .label { font-weight: 700; display: block; margin-bottom: 2px; font-size: 0.92rem; }
 .callout > :last-child { margin-bottom: 0; }
+.callout.analysis { border-color: var(--ink-3); background: transparent; border-top: 1px solid var(--line); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.as-of { font-size: 0.86em; color: var(--ink-3); white-space: nowrap; }
+.src-kind { color: var(--ink-3); }
 
 figure.fig { margin: 0 0 1.4em; }
 figure.fig img { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }

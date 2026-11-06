@@ -1,11 +1,12 @@
 ---
 title: "Where did that button go? The 5.2 to 9.x map of Day-2 tasks"
-description: "The single most useful page for an operations team moving from 5.x: every common Day-2 task, where it lived in SDDC Manager, and where it lives now."
+description: "For an operations team moving from 5.x: each Day-2 task, where it lived in SDDC Manager, and where it lives now."
 category: day-2
 order: 1
 versions: ["5.x", "9.0", "9.1"]
 level: Overview
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [454943, 435599]
 sources:
   - title: "10 VCF 9 enhancements simplifying your Day-2 operations"
@@ -20,7 +21,7 @@ sources:
 ---
 
 <InShort>
-In 5.2, SDDC Manager was where Day-2 work happened, and doing it anywhere else often caused trouble. In 9.x the work is split along a simple line. Tasks about **compute, storage and networking objects** moved to **vCenter**. Tasks about **the platform itself** (domains, certificates, passwords, backup, DNS and NTP, licensing and lifecycle) moved to **VCF Operations**. SDDC Manager still executes much of it underneath, which is why it must stay healthy, but you rarely start there.
+In 5.2, SDDC Manager was where Day-2 work happened, and doing it anywhere else could cause trouble. In 9.x the work is split along a simple line. Tasks about **compute, storage and networking objects** moved to **vCenter**. Tasks about **the platform itself** (domains, certificates, passwords, backup, DNS and NTP, licensing and lifecycle) moved to **VCF Operations**. SDDC Manager still executes much of it underneath, which is why it must stay healthy, but you rarely start there.
 </InShort>
 
 ## The map
@@ -58,7 +59,7 @@ The vCenter paths for workload domains need **VCF SSO and vCenter linking** in p
 4. **Update monitoring.** Alerts about certificate and password expiry now come from VCF Operations.
 
 <Callout type="field">
-The question that comes up most in the first month after an upgrade is "why is Add Host greyed out?". The answer is usually not a bug. The task has moved to vCenter, or VCF SSO and vCenter linking aren't configured for that workload domain yet.
+If Add Host is greyed out after an upgrade, check two things before calling it a bug. The task may have moved to vCenter, or VCF SSO and vCenter linking may not be configured for that workload domain yet.
 </Callout>
 
 ## Pitfalls

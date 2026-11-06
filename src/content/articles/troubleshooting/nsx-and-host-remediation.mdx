@@ -1,11 +1,12 @@
 ---
 title: "NSX and host remediation failures: TEPs, host preparation and vLCM images"
-description: "Infrastructure failures during VCF workflows often surface in SDDC Manager but live in NSX or vLCM. Faulty TEPs, hosts stuck waiting for managers, cluster images that would downgrade a driver, and vSAN alarms that block remediation all have well-worn diagnostics."
+description: "A failure that surfaces in SDDC Manager can live in NSX or vLCM. Diagnostics and KBs for faulty TEPs, hosts stuck waiting for managers, cluster images that would downgrade a driver, and vSAN alarms that block remediation."
 category: troubleshooting
 order: 11
 versions: ["5.x", "9.0", "9.1"]
 level: Deep dive
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [386023, 405174, 429558, 418506, 440331, 420572, 443279, 444283, 447375, 404830, 410343]
 sources:
   - title: "NSX 9.0 known issues"
@@ -59,7 +60,7 @@ esxcfg-vmknic -l
 Logs: `/var/log/vmware/vmware-updatemgr/vum-server/` on vCenter, `/var/log/lifecycle.log` on the host, and `domainmanager.log` or `lcm-debug.log` on SDDC Manager for the VCF side.
 
 <Callout type="field">
-For TEP issues, draw the path before running commands: host TEP VLAN, gateway, edge TEP VLAN, and where routing happens. Half of these tickets are solved by the drawing, because it shows the hop that nobody configured.
+For TEP issues, draw the path before running commands: host TEP VLAN, gateway, edge TEP VLAN, and where routing happens. The drawing shows which hop isn't configured.
 </Callout>
 
 ## Pitfalls

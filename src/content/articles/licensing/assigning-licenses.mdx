@@ -1,11 +1,12 @@
 ---
 title: "Assigning licenses: vCenter first, add-ons second, overrides in 9.1"
-description: "In 9.0 you license vCenter and everything connected to it inherits. 9.1 adds overrides on hosts and vSAN clusters and lets one vCenter mix license types. The prerequisites are short and specific, and most failures come from skipping one of them."
+description: "In 9.0 you license vCenter and everything connected to it inherits. 9.1 adds overrides on hosts and vSAN clusters and lets one vCenter mix license types. The prerequisites are short and specific, so check them first when assignment fails."
 category: licensing
 order: 6
 versions: ["9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [452095, 442564, 424533, 453517, 443714, 445504, 453510, 402049]
 sources:
   - title: "Assign a primary license to a vCenter instance (9.0)"
@@ -46,7 +47,7 @@ An assignment fails if the license has less capacity left than the vCenter needs
 
 ## When assignment fails
 
-- **Name resolution, case, FQDN or time** between vCenter and the License Server is the most common cause (<KB id={452095} />, <KB id={442564} />).
+- **Name resolution, case, FQDN or time** between vCenter and the License Server: check these first (<KB id={452095} />, <KB id={442564} />).
 - **An uppercase instance UUID** left over from an old upgrade can block License Server authentication. Check `instanceUuid` in `/etc/vmware-vpx/instance.cfg` (<KB id={424533} />).
 - **"No licenses are assignable"** or a licence that "could not be fully removed": toggle License Management off and on for the integration, waiting about 15 minutes each time (<KB id={453517} />).
 - **"Assets have been removed but still use license capacity"**: use **Reclaim Used Capacity** (<KB id={443714} />).
@@ -61,6 +62,6 @@ Capture a "license map" when you first assign: which vCenter carries which prima
 
 ## Pitfalls
 
-- **Skipping the SSO group.** It is the most common missing prerequisite.
+- **Skipping the SSO group.** Check it before you assign.
 - **Assigning during a 9.0 to 9.1 license transfer.** Wait until the transfer completes.
 - **A stale vSAN asset after disabling vSAN** in 9.0 can keep an expiry banner alive (<KB id={402049} />).

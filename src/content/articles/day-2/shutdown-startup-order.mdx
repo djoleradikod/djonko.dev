@@ -1,11 +1,12 @@
 ---
 title: "Shutdown and startup order for a 9.x fleet"
-description: "Power events are rare, so nobody remembers the order. In 9.x the order gained a fleet rule, a License Server and a Kubernetes runtime with its own script. Here is the sequence with the reasoning, so it can be adapted rather than memorised."
+description: "In 9.x the order gained a fleet rule, a License Server and a Kubernetes runtime with its own script. The instance that runs VCF Operations goes down last and comes up first. Here is the sequence with the reasoning, so it can be adapted rather than memorised."
 category: day-2
 order: 7
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [440874, 440862, 341964]
 sources:
   - title: "Shutting down VMware Cloud Foundation (9.0)"
@@ -73,7 +74,7 @@ Then each workload domain: vCenter, hosts, a cluster restart to re-establish pri
 If the runtime came back on its own in the wrong order, services can stay at zero replicas and nodes at "Ready,SchedulingDisabled". The documented recovery is to power on the control plane first, wait five minutes, power on the workers, then wait 15 to 20 minutes (<KB id={440862} />). The same KB covers the power-off marker that the shutdown script leaves behind.
 
 <Callout type="field">
-Write the order for the customer's actual estate, not the generic one. List which optional components exist, where DNS, NTP and AD run, and which domains share NSX. Then time a planned shutdown in a maintenance window. The hour each way for VCF Operations surprises people the first time.
+Write the order for the actual estate, not the generic one. List which optional components exist, where DNS, NTP and AD run, and which domains share NSX. Then time a planned shutdown in a maintenance window. Allow for the hour each way that VCF Operations takes.
 </Callout>
 
 ## Pitfalls

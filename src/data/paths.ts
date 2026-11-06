@@ -25,7 +25,7 @@ export const PATHS: ReadingPath[] = [
   },
   {
     id: 'on-call', title: 'On call for VCF 9', who: 'Engineers taking tickets or pages',
-    blurb: 'A method first, then the logs, the locks and the five causes behind most failures, and how to hand a case to support so it is answered on the first reply.',
+    blurb: 'A method first, then the logs, the locks and the five causes to rule out, and how to hand a case to support with the evidence attached.',
     steps: [
       'troubleshooting/seven-step-triage', 'troubleshooting/reading-sddc-manager-logs', 'day-2/stuck-tasks-locks',
       'day-2/dns-ntp-proxy', 'troubleshooting/certificate-failures', 'troubleshooting/password-and-account-failures',

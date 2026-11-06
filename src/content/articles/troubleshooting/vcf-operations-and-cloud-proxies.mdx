@@ -1,11 +1,12 @@
 ---
 title: "VCF Operations and cloud proxy problems: cluster state, disk, DNS and haproxy"
-description: "VCF Operations is now the console for the whole fleet, so its problems look like platform problems. Most of them reduce to disk on the analytics nodes, the cluster's own state, or DNS seen from the cloud proxies."
+description: "VCF Operations is now the console for the whole fleet, so its problems look like platform problems. Check disk on the analytics nodes, the cluster's own state, and DNS seen from the cloud proxies."
 category: troubleshooting
 order: 8
 versions: ["9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [410759, 446447, 318768, 454593, 436047, 448522, 426042, 443900, 437258, 443018, 440916]
 sources:
   - title: "VCF Operations 9.1 known issues"
@@ -14,7 +15,7 @@ sources:
 ---
 
 <InShort>
-Three areas cover most VCF Operations tickets. **Disk on the analytics nodes**: a full root or `/storage/db` stops analytics, and the fix is a **new disk on every node**, not expanding an existing one (<KB id={318768} />, <KB id={454593} />). **Cluster state**: stuck at "Waiting for Analytics", which is recovered through the admin UI by taking the cluster offline and online in order (<KB id={446447} />). **Cloud proxies and DNS**: proxies going offline every few hours, or 503s through haproxy, almost always trace back to name resolution (<KB id={426042} />, <KB id={443900} />). Never revert VCF Operations to a snapshot to undo a failed change (<KB id={436047} />).
+Check three areas first. **Disk on the analytics nodes**: a full root or `/storage/db` stops analytics, and the fix is a **new disk on every node**, not expanding an existing one (<KB id={318768} />, <KB id={454593} />). **Cluster state**: stuck at "Waiting for Analytics", which is recovered through the admin UI by taking the cluster offline and online in order (<KB id={446447} />). **Cloud proxies and DNS**: proxies going offline every few hours, or 503s through haproxy, point to name resolution (<KB id={426042} />, <KB id={443900} />). Never revert VCF Operations to a snapshot to undo a failed change (<KB id={436047} />).
 </InShort>
 
 <Compare rows={[
@@ -52,7 +53,7 @@ curl -sk https://<node>/casa/cluster/status
 | "VCF Operations lost connection to SDDC Manager" | An expired token on the diagnostics adapter. Recreate it (<KB id={440916} />). |
 
 <Callout type="field">
-Treat VCF Operations like vCenter now: image-level backups, disk monitoring, and a change window for upgrades. Many teams still think of it as "the monitoring tool". In 9.x it holds licensing and lifecycle for the whole fleet.
+Treat VCF Operations like vCenter now: image-level backups, disk monitoring, and a change window for upgrades. In 9.x it holds licensing and lifecycle for the whole fleet.
 </Callout>
 
 ## Pitfalls

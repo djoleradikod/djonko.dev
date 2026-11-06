@@ -6,6 +6,7 @@ order: 2
 versions: ["9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [443106, 442380, 449290, 414885, 429451, 426042, 443900, 433379]
 sources:
   - title: "Deploy a cloud proxy as part of a VCF 9.1 upgrade"
@@ -34,7 +35,7 @@ In 9.1 the **VCF instance adapter must collect through a healthy cloud proxy or 
 
 - **One collector group per site or network zone**, with at least two unified proxies.
 - **Proxy to VCF Operations:** outbound 443. **Push adapters** need inbound 443 to the proxy. **Groups** need VRRP between members.
-- **DNS from the proxy** must resolve every VCF Operations node. Proxies that go offline every few hours, or return 503s through haproxy, are almost always resolver problems (<KB id={426042} />, <KB id={443900} />).
+- **DNS from the proxy** must resolve every VCF Operations node. Proxies that go offline every few hours, or return 503s through haproxy, point to resolver problems (<KB id={426042} />, <KB id={443900} />).
 - **SSH** is disabled by default on proxies. Enable it only when needed.
 
 ## Moving adapters after a 9.1 upgrade

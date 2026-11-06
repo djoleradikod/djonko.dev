@@ -32,6 +32,10 @@ const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 const report = issueUrl({ template: 'correction.yml', title: `Correction: ${a.data.title}`, note: pageUrl });
 const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+const SOURCE_KIND = {
+  broadcom: 'Broadcom', practitioner: 'Practitioner', press: 'Press report', analyst: 'Analyst',
+  sponsored: 'Commissioned or sponsored', vendor: 'Other vendor', tracker: 'Third-party tracker', reference: 'Reference',
+} as const;
 const ld = {
   '@context': 'https://schema.org', '@type': 'TechArticle', headline: a.data.title, description: a.data.description,
   author: personRef(Astro.site), mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).href, datePublished: a.data.pubDate.toISOString(),
@@ -46,7 +50,8 @@ const ld = {
       <p class="lede">{a.data.description}</p>
       <div class="meta">
         <span data-pagefind-ignore><VersionBadges versions={a.data.versions} level={a.data.level} /></span>
-        <span>{fmt(a.data.updated ?? a.data.pubDate)}</span>
+        <span>{a.data.reviewed ? `Sources checked ${fmt(a.data.reviewed)}` : `Published ${fmt(a.data.updated ?? a.data.pubDate)}`}</span>
+        {a.data.reviewDue && <span>Next check due {fmt(a.data.reviewDue)}</span>}
         <span>{SITE.author} · {SITE.role}</span>
       </div>
       {a.data.versions.map((v) => <span hidden data-pagefind-filter="version">{`VCF ${v}`}</span>)}
@@ -73,7 +78,7 @@ const ld = {
             <details class="drawer">
               <summary>Sources and further reading ({a.data.sources.length})</summary>
               <div class="body"><ul>
-                {a.data.sources.map((s) => <li><a href={s.url} target="_blank" rel="noopener">{s.title}</a>{s.by && ` · ${s.by}`}</li>)}
+                {a.data.sources.map((s) => <li><a href={s.url} target="_blank" rel="noopener">{s.title}</a>{s.by && ` · ${s.by}`}{s.date && ` · ${fmt(s.date)}`}{s.kind && <span class="src-kind"> · {SOURCE_KIND[s.kind]}</span>}</li>)}
               </ul></div>
             </details>
           )}

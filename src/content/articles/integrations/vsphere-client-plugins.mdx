@@ -1,11 +1,12 @@
 ---
 title: "vSphere Client plugins in VCF 9: thumbprints, stale extensions and clean re-registration"
-description: "Remote plugins for VCF Operations, SDDC Manager, NSX, vSAN and Live Recovery are vCenter extensions verified by thumbprint. Certificate changes and decommissioned appliances break them in a handful of predictable ways, and the fix is almost always to re-register from the owning product."
+description: "Remote plugins for VCF Operations, SDDC Manager, NSX, vSAN and Live Recovery are vCenter extensions verified by thumbprint. Certificate changes and decommissioned appliances can break them, and the fix to try first is to re-register from the owning product."
 category: integrations
 order: 5
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [411268, 427228, 433208, 419087, 432196, 312247, 426913, 395813, 417767, 426469]
 sources:
   - title: "vSphere Client local plugins are deprecated"
@@ -26,7 +27,7 @@ A remote plugin is a vCenter **extension**: a key, a download URL and a **thumbp
   ["Status view", "Administration > Solutions > Client Plugins", "The same"],
 ]} />
 
-## Common failures
+## Failures and fixes
 
 | Message | Cause and fix |
 |---|---|
@@ -50,7 +51,7 @@ A remote plugin is a vCenter **extension**: a key, a download URL and a **thumbp
 Logs: `/var/log/vmware/vsphere-ui/logs/vsphere_client_virgo.log` (search for DOWNLOAD_FAILED and DEPLOYMENT_FAILED) and the reverse proxy log.
 
 <Callout type="field">
-Add "re-check Client Plugins" to every certificate replacement runbook. Plugins are the most visible casualty of a certificate change, and the check takes thirty seconds.
+Add "re-check Client Plugins" to every certificate replacement runbook. A certificate change can break plugins, because they are verified by thumbprint, and the check is quick.
 </Callout>
 
 ## Pitfalls

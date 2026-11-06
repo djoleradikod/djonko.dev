@@ -6,6 +6,7 @@ order: 10
 versions: ["9.0", "9.1"]
 level: Deep dive
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [428053, 440685, 443240, 448638, 404155]
 sources:
   - title: "Recovering licensing when VCF Operations is unavailable (9.0)"
@@ -52,7 +53,7 @@ For nested labs left switched off past expiry, a community method extracts the E
 - **Treat a stopped License Server as an incident** before the 180 days pass. An evaluation expiring while it's down causes exactly this (<KB id={443240} />).
 
 <Callout type="field">
-Write the recovery as a runbook before you need it: where the temporary host comes from, which VLANs it needs, who has console access to the Site ID, and how long a disconnected license cycle takes in practice. In a real outage, the slowest step is usually finding the person with portal access.
+Write the recovery as a runbook before you need it: where the temporary host comes from, which VLANs it needs, who has console access to the Site ID, and how long a disconnected license cycle takes in practice. Name the person with portal access in advance, because the recovery waits on them.
 </Callout>
 
 ## Pitfalls

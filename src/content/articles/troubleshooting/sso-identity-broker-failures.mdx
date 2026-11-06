@@ -1,11 +1,12 @@
 ---
 title: "VCF SSO and identity broker failures: redirects, clocks, secrets and a full database volume"
-description: "When VCF single sign-on fails, the message is usually generic and the cause is usually specific: the URL used to reach VCF Operations, clock drift, a rotated OAuth secret, an unreachable domain controller, or the broker's database volume filling up."
+description: "When VCF single sign-on fails, the message can be generic while the cause is specific: the URL used to reach VCF Operations, clock drift, a rotated OAuth secret, an unreachable domain controller, or the broker's database volume filling up."
 category: troubleshooting
 order: 9
 versions: ["9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [413976, 439953, 409353, 442137, 427108, 417098, 427554, 443943, 452420, 456305, 456430]
 sources:
   - title: "Deployment models for VCF single sign-on (9.0)"
@@ -42,7 +43,7 @@ VCF SSO is the identity broker federating to your identity provider, with VCF Op
 - **NSX SSO "Access Denied"** in 9.1.1: unjoin and rejoin NSX (<KB id={456430} />).
 
 <Callout type="field">
-Keep one emergency local login per component, tested quarterly, in the vault. SSO failures are rarely dangerous on their own. They become dangerous when nobody can log in to fix the thing that broke SSO.
+Keep one emergency local login per component, tested quarterly, in the vault. An SSO failure becomes dangerous when nobody can log in to fix the thing that broke SSO.
 </Callout>
 
 ## Pitfalls

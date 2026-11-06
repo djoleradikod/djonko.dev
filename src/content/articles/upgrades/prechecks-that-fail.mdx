@@ -1,11 +1,12 @@
 ---
-title: "The prechecks that fail most often, and how to clear them before the window"
-description: "Most failed upgrade windows fail on something a pre-window check would have caught: DNS, an expired password, a certificate SAN, a cloud proxy or a VM setting someone changed by hand. Here they are, grouped so they can be checked in one sitting."
+title: "Upgrade prechecks that can fail, and how to clear them before the window"
+description: "Check these before the upgrade window: DNS, an expired password, a certificate SAN, a cloud proxy or a VM setting someone changed by hand. Each maps to a public KB, and they are grouped so they can be checked in one sitting."
 category: upgrades
 order: 3
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [445418, 442719, 440459, 441858, 440910, 443106, 442290, 449148, 450561, 456790, 441813, 440901, 443988, 449075, 454898, 409353]
 sources:
   - title: "Upgrade to VCF Operations 9.1"
@@ -34,7 +35,7 @@ Run the checks below a week before the window, then again the day before. Each o
 
 ## Names and time
 
-- **Forward and reverse DNS for every new FQDN, in lowercase.** This covers VCF Operations nodes and the load balancer, the services runtime, fleet and instance FQDNs, the License Server, the identity broker and VCF Automation. A capital letter or a missing PTR record is the most common cause of "node unreachable" during management services deployment.
+- **Forward and reverse DNS for every new FQDN, in lowercase.** This covers VCF Operations nodes and the load balancer, the services runtime, fleet and instance FQDNs, the License Server, the identity broker and VCF Automation. A capital letter or a missing PTR record can cause "node unreachable" during management services deployment.
 - **NTP agreement on every node.** Clock drift shows up as token errors such as `IAM_401_INVALID_TOKEN` and as upgrades that hang part way (<KB id={409353} />). Check the VCF Operations nodes, SDDC Manager, the vCenters and the NSX Managers against the same source.
 
 ## Passwords and accounts

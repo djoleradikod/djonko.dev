@@ -6,6 +6,7 @@ order: 9
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [450972, 430524, 384976, 440630]
 sources:
   - title: "How to converge a VMware vSphere environment to VMware Cloud Foundation 9.0"
@@ -33,7 +34,7 @@ VCF 5.2 introduced the **Import Tool** (`vcf_brownfield.py`, run on SDDC Manager
   ["Tool", "Import Tool on SDDC Manager: convert (management domain) or import (VI workload domain)", "VCF Installer convergence (new fleet), or import into an existing fleet from VCF Operations"],
   ["What gets added", "SDDC Manager, with optional NSX deployment", "Whatever is missing: SDDC Manager, NSX, VCF Operations components"],
   ["Principal storage", "vSAN, plus VMFS on FC and NFS v3 for converted management domains", "The same options, with storage validated during the assessment"],
-  ["Common blockers", "Unsupported topologies listed in the Import Tool considerations", "Enhanced Linked Mode, down-level VDS, version pairs, NSX below 4.1.0.2"],
+  ["Blockers to check", "Unsupported topologies listed in the Import Tool considerations", "Enhanced Linked Mode, down-level VDS, version pairs, NSX below 4.1.0.2"],
   ["Lifecycle after onboarding", "SDDC Manager", "VCF Operations and SDDC Manager, as for any 9.x domain"],
 ]} />
 
@@ -50,8 +51,8 @@ For 9.1.0 sources, the back-in-time rules apply (<KB id={450972} />). vSphere 8.
 ## The assessment is the project
 
 1. **Assess.** Versions, Enhanced Linked Mode (must be removed), VDS versions, storage type, network settings and host defaults that must match VCF expectations.
-2. **Remediate** what validation flags. This takes most of the time.
-3. **Convert or import.** The run itself is the short part.
+2. **Remediate** what validation flags. Plan the most time for this step.
+3. **Convert or import.** Run it after remediation.
 4. **Bring lifecycle in line.** Imported domains are then upgraded through VCF like any other. Hosts that were added to SDDC Manager through brownfield import may need out-of-band steps, documented in <KB id={384976} />. A known failure when upgrading imported domains is covered in <KB id={430524} />.
 
 ## VVF and VCF
@@ -59,7 +60,7 @@ For 9.1.0 sources, the back-in-time rules apply (<KB id={450972} />). vSphere 8.
 vSphere Foundation can converge into a VCF fleet as well. In 9.1, the management services are mandatory for VCF but optional for VVF (<KB id={440630} />). A VVF estate without them has no unified fleet management for passwords, certificates or backup. That is a strong argument for deploying them when the licence allows.
 
 <Callout type="field">
-Convergence projects stall on assumptions, not on tools: "we don't use ELM" (they do), "all switches are the same version" (they aren't), "NSX is only in the lab" (it isn't). Gather the facts with a script before the scoping call, not after.
+Don't scope a convergence project on assumptions such as "we don't use ELM", "all switches are the same version" or "NSX is only in the lab". Gather the facts with a script before the scoping call.
 </Callout>
 
 ## Pitfalls

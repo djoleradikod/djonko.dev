@@ -6,6 +6,7 @@ order: 9
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [385749, 402476, 439473, 436398, 417255, 451560, 444466, 443789, 433768]
 sources:
   - title: "SoS utility options for SDDC Manager"
@@ -35,7 +36,7 @@ sources:
 
 ## The health check before every change
 
-Run it before an upgrade, a password rotation, a host commission or a certificate replacement. It takes minutes and it answers the two questions that most often stop a workflow halfway: is something already holding a lock, and are the stored credentials still valid?
+Run it before an upgrade, a password rotation, a host commission or a certificate replacement. It takes minutes and it answers two questions that can stop a workflow halfway: is something already holding a lock, and are the stored credentials still valid?
 
 ```bash
 # On SDDC Manager, as root
@@ -69,7 +70,7 @@ Use `--log-dir <path>` when the default location is short on space, and check `/
 
 The runtime is Kubernetes underneath, but the first stop is the dashboard, not `kubectl`. It shows node and pod health, volume utilisation and backup status for the management services, with documented thresholds (<KB id={417255} />):
 
-<Diagram viewBox="0 0 760 150" label="Volume utilisation thresholds on the management services dashboard" caption="Act at warning, not at critical. Log management and the depot are the usual consumers.">
+<Diagram viewBox="0 0 760 150" label="Volume utilisation thresholds on the management services dashboard" caption="Act at warning, not at critical. Check log management and the depot first.">
   <rect class="box v9" x="20" y="40" width="300" height="56" rx="8"/>
   <text class="t" x="170" y="66" text-anchor="middle">Good</text>
   <text class="s" x="170" y="86" text-anchor="middle">up to 80%</text>
@@ -89,11 +90,11 @@ The runtime is Kubernetes underneath, but the first stop is the dashboard, not `
 When the dashboard is not enough, the read-only commands in [services runtime and kubectl](/vcf/library/troubleshooting/services-runtime-kubectl/) are the next step.
 
 <Callout type="field">
-Attach the health check output to the change record. It costs nothing, it proves the platform was clean before you started, and it is the first thing a support engineer asks for if the change goes wrong.
+Attach the health check output to the change record. It costs nothing, it proves the platform was clean before you started, and it is ready for a support engineer if the change goes wrong.
 </Callout>
 
 ## Pitfalls
 
 - **Collecting everything, every time.** A full bundle across every domain can take an hour and fill a partition. Start narrow and add scope when the logs point somewhere else.
-- **Cleaning before collecting.** If a disk is full mid-incident, collect a bundle first, then clean. The rotated logs are often the evidence.
+- **Cleaning before collecting.** If a disk is full mid-incident, collect a bundle first, then clean. The rotated logs may be the evidence.
 - **Waiting for support to ask.** Collect the bundle when you open the case, with the exact time of the failure, so the first reply can be analysis rather than a request.

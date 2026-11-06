@@ -6,6 +6,7 @@ order: 10
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [450430, 445418, 452677, 452077, 451010, 443718, 440807, 444168, 449148, 454467, 442134, 446672]
 sources:
   - title: "Upgrading VCF 5.2 to 9.0: the top 10 questions answered (rollback)"
@@ -46,7 +47,7 @@ Delete snapshots when each checkpoint is confirmed good. Long-lived snapshots on
 
 ## Retry before rollback
 
-Most 9.x failures are recoverable in place, as long as you choose the right level:
+In 9.x, try to recover in place first, at the right level:
 
 - **Fix the cause, then use Retry Task.** Lifecycle tasks resume at the failed step. In 9.1 the underlying task has a retryable flag. When it is false, a reset is needed, and that is a support action (<KB id={451010} />).
 - **"Stuck" isn't always stuck.** If the work finished but the status didn't update, restarting the fleet and SDDC build and upgrade pods clears it (<KB id={443718} />).
@@ -70,7 +71,7 @@ Revert to a checkpoint when the KB says so, for example after an expired root pa
 </Diagram>
 
 <Callout type="field">
-Agree the "go back" criteria with the customer before the window. For example: "If SDDC Manager is not upgraded by 02:00, we revert the snapshot and stop." Making that decision at 02:00 under pressure is how windows overrun into business hours.
+Agree the "go back" criteria with the customer before the window. For example: "If SDDC Manager is not upgraded by 02:00, we revert the snapshot and stop." Decide it beforehand, so nobody has to make that call at 02:00 under pressure.
 </Callout>
 
 ## Pitfalls

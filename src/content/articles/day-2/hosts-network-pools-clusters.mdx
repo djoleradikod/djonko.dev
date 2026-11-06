@@ -1,11 +1,12 @@
 ---
 title: "Host commissioning, network pools and cluster expansion, now done from vCenter"
-description: "Adding capacity is the most frequent Day-2 change, and it moved from SDDC Manager into vCenter. The validations are the same, so the failures are familiar: DNS, certificates, uplinks, IP pools and leftovers from the last decommission."
+description: "Adding capacity moved from SDDC Manager into vCenter, and SDDC Manager still runs the validations underneath. Failures sort into five groups: names, trust, network shape, IP pools, and leftovers from the last decommission."
 category: day-2
 order: 5
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [415767, 424728, 424242, 451550, 412127, 416946, 428877, 316098, 417229, 456013, 453788]
 sources:
   - title: "10 VCF 9 enhancements simplifying your Day-2 operations"
@@ -17,7 +18,7 @@ sources:
 ---
 
 <InShort>
-In 9.x you create network pools, commission hosts and create or expand clusters from **vCenter**: Global Inventory List > Hosts for pools and unassigned hosts, and New SDDC Cluster for clusters. For workload domains this needs VCF SSO and vCenter linking. SDDC Manager still runs the guardrail validations and the work underneath, so its log (`operationsmanager.log` for commissioning, `domainmanager.log` for clusters) is where failures are explained. Almost every failure falls into one of five groups: names, trust, network shape, IP pools, or leftovers.
+In 9.x you create network pools, commission hosts and create or expand clusters from **vCenter**: Global Inventory List > Hosts for pools and unassigned hosts, and New SDDC Cluster for clusters. For workload domains this needs VCF SSO and vCenter linking. SDDC Manager still runs the guardrail validations and the work underneath, so its log (`operationsmanager.log` for commissioning, `domainmanager.log` for clusters) is where failures are explained. Sort a failure into one of five groups: names, trust, network shape, IP pools, or leftovers.
 </InShort>
 
 <Compare rows={[
@@ -64,7 +65,7 @@ In 9.x you create network pools, commission hosts and create or expand clusters 
 ```
 
 <Callout type="field">
-Decommission cleanly. Most of the "leftovers" group exists because a host was removed by re-imaging it, not by decommissioning it. If a host is dead and can't be decommissioned cleanly, record it, because its IP addresses and accounts will need a clean-up later.
+Decommission cleanly. Removing a host by re-imaging it, without decommissioning it, leaves the leftovers described above. If a host is dead and can't be decommissioned cleanly, record it, because its IP addresses and accounts will need a clean-up later.
 </Callout>
 
 ## Pitfalls

@@ -1,11 +1,12 @@
 ---
 title: "Go or no-go: change windows, checkpoints and honest rollback plans for VCF upgrades"
-description: "VCF upgrades are rarely reversible with one click, so the real control is deciding not to proceed. Clear go or no-go criteria at each phase, agreed before the window, make that decision quick and unemotional."
+description: "A VCF upgrade has no one-click undo, so the real control is deciding not to proceed. Clear go or no-go criteria at each phase, agreed before the window, make that decision quick and unemotional."
 category: leadership
 order: 5
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [440630, 450430]
 sources:
   - title: "Upgrading to VCF 9.1.x"
@@ -14,7 +15,7 @@ sources:
 ---
 
 <InShort>
-Most VCF components roll forward, not back. The recovery for a failed step is usually "fix and retry", and for some components "restore from backup or snapshot". So the most important rollback decision is made **before** each phase: is the platform healthy enough to start? Write the criteria down, agree them with the change owner, and check them at each gate in the official upgrade order (<KB id={440630} />). Define for each phase what "stop and hold" looks like, because a safe pause is often better than either finishing or rolling back.
+Plan on rolling forward. The recovery for a failed step is "fix and retry", and for some components "restore from backup or snapshot". So the most important rollback decision is made **before** each phase: is the platform healthy enough to start? Write the criteria down, agree them with the change owner, and check them at each gate in the official upgrade order (<KB id={440630} />). Define for each phase what "stop and hold" looks like, because a safe pause can be better than either finishing or rolling back.
 </InShort>
 
 <Compare rows={[
@@ -49,7 +50,7 @@ Most VCF components roll forward, not back. The recovery for a failed step is us
 | VCF Operations | Snapshot taken with the cluster offline, as documented |
 | vCenter | File-based backup restore |
 | NSX | Backup restore |
-| Hosts | Usually roll forward. Remediate again with the right image. |
+| Hosts | Roll forward. Remediate again with the right image. |
 
 <Callout type="field">
 Agree the go or no-go criteria in the planning meeting, not in the window. At 2 a.m., a pre-agreed checklist turns a tense judgment call into a quick, shared decision.

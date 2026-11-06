@@ -6,6 +6,7 @@ order: 9
 versions: ["9.0", "9.1"]
 level: Deep dive
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [438771, 448518, 439522, 453149, 428209, 432158, 435664, 409220, 447554, 441526, 440471, 440863, 452095, 445428, 454287, 440715, 429696]
 sources:
   - title: "Licensing overview (9.1)"
@@ -17,7 +18,7 @@ sources:
 ---
 
 <InShort>
-Almost every licensing message falls into one of three families. **Reporting**: usage is due or overdue, so run the update. **Registration**: VCF Operations can't reach the console, the code is stale, or the Site ID is wrong. **Assignment** (mostly 9.1): vCenter can't reach or trust the License Server, usually because of DNS, case, time or ports. Exact wording varies a little between builds, so search the KB with the string from your screen.
+Sort a licensing message into one of three families. **Reporting**: usage is due or overdue, so run the update. **Registration**: VCF Operations can't reach the console, the code is stale, or the Site ID is wrong. **Assignment** (mostly 9.1): vCenter can't reach or trust the License Server, usually because of DNS, case, time or ports. Exact wording varies a little between builds, so search the KB with the string from your screen.
 </InShort>
 
 <Compare rows={[
@@ -70,11 +71,11 @@ ESX              esxcli licensing entitlement list                  what the hos
 Some KBs give `/storage/vcops/log/` instead of `/storage/log/vcops/log/`. Check both.
 
 <Callout type="field">
-For any licensing ticket, ask three questions before opening a log: which mode, when was the last successful refresh, and is the License Server healthy (9.1)? The answers place the problem in one of the three families, and the table above usually finishes it.
+For any licensing ticket, ask three questions before opening a log: which mode, when was the last successful refresh, and is the License Server healthy (9.1)? The answers place the problem in one of the three families, and the table above gives the next step.
 </Callout>
 
 ## Pitfalls
 
 - **Restarting services before fixing the network path.** The message comes back.
 - **Pinging the License Server.** ICMP is disabled. Test TCP 443.
-- **Trusting a banner seen during an upgrade.** Transient alarms are common. Re-check after the upgrade settles.
+- **Trusting a banner seen during an upgrade.** An alarm can be transient. Re-check after the upgrade settles.

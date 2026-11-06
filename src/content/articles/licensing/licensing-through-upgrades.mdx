@@ -6,6 +6,7 @@ order: 7
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [406836, 452764, 438533, 418555, 440630, 440471, 440863, 442133, 453149]
 sources:
   - title: "High-level licensing workflow (9.0)"
@@ -48,7 +49,7 @@ From **5.2**, nothing converts: the subscription already carries 9.x licenses al
 4. **Then upgrade vCenter and ESX.** An ESX upgrade precheck saying the vCenter "is not licensed by a licensing server" means step 1 or 2 was skipped (<KB id={440863} />).
 
 <Callout type="field">
-Put a licensing checkpoint in the runbook between "VCF Operations upgraded" and "vCenter upgraded": registered, License Server healthy (9.1), licenses visible and assignable. It takes ten minutes and prevents the ticket that arrives 89 days later.
+Put a licensing checkpoint in the runbook between "VCF Operations upgraded" and "vCenter upgraded": registered, License Server healthy (9.1), licenses visible and assignable. It finds a licensing gap before the evaluation period runs out.
 </Callout>
 
 ## Pitfalls

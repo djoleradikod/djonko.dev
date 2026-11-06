@@ -6,6 +6,7 @@ order: 3
 versions: ["9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [325773, 421016, 449013, 446874, 421958, 429451, 433259, 410383]
 sources:
   - title: "Cloud proxy troubleshooting (9.0)"
@@ -19,7 +20,7 @@ Read health in this order: **proxy** (Online, Offline, Going Online), **account 
 
 <Compare rows={[
   ["Where to look", "Administration > Solutions, then Collection status", "Operate > Administration > Integrations > Accounts, then the admin UI"],
-  ["Credentials", "Usually your own accounts", "Usually system-managed: Rotate, Validate, Save"],
+  ["Credentials", "Can be your own accounts", "Can be system-managed: Rotate, Validate, Save"],
   ["Adapter logs", "/storage/log/vcops/log/adapters/", "The same, on whichever node or proxy runs the adapter"],
 ]} />
 
@@ -54,7 +55,7 @@ On a cloud proxy:
 If "Invalid username or password" persists with system-managed credentials, the analytics log may show that service account creation failed. Rotate, then validate (<KB id={446874} />).
 
 <Callout type="field">
-Teach the four-word rule to the operations team: "Online, Collecting, Object down: credentials." It is the single most common integration ticket, and it never needs escalation.
+Teach the four-word rule to the operations team: "Online, Collecting, Object down: credentials." They can fix that combination by correcting the credentials, without escalating.
 </Callout>
 
 ## Pitfalls

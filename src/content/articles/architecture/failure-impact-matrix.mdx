@@ -6,6 +6,7 @@ order: 10
 versions: ["9.0", "9.1"]
 level: Deep dive
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [443240, 440862, 440874, 453736, 455296, 443680, 437258, 443216, 452124, 441515, 450375]
 sources:
   - title: "VCF management services models (9.1)"
@@ -62,7 +63,7 @@ No VCF management component sits in the data path, so running workloads survive 
 ## Using the matrix
 
 - **In design reviews,** ask "where does this run, and what is in the row for it?" for each management component. It turns availability choices such as Simple or HA, embedded or instance mode, and the number of cloud proxies into conversations about consequences.
-- **In incidents,** use it to answer the first customer question, "are my workloads affected?", in one sentence. Then use it to scope what else to check.
+- **In incidents,** use it to answer "are my workloads affected?" in one sentence. Then use it to scope what else to check.
 - **In runbooks,** pair each row with the recovery KB and the order of restart. The services runtime, for example, must come back control plane first (<KB id={440862} />).
 
 <Callout type="warn">

@@ -1,11 +1,12 @@
 ---
-title: "VCF Installer and bring-up failures: the validation errors that come up again and again"
-description: "Most deployment failures in 9.x are caught by validation and caused by input: DNS case, missing records, host storage, HCL data, uplinks, a spec field, or a proxy the vCenter installer ignores. A catalogue grouped by cause, with the fix and the KB."
+title: "VCF Installer and bring-up failures: validation errors by cause, with the fix and the KB"
+description: "The VCF Installer's validation flags input problems: DNS case, missing records, host storage, HCL data, uplinks, a spec field, or a proxy the vCenter installer ignores. A catalogue grouped by cause, with the fix and the KB."
 category: troubleshooting
 order: 4
 versions: ["9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-06
 kbs: [403626, 404501, 405770, 408233, 427591, 416490, 401658, 431474, 447366, 415550, 439010, 447589]
 sources:
   - title: "VCF Installer 9.1 known issues"
@@ -17,7 +18,7 @@ sources:
 ---
 
 <InShort>
-The VCF Installer replaced Cloud Builder. It validates more, and most of its failures are input problems that the validation found. Six causes cover nearly all of them: **names** (uppercase FQDNs, missing A or PTR records), **hosts** (storage, stale vSAN partitions, beta builds, incompatible VIBs), **hardware compatibility** (HCL data older than 90 days), **network shape** (uplinks configured differently), **the spec** (a missing field), and **outbound paths** (the vCenter installer bypasses the depot proxy in 9.1). Fix the input, then **Retry**. For a broken spec, cancel, edit the JSON and deploy from it.
+The VCF Installer replaced Cloud Builder. It validates more, so look at the input first. This note groups the failures into six causes: **names** (uppercase FQDNs, missing A or PTR records), **hosts** (storage, stale vSAN partitions, beta builds, incompatible VIBs), **hardware compatibility** (HCL data older than 90 days), **network shape** (uplinks configured differently), **the spec** (a missing field), and **outbound paths** (the vCenter installer bypasses the depot proxy in 9.1). Fix the input, then **Retry**. For a broken spec, cancel, edit the JSON and deploy from it.
 </InShort>
 
 <Compare rows={[
