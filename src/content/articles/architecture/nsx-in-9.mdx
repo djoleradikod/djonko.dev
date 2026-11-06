@@ -1,59 +1,189 @@
 ---
-title: "NSX in 9.x: one NSX per vCenter, VPCs, and networking from vCenter"
-description: "NSX 9 is built on the NSX 4.x code base, but its operating model changed. Networking is consumed from vCenter, VPCs and transit gateways are first-class, and a few long-standing options are gone."
+title: "NSX in VCF 9: what the network team decides before the upgrade, and where the load balancer really stands"
+description: "The NSX Load Balancer is still in VCF 9 for appliances and Supervisor L4. General-purpose use is outside the entitlement, bridged to 30 May 2027 only with Avi licences. This note gives the decisions to make before upgrading and separates what 9 changed from what 4.x had already removed."
 category: architecture
 order: 8
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
 updated: 2026-11-06
-kbs: [440901, 432503]
+reviewed: 2026-11-06
+reviewDue: 2027-03-01
+kbs: [439411, 401492, 440901, 417789, 395937]
 sources:
+  - title: "VCF 9.1.1 and VVF 9.1.1: Feature Comparison and Upgrade Paths (footnotes 11 and 12)"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-feature-comparison-and-upgrade-paths"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "NSX Load Balancer to VMware Avi Load Balancer Migration (KB 439411)"
+    url: "https://knowledge.broadcom.com/external/article/439411/nsx-load-balancer-to-vmware-avi-load-bal.html"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "VMware NSX Load Balancer Entitlement Changes (KB 401492)"
+    url: "https://knowledge.broadcom.com/external/article/401492/vmware-nsx-load-balancer-entitlement-cha.html"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "NSX Upgrade PreCheck: Distributed Load Balancer Warning/Error in VCF 9.1 or later (KB 440901)"
+    url: "https://knowledge.broadcom.com/external/article/440901"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "Multi-NSX version compatibility and interoperability (KB 417789)"
+    url: "https://knowledge.broadcom.com/external/article/417789/multinsx-version-compatibility-and-inter.html"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "\"NSX Load Balancer will be Deprecated\" warning in vCloud Director (KB 395937)"
+    url: "https://knowledge.broadcom.com/external/article/395937/nsx-load-balancer-will-be-deprecated-war.html"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "VCF 9.0 Product Support Notes: NSX"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-nsx.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "What's New in NSX, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-nsx.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1 Product Support Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "NSX 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/nsx-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware NSX 4.0.0.1 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/nsx/vmware-nsx/4-0/release-notes/vmware-nsx-4001-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VMware NSX 4.1.1 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/nsx/vmware-nsx/4-1/release-notes/vmware-nsx-411-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Manage Unsupported Features (VCF 9.1 upgrade checklist)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/updating-vcenter-and-nsx/checklist-for-upgrading-nsx/manage-deprecated-nsx-features.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Manage Unsupported Features (VCF 9.0 upgrade guide)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/upgrading-nsx--to-version-9/manual-upgrade-to-nsx-9-by-using-upgrade-coordinator/manage-deprecated-nsx-features.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Import an Existing vCenter to Create a Workload Domain (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/import-an-existing-vcenter-to-create-a-workload-domain.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Import an Existing vCenter to Create a Workload Domain (VCF 9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/building-your-private-cloud-infrastructure/working-with-workload-domains/import-an-existing-vcenter-to-create-a-workload-domain.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Centralized Connectivity Model (VCF 9.1 design library)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/workload-connectivity-designs/centralized-connectivity-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Distributed VLAN Connectivity Model (VCF 9.1 design library)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/workload-connectivity-designs/distributed-vlan-connectivity-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Avi Load Balancer Model (VCF 9.1 design library)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-load-balancing-detailed-design/avi-load-balancer-detailed-design.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Simple NSX Manager Model (VCF 9.0 design library)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/design/design-library/nsx-management-and-control-plane-detailed-design/simple-nsx-manager-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Choosing the right load balancer for vSphere Supervisor in vSphere 9.0 and VCF 9.0"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/07/13/choosing-the-right-load-balancer-for-vsphere-supervisor-in-vsphere-9-0-and-vmware-cloud-foundation-9-0/"
+    by: "VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-07-13
   - title: "VPC distributed network connectivity: no NSX Edge VMs"
     url: "https://blogs.vmware.com/cloud-foundation/2025/06/25/vpc-distributed-network-connectivity-no-nsx-edge-vms/"
     by: "VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-06-25
   - title: "VPC centralized network connectivity with guided edge deployment"
     url: "https://blogs.vmware.com/cloud-foundation/2025/06/25/vpc-centralized-network-connectivity-with-guided-edge-deployment/"
     by: "VMware Cloud Foundation blog"
-  - title: "VCF 9 NSX VPC, part 1: centralized transit gateway"
-    url: "https://evoila.com/blog/vcf-9-nsx-vpc-part-1-centralized-transit-gateway"
-    by: "evoila"
-  - title: "VCF 9 NSX VPC, part 2: distributed transit gateway"
-    url: "https://evoila.com/blog/vcf-9-nsx-vpc-part-2-distributed-transit-gateway"
-    by: "evoila"
-  - title: "vSphere 9 and NSX 9 deprecated and removed features"
+    kind: broadcom
+    date: 2025-06-25
+  - title: "VMware Cloud Foundation 9: deprecated features in vSphere and NSX"
     url: "https://www.starwindsoftware.com/blog/vcf9-deprecated-vsphere-nsx/"
-    by: "StarWind"
+    by: "StarWind (vendor blog)"
+    kind: vendor
+    date: 2025-09-17
   - title: "VCF 9 deployment guide: NSX requirements"
     url: "https://vcf9-deployment-guide.pages.dev/requirements/nsx"
     by: "Community guide"
-  - title: "10 VCF 9 enhancements simplifying your Day-2 operations (edge clusters)"
-    url: "https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/"
-    by: "VMware Cloud Foundation blog"
+    kind: reference
 ---
 
 <InShort>
-In VCF 5.x you consumed NSX mostly through its own manager UI, and SDDC Manager deployed edge clusters. In 9.x the everyday networking tasks happen in vCenter: VPCs, subnets, network connectivity and edge deployment. Two connectivity models exist. **Centralized** routes through a transit gateway to a Tier-0 on edge VMs. **Distributed** maps the transit gateway onto a VLAN shared by every host, with no edge VMs at all. Several older options are gone: multiple NSX instances per vCenter, standalone NSX lifecycle, N-VDS on hosts, and the NSX load balancer, which Avi replaces.
+**The NSX Load Balancer is still in VCF 9, on narrower terms.** Broadcom keeps it entitled for VCF appliances and for Layer 4 on vSphere Supervisor. General-purpose use left the VCF entitlement at 9.0, and it may continue only until 30 May 2027 and only with Avi licences (<KB id={439411} />, Feature Comparison footnote 12, <AsOf date="2026-11-06" />). The network team's largest job before the upgrade is sorting every virtual server into those two groups. Several things blamed on 9 went earlier: the NSX 4.0.0.1 notes already remove host N-VDS and announce the end of KVM and third-party OpenStack support.
 </InShort>
 
-<Compare rows={[
-  ["Where you work", "NSX Manager UI. SDDC Manager deployed edge clusters.", "vCenter for VPCs, subnets, connectivity and guided edge deployment. NSX Manager for advanced configuration."],
-  ["Tenancy model", "Segments with Tier-1 and Tier-0 gateways, plus projects and VPCs from NSX 4.1.1", "VPCs and transit gateways as the default consumption model, with segments still available"],
-  ["North-south without edges", "Not available", "Distributed connectivity: the transit gateway maps onto a shared VLAN"],
-  ["NSX per vCenter", "Multi-NSX setups existed", "One NSX per vCenter. Disable multi-NSX before upgrading."],
-  ["Host switch", "VDS, with N-VDS on hosts removed from NSX 4.0.0.1", "VDS. Enhanced Datapath is the default mode for new installs."],
-  ["Load balancing", "NSX load balancer, deprecated", "Avi Load Balancer"],
-  ["Deployment size", "Three managers", "Simple (one manager) or HA (three managers)"],
-]} />
+<Callout type="note" title="Corrected on 6 November 2026">
+This note used to say the NSX load balancer is gone and that Avi replaces it. The position is the entitlement split above. It also gave NSX 4.1.0.2 as the import minimum, which came from a community guide: Broadcom's import pages say 4.2 for VCF 9.0 and 4.2.1 for 9.1.
+</Callout>
 
-## The two connectivity models
+## What to decide before the upgrade
 
-<Diagram viewBox="0 0 820 260" label="Centralized: VPC gateways connect to a transit gateway, which routes through a Tier-0 on NSX edge VMs to the physical network. Distributed: the transit gateway maps directly onto a VLAN shared by all hosts." caption="Centralized needs edges and supports stateful services. Distributed needs no edges but supports only distributed services.">
+| Decision | What settles it | Source |
+|---|---|---|
+| Which virtual servers need Avi | Any workload VIP on the NSX LB. See the next section. | <KB id={439411} />, <KB id={401492} /> |
+| How to leave multi-NSX, if a vCenter has it | Why the second NSX exists. [The exit table](/vcf/library/integrations/nsx-compute-manager/) picks the route. One NSX shared by several vCenters still exists. | <KB id={417789} />, [9.1 import guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/import-an-existing-vcenter-to-create-a-workload-domain.html) |
+| When to promote Manager-mode objects to Policy | Mixed-mode estates go to NSX 4.2.1 or later, promote, then upgrade. The precheck does not detect mixed-mode IP allocations, so check those by hand. | Manage Unsupported Features, [9.1 checklist](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/updating-vcenter-and-nsx/checklist-for-upgrading-nsx/manage-deprecated-nsx-features.html) and [9.0 guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/upgrading-nsx--to-version-9/manual-upgrade-to-nsx-9-by-using-upgrade-coordinator/manage-deprecated-nsx-features.html) |
+| What replaces overlay on physical servers | NSX agents on physical servers ended at 9.0. Broadcom recommends Edge bridging for new physical server deployments. | [9.0 support notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-nsx.html) |
+| What to do with a default distributed load balancer | A DLB with connectivity path "ALL" is an ERROR on the way to 9.1. Attach it to a group. Host upgrades temporarily interrupt DLB traffic until clients reconnect. | <KB id={440901} /> |
+| Which connectivity model new VPCs use | Whether you want edges at all. See the model table below. | 9.1 design library |
+
+## The load balancer position
+
+Broadcom's 9.1 What's New and Product Support pages say nothing about load balancer entitlement. The position sits in two KBs, the 9.0 support notes and one footnote.
+
+| Use today | Position | Decision |
+|---|---|---|
+| VCF appliances | Entitled. Footnote 12 lets VCF and VCF Edge use the NSX or the Foundation Load Balancer. | Keep. |
+| Supervisor L4 (VM Service, vSphere Pods, VKS, Supervisor Services) | Entitled (<KB id={401492} />). A [July 2026 VMware blog on 9.0](https://blogs.vmware.com/cloud-foundation/2026/07/13/choosing-the-right-load-balancer-for-vsphere-supervisor-in-vsphere-9-0-and-vmware-cloud-foundation-9-0/) puts Foundation LB on VDS networks and, in its comparison table, NSX LB on NSX segments or VPCs. Its network-model section names only Avi for VPCs. | Keep, unless the Supervisor needs L7, WAF or GSLB. |
+| Workload VIPs, L4 or L7 | Outside the entitlement from 9.0. Bridge to 30 May 2027 with Avi licences. | Buy Avi and migrate. |
+| Same VIPs, still on NSX 4.x entitlements | "Not impacted" until end of life of that release (<KB id={401492} />). | Plan the migration around the upgrade date. |
+
+**Sizing the bridge.** <KB id={439411} /> sets 100 qualified VCF cores to 1 Avi Service Unit, counting only cores tied to NSX Manager instances with the load balancer enabled, co-termed with the VCF licence. So the cost follows the NSX instance, whatever the number of VIPs on it.
+
+Constructed example, with assumed numbers: NSX A has the load balancer on and 1,280 cores, NSX B has it off and 3,000 cores. That gives 1,280 / 100 = 12.8 SU, and NSX B adds nothing. The KB doesn't state how fractions round.
+
+<Callout type="analysis" title="What this site would do">
+Sort by upgrade date. If the upgrade lands well before 30 May 2027 (205 days after this note), the bridge buys migration time on 9. If it lands after, no bridge time remains, so migrate on 4.x first. An estate with only appliance and Supervisor L4 use needs no Avi purchase for this reason. Consolidating workload VIPs onto one NSX reduces the cores counted, if the KB's counting rule holds for that layout. Confirm it with Broadcom before relying on it. Licensing here isn't purchasing advice: read the KB.
+</Callout>
+
+**Two design rules for Avi.** The [9.1 Avi design page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-load-balancing-detailed-design/avi-load-balancer-detailed-design.html) says Avi must be deployed before Supervisor activation, and that a Supervisor which detects no Avi defaults to the NSX load balancer. It also requires a 1:1 relationship between Avi and NSX Manager, so each NSX instance adds a controller cluster. Broadcom's conversion tool, vACT, is named in <KB id={439411} />. This note hasn't tested it.
+
+**Ask Broadcom, because no source opened answers these:**
+
+- Whether the L4 load balancer on the 9.1 Virtual Network Appliance counts as the NSX Load Balancer for entitlement.
+- Whether cores count when the load balancer is enabled only for appliances or Supervisor.
+- How a DLB outside Supervisor is treated. <KB id={401492} /> lists only the two approved uses.
+- What happens after 30 May 2027. The sources give the date and no technical behaviour.
+- Whether an estate that reaches 9 later still qualifies for the bridge. <KB id={439411} /> words it for customers "currently utilizing" the load balancer in VCF 9.0/9.1.
+
+## Connectivity models in 9.1
+
+<Diagram viewBox="0 0 820 260" label="Centralized: VPC gateways connect to a transit gateway, which routes through a Tier-0 on NSX edge nodes to the physical network. Distributed: the transit gateway maps directly onto an external VLAN extended across the VPC span." caption="Centralized needs edge nodes. Distributed needs none, and from 9.1 stateful services such as NAT or the VPC load balancer run on an optional Virtual Network Appliance cluster.">
   <text class="lbl" x="20" y="24">Centralized</text>
   <rect class="box" x="20" y="36" width="110" height="40" rx="6" /><text class="s" x="36" y="61">VPC A</text>
   <rect class="box" x="140" y="36" width="110" height="40" rx="6" /><text class="s" x="156" y="61">VPC B</text>
   <rect class="box accent" x="20" y="100" width="230" height="40" rx="6" /><text class="t" x="36" y="125">Transit gateway</text>
-  <rect class="box v9" x="20" y="164" width="230" height="40" rx="6" /><text class="t" x="36" y="189">Tier-0 on edge VMs</text>
+  <rect class="box v9" x="20" y="164" width="230" height="40" rx="6" /><text class="t" x="36" y="189">Tier-0 on edge nodes</text>
   <rect class="box plain" x="20" y="214" width="230" height="34" rx="6" /><text class="s" x="36" y="236">Physical network</text>
   <path class="wire" d="M75 76 L75 98" marker-end="url(#arr)" /><path class="wire" d="M195 76 L195 98" marker-end="url(#arr)" />
   <path class="wire" d="M135 140 L135 162" marker-end="url(#arr)" />
@@ -61,26 +191,44 @@ In VCF 5.x you consumed NSX mostly through its own manager UI, and SDDC Manager 
   <rect class="box" x="440" y="36" width="110" height="40" rx="6" /><text class="s" x="456" y="61">VPC A</text>
   <rect class="box" x="560" y="36" width="110" height="40" rx="6" /><text class="s" x="576" y="61">VPC B</text>
   <rect class="box accent" x="440" y="100" width="230" height="40" rx="6" /><text class="t" x="456" y="125">Transit gateway</text>
-  <rect class="box v9" x="440" y="164" width="360" height="40" rx="6" /><text class="t" x="456" y="189">VLAN shared by every ESX host</text>
+  <rect class="box v9" x="440" y="164" width="360" height="40" rx="6" /><text class="t" x="456" y="189">External VLAN across the VPC span</text>
   <rect class="box plain" x="440" y="214" width="360" height="34" rx="6" /><text class="s" x="456" y="236">Physical network</text>
   <path class="wire" d="M495 76 L495 98" marker-end="url(#arr)" /><path class="wire" d="M615 76 L615 98" marker-end="url(#arr)" />
   <path class="wire" d="M555 140 L555 162" marker-end="url(#arr)" />
 </Diagram>
 
-**Centralized** is the right default when you need stateful services such as NAT, gateway firewall or load balancing in front of VPCs. It is also required for vSphere Supervisor and VCF Automation, which need edges in active/standby with a centralized connectivity gateway. Edges can now be deployed through a guided workflow in vCenter.
+| Model | Requires | Load balancing | Watch for |
+|---|---|---|---|
+| [Centralized](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/workload-connectivity-designs/centralized-connectivity-model.html) | Edge nodes and a Tier-0 | NSX Edge LB or Avi | Transit gateway Active/Standby is required for VCF Automation All Apps orgs and Supervisor. The Tier-0 HA mode is independent. |
+| [Distributed VLAN](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/workload-connectivity-designs/distributed-vlan-connectivity-model.html) | The external VLAN on the VDS and pNICs carrying host TEPs | VNA LB or Avi | With Avi and no other stateful service, such as NAT, no VNA cluster is needed. |
+| VLAN-backed VPC without TEPs ([9.1.1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/nsx-9-1-1-0-release-notes.html)) | Physical VLANs, no overlay | Not stated in the release notes | No private subnets, and it is the default model during a VCF import. Check this before importing. |
+| Distributed EVPN-VXLAN (9.1.0, services added in 9.1.1) | An EVPN-VXLAN fabric | NAT, LB and DHCP relay need an enablement procedure | DHCP relay works on VPC public subnets only. |
 
-**Distributed** suits simple, high-throughput east-west and north-south designs where every host can reach one shared VLAN. It supports only distributed services. For example, it supports stateless 1:1 NAT and distributed DHCP, but not DHCP relay. Check the current feature matrix before promising anything stateful.
+<Callout type="analysis" title="Choosing">
+This is this site's reading. Keep centralized if edges already exist and you use gateway services on them, such as IPSec VPN on a centralized transit gateway. Take distributed VLAN for a new design that prefers no edges and can extend an external VLAN across the VPC span. Choosing distributed is less of a trap in 9.1 than it was in 9.0, because stateful services now have a home on the VNA.
+</Callout>
 
-## What to check before an upgrade from 5.x
+## What 9 changed, and what was already gone
 
-- **Multi-NSX.** If any vCenter is attached to more than one NSX Manager, untangle it before the upgrade. 9.x supports one NSX per vCenter.
-- **N-VDS on hosts.** Migrate any host still on N-VDS to VDS first. Edges can stay on N-VDS.
-- **Load balancer use.** Find every NSX load balancer and plan the move to Avi. Version alignment matters in the 9.1 upgrade too: the upgrade sequence calls out an Avi target and a default NSX distributed load balancer attached to a group (<KB id={440901} />).
-- **Unsupported attachments.** Bare-metal NSX agents, KVM transport nodes and third-party OpenStack integrations do not carry forward.
-- **Import prerequisites.** Workload domains imported into 9.x need NSX 4.1.0.2 or later. Clusters without NSX get it deployed during import.
+| Item | When | Action for an estate on 4.x |
+|---|---|---|
+| Multi-NSX on one vCenter | Not supported from 9.0 (<KB id={417789} />) | Exit first. |
+| Manager APIs and Advanced UIs | Removed at 9.0 | Promote to Policy. Replace IPSET, Logical Switch and Logical Port group members. |
+| Overlay agents on physical servers | Not supported from 9.0 | Edge bridging. |
+| Standalone NSX install or upgrade | Ended at 9.0, use the VCF BOM | Plan NSX inside the VCF upgrade. |
+| NSX Migration Coordinator | Removed at 9.0 | NSX for vSphere goes to 4.x first. |
+| Default DLB (path "ALL") | Not supported from 9.1 (<KB id={440901} />) | Attach to a group. |
+| Enhanced Datapath Standard as default switch mode | Default at 9.0, with "Standard" announced for removal | Check NIC and driver fit in the design. |
+| VPCs and transit gateways | NSX VPCs arrived in [4.1.1](https://techdocs.broadcom.com/us/en/vmware-cis/nsx/vmware-nsx/4-1/release-notes/vmware-nsx-411-release-notes.html). VCF 9 adds a [guided edge wizard in vCenter and NSX Manager](https://blogs.vmware.com/cloud-foundation/2025/06/25/vpc-centralized-network-connectivity-with-guided-edge-deployment/). 9.1 adds the VNA and VPC span set from vCenter. | Decide who owns VPC work. |
+| Single NSX Manager | [Simple model](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/design/design-library/nsx-management-and-control-plane-detailed-design/simple-nsx-manager-model.html) offered, with slower recovery after a node failure | Choose per domain. |
+| Host N-VDS | Removed at [4.0.0.1](https://techdocs.broadcom.com/us/en/vmware-cis/nsx/vmware-nsx/4-0/release-notes/vmware-nsx-4001-release-notes.html). Stays on Edge nodes. | An NSX 4.x estate should already be clear. |
+| KVM and third-party OpenStack | The 4.0.0.1 notes say NSX "will no longer support" them. VIO support remained then. | Check the interoperability matrix for VIO. |
 
-## Pitfalls
+**Importing.** The [9.1 import guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/import-an-existing-vcenter-to-create-a-workload-domain.html) lists NSX 4.2.1 as the minimum, and the [9.0 guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/building-your-private-cloud-infrastructure/working-with-workload-domains/import-an-existing-vcenter-to-create-a-workload-domain.html) says 4.2 or later. A vCenter with no NSX gets a new manager cluster and every eligible cluster prepared. A vCenter already registered with NSX keeps its unprepared clusters as they are.
 
-- **Treating vCenter networking as a toy.** It is the supported Day-2 path in 9.x, and VCF Automation expects VPCs. Learn it before a network team asks about it.
-- **Choosing distributed connectivity, then needing NAT.** Moving from distributed to centralized later means redesigning the north-south path. Ask about stateful services in the first workshop.
-- **NSX SSO.** NSX consumes VCF SSO in 9.x. If the embedded broker integration fails, NSX logins fail with it (<KB id={432503} />).
+## Where the sources disagree
+
+- **KVM and OpenStack timing.** [StarWind's blog](https://www.starwindsoftware.com/blog/vcf9-deprecated-vsphere-nsx/) lists them among VCF 9 removals and says "NSX 9.0 no longer supports" them, though it also dates the shift to NSX 4.0. The [community guide](https://vcf9-deployment-guide.pages.dev/requirements/nsx) lists them as not migrateable to NSX 9. Broadcom's 4.0.0.1 notes announce the end without naming the release it takes effect in, and the 9.0 NSX support notes don't mention them.
+- **"Deprecated".** The community guide calls the native load balancer deprecated, and <KB id={395937} /> says VMware "intends to deprecate" it, with no support intended "beyond the last NSX 4.x release". That KB doesn't name 9. The 9.1 design pages still list it for centralized connectivity and as the Supervisor default. Plan on the entitlement terms.
+- **Supervisor on centralized only.** A [June 2025 VMware blog](https://blogs.vmware.com/cloud-foundation/2025/06/25/vpc-centralized-network-connectivity-with-guided-edge-deployment/) says VCF Automation All Apps and Supervisor require centralized Active/Standby. [What's New in 9.1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-nsx.html) adds distributed VLAN support for both through the VNA, so that rule holds for 9.0 only.
+- **Distributed NAT.** The [matching 2025 blog](https://blogs.vmware.com/cloud-foundation/2025/06/25/vpc-distributed-network-connectivity-no-nsx-edge-vms/) limits distributed to stateless 1:1 NAT with no DHCP relay. 9.1 added 1:N SNAT and 9.1.1 added relay on public subnets.
