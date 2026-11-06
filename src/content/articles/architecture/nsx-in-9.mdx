@@ -1,6 +1,6 @@
 ---
 title: "NSX in VCF 9: what the network team decides before the upgrade, and where the load balancer really stands"
-description: "The NSX Load Balancer is still in VCF 9 for appliances and Supervisor L4. General-purpose use is outside the entitlement, bridged to 30 May 2027 only with Avi licences. This note gives the decisions to make before upgrading and separates what 9 changed from what 4.x had already removed."
+description: "The NSX Load Balancer is still in VCF 9 for appliances and Supervisor L4. General-purpose use is outside the entitlement, bridged to 30 May 2027 only with Avi licences, so sort every virtual server into those two groups before upgrading. Host N-VDS was already removed at NSX 4.0.0.1, before 9."
 category: architecture
 order: 8
 versions: ["5.x", "9.0", "9.1", "9.1.1"]
@@ -163,12 +163,12 @@ Broadcom's 9.1 What's New and Product Support pages say nothing about load balan
 Constructed example, with assumed numbers: NSX A has the load balancer on and 1,280 cores, NSX B has it off and 3,000 cores. That gives 1,280 / 100 = 12.8 SU, and NSX B adds nothing. The KB doesn't state how fractions round.
 
 <Callout type="analysis" title="What this site would do">
-Sort by upgrade date. If the upgrade lands well before 30 May 2027 (205 days after this note), the bridge buys migration time on 9. If it lands after, no bridge time remains, so migrate on 4.x first. An estate with only appliance and Supervisor L4 use needs no Avi purchase for this reason. Consolidating workload VIPs onto one NSX reduces the cores counted, if the KB's counting rule holds for that layout. Confirm it with Broadcom before relying on it. Licensing here isn't purchasing advice: read the KB.
+Sort by upgrade date. If the upgrade lands well before 30 May 2027 (205 days from 6 Nov 2026), the bridge buys migration time on 9. If it lands after, no bridge time remains, so migrate on 4.x first. An estate with only appliance and Supervisor L4 use needs no Avi purchase for this reason. Consolidating workload VIPs onto one NSX reduces the cores counted, if the KB's counting rule holds for that layout. Confirm it with Broadcom before relying on it. None of this is purchasing advice, so read the KB.
 </Callout>
 
-**Two design rules for Avi.** The [9.1 Avi design page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-load-balancing-detailed-design/avi-load-balancer-detailed-design.html) says Avi must be deployed before Supervisor activation, and that a Supervisor which detects no Avi defaults to the NSX load balancer. It also requires a 1:1 relationship between Avi and NSX Manager, so each NSX instance adds a controller cluster. Broadcom's conversion tool, vACT, is named in <KB id={439411} />. This note hasn't tested it.
+**Two design rules for Avi.** The [9.1 Avi design page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-load-balancing-detailed-design/avi-load-balancer-detailed-design.html) says Avi must be deployed before Supervisor activation, and that a Supervisor which detects no Avi defaults to the NSX load balancer. It also requires a 1:1 relationship between Avi and NSX Manager, so each NSX instance adds a controller cluster. Broadcom's conversion tool, vACT, is named in <KB id={439411} />. This site hasn't tested it.
 
-**Ask Broadcom, because no source opened answers these:**
+**Ask Broadcom about these, because none of the sources cited here answers them (checked 6 Nov 2026):**
 
 - Whether the L4 load balancer on the 9.1 Virtual Network Appliance counts as the NSX Load Balancer for entitlement.
 - Whether cores count when the load balancer is enabled only for appliances or Supervisor.
@@ -205,7 +205,7 @@ Sort by upgrade date. If the upgrade lands well before 30 May 2027 (205 days aft
 | Distributed EVPN-VXLAN (9.1.0, services added in 9.1.1) | An EVPN-VXLAN fabric | NAT, LB and DHCP relay need an enablement procedure | DHCP relay works on VPC public subnets only. |
 
 <Callout type="analysis" title="Choosing">
-This is this site's reading. Keep centralized if edges already exist and you use gateway services on them, such as IPSec VPN on a centralized transit gateway. Take distributed VLAN for a new design that prefers no edges and can extend an external VLAN across the VPC span. Choosing distributed is less of a trap in 9.1 than it was in 9.0, because stateful services now have a home on the VNA.
+This site's reading is to keep centralized if edges already exist and you use gateway services on them, such as IPSec VPN on a centralized transit gateway. Take distributed VLAN for a new design that prefers no edges and can extend an external VLAN across the VPC span. Choosing distributed is less of a trap in 9.1 than it was in 9.0, because stateful services now have a home on the VNA.
 </Callout>
 
 ## What 9 changed, and what was already gone

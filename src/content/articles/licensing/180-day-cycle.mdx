@@ -78,7 +78,7 @@ sources:
 ---
 
 <InShort>
-A checked comparison of Broadcom's 9.0 and 9.1 pages, for anyone with a banner on screen. Reporting is due at least every **180 days**. Miss it and the license expires; **90 days later** hosts disconnect from vCenter and workloads can't start. Running workloads aren't proactively stopped. The fix is an updated license file in VCF Operations, unless the subscription itself ended, when only a renewal helps. The versions differ on who moves the date. On 9.0 a person does, even in connected mode. On 9.1 it moves by itself only in connected mode with Update Licenses Mode set to automated. Broadcom's "does not enforce expiration" applies only with its approval ([section below](#does-the-product-enforce-expiration)).
+Reporting is due at least every **180 days**. Miss it and the license expires; **90 days later** hosts disconnect from vCenter and workloads can't start. Running workloads aren't proactively stopped. The fix is an updated license file in VCF Operations, unless the subscription itself ended, when only a renewal helps. The versions differ on who moves the date. On 9.0 a person does, even in connected mode. On 9.1 it moves by itself only in connected mode with Update Licenses Mode set to automated. Broadcom's "does not enforce expiration" applies only with its approval ([section below](#does-the-product-enforce-expiration)).
 </InShort>
 
 <Callout type="note" title="Corrected on 6 November 2026">
@@ -87,7 +87,7 @@ This note used to say the deadline in connected mode should always read about 18
 
 ## First, which clock is it?
 
-There are two, and they need different fixes. Compare the date on the banner with the subscription end date in the VCF Business Services console.
+Two clocks can run out, and they need different fixes. Compare the date on the banner with the subscription end date in the VCF Business Services console.
 
 - **Banner date well before the subscription end:** this is the 180-day reporting cycle. <KB id={448518} /> calls it a rolling "heartbeat" and expected behaviour. No renewal is needed.
 - **The dates match, or an update won't move the date:** the subscription is the limit. Without a renewal, a usage file "will not extend the end date" (<KB id={449122} />). Renew, then update licenses. If the renewal came as a new contract or serial number, use **Change Capacity** on the license in the console and update again.
@@ -105,7 +105,7 @@ With several subscriptions behind one license, the 9.1 overview says expiry of o
 | **9.1 disconnected** | You, by hand. | Same exchange as 9.0. You can get a new file without a usage file only while inside the due date, and Broadcom recommends submitting usage first. |
 | **Approved for non-expiring licenses** | The product doesn't enforce expiration or usage reporting. | See [the private license section](#does-the-product-enforce-expiration). |
 
-Broadcom's [9.1 update page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/update-licenses/updatelicenses.html) gives automated as the default <AsOf date="2026-11-06" />. On an instance upgraded from 9.0, read the setting: the [transfer page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/transfer-your-licenses-after-you-upgrade-vcf-operations.html) says the connection mode stays as it was, and the pages opened for this note don't say which update mode you get. That upgrade also makes a disconnected instance register its new license server and import a newly generated file; a connected one does this itself.
+Broadcom's [9.1 update page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/update-licenses/updatelicenses.html) gives automated as the default <AsOf date="2026-11-06" />. On an instance upgraded from 9.0, read the setting: the [transfer page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/transfer-your-licenses-after-you-upgrade-vcf-operations.html) says the connection mode stays as it was, and the Broadcom pages cited here don't say which update mode you get (checked 6 Nov 2026). That upgrade also makes a disconnected instance register its new license server and import a newly generated file; a connected one does this itself.
 
 ## What stops, and when
 
@@ -131,10 +131,10 @@ Broadcom's [9.1 update page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/
 | After the window | Management operations "might be prevented". ESX hosts disconnect from vCenter and most host management stops. You can't start workloads (9.0's page says "create or start"). | Existing workloads "are not proactively stopped". |
 
 <Callout type="analysis" title="Reading 'not proactively stopped'">
-Inference from the two sentences side by side: a VM that powers off after enforcement has no documented way back on until the license is recovered. Treat day 270 as the day restarts stop working.
+Inferring from those two sentences, a VM that powers off after enforcement has no documented way back on until the license is recovered. Treat day 270 as the day restarts stop working.
 </Callout>
 
-The [9.0 Licensing Model](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/licensing-overview/licensing-model.html) says a shut-down vCenter or VCF Operations appliance can't restart unless its host is licensed. A powered-off license server on those hosts would be in the same position (this is inference), so neither could apply the new file. [Recovering an expired estate](/vcf/library/licensing/expired-estate-recovery/) covers that case.
+The [9.0 Licensing Model](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/licensing-overview/licensing-model.html) says a shut-down vCenter or VCF Operations appliance can't restart unless its host is licensed. By inference, a powered-off license server on those hosts would be in the same position, so neither could apply the new file. [Recovering an expired estate](/vcf/library/licensing/expired-estate-recovery/) covers that case.
 
 ## Which banner is this?
 
@@ -155,7 +155,7 @@ The license server arrived with 9.1, and <KB id={443240} /> is scoped to it, so 
 - **Fully licensed:** existing entitlements stay active and workloads run. You can't make new assignments or capacity updates until it's back. The [License Server Overview](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview.html) adds that you can't generate usage reports or import license files either.
 - **In evaluation or due for renewal:** the sync fails. If the 90-day evaluation runs out before it's restored, hosts go to Disconnected and VMs can't power on.
 
-The KB asks for the server to stay powered on and for an alert on the connectivity warning above. If it's lost, the Overview says to deploy a new one, register it and transfer licenses. Your margin in an outage is the days left to the due date (this is inference from the Overview): about 180 in automated mode, possibly far fewer in manual or disconnected mode.
+The KB asks for the server to stay powered on and for an alert on the connectivity warning above. If it's lost, the Overview says to deploy a new one, register it and transfer licenses. Inferring from the Overview, your margin in an outage is the days left to the due date, which is about 180 in automated mode and possibly far fewer in manual or disconnected mode.
 
 ## Hosts in evaluation
 
@@ -170,7 +170,7 @@ Page 4 of the [9.1 Private License Files guide](https://vcf.broadcom.com/vcf/clm
 With the approval:
 
 - **The obligation stays.** "If your subscription expires and you do not renew it, you must stop using the product." Reporting "might be required, but is not enforced", unless your agreement exempts you. This note isn't legal advice: read your agreement and the guide.
-- **A registered instance needs a new file.** Download it from the registration in the console and import it. After that, per the 9.1 guide, the product "will no longer enforce or warn". A banner on an approved estate suggests that import hasn't happened (this is inference).
+- **A registered instance needs a new file.** Download it from the registration in the console and import it. After that, per the 9.1 guide, the product "will no longer enforce or warn". A banner on an approved estate suggests that import hasn't happened, though that's inference.
 - **Private license files carry a max version.** Update the file to a higher max version before upgrading past it.
 - **A standalone host going from 9.0 to 9.1** "loses its license and is not in evaluation mode", and can't start workloads until you finish the host-scoped license steps in the guide.
 
