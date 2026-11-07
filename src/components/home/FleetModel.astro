@@ -1,10 +1,9 @@
 ---
-// The VCF 9 model, the page's main explanatory figure, as one system in three visibly different levels: the fleet a solid ink
-// bar, instances medium outlines, domains light boxes with the management domains tinted. One trunk leaves the fleet for a
-// bus, and one drop from that bus lands on each instance's top border at its centre. Inside an instance, a stub under the
-// title strip meets a bus with one drop to each domain's top centre. No connector crosses a frame or a title. Same facts as
-// the diagram in the note. Real text in CSS boxes, not an SVG, so it reflows on a phone and stays at reading size. Connectors
-// are real borders, so forced colours keep them.
+// The VCF 9 model, drawn in the clock's language: no boxes, only bars, stops and open type. Width shows what contains what. The
+// fleet is one heavy bar across the page, each instance a medium bar under it, each domain a rule under that, the management
+// domains' rule heavier. A pole hangs from each bar down the left edge of everything it holds, so the hierarchy reads as a comb.
+// Same facts as the diagram in the note. Real text, not an SVG, so it reflows on a phone and stays at reading size. Bars and
+// poles are real borders, so forced colours and print keep them.
 import type { allArticles } from '../../lib/articles';
 import { urlOf } from '../../lib/articles';
 import Icon from '../Icon.astro';
@@ -20,9 +19,11 @@ if (!name) throw new Error(`The home page names its fleet section after ${note.i
   <h2 class="home-h" id="fm-h">VCF 9 puts a fleet and instances above the domains you knew from 5.x.</h2>
   <figure class="fm-fig" aria-labelledby="fm-h">
     <div class="fm-fleet">
-      <b class="fm-l">Fleet</b>
-      <b>VCF Operations · VCF Automation</b>
-      <span>Console, licensing, identity and fleet lifecycle</span>
+      <div>
+        <b class="fm-l">Fleet</b>
+        <b class="fm-svc">VCF Operations · VCF Automation</b>
+      </div>
+      <div><span>Console, licensing, identity and fleet lifecycle</span></div>
     </div>
     <div class="fm-insts">
       <div class="fm-inst">

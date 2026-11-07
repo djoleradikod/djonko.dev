@@ -1,7 +1,8 @@
 ---
 // The support clock, drawn to scale. Two columns: the label column holds its name and row
-// names, the plot column its axis, bars and words. Two encodings: solid for 9.x, hollow for everything
-// older, plus red hatching for what nobody can plan to yet. Every row is named and the same height, so there is no legend.
+// names, the plot column its axis, bars and words. Two encodings: a heavy ink bar for 9.x, a thin bar in the second ink for everything
+// older, plus red hatching for what nobody can plan to yet. A small key names the two bars in words true of the rows.
+// "General support ends" titles the plot, because that is what every date in it means.
 // There are no lines inside the plot, and each date sits right after its bar's end. It is a real table underneath:
 // release, timeline, date, basis.
 // src/data/releases.ts answers to the note, and the hub's build fails if the two stop agreeing.
@@ -34,9 +35,15 @@ const rows = groups.flatMap((g) => SUPPORT_ENDS.filter((r) => r.family === g).ma
   return { ...r, vars: `--end:${pct(r.end)};--stop:${pct(stop)}${r.unresolvedTo ? `;--to:${pct(r.unresolvedTo)}` : ''}` };
 }));
 if (rows.length !== SUPPORT_ENDS.length) throw new Error('The support clock has a release in a family it does not draw.');
+
+// The takeaway's first sentence is the instruction, so it gets the weight; the rest is its reason.
+const [order, ...reason] = summaryLine(note.data.description).split(/(?<=\.)\s+/);
+// The source line starts on the first labelled tick, so the foot lines up with the plot above it.
+const footAt = (at(Date.parse(AXIS.ticks[0].iso)) / 100).toFixed(4);
 ---
 <section class="sc" aria-labelledby="sc-h">
   <h2 class="sc-label" id="sc-h">Where things stand</h2>
+  <p class="sc-key"><span><i class="old" aria-hidden="true"></i>5.x and vSphere 8</span><span><i class="new" aria-hidden="true"></i>9.x</span></p>
   <div class="sc-plot">
     <table class="sc-t" role="table">
       <caption class="sr-only">General support ends, drawn to scale from {AXIS.fromLabel}</caption>
@@ -66,12 +73,12 @@ if (rows.length !== SUPPORT_ENDS.length) throw new Error('The support clock has 
       </tbody>
     </table>
   </div>
-  <div class="sc-foot">
-    <p class="sc-lead">{summaryLine(note.data.description)}</p>
+  <p class="sc-lead"><b>{order}</b> {reason.join(' ')}</p>
+  <div class="sc-facts" style={`--c:${footAt}`}>
     <dl class="sc-rel">
-      <div><dt>Current release</dt><dd><b>{CURRENT_RELEASE.name}</b>, <time datetime={CURRENT_RELEASE.iso}>{CURRENT_RELEASE.date}</time></dd></div>
+      <div><dt>Current release</dt><dd>{CURRENT_RELEASE.name}, <time datetime={CURRENT_RELEASE.iso}>{CURRENT_RELEASE.date}</time></dd></div>
       <div><dt>Next release</dt><dd>{NEXT_RELEASE.name}. Planned "{NEXT_RELEASE.plan}"</dd></div>
     </dl>
+    <p class="sc-cap"><span><a href={urlOf(note)}>{note.data.title}</a>. {note.data.reviewed && <>Sources checked <time datetime={note.data.reviewed.toISOString().slice(0, 10)}>{fmt(note.data.reviewed)}</time>.</>}</span> <span>The end of the 9.1 bar uses the derived day, 12 Aug 2028; Broadcom states the month.</span></p>
   </div>
-  <p class="sc-cap"><a href={urlOf(note)}>{note.data.title}</a>. {note.data.reviewed && <>Sources checked <time datetime={note.data.reviewed.toISOString().slice(0, 10)}>{fmt(note.data.reviewed)}</time>. </>}The end of the 9.1 bar uses the derived day, 12 Aug 2028; Broadcom states the month.</p>
 </section>

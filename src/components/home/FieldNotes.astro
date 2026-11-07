@@ -1,11 +1,12 @@
 ---
-// Field Notes: the count and the kept line as the section's heading, then the note set open at full width as the screen's one
-// dominant thing, then its sources as a quiet list. Every word comes from the note at build time, and the build fails if any
-// of it has gone.
+// Field Notes: the count and the kept line as the section's heading, then the note set open at full width. Its latency bounds,
+// drawn large and to scale, are the section's peak; the decision table follows at reading size and its sources run on as a
+// footnote. Every word comes from the note at build time, and the build fails if any of it has gone.
 import type { allArticles } from '../../lib/articles';
 import { urlOf } from '../../lib/articles';
 import { SITE } from '../../data/site';
 import NoteSheet from './NoteSheet.astro';
+import LatencyRuler from './LatencyRuler.astro';
 
 interface Props {
   note: Awaited<ReturnType<typeof allArticles>>[number];
@@ -14,7 +15,7 @@ interface Props {
 }
 const { note, noteCount, areaCount } = Astro.props;
 
-// Both kinds of evidence the note weighs, so the strip shows that it reads Broadcom and the people who run this.
+// Both kinds of evidence the note weighs, so the footnote shows that it reads Broadcom and the people who run this.
 const of = (kind: string, n: number) => {
   const found = note.data.sources.filter((s) => s.kind === kind).slice(0, n);
   if (found.length < n) throw new Error(`The home page shows ${n} "${kind}" sources from ${note.id}, which now has ${found.length}.`);
@@ -26,21 +27,16 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 
 <section class="home-sec fn" aria-labelledby="fn-h">
   <p class="home-kick"><a href="/vcf/">{SITE.vcfName}</a></p>
   <h2 class="home-h" id="fn-h">{noteCount} notes in {areaCount} areas. Each one links the sources behind it, and where 5.x and 9.x differ it says how.</h2>
-  <NoteSheet note={note} header={['#', 'Question']} rowHead={1} rows={5} class="sheet-q" />
-  <div class="fn-src">
-    <div class="ix-head">
-      <h3 class="ix-h" id="fn-src">Sources</h3>
+  <NoteSheet note={note} header={['#', 'Question']} rowHead={1} rows={5} class="sheet-q">
+    <LatencyRuler slot="figure" note={note} />
+    <div slot="foot" class="fn-src">
+      <h4 class="fn-h" id="fn-src">Sources</h4>{' '}
+      <ol class="fn-strip" role="list" aria-labelledby="fn-src">
+        {shown.map((s) => (
+          <li><a href={s.url} rel="noopener"><span class="t">{s.title}</span>, <span class="m">{[s.by, s.date && fmt(s.date)].filter(Boolean).join(', ')}</span></a></li>
+        ))}
+      </ol>{' '}
       <a class="fn-more" href={`${urlOf(note)}#note-sources`}>All {note.data.sources.length} in the note</a>
     </div>
-    <ol class="fn-strip" role="list" aria-labelledby="fn-src">
-      {shown.map((s) => (
-        <li>
-          <a href={s.url} rel="noopener">
-            <span class="t">{s.title}</span>
-            <span class="m">{[s.by, s.date && fmt(s.date)].filter(Boolean).join(', ')}</span>
-          </a>
-        </li>
-      ))}
-    </ol>
-  </div>
+  </NoteSheet>
 </section>

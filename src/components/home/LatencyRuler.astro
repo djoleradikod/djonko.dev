@@ -1,0 +1,78 @@
+---
+// The latency bounds, drawn to scale: the second chart on the page, in the clock's language and at a larger scale. Every bound,
+// path and consequence is read from the note's own table at build time, so the drawing can't drift from the note, and the
+// build fails if a row has gone or a bound is no longer a plain "≤N ms". The two bounds that change the count of instances and
+// fleets are heavy bars, as 9.x is on the clock. The others are thin bars, as the older releases are.
+// Bars and poles are borders, so forced colours and print keep them. All the words are real text; only the marks are hidden.
+import type { allArticles } from '../../lib/articles';
+import { noteTable } from './excerpts';
+
+interface Props { note: Awaited<ReturnType<typeof allArticles>>[number]; }
+const { note } = Astro.props;
+
+const SCALE_END = 400; // ms. Room past the last bound for what lies beyond it; a drawing choice, not a figure from the note.
+const table = noteTable(note, ['Path', 'Upper bound (9.1)'], 6);
+const bound = (path: RegExp) => {
+  const row = table.rows.find((r) => path.test(r[0]));
+  const ms = row && /^≤(\d+) ms$/.exec(row[1].trim());
+  if (!row || !ms || +ms[1] >= SCALE_END) throw new Error(`The latency ruler needs a row matching ${path} with a bound under ${SCALE_END} ms in ${note.id}.`);
+  // The consequence up to its first comma: the rest of the cell is the note's aside.
+  return { path: row[0], ms: +ms[1], then: row[2].split(',')[0].trim(), at: `${(+ms[1] / SCALE_END) * 100}%` };
+};
+const instance = bound(/^SDDC Manager to vCenter/);
+const fleet = bound(/^VCF Operations and VCF Automation to/);
+const minor = [bound(/^Collector to/), bound(/^NSX Manager to/), bound(/^Identity broker to/), bound(/^License server to/)].sort((a, b) => a.ms - b.ms);
+const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
+
+const diagram = note.data.sources.find((s) => s.title.includes('fleet latency diagrams'));
+if (!diagram) throw new Error(`The latency ruler links the post that carries the 9.1 diagram, which ${note.id} no longer cites.`);
+
+// Ticks every 5 ms, a longer one every 10 and the longest every 50. Phones drop the 5s.
+const every = (step: number, skip = 0) => {
+  const out: number[] = [];
+  for (let ms = 0; ms <= SCALE_END; ms += step) if (!skip || ms % skip !== 0) out.push(ms);
+  return out;
+};
+const ticks = (list: number[], top: number) => list.map((ms) => `M${ms} ${top}V20`).join('');
+const labels = every(50).filter((ms) => ms < SCALE_END && ms !== instance.ms && ms !== fleet.ms);
+const a = (instance.ms / SCALE_END) * 100;
+const b = (fleet.ms / SCALE_END) * 100;
+---
+<figure class="rl" aria-labelledby="rl-cap" style={`--a:${a}%;--b:${b}%`}>
+  <div class="rl-plot">
+    <div class="rl-in">
+      <div class="rl-flags">
+        <p class="rl-title">Latency: upper bounds for VCF 9.1</p>
+        <p class="rl-flag rl-f1"><span class="rl-num">{instance.ms}<small> ms</small></span><span class="rl-then">Beyond this: {lower(instance.then)}</span></p>
+        <p class="rl-flag rl-f2"><span class="rl-num">{fleet.ms}<small> ms</small></span><span class="rl-then">Beyond this: {lower(fleet.then)}</span></p>
+      </div>
+      <div class="rl-axis" aria-hidden="true">
+        <span class="rl-ticks">{labels.map((ms) => <span style={`left:${(ms / SCALE_END) * 100}%`}>{ms}</span>)}</span>
+        <svg class="rl-ruler" viewBox={`0 0 ${SCALE_END} 20`} preserveAspectRatio="none" focusable="false">
+          <path class="rl-fine" d={ticks(every(5, 10), 15)}></path>
+          <path d={ticks(every(10, 50), 10)}></path>
+          <path d={ticks(every(50), 0)}></path>
+        </svg>
+      </div>
+      <div class="rl-row rl-r1" style={`--at:${instance.at}`}>
+        <i class="rl-bar" aria-hidden="true"></i>
+        <p class="rl-txt"><b>One instance</b> <span class="rl-v">≤{instance.ms} ms</span> <span class="rl-path" set:html={instance.path}></span></p>
+      </div>
+      <i class="rl-pole rl-p1" aria-hidden="true"></i>
+    </div>
+    <div class="rl-row" style={`--at:${fleet.at}`}>
+      <i class="rl-bar" aria-hidden="true"></i>
+      <p class="rl-txt"><b>One fleet</b> <span class="rl-v">≤{fleet.ms} ms</span> <span class="rl-path" set:html={fleet.path}></span></p>
+    </div>
+    <i class="rl-pole rl-p2" aria-hidden="true"></i>
+  </div>
+  <ul class="rl-minor" role="list">
+    {minor.map((m) => (
+      <li style={`--at:${m.at}`}>
+        <p class="rl-mname"><span class="rl-v">≤{m.ms} ms</span> <span set:html={m.path}></span></p>
+        <p class="rl-mline"><i aria-hidden="true"></i><span set:html={m.then}></span></p>
+      </li>
+    ))}
+  </ul>
+  <figcaption class="rl-cap" id="rl-cap">Upper bounds drawn to scale from the <a href={diagram.url} rel="noopener">fleet latency diagram, Ver 2.0, labelled for VCF 9.1</a> ({diagram.by}, 12 May 2026). The diagram doesn't say whether its figures are round trip or one way, so design to round trip. A second fleet beyond {fleet.ms} ms is an inference: the diagram draws the VCF Operations and VCF Automation paths at ≤{fleet.ms} ms, and this note takes that as the limit.</figcaption>
+</figure>
