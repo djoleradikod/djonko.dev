@@ -1,8 +1,9 @@
 ---
-// The support clock, drawn to scale: the page's signature and its only drawing (ink rules, date ticks, hatching, one
-// red pencil). Rows are ordered by what they are, and each family has its own stroke: an open bar for VCF 5.x, a single
-// line for vSphere 8, a solid bar for VCF 9.x. Every row is the same height; a hairline marks where the family changes.
-// Red hatching is only what nobody can plan to yet. It is a real table underneath: release, timeline, date, basis.
+// The support clock, drawn to scale: the page's signature (ink rules, date ticks, hatching, one red pencil). Its label
+// sits in the plot's corner and its words under it. Rows are ordered by what they are, and each family has its own
+// stroke: an open bar for VCF 5.x, a single line for vSphere 8, a solid bar for VCF 9.x. Every row is named and the same
+// height. Red hatching is only what nobody can plan to yet. Dates sit in their own column, so the major lines run the
+// plot's full height under the bars with nothing on them. It is a real table underneath: release, timeline, date, basis.
 // src/data/releases.ts answers to the note, and the hub's build fails if the two stop agreeing.
 import { summaryLine } from '../../data/decisions';
 import { AXIS, CURRENT_RELEASE, NEXT_RELEASE, SUPPORT_ENDS } from '../../data/releases';
@@ -17,7 +18,7 @@ const at = (t: number) => ((t - t0) / (t1 - t0)) * 100;
 const num = (n: number) => n.toFixed(2);
 const pct = (iso: string) => `${num(at(Date.parse(iso)))}%`;
 
-// A tick for every month on the axis; the labelled ones run through the whole figure.
+// A tick for every month on the axis; only the labelled dates run on through the plot, as lines under the bars.
 const majors = new Set(AXIS.ticks.map((t) => Date.parse(t.iso)));
 const first = new Date(t0);
 const months: number[] = [];
@@ -25,25 +26,20 @@ for (let m = first.getUTCMonth() + 1, ts = Date.UTC(first.getUTCFullYear(), m, 1
 const minor = months.filter((ts) => !majors.has(ts));
 const major = months.filter((ts) => majors.has(ts));
 const ruler = `${minor.map((ts) => `M${num(at(ts))} 4V10`).join('')}${major.map((ts) => `M${num(at(ts))} 0V10`).join('')}`;
-const fineGrid = minor.map((ts) => `M${num(at(ts))} 0V100`).join('');
 const majorGrid = major.map((ts) => `M${num(at(ts))} 0V100`).join('');
 
 // 5.x, then vSphere 8, then 9.x, keeping the data's own order inside each group.
 const groups = ['v5', 'other', 'v9'];
-const rows = groups.flatMap((g) => SUPPORT_ENDS.filter((r) => r.family === g).map((r, i) => {
+const rows = groups.flatMap((g) => SUPPORT_ENDS.filter((r) => r.family === g).map((r) => {
   const stop = r.unresolvedTo ?? r.end;
-  return { ...r, startsGroup: i === 0 && g !== groups[0], vars: `--end:${pct(r.end)};--stop:${pct(stop)}${r.unresolvedTo ? `;--to:${pct(r.unresolvedTo)}` : ''}` };
+  return { ...r, vars: `--end:${pct(r.end)};--stop:${pct(stop)}${r.unresolvedTo ? `;--to:${pct(r.unresolvedTo)}` : ''}` };
 }));
 if (rows.length !== SUPPORT_ENDS.length) throw new Error('The support clock has a release in a family it does not draw.');
 ---
 <section class="wrap sc" aria-labelledby="sc-h">
-  <h2 class="home-h2" id="sc-h">Where things stand</h2>
-  <p class="sc-lead">{summaryLine(note.data.description)}</p>
-  <dl class="sc-rel">
-    <div><dt>Current release</dt><dd><b>{CURRENT_RELEASE.name}</b>, <time datetime={CURRENT_RELEASE.iso}>{CURRENT_RELEASE.date}</time></dd></div>
-    <div><dt>Next release</dt><dd>{NEXT_RELEASE.name}. Planned "{NEXT_RELEASE.plan}"</dd></div>
-  </dl>
+  <h2 class="sc-label" id="sc-h">Where things stand</h2>
   <div class="sc-plot">
+    <svg class="sc-grid" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d={majorGrid}></path></svg>
     <table class="sc-t" role="table">
       <caption class="sr-only">General support ends, drawn to scale from {AXIS.fromLabel}</caption>
       <thead role="rowgroup">
@@ -54,13 +50,13 @@ if (rows.length !== SUPPORT_ENDS.length) throw new Error('The support clock has 
             <span class="sc-ticks" aria-hidden="true"><span>{AXIS.fromLabel}</span>{AXIS.ticks.map((t) => <span style={`left:${pct(t.iso)}`}>{t.label}</span>)}</span>
             <svg class="sc-ruler" viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><path d={ruler}></path></svg>
           </th>
-          <th role="columnheader" scope="col" class="sr-only">General support ends</th>
+          <th role="columnheader" scope="col" class="sc-endh">General support ends</th>
           <th role="columnheader" scope="col" class="sr-only">Basis</th>
         </tr>
       </thead>
       <tbody role="rowgroup">
         {rows.map((r) => (
-          <tr role="row" class:list={['sc-r', r.family, r.unresolvedTo && 'open', r.startsGroup && 'g']} style={r.vars}>
+          <tr role="row" class:list={['sc-r', r.family, r.unresolvedTo && 'open']} style={r.vars}>
             <th role="rowheader" scope="row" class="sc-n">{r.item}</th>
             <td role="cell" class="sc-tl"><span aria-hidden="true"><i class="sc-bar"></i>{r.unresolvedTo ? <i class="sc-span"></i> : <i class="sc-stop"></i>}</span></td>
             <td role="cell" class="sc-d"><span class="sc-dt">{r.date}</span></td>
@@ -71,7 +67,13 @@ if (rows.length !== SUPPORT_ENDS.length) throw new Error('The support clock has 
         ))}
       </tbody>
     </table>
-    <svg class="sc-grid" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path class="fine" d={fineGrid}></path><path class="major" d={majorGrid}></path></svg>
+  </div>
+  <div class="sc-foot">
+    <p class="sc-lead">{summaryLine(note.data.description)}</p>
+    <dl class="sc-rel">
+      <div><dt>Current release</dt><dd><b>{CURRENT_RELEASE.name}</b>, <time datetime={CURRENT_RELEASE.iso}>{CURRENT_RELEASE.date}</time></dd></div>
+      <div><dt>Next release</dt><dd>{NEXT_RELEASE.name}. Planned "{NEXT_RELEASE.plan}"</dd></div>
+    </dl>
   </div>
   <p class="sc-cap"><a href={urlOf(note)}>{note.data.title}</a>. {note.data.reviewed && <>Sources checked <time datetime={note.data.reviewed.toISOString().slice(0, 10)}>{fmt(note.data.reviewed)}</time>. </>}The end of the 9.1 bar uses the derived day, 12 Aug 2028; Broadcom states the month.</p>
 </section>
