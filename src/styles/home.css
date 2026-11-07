@@ -387,3 +387,7 @@
   .sc-dt, .sc-flag, .sc-n { forced-color-adjust: auto; }
   .fm-fleet, .fm-fleet * { forced-color-adjust: none; }
 }
+
+@media print {
+  :root .page-home main, :root[data-theme="dark"] .page-home main, :root:not([data-theme="light"]) .page-home main { --ink-2: #333; --fm-tint: #eee; }
+}

@@ -19,8 +19,11 @@ grep -n -B 20 -A 60 "<reference-id>" /var/log/vmware/vcf/<service>/<service>.log
   },
   {
     t: 'Check for locks and stale credentials',
-    run: '/opt/vmware/sddc-support/sos --health-check --domain-name <domain>',
-    good: 'A clean run. On 5.x and 9.0.x a stale lock fails this check even with every task complete. On 9.0, so can "Failed to get details" against an ESXi root account.',
+    run: `# 5.x and 9.0.x
+/opt/vmware/sddc-support/sos --health-check --domain-name <domain>
+# 9.1: read the lock table (KB 449148)
+psql -h localhost -U postgres -d platform -c "select * from lock;"`,
+    good: 'A clean run. On 5.x and 9.0.x a stale lock fails this check even with every task complete. On 9.0, so can "Failed to get details" against an ESX root account. On 9.1, no rows from a task that has ended.',
     not: 'The log line names the lock holder. In progress and really hung: cancel it (API below). Failed: fix the cause and retry, because cancel returns 409. Nothing to cancel: a lock-row KB, with a snapshot. "Failed to get details": remediate with the password that works on the component today.',
   },
   {
@@ -39,11 +42,11 @@ date -u`,
   {
     t: 'Check disk',
     run: `# SDDC Manager
-df -h /data /opt /var/log 2>/dev/null
+df -h / /nfs/vmware/vcf/nfs-mount
 # vCenter
 df -h /storage/log /storage/seat /storage/db /storage/core`,
-    good: 'SDDC Manager: more than 10 GB free in /opt and more than 1 GB for the database (the precheck\'s critical limits). vCenter: no partition close to full.',
-    not: 'Collect a support bundle before you clean anything. Then use the documented clean-up, not rm: on 9.x, DELETE DOWNLOAD under Binary Management, then bundle_cleanup.py if that fails.',
+    good: 'No partition close to full on either appliance.',
+    not: 'Collect a support bundle before you clean anything. Then use the documented clean-up, not rm: on 9.x, DELETE DOWNLOAD under Binary Management, then bundle_cleanup.py if that fails. A precheck saying "does not have enough disk space" with space free is a stale cache, and the fix is a service restart (KB 439946).',
   },
   {
     t: 'Check the path',

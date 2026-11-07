@@ -147,7 +147,7 @@ SDDC="sddc-manager.example.com"
 OPS="vcf-operations.example.com"
 DAY=$(date +%F)
 SINCE=$(( ($(date +%s) - 7 * 86400) * 1000 ))   # seven days ago, in milliseconds
-CURL=(curl -s --cacert "$CA_BUNDLE" -H 'Content-Type: application/json' -H 'Accept: application/json')
+CURL=(curl -sS --fail --cacert "$CA_BUNDLE" -H 'Content-Type: application/json' -H 'Accept: application/json')
 
 SDDC_TOKEN=$("${CURL[@]}" -X POST "https://$SDDC/v1/tokens" \
   -d "$(jq -n --arg u "$SDDC_USER" --arg p "$SDDC_PASS" '{username:$u,password:$p}')" | jq -r .accessToken)
@@ -169,8 +169,11 @@ OPS_TOKEN=$("${CURL[@]}" -X POST "https://$OPS/suite-api/api/auth/token/acquire"
 "${CURL[@]}" -H "Authorization: OpsToken $OPS_TOKEN" -X POST "https://$OPS/suite-api/api/diagnostics/findings/query" \
   -d '{"filter":{}}' | jq -S . > "findings-$DAY.json"
 
+# SDDC Manager only. Repeat for vCenter and each VCF Operations node.
 ssh "vcf@$SDDC" 'df -h' > "disk-$DAY.txt"
 ```
+
+The alerts and findings calls take the API's default page size, so compare their counts with the UI in the first week.
 
 SoS stays a separate step because the [documented route is SSH as `vcf`, then `su` to root](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html), which doesn't script cleanly from a remote host. `--json-output-dir` gives you a file to diff, so copy it back to the report host:
 

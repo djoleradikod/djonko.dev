@@ -15,9 +15,9 @@ const playbook: [string, string, string][] = [
   ['Signed certificate rejected', 'openssl x509 -in cert.crt -pubkey -noout | sha256sum; openssl req -in csr.csr -pubkey -noout | sha256sum', 'Hashes differ: the certificate was signed from another CSR. Sign the current one.'],
   ['"no healthy upstream" on vCenter', 'df -h; service-control --status --all; the VECS expiry loop', 'Free the full partition or replace the expired certificate, then start services. A reboot alone frees no partition and replaces no certificate.'],
   ['9.1 runtime tasks stuck', 'kubectl get pods -A | grep -vE \'Running|Completed\'', 'Fix pod health first. Restart a lifecycle service with lcm_service_support.sh, and delete pods only where a KB names them.'],
-  ['Depot 403, "Bundle not found", download stalls', 'curl -I https://eapi.broadcom.com from a runtime node', 'Allow every runtime node, not only SDDC Manager. Check the token or activation code, and TLS inspection.'],
+  ['Depot 403, "Bundle not found", download stalls', 'curl -I https://eapi.broadcom.com from a runtime node', 'Allow the Fleet components (KB 443166) and the runtime IP pool (KB 443216), not only SDDC Manager. Check the token or activation code, and TLS inspection.'],
   ['NSX host preparation or TEP failures', 'vmkping -S vxlan -s 1572 -I vmk10 -d <edge-tep>', 'Fails with -d: MTU on the path is under 1600. Fix the network, then Resolve in NSX.'],
-  ['VCF Operations slow, node offline, cluster not ready', 'curl -sk https://<node>/casa/cluster/status; df -h /storage/db /storage/log', 'One node must be MASTER. Add disk to every node, identically sized. Never revert to a snapshot.'],
+  ['VCF Operations slow, node offline, cluster not ready', 'df -h /storage/db /storage/log on each node', 'Near 90% on /storage/db: take the cluster offline and add a new disk to every analytics node, all at equal capacity (KB 318768). Don\'t revert to cure slowness or a full disk without asking support. Reverting all nodes and proxies is the documented way back from a failed upgrade: see Rollback checkpoints.'],
 ];
 const kb = (id: number) => kbInfo(id).url;
 ---
@@ -35,7 +35,7 @@ const kb = (id: number) => kbInfo(id).url;
         <thead><tr><th></th><th>Management component</th><th>Core infrastructure</th></tr></thead>
         <tbody>
           <tr><th>What</th><td>VCF Operations, VCF Automation, identity broker, Ops for networks, log management, services runtime</td><td>vCenter, ESX, NSX Managers and Edges, vSAN, SDDC Manager</td></tr>
-          <tr><th>Tasks</th><td>Build &gt; Lifecycle &gt; VCF Management &gt; Tasks</td><td>SDDC Manager Tasks, Build &gt; Lifecycle &gt; VCF Instances</td></tr>
+          <tr><th>Tasks</th><td>Build &gt; Lifecycle &gt; VCF Management &gt; Tasks</td><td>SDDC Manager Tasks, Build &gt; Tasks &gt; VCF Instances</td></tr>
           <tr><th>Logs</th><td>Runtime pods in <code>vcf-fleet-lcm</code>, <code>vcf-sddc-lcm</code></td><td><code>/var/log/vmware/vcf/</code> on SDDC Manager</td></tr>
         </tbody>
       </table>
@@ -100,7 +100,7 @@ const kb = (id: number) => kbInfo(id).url;
   </div>
 
   <section class="cs">
-    <h2>Services runtime toolkit (9.1, read-only)</h2>
+    <h2>Services runtime toolkit (9.1)</h2>
     <Code lang="bash" wrap code={`# Control-plane node IP: Build > Lifecycle > VCF Management > Components > VCF Services Runtime > Nodes
 ssh vmware-system-user@<control-plane-node>
 sudo -i

@@ -1,5 +1,5 @@
 // Code tokens come in seven colours, so each gets a class (global.css) and not its own style attribute.
-// Used by the Markdown config and by the Code component where a page renders code itself.
+// Used by the Markdown config and Download.astro. A page calling <Code> itself keeps inline styles unless it passes this.
 const TOKEN_CLASS = {
   'color:#032563;--shiki-dark:#ADDCFF': 'c1',
   'color:#0E1116;--shiki-dark:#F0F3F6': 'c2',

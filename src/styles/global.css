@@ -501,7 +501,6 @@ h1, h2, h3, h4, .list .t, .tool p { overflow-wrap: break-word; }
 .report { margin: 12px 0 0; }
 @media print { .related, .report { display: none !important; } }
 tr:target td { background: var(--surface-2); }
-.cites { margin: 0; padding-left: 1.1em; } .cites li { margin: 0 0 4px; }
 
 /* A reading path as one printable document */
 .print-cover { padding-bottom: 12px; border-bottom: 1px solid var(--line); margin-bottom: 28px; }
@@ -977,7 +976,6 @@ input[type="search"] { width: 100%; max-width: 440px; padding: 10px 12px; border
 }
 
 @media print {
-  :root .page-home main, :root[data-theme="dark"] .page-home main, :root:not([data-theme="light"]) .page-home main { --ink-2: #333; --fm-tint: #eee; }
   .home-lead .actions, .hub-start, .lib-filters { display: none !important; }
   .stand { border: 0; background: none; }
   .clock-bar, .clock-span, .clock-keys i, .sc-bar, .sc-span, .sc-plot::before, .sc-plot::after { print-color-adjust: exact; -webkit-print-color-adjust: exact; }

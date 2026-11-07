@@ -123,7 +123,7 @@ VCF Operations, the renamed and expanded Aria Operations, is [a required compone
 </InShort>
 
 <Callout type="note" title="Corrected on 7 November 2026">
-This note used to say that a 5.2 upgrade deploys VCF Operations if it is missing, that log ingestion continues and users can still sign in during an outage, that workloads are simply unaffected, and that 9.1 sizing comes from the 9.0 guide. The 9.1 guide has you deploy VCF Operations yourself if there's no Aria Operations 8.18.x, no Broadcom page we opened states either outage claim, evaluation estates are exposed, and 9.1 sizing now points to Configuration Maximums.
+This note used to say that a 5.2 upgrade deploys VCF Operations if it is missing, that log ingestion continues and users can still sign in during an outage, that workloads are simply unaffected, and that 9.1 sizing comes from the 9.0 guide. The 9.1 guide has you deploy VCF Operations yourself if there's no Aria Operations 8.18.x, no Broadcom page this site opened states either outage claim, evaluation estates are exposed, and 9.1 sizing now points to Configuration Maximums.
 </Callout>
 
 ## Pick the availability model first
@@ -170,7 +170,7 @@ The [design requirement](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-
 
 Follow the KB, since it's the narrower and more specific statement. In practice that makes the first size a long-lived choice, so pick it from the VM forecast. That reading is this site's analysis.
 
-One proxy is a single point of failure until you act on the HA model page's recommendations, all manual and all after deployment: [a collector group per instance, a second collector, a DRS anti-affinity rule, and the default VCF adapter pointed at the group](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-ha-model.html). Expect a gap even then, because [failover takes a few minutes and logs may be lost](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html).
+One proxy is a single point of failure until you act on the HA model page's recommendations, all manual and all after deployment: [a collector group per instance, a second collector, a DRS anti-affinity rule, and the default VCF adapter pointed at the group](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-ha-model.html). Expect a gap even then, because the log deployment page says [failover takes a few minutes and logs may be lost](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html), and the cloud proxy FAQ says [collection failover starts after about 10 minutes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/cloud-proxy-faq.html).
 
 Three faults are worth planning around:
 
@@ -180,10 +180,10 @@ Three faults are worth planning around:
 
 ## What happens when it is down
 
-No Broadcom page we opened gives an outage table for VCF Operations <AsOf date="2026-11-07" />, so keep documented and inferred behaviour apart in the runbook, and write it before go-live. Licensing is the documented part, on 9.1 (<KB id={443240} />), and this is technical behaviour, so check entitlement questions with Broadcom:
+No Broadcom page this site opened gives an outage table for VCF Operations <AsOf date="2026-11-07" />, so keep documented and inferred behaviour apart in the runbook, and write it before go-live. Licensing is the documented part, on 9.1 (<KB id={443240} />), and this is technical behaviour, so check entitlement questions with Broadcom:
 
 - **Fully licensed:** existing entitlements stay active and workloads keep running, but new assignments and capacity changes are blocked until connectivity returns.
-- **Evaluation or expiring:** automatic sync fails. If the 90-day evaluation ends before connectivity returns, ESXi hosts go Disconnected and VMs can't power on.
+- **Evaluation or expiring:** automatic sync fails. If the 90-day evaluation ends before connectivity returns, ESX hosts go Disconnected and VMs can't power on, though [existing workloads aren't proactively stopped](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html). [The expired estate note](/vcf/library/licensing/expired-estate-recovery/) covers recovery and where Broadcom's pages differ.
 
 The same KB recommends monitoring the VCF Operations appliance and the License Server VM, and alerting on the vCenter license server banner, so set those up from day one.
 
