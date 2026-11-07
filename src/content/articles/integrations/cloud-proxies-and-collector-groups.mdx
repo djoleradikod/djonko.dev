@@ -1,62 +1,131 @@
 ---
 title: "Cloud proxies and collector groups in 9.1: unified proxies, HA and the default-group trap"
-description: "Cloud proxies run the adapters, so where an integration collects from decides whether it works. 9.1 requires the VCF instance adapter on a cloud proxy, introduces unified proxy sizes, and keeps a few networking rules that are easy to miss."
+description: "Give each VCF instance a collector group of at least two unified cloud proxies. The 9.1 upgrade fails validation while the VCF instance adapter stays on the local collector, and on the default group every VCF Operations node must reach vCenter."
 category: integrations
 order: 2
-versions: ["9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
 kbs: [443106, 442380, 449290, 414885, 429451, 426042, 443900, 433379]
 sources:
-  - title: "Deploy a cloud proxy as part of a VCF 9.1 upgrade"
+  - title: "Deploy Cloud Proxy for the VCF 9.1 Upgrade"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/configuring-cloud-proxies-in-vrealize-operations-cloud.html"
     by: "Broadcom TechDocs"
-  - title: "Cloud proxy FAQ (9.0)"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/cloud-proxy-faq.html"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Cloud Proxy FAQ (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/cloud-proxy-faq.html"
     by: "Broadcom TechDocs"
-  - title: "Cloud proxy troubleshooting (9.0)"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/cloud-proxy-troubleshooting.html"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Cloud Proxy Troubleshooting (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/cloud-proxy-troubleshooting.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configuring Collector Groups (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/collector-groups-managing.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Adding a Collector Group (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/collector-groups-managing/collector-groups-adding.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Collecting Data with Cloud Proxy in VCF Operations (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "High Availability VCF Operations Model (9.1 design library)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-ha-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Fleet in a Single Site blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrade VCF Operations to 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/install-a-software-update.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
 ---
 
 <InShort>
-In 9.1 the **VCF instance adapter must collect through a healthy cloud proxy or collector group**, not the local collector, or the management services deployment fails validation (<KB id={443106} />). Deploy proxies as **Unified Small** (up to 16,000 VMs) or **Unified Standard** (16,000 to 80,000), not Classic. The registration key expires after 24 hours. Group two or more proxies for HA: another one takes over after about 10 minutes. If you leave adapters on the **default collector group**, every VCF Operations node must reach vCenter on 443 (<KB id={442380} />).
+Give each VCF instance a collector group of at least two unified cloud proxies, and put its adapters on that group. The 9.1 upgrade won't deploy management services while the **VCF instance adapter stays on the local collector** (<KB id={443106} />), and [Broadcom's HA design recommends one group per VCF instance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-ha-model.html). When a member fails, [another can pick up collection, with failover starting after about 10 minutes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/cloud-proxy-faq.html). Stay off the **default collector group** on segmented networks, because every VCF Operations node, replica and data nodes included, then has to reach vCenter (<KB id={442380} />).
 </InShort>
 
-<Compare rows={[
-  ["Collector types", "Remote collectors and cloud proxies", "Cloud proxies. 9.1 adds unified proxy sizes."],
-  ["VCF instance adapter", "Any collector", "Must be on a cloud proxy or collector group (9.1)"],
-  ["Upgrade", "Proxies upgraded with the product", "Proxies auto-upgrade. 8.18 had no unified proxies, so reassign integrations after upgrading."],
-  ["Network", "Outbound 443 to VCF Operations", "The same, plus inbound 443 for push adapters and VRRP between proxies in a group"],
-]} />
-
-## Design rules
-
-- **One collector group per site or network zone**, with at least two unified proxies.
-- **Proxy to VCF Operations:** outbound 443. **Push adapters** need inbound 443 to the proxy. **Groups** need VRRP between members.
-- **DNS from the proxy** must resolve every VCF Operations node. Proxies that go offline every few hours, or return 503s through haproxy, point to resolver problems (<KB id={426042} />, <KB id={443900} />).
-- **SSH** is disabled by default on proxies. Enable it only when needed.
-
-## Moving adapters after a 9.1 upgrade
-
-1. Deploy unified proxies and put them in a group.
-2. Edit the VCF account and set the collector to that group for all domains and vCenters.
-3. Run an inventory sync, then retry anything that failed validation.
-4. If an adapter is stuck in "State: Stopping" or Warning, **Stop collecting**, then **Start collecting** (<KB id={414885} />, <KB id={429451} />).
-
-A known 9.1.0 issue makes a vCenter adapter moved from a group to a single proxy revert to the group on save (<KB id={449290} />). Keep it in a group.
-
-## The vCenter plugin depends on the proxy
-
-The VCF Operations plugin in the vSphere Client is served by the node or proxy running the vCenter adapter. After a proxy certificate change, the plugin can show "Download plug-in" until the proxy's certificate file is updated (<KB id={433379} />).
-
-<Callout type="field">
-Draw the collector design as part of the network design: which proxy group collects which instance, from which subnet, through which firewall. It makes the 9.1 requirement visible early and turns "the adapter won't connect" into a one-line firewall request.
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to recommend one collector group per site or network zone and to require VRRP in every group, where Broadcom recommends a group per VCF instance and asks for VRRP in groups with Application Monitoring High Availability activated. It also no longer says which node serves the vSphere Client plugin, a claim it had no source for.
 </Callout>
 
-## Pitfalls
+## One group per VCF instance
 
-- **Deploying Classic proxies** in 9.1 out of habit.
-- **Letting the registration key expire** between deploying the OVA and registering.
-- **Default collector group with segmented networks.** Replica and data nodes can't reach vCenter, and collection breaks intermittently.
+A deployment starts with a single proxy, so the group is a post-deployment job. The [HA model](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-ha-model.html) sets it out in decisions VCF-OPS-RCMD-HA-002 to HA-005: create a collector group for each VCF instance, add a second collector in the default management vSphere cluster, keep the two apart with a DRS anti-affinity rule, and reconfigure the default VCF adapter to use the group. The [single-site blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint.html) gives the same advice for the second appliance.
+
+vSphere HA (VCF-OPS-REQD-COM-004) restarts a proxy after a host failure. The group adds cover for a proxy that has failed or dropped off the network. The design also recommends data persistence on each proxy (VCF-OPS-RECD-COM-001), so data can be stored through connectivity problems. This site would also monitor each proxy's storage.
+
+Two membership rules can undo a plan. [A proxy with log forwarding can't join a collector group, and a proxy can belong to only one group](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/collector-groups-managing/collector-groups-adding.html), so settle log forwarding first.
+
+<Callout type="analysis" title="When one instance needs two groups">
+[An account assigned to a group can use any collector in it](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/collector-groups-managing.html), so every member needs a path to every endpoint that group collects. The HA model and the single-site blueprint give no per-site or per-zone rule. This site's reading is that one group per instance holds until proxies sit in zones that can't all reach the same endpoints, and then each zone of reach gets its own group. Re-balancing [needs spare capacity on the collectors](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/collector-groups-managing.html), so leave room on each proxy. Record all this in the network design: which group collects which instance, from which subnet, through which firewall.
+</Callout>
+
+## Unified proxies, and a conflict over Classic
+
+Size from the [deployment page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/configuring-cloud-proxies-in-vrealize-operations-cloud.html): Unified Small handles up to 16,000 VMs and Unified Standard 16,000 to 80,000. VCF 8.18.x had no unified proxies, so an upgrade from it means deploying one and assigning it to the instance and its workload domains. The registration key expires 24 hours after generation. If it lapses, delete the proxy and deploy a new one.
+
+The same page says not to deploy Classic unless technical support tells you to, while the [collecting-data page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud.html) still offers Classic for remote data centers <AsOf date="2026-11-07" />. Follow the deployment page, the stricter of the two. It also names the unified type for log collection and log assist, so a Classic proxy may close off that option, though it doesn't say so.
+
+## What the network has to allow
+
+| Path | Requirement | Applies to |
+|---|---|---|
+| Proxy to VCF Operations | [Outbound HTTPS 443](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/cloud-proxy-faq.html) | Every proxy |
+| Inbound to proxy | [HTTPS 443](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/cloud-proxy-faq.html) | Push-model adapters such as application monitoring, and Suite-API |
+| Inbound to proxy | [TCP 4505 and 4506](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/cloud-proxy-faq.html) | Application monitoring |
+| Between proxies | [VRRP](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/cloud-proxy-faq.html) | Groups with Application Monitoring HA activated |
+| Virtual IP | [Same subnet as the proxies' physical addresses](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/collector-groups-managing/collector-groups-adding.html) | Groups with Application Monitoring HA activated |
+| DNS from the proxy | FQDN of each VCF Operations node resolves (<KB id={426042} />) | Every proxy |
+| Latency | [Above 500 ms isn't supported](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/cloud-proxy-troubleshooting.html), and the PAK download can fail | Automatic proxy upgrade |
+
+Default groups have [application monitoring HA deactivated by default](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/collector-groups-managing.html). VRRP and the virtual IP enter the design when you activate it on a group.
+
+Proxies [upgrade with VCF Operations, rebooting and going temporarily offline](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/install-a-software-update.html). Version order matters for a secondary instance: its proxy [must match the VCF Operations version exactly and fails to register if newer](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), yet VCF Installer checks only major.minor. Upgrade VCF Operations before you deploy that instance.
+
+## The default-group trap
+
+On the default group, a firewall blocking any node from vCenter stops you adding a standalone vCenter, with "Unable to connect to VC" in the UI (<KB id={442380} />). The KB's fix is to allow outbound connectivity from all nodes. On a segmented network, a proxy group looks like the smaller firewall request, since the path then concerns its members. That's an inference, and the KB doesn't discuss it. Before 9.1.1, [an offline collector in the default group also made vCenter account creation fail with an unhandled error](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), which 9.1.1.0 resolves.
+
+## Moving adapters during a 9.1 upgrade
+
+Deploy the unified proxies and group them first. The rest follows <KB id={443106} />, which clears the failed validation:
+
+1. In Administration > Integrations, edit the VCF adapter instance and set its Collector/Group. Repeat for every associated workload domain and vCenter.
+2. Confirm the proxy reports healthy and online.
+3. In Fleet Management > Lifecycle > VCF Management > Components, select the operations component and run **Trigger inventory sync**.
+4. Retry the VCF Management Services deployment in SDDC Manager.
+
+Then read the accounts back, because three known faults can get in the way:
+
+- **Workload domain accounts stay Stopped.** They show the default legacy collector instead of the configured proxy, and collection never starts. [Re-save each account](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) to rebind it. The 9.1.1.0 notes list this as known when an existing VCF account is upgraded to VCF Operations 9.1 or later.
+- **Warning or "State: Stopping".** Stop collecting, then start collecting. <KB id={414885} /> covers VCF Operations 9.x with a 9.0.0 to 9.0.1 upgrade as its example, and <KB id={429451} /> lists 9.0.x and Aria Operations 8.18.x, so on 9.1 treat this as a first thing to try.
+- **A vCenter adapter reverts to its original group when changed to a cloud proxy.** VCF Operations 9.1.0.x has this bug, with no workaround and the issue under review (<KB id={449290} />). The 9.1.1.0 notes don't list it as resolved <AsOf date="2026-11-07" />, so check the assignment after saving.
+
+## Symptoms that trace back to the proxy
+
+Check DNS first when a proxy drops out. A 9.x proxy that goes offline every 4 to 8 hours and needs a reboot points to an haproxy service that can't resolve the other VCF Operations nodes, so `nslookup` each FQDN from the proxy (<KB id={426042} />). Periodic 503s in the haproxy log, on 9.0.x and 9.1, point to haproxy's built-in resolver, and <KB id={443900} /> disables it. Recheck that workaround after a 9.0 to 9.1 upgrade, because `haproxy.cfg` reverts to defaults. Both need the proxy's command line, and [SSH is off by default, so the first login goes through the vCenter console](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/cloud-proxy-faq.html). Enable it only when needed.
+
+Replacing a proxy certificate can break the VCF Operations plugin in vCenter with a "Download plug-in" error. A stale `south_cert.pem` on the proxy is the cause, and about 5 minutes after you update it the error should clear (<KB id={433379} />). The KB lists 9.0.x only. [9.1.1 brings cloud proxy certificates under VCF Operations management](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), so check the plugin after a rotation there too. For symptoms beyond these, see [VCF Operations and cloud proxies](/vcf/library/troubleshooting/vcf-operations-and-cloud-proxies/).

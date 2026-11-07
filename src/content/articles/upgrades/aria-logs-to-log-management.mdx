@@ -1,67 +1,129 @@
 ---
 title: "Aria Operations for Logs to 9.x log management: what migrates and what is new"
-description: "Logs is the one management product that is always rebuilt on the way to 9.x. Plan a parallel run, an integration cut-over and a history window, and know which behaviours change in 9.1."
+description: "Aria Operations for Logs has no in-place route to 9.x. If 9.1 is the target, deploy log management directly and skip 9.0. Transfer stops at 90 days, so settle retention first, fix certificates before the import, and size for the runtime's extra footprint."
 category: upgrades
 order: 8
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [402314, 442588, 443718, 451919, 451907, 433089, 451758, 441515, 436904]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [402314, 440630, 443492, 431616, 442588, 443718, 451919, 451907, 433089, 459831, 451758, 441515, 436904]
 sources:
-  - title: "Upgrade guidance for Aria Operations for Logs 8.18.3 to VCF Operations for Logs 9.0"
+  - title: "Upgrade guidance for Aria Operations for Logs 8.18.x to VCF Operations for Logs 9.0.x"
     url: "https://knowledge.broadcom.com/external/article/402314/upgrade-guidance-for-aria-operations-for.html"
     by: "Broadcom KB"
-  - title: "Log management design (9.1)"
+    kind: broadcom
+  - title: "Log Management Detailed Design (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "High Availability Log Management Model (multi-region blueprint, 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-with-multiple-sites-across-multiple-regions-blueprint/management-domain-design-selections(3)/operations-layer(3)/high-availability-logs-management-model(2).html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
   - title: "Upgrading to VCF 9.1.x"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Upgrade to Log Management 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-vcf-operations-for-logs.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Deploy Log Management (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/manual-deployment-of-components-to-complete-your-vcf-platform/installing-vcf-logs.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Log Data Transfer (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/log-analysis/deploy-and-upgrade-log-management/log-data-transfer.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VCF Operations 9.1 known issues"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/known-issues/vcfoperations-91-known-issues.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VCF Operations 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-03
+  - title: "Log Management 9.1.1.0100 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-1-x/vcf-operations/9100100/log-management-9-1-1-0100-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-10-12
 ---
 
 <InShort>
-Aria Operations for Logs 8.x cannot be upgraded in place. In 9.0 you deploy **VCF Operations for logs** as a new cluster, run it in parallel, move integrations across, and transfer up to 90 days of history (<KB id={402314} />). In 9.1 the appliance disappears altogether. **Log management** becomes a Day-N service on the services runtime, searched from VCF Operations under Operate > Logs. vCenter and NSX collection is off until you enable it, and some upgrade screens behave in ways the documentation does not warn you about.
+Aria Operations for Logs has no in-place route to 9.x, and even 9.0 to 9.1 is a side-by-side rebuild (<KB id={442588} />). If 9.1 is the target, this site's advice is to deploy log management directly and skip the 9.0 appliance, which would only add a second rebuild. In 9.1 the appliance is gone: log management is a Day-N service on the services runtime, searched from VCF Operations under Operate > Logs, and vCenter and NSX collection stays off until you enable it. History transfer stops at 90 days, so settle retention before anything else.
 </InShort>
 
-<Compare rows={[
-  ["Product", "Aria Operations for Logs (formerly vRealize Log Insight), an appliance cluster", "9.0: VCF Operations for logs, a new cluster. 9.1: the log management service on the runtime."],
-  ["Upgrade", "In place through Aria Suite Lifecycle", "No in-place path from 8.x. From 9.0 to 9.1 it is side-by-side through fleet lifecycle."],
-  ["History", "Retained in place", "Up to 90 days can be transferred from 8.18. Keep the old cluster for anything older."],
-  ["Where you search", "The Logs UI", "9.1: VCF Operations, Operate > Logs"],
-  ["What forwards", "Whatever you configured", "Management services forward automatically and cannot be turned off. vCenter and NSX collection is off by default."],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+Earlier versions described an in-place upgrade through Aria Suite Lifecycle, steps for 5.2 to 9.0, keeping 8.18 "read-only", and a backup failure "fixed in 9.1.1". Broadcom's pages for this move support none of those: <KB id={402314} /> covers 8.18.x and keeps it running, and <KB id={451919} /> only promises the fix. The vCenter and intermediate CA items also overstated their scope and now carry their conditions.
+</Callout>
 
-## 5.2 or 8.x to 9.0
+## Choose the route
 
-1. Deploy VCF Operations for logs 9.0 as a new instance. Both can run together.
-2. Remove the integrations from the 8.18 instance, then configure them on the new one: vCenter, NSX, ESX syslog targets and agents.
-3. Transfer the history you need, up to 90 days.
-4. Keep 8.18 read-only for reference until the retention requirement is met, then retire it.
+| From | To | What happens | Agents and sources | History |
+|---|---|---|---|---|
+| 8.18.x | 9.0.x | Fresh deployment of VCF Operations for logs, both running in parallel. Unconfigure integrations on 8.18 and reconfigure them on 9.0 (<KB id={402314} />). | Reconfigured by you | Up to 90 days transferred; 8.18 stays up for the rest |
+| 8.x, including under VCF 5.2 | 9.1 | [No upgrade path](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html). Install as a Day-N component, [optionally importing the 8.x configuration](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/manual-deployment-of-components-to-complete-your-vcf-platform/installing-vcf-logs.html). | Manual. Old appliances keep collecting until you move them | Transfer utility or archive import |
+| 9.0.x | 9.1 | [Upgrade under Build > Lifecycle > VCF Management](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-vcf-operations-for-logs.html), which deploys 9.1 and transfers the configuration. | Automatic if collection was set up in the 9.0 UI | Transfer utility, archive import, or querying the old cluster for 90 days |
 
-## 9.0 to 9.1
+Going through 9.0 on the way to 9.1 means rebuilding twice for no gain this site could find documented, so its advice is to skip it when 9.1 is the target. The old product can keep working meanwhile, since Aria Log Insight [continues after the management components reach 9.1](https://knowledge.broadcom.com/external/article/440630), but [VCF Operations won't integrate with it](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/log-analysis/deploy-and-upgrade-log-management/log-data-transfer.html), so expect to search the two separately during the overlap.
 
-Log management installs on the services runtime as a Day-N service, and the runtime may add workers to fit it.
+Custom content doesn't carry over automatically from 9.0 to 9.1. [Dashboards, queries and alerts](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-vcf-operations-for-logs.html) go through a Content Pack to Management Pack conversion, and imported forwarders arrive inactive until you switch them on.
 
-- **Run Prechecks returns HTTP 500.** There is no back-end precheck for this side-by-side move. Click Upgrade instead (<KB id={442588} />).
-- **Stuck at "Install VCF services runtime"** while the 9.0 log VMs still run. The work often finished and only the status was lost. Restarting the fleet and SDDC build and upgrade pods clears it (<KB id={443718} />).
-- **Backup of "Operations Logs" fails** on a corrupt backup repository. Fixed in 9.1.1 (<KB id={451919} />).
-- **"Log management was not discovered with the provided import details".** The 9.0 cluster was imported with wrong details. Recovery involves deregistering and redeploying (<KB id={451907} />).
+## Settle retention first
+
+Agree retention with the security team before the project starts, because "a year of logs" and "90 days" are different builds. A year can mean keeping the old cluster for months, or exporting to a long-term store.
+
+[The transfer utility](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/log-analysis/deploy-and-upgrade-log-management/log-data-transfer.html) moves at most 90 days and defaults to 10. It can skip buckets if log management runs short of disk, and every source node needs the same SSH credentials and port 22 open to the log management nodes. For a 9.0 source, [Broadcom's order](https://knowledge.broadcom.com/external/article/443492/postupgrade-decommissioning-of-legacy-vc.html) is live sources on 9.1 first, then the transfer, then 24 to 48 hours of monitoring, then power off and keep the VM for your retention period. Powering off also ends the 90-day query of the old cluster. That's an inference from the upgrade guide, so decide which of the two you are relying on before you shut anything down.
+
+On the new platform, retention has a ceiling from shard limits: [a medium profile with 8 partitions tops out at 100 days](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html). Longer requirements belong in an archive, and the [multi-region blueprint recommends](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-with-multiple-sites-across-multiple-regions-blueprint/management-domain-design-selections(3)/operations-layer(3)/high-availability-logs-management-model(2).html) a retention period and archiving on every partition (VCF-LOGS-RCMD-COM-003), plus your own cleanup policy (COM-008) because log management doesn't prune archives. Archived logs must be imported to an archive partition before they can be searched.
+
+<Callout type="analysis" title="Where Broadcom's own pages disagree">
+**Archive target.** The detailed design says NFSv3 or S3-compatible; blueprint recommendation COM-002 says SFTP or S3. S3 is the one target both accept, so choose it unless you can test the other first, and confirm the endpoint supports chunked transfer encoding.
+
+**Medium size.** The [design table](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html) gives 16 vCPU and 32 GB per replica; the [deployment table](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/manual-deployment-of-components-to-complete-your-vcf-platform/installing-vcf-logs.html) gives 24 and 48. Reserve the larger figure until they agree.
+
+**SDDC Manager.** Blueprint COM-007 says to install a log agent; [the 9.1.1 notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) say automated configuration now removes that manual setup. On 9.1.1, use the automated route.
+</Callout>
+
+## Size and place it before you start
+
+The multi-region blueprint requires [at least 3 replicas](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-with-multiple-sites-across-multiple-regions-blueprint/management-domain-design-selections(3)/operations-layer(3)/high-availability-logs-management-model(2).html) (VCF-LOGS-REQD-HA-001), yet the upgrade page defines Small as a single replica (the design and deployment tables allow 1 to 19), so this site would pick Medium for a production upgrade. Three Medium nodes come to 48 to 72 vCPU and 96 to 144 GB depending on which table above is right, [on top of the runtime's own footprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/manual-deployment-of-components-to-complete-your-vcf-platform/installing-vcf-logs.html), and the runtime may add workers to fit it. Neither size nor replica count can be reduced later, so start at what you can afford to keep.
+
+[Log management shouldn't install in parallel with VCF Operations for networks](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html): run them in sequence, because a stuck install has to wait out a three-hour timeout before you can retry.
+
+Placement has two hard rules. [The new FQDN](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-vcf-operations-for-logs.html) must be unique, lowercase and outside the management services IP range, and the component must sit on the management network, never a custom NSX overlay. Since you're repointing external agents anyway, give them a separate VIP (blueprint COM-012) so a future move doesn't mean touching each one, and put that FQDN in the certificate's SAN field first (COM-004).
+
+## Fix certificates before the import
+
+Certificates can stop this move at three points, and all are cheaper to clear in advance:
+
+- **Import source.** A legacy appliance on its default self-signed certificate fails validation, because neither its SAN nor its CN matches the hostname. Replace the certificate first (<KB id={431616} />).
+- **Log forwarders.** [9.1 no longer falls back to the CN](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/known-issues/vcfoperations-91-known-issues.html), so SSL forwarding stops for any destination whose certificate lacks a matching SAN. Reissue those certificates.
+- **Microsoft CA.** Requesting the ingress certificate through the automated Microsoft CA URL can leave the intermediate out of `platform-trust`. Log Management then shows as installed while Operate > Logs offers the install screen, and its backups fail. The interim fix is a CSR with the full chain imported by hand (<KB id={441515} />).
+
+On a 9.0.x upgrade, between the VCF Operations step and the logs step, [certificates and passwords for logs can't be managed](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html), so keep that window clear of expiry dates.
+
+## When 9.0 to 9.1 fails
+
+- **Run Prechecks returns HTTP 500.** The back end has no precheck for this path, so save the configuration and click Upgrade (<KB id={442588} />).
+- **Stuck at "Install VCF services runtime"** with the 9.0.2 log VMs still running. The work has often finished and only the status was lost. Deleting the SDDC and Fleet build and upgrade pods restarts those services on the control plane node and clears it (<KB id={443718} />, VCF Operations 9.1.0).
+- **Backup of "Operations Logs" fails** on a corrupt OpenSearch repository. The KB offers no workaround, only a fix promised for an "upcoming" 9.1.1 (<KB id={451919} />). 9.1.1 shipped on 3 Sep 2026, and neither the [9.1.1.0 notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) nor the [Log Management 9.1.1.0100 notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-1-x/vcf-operations/9100100/log-management-9-1-1-0100-release-notes.html) list it <AsOf date="2026-11-07" />. Raise it with Broadcom Support before relying on a 9.1.1 target to clear it.
+- **"Log management was not discovered with the provided import details".** The 9.0 instance was imported with wrong details. Recovery deregisters the component through the Fleet LCM API and redeploys it; configuration syncs afterwards but history needs the transfer utility (<KB id={451907} />).
 
 ## After the move
 
-- **Enable collection** for vCenter and NSX under VCF Operations, Administration, Integrations, VMware Cloud Foundation. You can collect directly or through a cloud proxy, which round-robins across log endpoints.
-- **Re-check vCenter after its 9.1 upgrade.** vCenter 9.1 ships its own agent, and the upgrade wipes the old syslog configuration. Re-enable collection (<KB id={433089} />).
-- **Trust chain.** A missing intermediate CA in the runtime's platform trust breaks the VCF Operations to log management integration, and shows the "Install" screen where logs should be (<KB id={441515} />).
-- **Noisy "logs are getting dropped" banner.** Often a false positive from a tight dynamic threshold. Recalculate thresholds before chasing it (<KB id={451758} />).
-- **Disaster recovery.** Restoring log management onto a rebuilt runtime needs a post-restore step (<KB id={436904} />).
+On 9.1, search moves to VCF Operations under Operate > Logs. Enable vCenter and NSX collection per adapter under [VCF Operations, Administration, Integrations, VMware Cloud Foundation](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html), which is also where you choose direct or cloud proxy. The blueprint recommends a proxy for remote sites (COM-010). Proxied collection balances round-robin across all VIPs, and it buffers about 20 GB to disk through an unreliable network, dropping the oldest logs once full. Management services forward on their own and can't be turned off, with nothing to configure on the Log Collection tile.
 
-<Callout type="field">
-Agree the history requirement with the security team before the project starts. "We need a year of logs" is a different design from "90 days is fine". It can mean keeping the old cluster for months, or exporting to a long-term store.
-</Callout>
+Add a log check to the test list after each vCenter upgrade. vCenter 9.1 includes the Log Insight Agent, so upgrading one that had an agent installed deletes that agent and its configuration, and any syslog targets go too. Re-enable collection on the configure collection page (<KB id={433089} />). On 9.1.1 a vCenter marked "Failed to configure VC to send logs" can be a false positive, so chart event counts by `vmw_vcenter` under Operate > Logs > Analyze Logs before chasing it.
 
-## Pitfalls
+Keep these for when they appear:
 
-- **Assuming logs keep flowing after the vCenter upgrade.** They don't. Add a log check to the post-upgrade test list.
-- **Certificates without SANs.** 9.1 removed the CN fallback for log forwarders. Reissue certificates with SANs.
-- **Forgetting the buffer.** Cloud proxies buffer about 20 GB when log management is unreachable. That is enough for a maintenance window, not for a week-long outage.
+- While vCenter and ESX remain on 9.0.x, hosts can repeatedly raise `esx.problem.vmsyslogd.remote.failure`, and the errors can grow the vCenter database. The interim options are disabling ESX logging from VCF Operations or switching syslog to TCP over SSL, which cuts the errors to one every 15 minutes (<KB id={459831} />).
+- The "logs are getting dropped" banner is a false positive when the dashboard shows zero dropped events. A tight dynamic threshold causes it, so recalculate thresholds and expect several hours before it clears (<KB id={451758} />).
+- Restoring log management onto a rebuilt runtime needs a post-restore run of a recovery bundle (<KB id={436904} />). On 9.1.1, ["Unable to access logs due to user permissions"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) after a restore clears with a Stop/Start in Fleet LCM.
