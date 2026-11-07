@@ -1052,6 +1052,8 @@ input[type="search"] { width: 100%; max-width: 440px; padding: 10px 12px; border
 @media (forced-colors: active) {
   :root:root:root { --ink: CanvasText; --ink-2: CanvasText; --ink-3: CanvasText; --bg: Canvas; --line: GrayText; --line-strong: CanvasText; --dw-ink: CanvasText; --dw-grid: GrayText; --dw-grid-fine: GrayText; --dw-red: Highlight; --dw-red-ink: LinkText; --chart-v9: CanvasText; --chart-v5: CanvasText; --chart-other: CanvasText; }
   .fm-fleet, .fm-inst, .fm-dom { border: 1px solid CanvasText; }
+  .sc-dt, .sc-flag, .sc-n { forced-color-adjust: auto; }
+  .sc-grid .fine { display: none; }
 }
 @media (min-width: 1081px) and (max-height: 820px) { .sc { --row: 40px; padding-top: 48px; } }
 /* Below the width where a name column fits, each name and date sit on one line with the bar under them. */

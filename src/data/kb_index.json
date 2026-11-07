@@ -226,14 +226,6 @@
   "url": "https://knowledge.broadcom.com/external/article/381709"
  },
  {
-  "kb": 382440,
-  "topic": "SRM/VR \"URI is not absolute\" after vCenter update",
-  "decks": [
-   "How it all connects"
-  ],
-  "url": "https://knowledge.broadcom.com/external/article/382440"
- },
- {
   "kb": 384397,
   "topic": "Disabling compression on a vSAN ESA cluster (storage policy)",
   "decks": [
@@ -749,16 +741,8 @@
   "url": "https://knowledge.broadcom.com/external/article/426389"
  },
  {
-  "kb": 426469,
-  "topic": "Live Recovery plugin \"no healthy upstream\": certificate on a short name",
-  "decks": [
-   "How it all connects"
-  ],
-  "url": "https://knowledge.broadcom.com/external/article/426469/vlsr-plugin-is-not-accessible-from-vcent.html"
- },
- {
   "kb": 426872,
-  "topic": "9.0: certificate rotation not automated for some components",
+  "topic": "9.0: password rotation not automated for some components",
   "decks": [
    "Meet the fleet"
   ],
@@ -1439,14 +1423,6 @@
   "url": "https://knowledge.broadcom.com/external/article/441205"
  },
  {
-  "kb": 441246,
-  "topic": "vmsp_upgrade_vcfa reports failure after a timeout",
-  "decks": [
-   "Upgrading to VCF 9.1, the right way round"
-  ],
-  "url": "https://knowledge.broadcom.com/external/article/441246"
- },
- {
   "kb": 441251,
   "topic": "License Server OVA via Host Client: not configured",
   "decks": [
@@ -1912,14 +1888,6 @@
    "Mind the licensing clock"
   ],
   "url": "https://knowledge.broadcom.com/external/article/444349"
- },
- {
-  "kb": 444431,
-  "topic": "VCF Operations install fails on an incorrect NTP server (9.1)",
-  "decks": [
-   "Meet the fleet"
-  ],
-  "url": "https://knowledge.broadcom.com/external/article/444431/install-vcf-operations-and-vcf-cloud-pro.html"
  },
  {
   "kb": 444466,

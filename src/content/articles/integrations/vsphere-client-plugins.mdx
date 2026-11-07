@@ -7,7 +7,7 @@ versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
 updated: 2026-11-06
-kbs: [411268, 427228, 433208, 419087, 432196, 312247, 426913, 395813, 417767, 426469]
+kbs: [411268, 427228, 433208, 419087, 432196, 312247, 426913, 395813, 417767]
 sources:
   - title: "vSphere Client local plugins are deprecated"
     url: "https://knowledge.broadcom.com/external/article/313839/vsphere-client-local-plugins-are-depreca.html"
@@ -36,7 +36,7 @@ A remote plugin is a vCenter **extension**: a key, a download URL and a **thumbp
 | SDDC Manager plugin fails after an out-of-band vCenter certificate change | Trust and thumbprint. Sync trust or redeploy the plugin from SDDC Manager (<KB id={419087} />). |
 | vSAN plugins "DOWNLOAD_FAILED ... No issuer certificate" | A stale thumbprint in vCenter's extension table. Fix as the KB describes, with a snapshot (<KB id={432196} />). |
 | "Plugin configuration with Reverse Proxy failed" | The vSphere Client service account role lacks Global.Proxy (<KB id={312247} />). |
-| Live Recovery plugin undeploys after about 30 minutes | A stale cached package from an older version (<KB id={417767} />). FQDN-based certificates are required (<KB id={426469} />). |
+| Live Recovery plugin undeploys after about 30 minutes | A stale cached package from an older version (<KB id={417767} />). |
 | Plugin stuck at an old version | A cached package. Clear the client cache folder and restart the UI service (<KB id={395813} />). |
 
 ## Clean re-registration

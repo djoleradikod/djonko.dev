@@ -6,8 +6,8 @@ order: 1
 versions: ["5.x", "9.0", "9.1"]
 level: Overview
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [454943, 435599]
+updated: 2026-11-07
+kbs: [435599]
 sources:
   - title: "10 VCF 9 enhancements simplifying your Day-2 operations"
     url: "https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/"
@@ -18,6 +18,16 @@ sources:
   - title: "Lifecycle management (VCF 9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html"
     by: "Broadcom TechDocs"
+  - title: "Accounts in VMware Cloud Foundation (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
 ---
 
 <InShort>
@@ -37,7 +47,7 @@ In 5.2, SDDC Manager was where Day-2 work happened, and doing it anywhere else c
 | DNS and NTP | Administration > Network Settings | **VCF Operations:** Inventory > VCF Instance > Manage VCF Instance Settings > Network Settings. 9.1 adds fleet-level settings. |
 | Certificate authority | Security > Certificate Authority | **VCF Operations:** Fleet Management > Certificates > Configure CA |
 | Certificates | Workload Domains > domain > Certificates | **VCF Operations:** Fleet Management > Certificates, with auto-renewal |
-| Passwords | Security > Password Management | **VCF Operations:** Fleet Management > Passwords (VCF Management and VCF Instances) |
+| Passwords | Security > Password Management | **VCF Operations:** Fleet Management > Passwords (VCF Management and VCF Instances), for Update. Rotate stays in SDDC Manager, and Remediate [depends on the account](/vcf/library/day-2/passwords-service-accounts/). |
 | Licensing | Administration > Licensing | **VCF Operations:** Licensing |
 | Upgrades and patches | Workload Domains > Updates | **VCF Operations:** Build > Lifecycle (VCF Management, and VCF Instances > domain > Upgrades) |
 | Image management | SDDC Manager > Lifecycle Management > Image Management | **VCF Operations:** Build > Lifecycle > VCF Instances > Image Management |
@@ -47,7 +57,7 @@ The vCenter paths for workload domains need **VCF SSO and vCenter linking** in p
 <Compare rows={[
   ["Principle", "One tool for everything platform-related", "Object tasks in vCenter, platform tasks in VCF Operations"],
   ["SDDC Manager UI", "Primary", "9.0: still present. 9.1: deprecated."],
-  ["SDDC Manager's own passwords", "Managed in SDDC Manager", "9.1: changed in the OS. 9.1.1: from the VCF Operations UI or API (<a href='https://knowledge.broadcom.com/external/article/454943' target='_blank' rel='noopener'>KB 454943</a>)."],
+  ["SDDC Manager's own passwords", "Managed in SDDC Manager", "9.1: root and vcf in the OS, admin@local through the SDDC Manager API. 9.1.1: from the VCF Operations UI or API (<a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html' target='_blank' rel='noopener'>accounts table</a>, <a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html' target='_blank' rel='noopener'>9.1.1.0 release notes</a>)."],
   ["Automation", "SDDC Manager public API for most tasks", "VCF Operations APIs, fleet lifecycle API (9.1), vCenter APIs and the SDDC Manager API for core lifecycle"],
 ]} />
 
@@ -64,6 +74,6 @@ If Add Host is greyed out after an upgrade, check two things before calling it a
 
 ## Pitfalls
 
-- **Doing it twice.** Rotating a password in SDDC Manager and again in VCF Operations, or rotating it outside both, creates the drift that later breaks upgrades.
+- **Doing it twice.** Updating in VCF Operations and rotating in SDDC Manager, or changing it outside both, creates the drift that later breaks upgrades.
 - **Expecting 9.0 and 9.1 to look the same.** VCF Operations menus regrouped between releases, for example Fleet Management against Build > Lifecycle. KBs written for one release may use the other release's paths.
 - **Forgetting the "authoritative" rule in 9.0.** For core component accounts, SDDC Manager password management stays the source of truth in 9.0 (<KB id={435599} />).

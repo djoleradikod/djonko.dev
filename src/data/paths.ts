@@ -28,7 +28,7 @@ export const PATHS: ReadingPath[] = [
     blurb: 'A method first, then the logs, the locks and the five causes to rule out, and how to hand a case to support with the evidence attached.',
     steps: [
       'troubleshooting/seven-step-triage', 'troubleshooting/reading-sddc-manager-logs', 'day-2/stuck-tasks-locks',
-      'day-2/dns-ntp-proxy', 'troubleshooting/certificate-failures', 'troubleshooting/password-and-account-failures',
+      'day-2/dns-ntp-proxy', 'day-2/certificates-in-9', 'day-2/passwords-service-accounts',
       'troubleshooting/services-runtime-kubectl', 'leadership/escalating-well',
     ],
   },
