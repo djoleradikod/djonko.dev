@@ -1665,7 +1665,7 @@
  },
  {
   "kb": 443166,
-  "topic": "9.1 depot 403: egress from runtime nodes",
+  "topic": "9.1 depot 403: downloads moved to Fleet components",
   "decks": [
    "Meet the fleet",
    "Follow the signposts"
@@ -1674,7 +1674,7 @@
  },
  {
   "kb": 443216,
-  "topic": "Management services runtime components (9.1)",
+  "topic": "Disconnected depot status: depot on the runtime IP pool (9.1.0)",
   "decks": [
    "Meet the fleet"
   ],
@@ -1925,7 +1925,7 @@
  },
  {
   "kb": 444986,
-  "topic": "Cancel a credential task holding a lock",
+  "topic": "Cancel a credential task holding a lock (9.0)",
   "decks": [
    "Upgrading to VCF 9.1, the right way round",
    "Follow the signposts"
@@ -2207,7 +2207,7 @@
  },
  {
   "kb": 448518,
-  "topic": "Licenses expire: 180-day update missed",
+  "topic": "Usage report due warning: the rolling 180-day window",
   "decks": [
    "Mind the licensing clock"
   ],

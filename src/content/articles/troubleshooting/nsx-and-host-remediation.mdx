@@ -1,70 +1,154 @@
 ---
 title: "NSX and host remediation failures: TEPs, host preparation and vLCM images"
-description: "A failure that surfaces in SDDC Manager can live in NSX or vLCM. Diagnostics and KBs for faulty TEPs, hosts stuck waiting for managers, cluster images that would downgrade a driver, and vSAN alarms that block remediation."
+description: "Which tunnels are down gives a first sort between a TEP routing fault and a trunk or address fault. In ESX remediation, the error names the owner: your image, a vSAN alarm, the hardware vendor or an NSX conflict on the way to 9.1.1. KB fixes with their scope, for NSX, host preparation and vLCM on VCF 9.x."
 category: troubleshooting
 order: 11
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Deep dive
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [386023, 405174, 429558, 418506, 440331, 420572, 443279, 444283, 447375, 404830, 410343]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [386023, 385257, 405174, 379112, 429558, 418506, 440331, 420572, 443279, 444283, 447375, 404830, 410343, 455572, 445590, 397253]
 sources:
-  - title: "NSX 9.0 known issues"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/component-specific/nsx-90-known-issues.html"
+  - title: "Upgrade ESX to 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/upgrade-esxi-for-vmware-cloud-foundation-5-2-1.html"
     by: "Broadcom TechDocs"
-  - title: "vSphere 9.0 known issues"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/component-specific/vsphere-90-known-issues.html"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Transitioning from vSphere Lifecycle Manager baselines to images (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/vlcm-baseline-to-vlcm-image-cluster-transition-.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Troubleshooting Blueprint: Troubleshooting Concepts (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Troubleshooting Blueprint: Components for VCF Troubleshooting (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/environment.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Troubleshooting Blueprint: Troubleshooting Scenarios (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-scenarios.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "NSX 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/nsx-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "ESX 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/esx-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-03
+  - title: "NSX 9.0 Event Catalog"
+    url: "https://techdocs.broadcom.com/content/dam/broadcom/techdocs/us/en/dita/vmware/vcf/vcf-90/nsx/PDF/NSX_Events_Catalog_9_0.pdf"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2025-08-06
+  - title: "Multi-TEP High Availability (VCF 9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/advanced-network-management/administration-guide/host-switches/multi-tep-high-availability.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Verify NSX Manager Clustering (NSX 4.2)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/nsx/vmware-nsx/4-2/installation-guide/installing-nsx-manager-cluster-on-vsphere/install-nsx-manager-and-available-appliances/verify-nsx-manager-clustering.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-07-29
+  - title: "vSphere Cluster Design for VCF 5.2"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/vcf-design-5-2/vsphere-design-for-vmware-cloud-foundation/vcf-vsphere-cluster-design.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-01
 ---
 
 <InShort>
-For NSX, start with **cluster status** on a manager, then the **TEP path**: a "Faulty TEP" alarm with host-to-edge tunnels down usually means no routing between the host and edge TEP VLANs, a VLAN missing on the switch trunk, or a duplicate TEP address (<KB id={405174} />). Hosts stuck at "Waiting for connection to Managers" are usually a host DNS problem (<KB id={440331} />). For vLCM, remediation fails when the target image would **downgrade** a vendor component (<KB id={443279} />) or when **vSAN health alarms** are active (<KB id={444283} />). Build the right image and clear the alarm, then retry from VCF.
+Start from what is down, because each pattern has a different fix. Host-to-edge tunnels down while host-to-host stay up points to routing between the TEP VLANs (<KB id={405174} />). Host-to-host down as well points to a TEP VLAN missing from the switch trunk (<KB id={429558} />), and an alarm on one vmk points to that TEP's address or underlay path (<KB id={418506} />). In ESX remediation, the error decides: an add-on downgrade means a new image (<KB id={443279} />), `get_host_inventory failed` goes to the hardware vendor (<KB id={447375} />), and active vSAN alarms on a 9.0 to 9.1 Fleet Manager upgrade point to NVMe or SCSI controller faults worth repairing before the window (<KB id={444283} />).
 </InShort>
 
-<Compare rows={[
-  ["Host lifecycle", "vLCM images or baselines", "vLCM images only. Baseline-managed clusters are not supported from 9.0."],
-  ["Image source", "SDDC Manager image management", "VCF Operations: Build > Lifecycle > Image Management"],
-  ["NSX deployment", "One NSX per workload domain, or shared", "The same model, managed from VCF Operations and vCenter"],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+This note gave `vmkping ++netstack=vxlan` with `-s 8972` for MTU 9000; <KB id={405174} /> gives `-S vxlan` and 8970. It also blamed the downgrade error on an older target image (the fault is one component), applied the vSAN alarm block to all vLCM remediation (the KB covers a 9.0 to 9.1 Fleet Manager upgrade), and left the vendor out of the HSM fix. The host log path was wrong, and uncited items came out: `get cluster config`, `lcm-debug.log` and a 5.x and 9.x comparison table.
+</Callout>
 
-## NSX
+## TEP alarms: read the tunnels first
 
-```text
-# On an NSX Manager (admin CLI)
-get cluster status
-get cluster config
+| What you see | Fault | Fix |
+|---|---|---|
+| Host-to-edge tunnels down, host-to-host up, host and edge TEPs on different VLANs. ICMP never reaches the edge host's uplinks | The physical network doesn't route between the two TEP VLANs | Configure routing on the device that owns it and check both gateways, then retest at your MTU (<KB id={405174} />) |
+| Host-to-host tunnels down too, 100% loss between host TEPs, host transport nodes Degraded | Top-of-rack ports don't trunk the TEP VLAN | Tag the VLAN on the host-facing ports. ARP resolves and the tunnels come up without further steps (<KB id={429558} />) |
+| "Faulty TEP" on one vmk, with BFD still up on other vmks on the host. The TEP may not reach its gateway | Layer 2 or 3 connectivity from that vmkernel interface | Confirm the IP is valid and not a duplicate, then check the underlay (<KB id={418506} />) |
 
-# From an ESX host: TEP to edge TEP, do-not-fragment
-#   -s 1572 tests MTU 1600; use -s 8972 for MTU 9000
-vmkping ++netstack=vxlan -d -s 1572 -I vmk10 <edge-tep-ip>
-esxcfg-vmknic -l
-```
-
-| Symptom | Cause and fix |
-|---|---|
-| Cluster not STABLE, appliance nodes not UP | A node or service down, or the datastore group degraded. Bring the node up; datastore issues go to support (<KB id={386023} />). |
-| "Faulty TEP", host-to-edge tunnels down | No L3 path between TEP VLANs (<KB id={405174} />), VLAN not trunked (<KB id={429558} />) or duplicate TEP IP (<KB id={418506} />). |
-| Host prep stuck at about 48%, "Waiting for connection to Managers" | Host DNS can't resolve vCenter. Fix it, restart host services, retry in SDDC Manager (<KB id={440331} />). |
-| `/var/log` full on every manager, logs dated in the far future | An NTP failure stamped files with a future year. Remove them and reboot (<KB id={420572} />). |
-
-## Hosts and vLCM
-
-| Symptom | Cause and fix |
-|---|---|
-| "Downgrades of Addon Components ... are not supported" | The target image is older than what the host runs. Build a new image in vCenter, import it into VCF Operations, re-precheck (<KB id={443279} />). |
-| Remediation blocked by vSAN health alarms | Lifecycle refuses while alarms are active. Silence the specific alarm, retry, then fix the hardware. Check NTP too (<KB id={444283} />). |
-| `get_host_inventory failed` with HTTP 500 | The vendor hardware support manager. Check its registration (<KB id={447375} />). |
-| Live patch remediation fails to load modules | The image is applied. Reboot the host (<KB id={404830} />). |
-| Image compliance loops on "Health Check failed" | A known false positive. Reboot vCenter (<KB id={410343} />). |
-
-Logs: `/var/log/vmware/vmware-updatemgr/vum-server/` on vCenter, `/var/log/lifecycle.log` on the host, and `domainmanager.log` or `lcm-debug.log` on SDDC Manager for the VCF side.
+Each KB lists its pattern as symptoms and none of them offers this split as a test, so treat the table as a first sort and confirm it with a capture. <KB id={405174} /> has the `pktcap-uw` commands for both ends, and <KB id={379112} /> covers BFD sessions and the gateway firewall ports on the edge.
 
 <Callout type="field">
 For TEP issues, draw the path before running commands: host TEP VLAN, gateway, edge TEP VLAN, and where routing happens. The drawing shows which hop isn't configured.
 </Callout>
 
-## Pitfalls
+```text
+# ESX host: find the TEP vmkernel adapter
+esxcfg-vmknic -l
 
-- **Testing TEPs without the don't-fragment flag.** A plain ping hides MTU problems.
-- **Suppressing vSAN alarms permanently** to get an upgrade through. Silence one, fix it, unsilence it.
-- **Building images from the wrong vendor add-on.** Start from what the hosts run today.
+# ESX host: TEP to edge TEP, do not fragment
+#   -s 1572 for MTU 1600, -s 8970 for MTU 9000
+vmkping -S vxlan -s 1572 -I vmk10 -c 100 -d <edge-tep-ip>
+```
+
+Keep `-d`. The first test in <KB id={405174} /> leaves it out, but its validation step and <KB id={379112} /> both set the do-not-fragment bit, and a test that allows fragmentation says little about MTU. The sizes are Broadcom's and they don't share a margin: 1572 sits 28 bytes under 1600 and 8970 sits 30 under 9000. A pass at 8970 therefore checks two bytes less of a 9000 MTU than 1572 checks of 1600.
+
+The alarm also raises a design question. The [9.0 Event Catalog](https://techdocs.broadcom.com/content/dam/broadcom/techdocs/us/en/dita/vmware/vcf/vcf-90/nsx/PDF/NSX_Events_Catalog_9_0.pdf) says overlay workloads on a faulty TEP "will face network outage", and its second recommended action is to enable TEP HA. That moves vNICs to a healthy TEP on the same host, but the default transport node profile has [TEP HA disabled](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/advanced-network-management/administration-guide/host-switches/multi-tep-high-availability.html), and the alarm can take at least 60 seconds to appear. If your hosts have more than one TEP, decide this before the next alarm. Both pages are 9.0 documents, so confirm the behaviour against your release.
+
+## Manager cluster and host preparation
+
+Run `get cluster status` as admin on any manager. The NSX 4.2 docs describe a healthy result as the expected members and [a STABLE status](https://techdocs.broadcom.com/us/en/vmware-cis/nsx/vmware-nsx/4-2/installation-guide/installing-nsx-manager-cluster-on-vsphere/install-nsx-manager-and-available-appliances/verify-nsx-manager-clustering.html), and the 9.0 Event Catalog uses the same command for a Cluster Degraded alarm. The message beside the status picks the first two rows below.
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| "One or more unified appliance nodes are not in UP state" | A node or its services are down | `get service <name>`, then start or restart it and allow about 5 minutes for the UI to update (<KB id={386023} />, <KB id={385257} />) |
+| "Unified appliance datastore cluster is DEGRADED/UNAVAILABLE" | The datastore group | Open a Broadcom support case (<KB id={386023} />) |
+| `/var/log` at 100% on all three managers, logs dated far in the future, rsyslog reporting "invalid year 2142" | An NTP failure stamped files with a future year (2142 in the KB), and gzip and rotation fail on them | Find and delete those files, then reboot each manager. The KB gives no delete command, so review the list first. Edge VMs can also be affected (<KB id={420572} />) |
+| VCF 9.0.x deployment stalled around 48%, one host at "Waiting for connection to Managers" | The host has no DNS server or can't reach it, so its Cluster Agent can't resolve the vCenter FQDN | Compare DNS with a healthy host, set it, restart agents if needed, retry the task in SDDC Manager (<KB id={440331} />) |
+| Standalone host at Install Failed straight after upgrading to 9.1.1.0, with DFW enabled globally | [Known issue in NSX 9.1.1.0](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/nsx-9-1-1-0-release-notes.html) | Clear the failure under System > Fabric and confirm Install Success |
+
+<KB id={440331} /> describes one failure during a 9.0.x deployment. If the same message appears elsewhere and DNS matches a healthy host, that KB has nothing further for you, so move on to the host's logs.
+
+## ESX remediation: the error names the owner
+
+VCF 9.0 and later [support only image clusters](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/upgrade-esxi-for-vmware-cloud-foundation-5-2-1.html), so a 5.x cluster on baselines has to [transition before its ESX upgrade](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/vlcm-baseline-to-vlcm-image-cluster-transition-.html), using SDDC Manager's supported mechanisms where SDDC Manager manages it. The [5.2 design](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/vcf-design-5-2/vsphere-design-for-vmware-cloud-foundation/vcf-vsphere-cluster-design.html) already marks baselines deprecated and recommends images. In 9.x you create the image in the vSphere Client and import it in VCF Operations. The 9.1 path is Build > Lifecycle > VCF Instances > Image Management.
+
+| Error | Owner | What to do |
+|---|---|---|
+| `Downgrades of Addon Components <component name> <version> in the desired ESXi version are not supported.` | Your image. One asynchronous component on the host, such as a vendor add-on or driver, is newer than the image's version | Recreate the image with the right vendor add-on, starting from what the hosts run today, validate it, import it, assign it and rerun prechecks (<KB id={443279} />, 9.0.x and 9.1.0) |
+| Active vSAN health alarms at REMEDIATE, on a 9.0 to 9.1 upgrade through Fleet Manager | The NVMe devices and SCSI controllers raising the warnings | See below (<KB id={444283} />) |
+| `Failed to invoke create and commit the desired state image spec`, naming `/profile/nsx/fabric/transport_node_profile` | NSX and vSphere Configuration Profiles, on 9.1 to 9.1.1 | Run the out-of-band NSX upgrade through Finalize, sync the NSX inventory, retry (<KB id={455572} />) |
+| `get_host_inventory failed with InternalServerError`, HTTP 500 in `hsm-service.log` | The hardware vendor's support manager | Confirm servers are registered, licensed and monitored in the vendor's console, then contact the vendor. Broadcom treats this as outside its scope (<KB id={447375} />, 9.0.x) |
+| "VMKernel Live Patch remediation failed", in any of the KB's three variants, such as modules failing to load | The host. The image is already applied | Reboot it, by hand or through reboot-based remediation (<KB id={404830} />) |
+| `Health Check for '<ESXi host fqdn>' failed`, repeating on the WCP solution during image compliance | vCenter. The KB says it "appears to be a false positive" | Reboot vCenter (<KB id={410343} />, VCF 9.0) |
+
+Silencing the specific alarm is the first resolution step in <KB id={444283} />, aimed at the Fleet Manager check. The hardware faults are still there afterwards, and the KB tells you to repair them after the upgrade. Never leave an alarm silenced for good: fix it, then unsilence it. Clear them before the window instead, since [Upgrade ESX to 9.1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/upgrade-esxi-for-vmware-cloud-foundation-5-2-1.html) recommends that "no health issues are present" anyway. That order is this site's advice, and [Prechecks that fail](/vcf/library/upgrades/prechecks-that-fail/) makes the same call. If you are already in the window, the KB sends a host that still fails after silencing to a manual interactive upgrade through out-of-band management, followed by the upgrade configure task in Fleet Manager to resync SDDC Manager. Check NTP before you start: clock skew between SDDC Manager and vCenter can cause token validation failures at the same stage (<KB id={444283} />).
+
+The 9.1.1 row needs reading closely. The [ESX 9.1.1.0 notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/esx-9-1-1-0-release-notes.html) list the same symptom among resolved issues and still send you to <KB id={455572} />, so follow the KB if you hit it. The sequence matters on that path too: patch [VCF Operations and its license servers first](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html), and don't use the Upgrade All button <AsOf date="2026-11-07" />.
+
+The Live Patch setting decides the fallback. In the [9.1 ESX upgrade options](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/upgrade-esxi-for-vmware-cloud-foundation-5-2-1.html), Auto drops to maintenance mode and a reboot when Live Patch isn't available, while Enforce uses Live Patch only. Live Patch doesn't apply to major upgrades, and the ESX 9.1.1.0 image is marked not live-patchable, so this site's advice is Auto unless you know the target image carries a live patch.
+
+## Logs, and where the 9.1 blueprint fits
+
+The 9.1 [Troubleshooting Blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html) tells you to start with the top-level impacted object in the VCF Operations Workbench and review recent changes under Events. It also says: "Rather than manually scanning individual logs, focus on the "Potential Evidence" tab." That only works if [its components](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/environment.html) (VCF Operations, Log Management, VCF Operations for Networks and real-time data) are in place before the incident.
+
+<Callout type="analysis" title="When to skip Workbench">
+This note sends you to raw logs, which runs against that blueprint advice, and the difference is deliberate. The blueprint's [four scenarios](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-scenarios.html) cover workload performance, connectivity, intermittent faults and reboots, and none of them addresses TEPs or lifecycle failures. Use Workbench when a symptom has no error string. When you already hold one of the strings above, go to its KB and any log it names.
+</Callout>
+
+- **vCenter:** `/var/log/vmware/vmware-updatemgr/vum-server/`, including `hsm-service.log` for vendor errors (<KB id={447375} />).
+- **ESX host:** `/var/run/log/lifecycle.log` (<KB id={445590} />).
+- **SDDC Manager:** `/var/log/vmware/vcf/domainmanager/domainmanager.log` and `/var/log/vmware/vcf/lcm/lcm.log`. <KB id={397253} /> is scoped to 5.2, so confirm the paths on a 9.x appliance.

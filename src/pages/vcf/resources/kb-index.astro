@@ -41,10 +41,10 @@ const themeOf: Record<string, string> = {
           const tags = [...th, ...(notes.length ? ['cited'] : [])];
           return (
             <tr id={`kb-${k.kb}`} data-t={tags.join('|')}>
-              <td><a href={k.url} target="_blank" rel="noopener">{k.kb}</a></td>
+              <td><a href={k.url}>{k.kb}</a></td>
               <td>{k.topic || <span class="muted">Not summarised yet. See the note that cites it.</span>}</td>
-              <td class="small muted">{th.join(', ')}</td>
-              <td class="small">{notes.length > 0 ? <ul class="cites">{notes.map((a) => <li><a href={urlOf(a)}>{shortTitle(a.data.title)}</a></li>)}</ul> : <span class="muted">None yet</span>}</td>
+              <td>{th.join(', ')}</td>
+              <td>{notes.length > 0 ? <ul>{notes.map((a) => <li><a href={urlOf(a)}>{shortTitle(a.data.title)}</a></li>)}</ul> : <span class="muted">None yet</span>}</td>
             </tr>
           );
         })}
@@ -60,9 +60,16 @@ const themeOf: Record<string, string> = {
       rows.forEach((r, i) => { const ok = (!s || text[i].includes(s)) && (!t || r.dataset.t.split('|').includes(t)); r.hidden = !ok; if (ok) n++; });
       c.textContent = `${n} of ${rows.length} KBs`;
     }
+    document.getElementById('kbt').addEventListener('click', (e) => { const a = e.target.closest('a[href^="https:"]'); if (a) { a.target = '_blank'; a.rel = 'noopener'; } });
     q.addEventListener('input', apply);
     g.addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; t = b.dataset.t; g.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); apply(); });
     apply();
   </script>
+  <style is:global>
+    #kbt td:nth-child(3) { font-size: 0.88rem; color: var(--ink-3); }
+    #kbt td:nth-child(4) { font-size: 0.88rem; }
+    #kbt ul { margin: 0; padding-left: 1.1em; }
+    #kbt li { margin: 0 0 4px; }
+  </style>
   </div>
 </Base>

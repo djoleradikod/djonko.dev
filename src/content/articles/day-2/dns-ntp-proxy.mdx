@@ -1,76 +1,220 @@
 ---
 title: "DNS, NTP and proxy: the names, clocks and outbound paths VCF 9 depends on"
-description: "VCF 9 adds more names, more clocks and more outbound paths than 5.x had. Keep one table of FQDNs and addresses, generate the DNS checks from it, and write firewall rules for the whole runtime pool, because 9.1 depot downloads leave from runtime node addresses."
+description: "Write firewall rules for the whole VCF services runtime pool, keep License Server traffic off proxies, keep names lowercase and off .local, and book a window for any 9.1 DNS or NTP change, because the runtime can take over two hours to roll. Tables list sources, hosts and the failures bad names and clocks cause."
 category: day-2
 order: 6
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [404501, 435717, 440331, 426042, 443900, 451990, 452095, 409353, 438528, 439240, 449159, 443166, 447542, 442978, 442735, 444267, 432021, 447366, 409220, 429451]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [443166, 443216, 447366, 447542, 441747, 432021, 442735, 444267, 442978, 445368, 435717, 451990, 452095, 404501, 440331, 426042, 443900, 409220, 439240, 438528, 409353, 449159]
 sources:
-  - title: "Modernizing infrastructure: VCF 5.2.x to 9.1 upgrade guide (DNS)"
+  - title: "Public URLs Required for Online Functionalities (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/planning-and-preparation/public-urls-required-for-vmware-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configure a Proxy Server for VCF Management Services Components and VCF Automation (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/configuring-management-components/configure-a-proxy-server-to-download-bundles-from-sddc-manager.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configure a Software Depot Connection Mode (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/connect-sddc-manager-to-a-software-depot-for-downloading-bundles.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Deploy VCF Management Services and License Server as Part of VCF Upgrade to 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "First VCF Instance FQDNs and IP addresses (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/planning-and-preparation/vcf-components-fqdns-and-ip-addresses/first-vcf-instance-fqdns-and-ip-addresses.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Update the DNS Server Configuration for VCF Components (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-external-infrastructure-services/update-dns-server-configuration.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Update the NTP Server Configuration for VCF Components (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-external-infrastructure-services/update-ntp-server-configuration.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "External Services Detailed Design (9.1 design library)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/external-services-design.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Management Services in the First VCF Instance Model (minimal-footprint blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-with-minimal-footprint-blueprint/management-domain-design-selections/operations-layer/vcf-management-services-in-the-first-vcf-instance-model-minimal-fleet.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Design Elements for VCF Fleet Disaster Recovery (9.1 blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-disaster-recovery/design-elements-for-vcf-disaster-recovery.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Dual Stack IP Addressing Model (9.1 design library)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/datacenter-network-requirements/infrastucture-ip-addressing-models/dual-stack-ip-addressing-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "License Server Networking (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-networking.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Shut Down the Management Domain (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Modernizing infrastructure: VCF 5.2.x to 9.1 upgrade guide"
     url: "https://blogs.vmware.com/cloud-foundation/2026/06/05/modernizing-infrastructure-vmware-cloud-foundation-5-2-x-to-9-1-upgrade-guide/"
-    by: "VMware Cloud Foundation blog"
-  - title: "Let's talk about VCF management services (firewalls and runtime addresses)"
-    url: "https://www.why-did-it.fail/blog/2026-05-lets-talk-about-vcf-mgmt-svc/"
-    by: "why-did-it.fail"
-  - title: "10 VCF 9 enhancements simplifying your Day-2 operations (DNS and NTP settings)"
+    by: "Abhilash Kunhappan, Anurag Bhardwaj, Shubham Pareek, Vijay Kondeti and Girish Thota, VMware"
+    kind: broadcom
+    date: 2026-06-05
+  - title: "10 VCF 9 enhancements simplifying your Day-2 operations"
     url: "https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/"
-    by: "VMware Cloud Foundation blog"
+    by: "Brandon Hahn, VMware"
+    kind: broadcom
+    date: 2025-09-18
+  - title: "Let's talk about VCF management services"
+    url: "https://www.why-did-it.fail/blog/2026-05-lets-talk-about-vcf-mgmt-svc/"
+    by: "Dominik Textoris, why-did-it.fail"
+    kind: practitioner
+    date: 2026-06-10
 ---
 
 <InShort>
-In 5.x, DNS and NTP were configured in SDDC Manager, and SDDC Manager was the main thing that needed to reach the internet. In 9.x, DNS and NTP are set per instance in VCF Operations, with fleet-level settings in 9.1. Several new components also depend on them: cloud proxies, the License Server, the services runtime and the identity broker. Each has its own outbound path through a proxy or firewall. The rules are the same as ever, applied more strictly. Every FQDN needs matching **lowercase** forward and reverse records. Every node needs the **same time**. Every outbound path is tested **from the address that will use it**.
+Write the firewall rule for the whole VCF services runtime pool, because the 9.1 software depot runs there and its addresses are assigned dynamically. Ask for an inspection bypass before importing a firewall CA into separate trust stores. Keep the License Server's management traffic off proxies, since it makes no internet connections. Keep every name lowercase and off `.local`, and treat any later 9.1 DNS or NTP change as a maintenance window, because the runtime can take more than two hours to roll it out.
 </InShort>
 
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to list the License Server as an outbound source with special networking needs; it has [no external network requirements](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-networking.html). It also said NTP formats get rejected (the KB's cause is an unreachable server), told readers to restart collection after a cloud proxy change (that KB covers a stuck adapter), and gave a 9.0-style menu path for 9.1. Uncited drift symptoms are gone.
+</Callout>
+
 <Compare rows={[
-  ["Where configured", "SDDC Manager: Administration > Network Settings", "VCF Operations: VCF Instance > Manage VCF Instance Settings > Network Settings. 9.1 adds fleet-level settings."],
+  ["Where DNS and NTP are set", "5.2: SDDC Manager, Administration > Network Settings", "9.0: VCF Operations, Inventory > VCF Instance > Actions > Manage VCF Instance Settings > Network Settings. 9.1: VCF Operations, Manage > Fleet management > Fleet settings, then assign a named setting to each instance"],
   ["Names to manage", "SDDC Manager, vCenters, NSX, hosts, Aria (optional)", "Also VCF Operations nodes and load balancer, cloud proxies, the License Server, runtime, fleet and instance FQDNs, the broker and VCF Automation"],
-  ["Outbound sources", "SDDC Manager, Aria Suite Lifecycle", "SDDC Manager, the installer, cloud proxies, the License Server and every runtime node (depot)"],
-  ["Time-sensitive pieces", "SSO tokens, vSAN, NSX", "Also VCF SSO JWTs, runtime Kubernetes certificates and fleet lifecycle tasks"],
+  ["What downloads binaries", "SDDC Manager core services", "9.1: Fleet Lifecycle components on the services runtime"],
 ]} />
 
-## DNS
+The 5.2 and 9.0 paths come from [Brandon Hahn's September 2025 post](https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/), the 9.1 path from the [DNS](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-external-infrastructure-services/update-dns-server-configuration.html) and [NTP](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-external-infrastructure-services/update-ntp-server-configuration.html) procedures, and the download move from <KB id={443166} />.
 
-- **Lowercase, forward and reverse, before the step that needs them.** Capital letters and PTR case mismatches fail the installer validation (<KB id={435717} />). A missing record can show as a 502 in the installer UI (<KB id={404501} />).
-- **Hosts too.** NSX host preparation stalls when a host's own DNS is wrong (<KB id={440331} />).
-- **Cloud proxies are sensitive to DNS.** A proxy going offline every few hours (<KB id={426042} />) and HAProxy 503 errors (<KB id={443900} />) both trace back to resolver configuration.
-- **License Server.** Detection fails on bad DNS, and its networking has specific requirements (<KB id={451990} />, <KB id={452095} />).
+## Firewall: allow the pool, and test from it
 
-## NTP
+A rule written for SDDC Manager's address stops covering depot downloads once the fleet deploys. The depot then runs as a pod on the runtime cluster, using addresses dynamically assigned from the VCF Services Runtime IP Pool (<KB id={443216} />), and a proxy or firewall that doesn't know them blocks the requests with an HTTP 403 (<KB id={443166} />). Dominik Textoris [draws the practical conclusion](https://www.why-did-it.fail/blog/2026-05-lets-talk-about-vcf-mgmt-svc/): pods can land on any node, so you can't pinpoint a source and the complete range goes in the rule. Size the rule for growth too, since the [upgrade procedure](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html) asks for a minimum of 12 addresses and recommends 30 for later components and scale-out.
 
-- **Symptoms of drift:** VCF SSO reporting "JWT token is expired" (<KB id={409353} />), upgrades stuck part way, and intermittent 401 errors between components.
-- **Installer quirks:** an NTP server that answers slowly may need `iburst` to pass validation (<KB id={438528} />). Some formats are rejected (<KB id={439240} />).
-- **Changes that don't stick:** an SDDC Manager NTP change not written to `ntp.conf` is a known issue (<KB id={449159} />). Verify on the appliance after any change.
+The [Public URLs page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/planning-and-preparation/public-urls-required-for-vmware-cloud-foundation.html) sets the rest <AsOf date="2026-11-07" />. These rows decide most rules, and the page has more, including telemetry:
 
-## Proxy and firewall
+| Source | Destination | Purpose |
+|---|---|---|
+| VCF Installer, vCenter, VCF Operations, VCF Download Tool, every runtime IP pool hosting a software depot | `dl.broadcom.com`, `eapi.broadcom.com`, `vvs.broadcom.com`, `vsanhealth.vmware.com`; from 9.1.1, `vcf.packages.broadcom.com` | Binaries |
+| VCF Installer, SDDC Manager, VCF Download Tool | `vvs.broadcom.com` | Compatibility data |
+| VCF Installer, SDDC Manager, vCenter, VCF Download Tool | `vsanhealth.vmware.com`, `eapi.broadcom.com` | vSAN HCL |
+| VCF Operations | `vcf.broadcom.com`, `eapi.broadcom.com` | Licensing |
+| Cloud proxy | `eapi.broadcom.com` | Log bundles |
+| License Server | None | It [doesn't communicate with the internet](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-networking.html) |
 
-- **9.1 depot downloads leave from runtime node addresses** (<KB id={443166} />). Write firewall rules for the whole runtime pool.
-- **Configure each component's proxy where it lives:** the software depot through a utility script (<KB id={447542} />, <KB id={442978} />), and the installer's trust stores for a proxy CA (<KB id={432021} />). Note that the 9.1 vCenter appliance installer bypasses the proxy and needs a direct path (<KB id={447366} />).
-- **TLS inspection** breaks trust in predictable ways: PKIX errors on SDDC Manager (<KB id={442735} />) and `certificate_unknown(46)` from the installer (<KB id={444267} />). Exempt VCF's outbound hosts from inspection.
-- **After any proxy change on a cloud proxy,** stop and start collection (<KB id={429451} />). A "status code 0" in licensing registration is often the proxy (<KB id={409220} />).
-
-## Checks worth scripting
+The `vcf.packages.broadcom.com` entry applies from 9.1.1, so raise that firewall change before the upgrade starts. A curl from SDDC Manager proves nothing about the pool. Run the check below from VCF Operations and the control plane nodes, where <KB id={443216} /> puts it, and take the exact commands with their CA paths from that KB.
 
 ```bash
-# Forward and reverse, case-sensitive comparison
+# Expected codes per KB 443216: 403, 500, 403, 500. A code like these means the host answered.
+for h in dl.broadcom.com eapi.broadcom.com vvs.broadcom.com vsanhealth.vmware.com; do
+  echo "$h $(curl -s -o /dev/null -w '%{http_code}' https://$h)"
+done
+# Licensing, from VCF Operations. That KB gives no expected code for this host.
+curl -s -o /dev/null -w '%{http_code}\n' https://vcf.broadcom.com
+```
+
+## Proxy: one setting per runtime, with exceptions
+
+A proxy is [configured per VCF services runtime instance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/configuring-management-components/configure-a-proxy-server-to-download-bundles-from-sddc-manager.html), and everything hosted there inherits it: software depot, telemetry, identity broker and VCF Automation. Repeat it on each instance whose traffic needs the proxy, through the API calls on that page or the scripted route in <KB id={447542} />. Before you commit to a proxy, check its authentication, because the [software depot page rules out Kerberos and NTLMv2 proxies](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/connect-sddc-manager-to-a-software-depot-for-downloading-bundles.html). Leave wildcards out of `excludeDomains` and `excludeIpAddresses`. The runtime proxy page forbids asterisks and then shows `*.local` in its own sample payload, so follow the sentence and test each exclusion.
+
+Three components sit outside that setting:
+
+- **License Server.** It should not route internal management traffic through a proxy (<KB id={441747} />). The dependency the KB names is port 443 to vCenter and VCF Operations, and its fallback when a configured proxy breaks that link is to redeploy without one.
+- **vCenter CLI installer.** In a 9.1.0.x greenfield deployment it ignores the Online Depot proxy and goes straight to `eapi.broadcom.com` for the vSAN HCL. Proxy-only egress then fails "Deploy vCenter Appliance", so allow direct 443 from the Installer's address (<KB id={447366} />).
+- **Cloud proxy.** From 9.1.1.0, a [new cloud proxy deployed from the OVA](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) can take Outbound Network Proxy Settings for external traffic such as the Broadcom Portal.
+
+On an upgrade, one more proxy can block you. If VCF Operations has a proxy with SSL termination and the environment has additional management components, [remove that configuration before you deploy VCF management services](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html).
+
+## TLS inspection: ask for the bypass first
+
+Bypass is the preferred method for SDDC Manager: an inspection exemption for `*dl.broadcom.com` means it receives Broadcom's original certificates (<KB id={432021} />, and offered as the alternative in <KB id={442735} />). Those KBs cover SDDC Manager only. Extending the request to the Installer and the runtime pool is an inference from the same failure mechanism, and it spares you the work below, where each component holds its own trust store. Deep inspection also adds [CDN destinations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/planning-and-preparation/public-urls-required-for-vmware-cloud-foundation.html) to the allow list, with wildcard rules for the Akamai entries. Standard hostname filtering doesn't need them.
+
+| Component | What you see | If bypass is refused |
+|---|---|---|
+| SDDC Manager | `PKIX path building failed` in `lcm-debug.log` | Import the chain into the trusted certificates store and the JRE keystore (<KB id={442735} />) |
+| VCF Installer 9.1.0 | `certificate_unknown(46)` | Add the corporate issuer and intermediates to the Installer trust stores (<KB id={444267} />) |
+| Software depot 9.1 | "Failed to connect to the authorization server" | Run `vmsp-utility.py`, option 4 (trust store). The depot UI can stay blank for about 15 minutes while services restart (<KB id={442978} />) |
+
+## Changing DNS or NTP later: book a window
+
+In 9.1 you [create a named setting under Fleet settings and assign it to instances](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-external-infrastructure-services/update-dns-server-configuration.html), which pushes it to SDDC Manager, vCenter, ESX, NSX, VCF management services, VCF Automation and VCF Operations for networks. vCenter, NSX and SDDC Manager update quickly, but the runtime recreates all its service pods in a rolling update, so a change takes more than two hours in 9.1.x, with no workaround (<KB id={445368} />). Don't run other fleet lifecycle work beside it. That's advice inferred from the pod restarts, since the KB doesn't state it.
+
+Clear the prerequisites before you press Assign, because a failure [rolls back the failed component](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-external-infrastructure-services/update-dns-server-configuration.html) and leaves you to fix and retry. The new servers must be reachable from every component, SDDC Manager must reach every component over SSH, and new NTP servers must [sit within 5 minutes of each other](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-external-infrastructure-services/update-ntp-server-configuration.html). DNS changes also need working forward and reverse records for each component.
+
+## Names
+
+Records come first. The [minimal-footprint blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-with-minimal-footprint-blueprint/management-domain-design-selections/operations-layer/vcf-management-services-in-the-first-vcf-instance-model-minimal-fleet.html) requires DNS entries for the fleet, instance, runtime and identity broker FQDNs before deployment starts (VCF-MS-REQD-FIRST-001 and 002). On an upgrade, those names and the License Server's [must resolve to unique addresses outside the runtime range, on the runtime's network](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html). The [FQDN planning page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/planning-and-preparation/vcf-components-fqdns-and-ip-addresses/first-vcf-instance-fqdns-and-ip-addresses.html) asks for A and PTR records for each name. Use FQDNs, not short names, in certificates and DNS.
+
+A `.local` domain can end a design. [Containerized services such as VCF management services don't support it](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/planning-and-preparation/vcf-components-fqdns-and-ip-addresses/first-vcf-instance-fqdns-and-ip-addresses.html), while vCenter and ESX keep working and `vsphere.local` is unaffected.
+
+Broadcom's material disagrees on capitals. The [VCF Operations 9.1.1.0 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) list the mixed-case failure as resolved and say "all FQDNs can use mixed case". The [planning page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/planning-and-preparation/vcf-components-fqdns-and-ip-addresses/first-vcf-instance-fqdns-and-ip-addresses.html) and [upgrade procedure](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html), both updated 5 November 2026, still say not to use capital letters for the runtime, fleet, instance and broker FQDNs, and a [June upgrade guide](https://blogs.vmware.com/cloud-foundation/2026/06/05/modernizing-infrastructure-vmware-cloud-foundation-5-2-x-to-9-1-upgrade-guide/) calls 9.1 strictly lower-case. <KB id={451990} /> adds that mixed-case records cause certificate trust failures for the License Server. Stay lowercase: every page accepts it, and only one accepts anything else.
+
+Run authoritative DNS. A forwarder such as dnsmasq can fail License Server detection in 9.1 even when lookups appear to work, and the KB's fix is Windows DNS or BIND (<KB id={451990} />). In a dual-stack design, [make NTP and DNS dual-stack capable before activation](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/datacenter-network-requirements/infrastucture-ip-addressing-models/dual-stack-ip-addressing-model.html), because a failed IPv6 path has no automatic failback to IPv4 for these services (VCF-OPS-RCMD-DS-002).
+
+```bash
+# Forward and reverse, case-sensitive comparison. Run from the Installer or a management node.
 for fqdn in $(cat fqdns.txt); do
   ip=$(dig +short "$fqdn" | tail -1)
   ptr=$(dig +short -x "$ip" | sed 's/\.$//')
   [ "$ptr" = "$fqdn" ] && echo "OK   $fqdn $ip" || echo "FAIL $fqdn -> $ip -> $ptr"
 done
-
-# Time offset against your NTP source, from each appliance (chrony or ntpd)
-chronyc tracking 2>/dev/null | grep -E 'System time|Leap' || ntpq -p
 ```
 
-<Callout type="field">
-Keep one table per instance listing every FQDN, IP address, role and owner, and generate the DNS checks from it. It becomes the source of truth for firewall requests, certificate SANs and upgrade planning. Use it to clear the upgrade prechecks on names and addresses.
+## Clocks
+
+The [9.1 design library](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/external-services-design.html) requires an internal NTP source for all management components and automatic NTP service start (VCF-NET-REQD-NTP-001 and 002), so an appliance pointed straight at a public pool is outside the design. In a multi-instance disaster recovery design, the [blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-disaster-recovery/design-elements-for-vcf-disaster-recovery.html) has each protected component use NTP and DNS servers across all instances (VCF-PB-DR-REQD-021 and 022), which means revisiting those settings when a second instance arrives.
+
+Where DNS and NTP servers run as VMs in the management domain, [stop them last, after the vCenter appliance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain.html). The vSAN shutdown wizard needs you to confirm them as infrastructure VMs. On other clusters, move them to the first host running vCenter. Startup order has to account for them too.
+
+On the Installer, `ntpq -p` shows whether it has a source: a reach of 0 and no asterisk means no synchronized source (<KB id={438528} />). After any NTP change, verify on each appliance with `chronyc tracking` or `ntpq -p`, depending on its daemon, because on SDDC Manager 5.2.x a success message can hide an unwritten `ntp.conf` (<KB id={449159} />).
+
+## Failures that trace back to names, clocks and outbound paths
+
+| What you see | Cause | First move | Scope |
+|---|---|---|---|
+| "Reverse lookup of IP address ... returned FQDN" at validation | PTR or A record differs from the spec, and the match is case-sensitive | Fix the record, rerun validation (<KB id={435717} />) | 9.x |
+| 502 in the Installer UI | Missing DNS entries for the Installer's own address can cause it | Create the record, restart the appliance (<KB id={404501} />) | 9.0 |
+| NSX transport node configuration stops near 48% | ESX host has no working DNS settings | Correct the host, retry the task (<KB id={440331} />) | 9.0.x |
+| Cloud proxy offline every 4 to 8 hours | HAProxy can't resolve the VCF Operations nodes | `nslookup` each node from the proxy (<KB id={426042} />) | 9.x |
+| Cloud proxy 503s, backend `<NOSRV>` | HAProxy's built-in resolver fails to refresh hostnames | Flag file disables it. Recheck after a 9.0 to 9.1 upgrade, because `haproxy.cfg` reverts (<KB id={443900} />) | 9.0.x, 9.1 |
+| License Server "Disconnected" with lookups passing | Can be a non-authoritative forwarder | Authoritative DNS, then redeploy if the original deployment was wrong (<KB id={451990} />) | 9.1 |
+| "vCenter is unable to resolve the license server host name" | FQDN in the Business Services console differs from the deployed one, in disconnected mode | Check A and PTR, unregister, register again (<KB id={452095} />) | 9.1 |
+| Depot "Expected HTTP status 200 but received 403" | Allow list covers SDDC Manager only | Allow the Fleet sources. If it persists, check the registered name is all lowercase (<KB id={443166} />) | 9.1 |
+| "Disconnected depot: active" | Depot URLs blocked | Allow the URLs, then stop and start the Software Depot service (<KB id={443216} />) | 9.1.0 |
+| "Server returned status code: 0" at registration | Proxy or firewall blocking required URLs | Confirm VCF Operations reaches the URL list the KB links (<KB id={409220} />) | 9.x |
+| "Specified NTP server is specified incorrect" | The nodes can't reach the server, whatever the wording suggests | Open UDP 123, query with `ntpdate`, retry (<KB id={439240} />) | 9.1 |
+| "not currently synchronizing time with NTP Server null" at pre-check | First sync runs past the timeout without `iburst` | Add `iburst` in the Installer's `ntp.conf`, restart ntpd, rerun (<KB id={438528} />) | Reported on a multi-site deployment |
+| "JWT token is expired" at VCF Operations SSO login | Appliance clock out of sync with vCenter | Same NTP server as vCenter, `ntpd` active, `systemd-timesyncd` off (<KB id={409353} />) | 9.0, embedded SSO |
+| VCF Operations UI won't load, services fail to start | NTP out of sync | Listed as resolved in [9.1.1.0](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html). If `ntp sync` fails, use `ntp set --ip-fqdn` | Before 9.1.1.0 |
+| NTP change reports success, `ENTITY_NTP_NOT_SYNCED` follows | SDDC Manager saves the change but doesn't write `/etc/ntp.conf` | Edit the file, restart ntpd (<KB id={449159} />) | SDDC Manager 5.2.x |
+
+<Callout type="analysis" title="An inventory to generate from">
+Keep one table per instance listing every FQDN, address, role and owner, and generate the DNS checks from it. Firewall requests, certificate SANs and upgrade planning all draw on the same facts, and the case and PTR failures above are cheap to catch there. Use it to clear the upgrade prechecks on names and addresses.
 </Callout>
-
-## Pitfalls
-
-- **Testing from the wrong address.** A curl that works from SDDC Manager proves nothing about the runtime nodes.
-- **Short names in certificates and DNS.** Use FQDNs everywhere.
-- **Infrastructure VMs inside the domain they serve.** If DNS and NTP run on the management cluster, shutdown and startup order must account for them.

@@ -1,6 +1,6 @@
 ---
 title: "Counting cores: per-CPU floors, Edge and Express limits, and which build licenses the fewest"
-description: "VCF and VVF count every physical core with a floor of 16 per CPU; VCF Edge uses 8, at least 10 sites and at most 256 cores a site. Express stops at 128 cores per customer. Broadcom's public documents state no 72-core order minimum. Worked arithmetic shows which CPU licenses the fewest cores, and when that changes."
+description: "VCF and VVF count every physical core with a floor of 16 per CPU; VCF Edge uses 8, at least 10 sites and at most 256 cores a site. Express stops at 128 cores per customer. No CPU always wins: at 120 cores with N+1, dual 16-core and dual 20-core tie at 160. Broadcom's public documents state no 72-core order minimum."
 category: value
 order: 2
 versions: ["5.x", "9.0", "9.1", "9.1.1"]
@@ -102,7 +102,9 @@ This note said dual 20-core needed the fewest licensed cores and the fewest host
 | Per site | None published | None published | At most 256 cores | Console blocks allocation above 128 "per customer or site ID"; default licence can't be shared across sites |
 | vSAN per core | 1 TiB | 0.25 TiB, rounded up | 1 TiB, usable only across Edge cores | No add-ons; the page doesn't mention vSAN |
 
-The VCF, VVF and Edge columns come from the June 2026 program documents ([VCF](https://ftpdocs.broadcom.com/cadocs/0/VCF_SPD_June2026.pdf), [VVF](https://ftpdocs.broadcom.com/cadocs/0/VVF_SPD_June2026.pdf), [Edge](https://ftpdocs.broadcom.com/cadocs/0/VCF_Edge_SPD_June2026.pdf)). All three require a licence for each core on the server, "including Cores deactivated by the BIOS", and define a core as "a single physical computational unit", so count sockets and cores and leave logical processors out. The rounding on VVF is from <KB id={313548} />. [FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) Q75 (4 Nov 2026) repeats the Edge figures. The Express column is the [TechDocs page](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-express.html) of 2 Nov 2026. [Licensing Model](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html) (5 Nov 2026) lists Express as a core-based licence and applies the 16-core floor to "most products" without saying whether Express is one. No Express program document could be found on 6 Nov 2026.
+Count sockets and cores and leave logical processors out. Every core on the server needs a licence, "including Cores deactivated by the BIOS", and a core is "a single physical computational unit", in all three June 2026 program documents ([VCF](https://ftpdocs.broadcom.com/cadocs/0/VCF_SPD_June2026.pdf), [VVF](https://ftpdocs.broadcom.com/cadocs/0/VVF_SPD_June2026.pdf), [Edge](https://ftpdocs.broadcom.com/cadocs/0/VCF_Edge_SPD_June2026.pdf)). The VCF, VVF and Edge columns come from those documents, with VVF's rounding from <KB id={313548} />, and [FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) Q75 (4 Nov 2026) repeats the Edge figures.
+
+Express rests on thinner evidence. Its column is the [TechDocs page](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-express.html) of 2 Nov 2026, and no Express program document could be found on 6 Nov 2026. [Licensing Model](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html) (5 Nov 2026) lists Express as a core-based licence and applies the 16-core floor to "most products" without saying whether Express is one, so the Express example further down treats the floor as an assumption.
 
 ## Which CPU licenses the fewest cores
 
@@ -122,42 +124,40 @@ This example is constructed. The target is the physical cores the workload needs
 
 Checking one cell: for 20-core at 120, 120 ÷ 40 = 3 hosts, plus 1 spare = 4 hosts, and 4 × 40 = 160.
 
-Bold marks the lowest count in each column, and three results follow from the table:
+Bold marks the lowest count in each column. Dual 16-core wins at 96, ties at 120 and 144, and loses to dual 20-core at 200, so run the sum at your own target instead of borrowing a winner from this table.
 
-- **The 12-core row never wins.** Its hosts license 32 cores like the 16-core hosts but deliver 24, so at every target it needs at least as many hosts. At 120 it pays for 48 cores that don't exist: 6 × 8.
-- **The fewest hosts isn't the fewest licences.** Dual 32-core reaches 120 with 3 hosts and licenses 192, because each spare host costs 64.
-- **The winner moves.** Dual 16-core wins at 96, ties at 120 and 144, and loses to dual 20-core at 200.
+The 12-core row never wins: its hosts license 32 cores like the 16-core hosts but deliver 24, so at every target it needs at least as many hosts, and at 120 it pays for 6 × 8 = 48 cores that don't exist. Dual 32-core has the fewest hosts at 120 and still loses, with 3 hosts licensing 192, and each spare host costs 64.
 
-The tie at 120 needs a judgement. After a host failure, the 16-core build has 4 × 32 = 128 cores against the 120 target, and the 20-core build has 3 × 40 = 120. At 121 cores the 16-core build still licenses 160, and the 20-core build needs a fifth host and licenses 200.
+The tie at 120 breaks on headroom. After a host failure, the 16-core build has 4 × 32 = 128 cores against the 120 target, and the 20-core build has 3 × 40 = 120, with nothing left over. One core of growth shows the difference: at 121 cores the 16-core build still licenses 160, and the 20-core build needs a fifth host and licenses 200.
 
-<Callout type="analysis" title="This site's call">
-Buy dual 16-core at a 120 target unless the workload is truly capped, in which case dual 20-core saves a fifth server at the same licence count. Dual 20-core is also the better buy when a firm target sits at or just under a multiple of 40. Run the sum at today's target and at your three-year target, and pick the build that stays lowest across both.
+<Callout type="analysis" title="Breaking the tie at 120">
+Buy dual 16-core at a 120 target unless the workload is truly capped, in which case dual 20-core saves a fifth server at the same licence count. A multiple of 40 doesn't settle it: dual 20-core wins at 200 and 240, ties at 280, and loses at 160 and 320. Run the sum at today's target and at your three-year target, and pick the build that stays lowest across both.
 </Callout>
 
 Four things can overrule the core count:
 
-- **N+2.** A design that survives a host in maintenance and a failure together changes the 120 column to 12-core 224, 16-core 192, 20-core 200, 24-core 240 and 32-core 256. Dual 16-core then wins alone.
-- **Memory.** If memory runs out before CPU, memory per host sets the host count. [NVMe memory tiering](/vcf/library/value/nvme-memory-tiering/) changes that limit.
-- **vSAN entitlement.** On VCF, 160 licensed cores bring 160 TiB and 192 bring 192 TiB. Check the [entitlement note](/vcf/library/value/vsan-entitlement/) before you take the lower count.
-- **vSAN protection.** The [space efficiency guide](https://www.vmware.com/docs/vmw-vsan-space-efficiency) says 9.1 Auto-RAID uses RAID-5 2+1 on three to five hosts and RAID-6 4+2 from six, both at 1.5 times raw. Before 9.1, six or more hosts could use 4+1 at 1.25 times, so a build that crosses six hosts on an upgraded cluster needs more raw capacity for the same data. More on this in [vSAN ESA space efficiency](/vcf/library/value/vsan-esa-space-efficiency/).
+- A design that survives a host in maintenance and a failure together (N+2) changes the 120 column to 12-core 224, 16-core 192, 20-core 200, 24-core 240 and 32-core 256, and dual 16-core then wins alone.
+- If memory runs out before CPU, memory per host sets the host count, whatever the core sum says. [NVMe memory tiering](/vcf/library/value/nvme-memory-tiering/) changes that limit.
+- The lower count also brings less vSAN: on VCF, 160 licensed cores bring 160 TiB and 192 bring 192 TiB. Check the [entitlement note](/vcf/library/value/vsan-entitlement/) before you take it.
+- On an upgraded cluster, vSAN protection can move the answer. In 9.1, Auto-RAID uses RAID-5 2+1 on three to five hosts and RAID-6 4+2 from six, both at 1.5 times raw, according to the [space efficiency guide](https://www.vmware.com/docs/vmw-vsan-space-efficiency). Before 9.1, six or more hosts could use 4+1 at 1.25 times, so a build that crosses six hosts on an upgraded cluster needs more raw capacity for the same data. More on this in [vSAN ESA space efficiency](/vcf/library/value/vsan-esa-space-efficiency/).
 
 ## When VCF Edge changes the count
 
 The lower floor only saves licences on CPUs under 16 cores. This example is constructed: 12 retail sites, each with two single-CPU 8-core hosts. Edge needs 12 × 2 × 8 = 192 cores. Standard VCF needs 12 × 2 × 16 = 384. With 16-core CPUs at the same sites, both count 384, and the choice comes down to your quote and the Edge terms.
 
-Three limits come with it, all from the June 2026 program document:
+Three limits come with Edge, all from the June 2026 [Edge program document](https://ftpdocs.broadcom.com/cadocs/0/VCF_Edge_SPD_June2026.pdf). They set where it can run, how many sites it takes and how large a site can be:
 
-- **Where it runs.** An Edge Location is a remote site such as a branch store, fulfilment centre or substation. Data centres, colocation and public cloud are excluded, even for internal use.
-- **How many.** The document says you may not have deployed fewer than 10 Edge Locations within the first year. With one 8-core CPU per site that is at least 10 × 8 = 80 cores.
-- **How large.** No site may exceed 256 cores. Dual 32-core hosts reach that at four hosts (4 × 64), so a fifth at 320 is over.
+- An Edge Location is a remote site such as a branch store, fulfilment centre or substation. Data centres, colocation and public cloud are excluded, even for internal use.
+- You may not have deployed fewer than 10 Edge Locations within the first year, the document says. With one 8-core CPU per site that is at least 10 × 8 = 80 cores.
+- No site may exceed 256 cores. Dual 32-core hosts reach that at four hosts (4 × 64), so a fifth at 320 is over.
 
-The entitlement also stays apart: Edge vSAN TiB can only be used across cores running Edge vSphere, so it can't cover a storage-heavy cluster in the main data centre.
+The entitlement stays apart too. Edge vSAN TiB can only be used across cores running Edge vSphere, so it can't cover a storage-heavy cluster in the main data centre.
 
-The KB describes its counting tool as applying "a minimum of 16 cores per physical CPU" and doesn't mention Edge (<KB id={313548} />). This is inference from that wording: expect it to overstate any CPU of 8 to 15 cores at an Edge site, and recount those by hand at the 8-core floor.
+Recount any CPU of 8 to 15 cores at an Edge site by hand at the 8-core floor. The counting tool is described as applying "a minimum of 16 cores per physical CPU", with no mention of Edge (<KB id={313548} />), so expect it to overstate those CPUs. That's an inference from the KB's wording.
 
 ## What 128 cores buys on Express
 
-Broadcom's [4 Nov post](https://blogs.vmware.com/cloud-foundation/2026/11/04/broadcom-vcf-portfolio-updates/) places Express "for customers with 128 cores across all environments", and TechDocs says "A maximum of 128 cores per customer". Price, term, pack size and who qualifies are reseller reports, weighed in the [portfolio note](/vcf/library/licensing/november-2026-portfolio/) with each party's stake named.
+The 128-core cap covers the whole customer, so Express has to fit the estate as well as the cluster. It is "for customers with 128 cores across all environments" in Broadcom's [4 Nov post](https://blogs.vmware.com/cloud-foundation/2026/11/04/broadcom-vcf-portfolio-updates/) and "A maximum of 128 cores per customer" on [TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-express.html). Price, term, pack size and who qualifies are reseller reports, weighed in the [portfolio note](/vcf/library/licensing/november-2026-portfolio/) with each party's stake named.
 
 This example is constructed and uses that note's assumptions: the 16-core floor applies and every host counts. It adds the column a design needs, which is what's left after one host fails.
 
@@ -169,11 +169,15 @@ This example is constructed and uses that note's assumptions: the 16-core floor 
 | 1 × 32-core | 32 | 4 | 128 | 96 |
 | 1 × 16-core | 16 | 8 | 128 | 112 |
 
-Under the floor assumption, smaller sockets and more hosts leave the most after a failure, and a dual 24-core design strands 32 of the 128 because a third host would reach 144. If the workload needs more than 112 cores with a host down, Express can't hold it with these CPUs and you're in VVF or VCF territory.
+If the workload needs more than 112 cores with a host down, Express can't hold it with these CPUs, which leaves VVF or VCF. Under the floor assumption, smaller sockets and more hosts leave the most after a failure. A dual 24-core design strands 32 of the 128, because a third host would reach 144.
 
-## The 72-core story
+## The 72-core order minimum
 
-No Broadcom document cited here states a 72-core minimum. The reports that name a source for it point to a distributor email or a reseller pricebook.
+Size to the per-CPU floor and let 72 change the number only when a reseller writes it into your quote, naming the clause. It only matters on small orders. Three single-CPU hosts at the floor come to 3 × 16 = 48 cores, so a 72-core minimum would add 24 unused. An Edge estate that meets the 10-site rule reaches at least 80, though phased orders could sit under 72.
+
+The June 2026 program documents, <KB id={313548} /> and Licensing Model carry the per-CPU floors and no order minimum (checked 6 Nov 2026), and no Broadcom document cited here states a 72-core minimum. The reports that name a source for 72 point to a distributor email or a reseller pricebook. A price list term wouldn't necessarily appear in those documents, and no primary source settles what resellers can sell today, which is why the clause has to be in writing.
+
+The two latest entries below conflict, and both come from firms with something to sell, so neither settles it.
 
 | Date | Who | What they said |
 |---|---|---|
@@ -184,10 +188,6 @@ No Broadcom document cited here states a 72-core minimum. The reports that name 
 | 26 Mar 2026 | [OTAVA](https://www.otava.com/?p=23083), a Broadcom partner selling managed VMware | Still describes 72 cores per licence instance as a live rule, on top of the 16-core floor |
 | 10 Sep 2026 | [Redress Compliance](https://redresscompliance.com/vcf-benchmark-adjust-for-core-minimum-inflation), which sells negotiation services | Calls it withdrawn, says Broadcom's public pages checked in August 2026 don't state it, and says some resellers still quote 72 as the smallest line |
 
-Checked on 6 Nov 2026, the June 2026 program documents, <KB id={313548} /> and Licensing Model carry the per-CPU floors and no order minimum. A price list term wouldn't necessarily appear in those documents, and no primary source settles what resellers can sell today.
-
-So size to the per-CPU floor and let 72 change the number only when a reseller writes it into your quote, naming the clause. It only matters on small orders. Three single-CPU hosts at the floor come to 3 × 16 = 48 cores, so a 72-core minimum would add 24 unused. An Edge estate that meets the 10-site rule reaches at least 80, though phased orders could sit under 72.
-
 ## Before you sign
 
-Run the counting tool from <KB id={313548} /> against the real hosts with all cores enabled, since the KB warns that disabled cores can make its output inaccurate. It needs PowerCLI 13.3 or later and PowerShell 7.4.6 or later. Hosts bought at different times can carry CPUs under the floor, and each of those is a host where a 16-core replacement gives more capacity for the same licence.
+Run the counting tool from <KB id={313548} /> against the real hosts with all cores enabled, since disabled cores can make its output inaccurate, the KB warns. It needs PowerCLI 13.3 or later and PowerShell 7.4.6 or later. Look for CPUs under the floor in hosts bought at different times: each of those is a host where a 16-core replacement gives more capacity for the same licence.

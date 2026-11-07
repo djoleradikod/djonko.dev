@@ -1,71 +1,179 @@
 ---
 title: "Failure-impact matrix: what stops when each component is down"
-description: "When a management component fails, the first questions are whether workloads are affected and what else stops. This matrix answers both for VCF 9.0 and 9.1, and marks what is documented and what is reasoned."
+description: "Plan for workloads to keep running when a VCF management component fails, and watch the licensing clocks that can reach them. This matrix separates what Broadcom documents for 9.0, 9.1 and 9.1.1 from what is inferred, and names the design choices that set the blast radius."
 category: architecture
 order: 10
-versions: ["9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Deep dive
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [443240, 440862, 440874, 453736, 455296, 443680, 437258, 443216, 452124, 441515, 450375]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [443240, 440874, 440862, 453736, 455296, 443680, 437258, 443216, 452124, 441515, 450375, 445428, 453197, 460245, 441793, 420284, 440630]
 sources:
   - title: "VCF management services models (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-management-services-models.html"
     by: "Broadcom TechDocs"
-  - title: "Authentication design for VCF (9.1)"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Identity broker models (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/auth-design-vcf.html"
     by: "Broadcom TechDocs"
-  - title: "Log management design (9.1)"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF fleet-wide single sign-on model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models/vcf-fleet-wide-sso-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Single VCF instance single sign-on model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models/single-single-sign-on-deployment-per-vcf-instance.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Single sign-on models (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Deployment modes of the VCF Identity Broker (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/what-is/deployment-models-for-sso.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Log management detailed design (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
   - title: "Lifecycle management (VCF 9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Components in VCF and vSphere Foundation (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/vcf-management-appliances.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "License server downtime impact (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-downtime-impact.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Single license server model (9.1 single-site blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections%281%29/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF fleet in a single site blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF fleet with multiple sites in a single region blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-with-multiple-sites-in-a-single-region-blueprint.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF management services in the first instance model (9.1 minimal footprint blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-with-minimal-footprint-blueprint/management-domain-design-selections/operations-layer/vcf-management-services-in-the-first-vcf-instance-model-minimal-fleet.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "SDDC Manager detailed design (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/sddc-manager-design.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Troubleshooting guide: environment (9.1 blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/environment.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF component backup and restore blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-backup-and-restore.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "NSX multisite (VCF 9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/advanced-network-management/administration-guide/managing-nsx-t-in-multiple-locations/nsx-t-multisite.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "VCF Operations 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Starting up VMware Cloud Foundation (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
 ---
 
 <InShort>
-No VCF management component sits in the data path, so running workloads survive the loss of any of them. What you lose is control. That can be lifecycle, configuration, monitoring, sign-on or, in edge cases, the ability to license new capacity. The matrix below is the version to keep in a runbook. Rows marked *documented* come from a KB or TechDocs. Rows marked *reasoned* follow from the architecture, so treat them as hypotheses to confirm in your own environment.
+Plan for workloads to keep running when a VCF management component fails, and for lost control: lifecycle, configuration, monitoring or sign-on, depending on the component. This site found no outage matrix from Broadcom <AsOf date="2026-11-07" />, so that expectation is an inference from where the components sit. Licensing is the documented exception. In 9.1, if a 90-day evaluation ends before license sync returns, hosts go Disconnected and VMs can't power on (<KB id={443240} />), though [existing workloads aren't proactively stopped](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html), and licenses [expire after the 180-day update period](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-downtime-impact.html). Each row below separates the documented effect from the inferred one. Test the inferred column on non-production before it goes in a runbook.
 </InShort>
 
-<Compare title="How the question changed from 5.x">
-  <Fragment slot="v5">
-  <p>The answer was short. SDDC Manager down meant no lifecycle or Day-2 automation. An Aria product down meant you lost that product's function. vCenter and NSX were the only components whose failure affected operators broadly.</p>
-  </Fragment>
-  <Fragment slot="v9">
-  <p>VCF Operations, the services runtime, the identity broker and the License Server each carry fleet-wide functions. A failure in the first instance's management domain can affect every instance. Map the blast radius per component, and per instance.</p>
-  </Fragment>
-</Compare>
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to say workloads survive the loss of any component, that log ingestion continues in 9.1 while VCF Operations is down, and that lifecycle, depot and backups stopping with the services runtime was documented. This site found none of those documented as outage behaviour, the NSX exclusion-list row had no source, and several KB-cited rows described narrower faults, such as the blank SDDC Manager page in <KB id={443680} />, so those faults now have their own table.
+</Callout>
+
+## The choices that set the blast radius
+
+**Run the services runtime in the HA model.** In the Simple model, [losing the single control plane node means redeploying the cluster and restoring from backup](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-management-services-models.html), and that page positions Simple for testing and proof of concept. The [single-site blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint.html) selects HA. The choice carries most of the matrix, because the runtime [hosts](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/vcf-management-appliances.html) fleet lifecycle, SDDC lifecycle, the software depot, the instance-mode identity broker, log management, real-time metrics and telemetry.
+
+**Decide how many instances a broker failure may lock out.** [A fleet-wide broker outage "impacts the VCF fleet"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models/vcf-fleet-wide-sso-model.html). With [one broker per instance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models/single-single-sign-on-deployment-per-vcf-instance.html) it only affects logins for that instance, at the price of more resources and repeated sign-in between instances. [Local accounts and the emergency API client keep working](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models.html) across that page's broker failure scenarios, so keep those credentials reachable. For placement, [the instance model is the recommendation for production](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/auth-design-vcf.html), while the [9.0 page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/what-is/deployment-models-for-sso.html) warns that embedded mode can be a single point of failure if the management domain vCenter goes down.
+
+<Callout type="analysis" title="The blueprints accept the large blast radius">
+The [single-site](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint.html) and [single-region](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-with-multiple-sites-in-a-single-region-blueprint.html) blueprints both select one fleet-wide broker and list "Tolerates failure of a single management component". Those fit together only if tolerating means the platform keeps running while fleet-wide sign-on is down, and neither blueprint spells that out. Follow the blueprint when local-account access is acceptable for the length of a restore. If it isn't, price a cross-instance or per-instance design.
+</Callout>
+
+**Alert on the license server, and write down its recovery.** Its outage causes [no immediate problem for workloads or management tasks](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-downtime-impact.html), so the danger is an outage nobody notices while the clocks run. <KB id={443240} /> still says to keep it powered on at all times, a tension the license server note takes up. Alert on the vSphere message in <KB id={443240} /> and confirm vSphere HA on its cluster. [Backup isn't required](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections%281%29/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html): deploy a new instance and migrate the licenses within 90 days. [The license server note](/vcf/library/licensing/license-server/) has the detail. Licensing rows here apply to 9.1 only, since the server and the KB are both 9.1.
+
+**Add the second cloud proxy.** Deployment gives you one, and the [blueprint adds another in a collector group](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint.html). With a group, sources move to another proxy once VCF Operations detects the failure, though [logs may be lost during the failover](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html).
+
+**Map the first instance separately.** [Fleet lifecycle always, and the depot and broker unless you add others, sit in the first instance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/vcf-management-appliances.html), so losing that management domain takes them from every instance. That's an inference from placement, and it gives the first instance's management domain a stronger claim on recovery planning than any other. [VCF Operations is also one per fleet](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/environment.html).
 
 ## Management components
 
-| Component down | Lifecycle | Config and UI | Licensing | Monitoring and logs | Sign-on | Basis |
-|---|---|---|---|---|---|---|
-| **VCF Operations** | No lifecycle UI (9.1) | No password, certificate, SSO or fleet DNS and NTP changes | Existing licences fine. New assignments and capacity changes blocked (<KB id={443240} />). | Alerts and dashboards lost. In 9.1, log ingestion continues but search is lost. | Logins continue | Documented for licensing; reasoned for the rest |
-| **License Server (9.1)** | Unaffected | Unaffected | As above, with a vSphere banner about the license server connection | Unaffected | Unaffected | Documented (<KB id={443240} />) |
-| **Services runtime (9.1)** | Fleet and SDDC lifecycle, depot and backups stop (<KB id={440862} />, <KB id={440874} />) | Custom role push fails (<KB id={453736} />). Fleet DNS and password policy tasks fail (<KB id={455296} />). | Likely unaffected, since the License Server is separate | Log management and real-time metrics stop (<KB id={440874} />) | Lost for the realm if the broker runs in instance mode | Documented except licensing and sign-on |
-| **Fleet management appliance (9.0)** | No lifecycle for VCF Ops, VCFA or the broker | Management component passwords and certificates unavailable | Unaffected | Unaffected | Logins continue | Documented |
-| **SDDC Manager** | Core lifecycle stops: ESX, vCenter, NSX and domains | VCF Ops SDDC Manager page blank. VCF adapter reports failed (<KB id={443680} />). | Unaffected | VCF adapter collection stops | Unaffected (not in VCF SSO) | Documented |
-| **Cloud proxy** | Management services deployment blocked (9.1) | SSO configuration page fails to load (<KB id={437258} />) | Probably degraded | Collection for that site stops. Log forwarding through the proxy stops. | Logins continue | Documented except licensing |
-| **Identity broker** | Unaffected | Local accounts still work | Unaffected | Unaffected | SSO lost for every component in its scope | Documented (TechDocs single point of failure) |
-| **Software depot or its egress (9.1)** | Binary download and sync fail (<KB id={443216} />) | Unaffected | Unaffected | Unaffected | Unaffected | Documented |
-| **Log management (9.1)** | Unaffected | Operate > Logs unavailable | Unaffected | Ingest and search lost. Cloud proxies buffer about 20 GB. | Unaffected | Documented |
+| Component down | Where it runs | Documented effect | Inferred, so test first |
+|---|---|---|---|
+| **VCF Operations** | One per fleet, outside the runtime | 9.1 licensed: entitlements stay active and workloads run, but new assignments and capacity changes fail. Evaluation: sync fails, with the host and VM consequence above (<KB id={443240} />). | No [lifecycle console](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html) (9.1). No fleet password, certificate, SSO or DNS and NTP tasks. Alerts and dashboards lost. Existing sign-on continues, since the broker is separate. |
+| **License server (9.1)** | [One per fleet by default](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections%281%29/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html), outside the runtime | [Can't assign licenses, generate usage reports or import license files; new vCenters, hosts and vSAN clusters only in evaluation mode](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-downtime-impact.html). vSphere banner: "One or more vCenter instances are not connected to a license server." (<KB id={443240} />) | Lifecycle, monitoring and sign-on carry on. |
+| **Services runtime (9.1)** | [Hosts the services listed above](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/vcf-management-appliances.html) | A planned shutdown "stops all VCF management components running on the platform", naming Log Management, Realtime Metrics and VCF Operations Lifecycle and Configuration Management (<KB id={440874} />). A cluster failure can [stop the broker, which restores from its latest backup](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models.html). | An unplanned outage takes the same list: fleet and SDDC lifecycle, depot, logs, real-time metrics, and SSO if the broker runs in instance mode. The license server should keep running, since it sits outside. |
+| **Fleet management appliance (9.0)** | Standalone; [replaced by fleet and SDDC lifecycle in 9.1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html) (<KB id={440630} />) | Out of sync with VCF Operations, the lifecycle view reports "not Ready" and Fleet Manager password remediation fails (<KB id={420284} />, 9.0.x). That KB covers a sync fault, with no outage in it. | While the appliance is down, lifecycle for VCF Operations, VCF Automation and the broker stops, as do management component passwords and certificates. Licensing, monitoring and logins carry on. |
+| **SDDC Manager** | [One per instance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/sddc-manager-design.html) | [Supplies VCF Operations with](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/vcf-management-appliances.html) lifecycle for ESX, vCenter, HCX and NSX, workload domain deployment and import, and vSAN stretched cluster configuration. [Not covered by the broker](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/auth-design-vcf.html). | Those functions and VCF adapter collection stop for that instance. Other instances carry on. Licensing is unaffected. |
+| **Cloud proxy** | [One by default in each instance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html) | HAProxy services that stop responding leave the proxy Offline and the SSO configuration page failing to load (<KB id={437258} />, 9.x). [Disk buffer of about 20 GB, oldest logs dropped when full](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html), meant for unreliable networks. [One is required to deploy VCF management services](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/deploy-vcf-operations.html) on 9.1. | With one proxy, collection and log forwarding for that instance stop. Licensing is probably degraded. Logins continue. |
+| **Identity broker** | [Instance mode on the runtime, or embedded in vCenter](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/auth-design-vcf.html) | Outage impacts [the whole fleet](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models/vcf-fleet-wide-sso-model.html) or [all components in the instance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models/single-single-sign-on-deployment-per-vcf-instance.html), by SSO model. [Local accounts and the emergency API client keep working](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models.html). | Lifecycle, licensing and monitoring carry on. |
+| **Software depot (9.1)** | [Runtime, first instance, optionally others](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/vcf-management-appliances.html) | [Handles binaries for all VCF components](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html). | No new binaries, so upgrades that need them wait. Running components are untouched. |
+| **Log management (9.1)** | [Runtime worker nodes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html) | [HA recommended, Simple for test and dev only; plan N+1 or N+2 replicas](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html). [Backed up with the management services](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-backup-and-restore.html). | Operate > Logs is unavailable, and ingest and search stop. Logs sent through a proxy buffer up to its limit. Lifecycle, licensing and sign-on carry on. |
 
 ## Infrastructure and dependencies
 
-| Failure | What it takes with it | Basis |
+| Failure | Documented effect | Inferred, so test first |
 |---|---|---|
-| **Management domain vCenter** | Runtime node replacement and scaling (the runtime records vSphere placement, <KB id={452124} />). SSO if the broker is embedded. vCenter-dependent operations for everything it manages. | Documented |
-| **NSX Manager** | Data plane continues. Management services bootstrap edits the DFW exclusion list, so deployments can fail. NSX sign-on through SSO. | Documented for bootstrap; reasoned for SSO |
-| **DNS** | Upgrades and bootstrap (A and PTR records needed), License Server detection, cloud proxy load balancing, sign-on | Documented |
-| **Service account drift** | 9.1 upgrades and inventory sync. Repeated failures lock runtime addresses out of SDDC Manager (<KB id={450375} />). | Documented |
-| **Missing intermediate CA in platform trust** | VCF Ops to log management integration, and log management backups (<KB id={441515} />) | Documented |
+| **Management domain vCenter** | vSphere HA is the supported availability model, and vCenter HA isn't supported (<KB id={441793} />). Embedded broker [can be a single point of failure](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/what-is/deployment-models-for-sso.html) (9.0). | Sign-on lost if the broker is embedded. vCenter-dependent operations stop for what it manages. |
+| **NSX Manager** | While HA restarts managers at a second site in a 9.0 multisite design, about ten minutes, [the management plane is unavailable and the data plane isn't impacted](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/advanced-network-management/administration-guide/managing-nsx-t-in-multiple-locations/nsx-t-multisite.html). | The same holds for other manager outages. Broadcom states it for this scenario, so confirm yours. NSX sign-on through SSO is lost too. |
+| **DNS** | All VCF and VVF deployments require A and PTR records (<KB id={460245} />), and [runtime and broker FQDNs need entries before deployment](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-with-minimal-footprint-blueprint/management-domain-design-selections/operations-layer/vcf-management-services-in-the-first-vcf-instance-model-minimal-fleet.html). License server records missing: server shows "Not configured", assignments fail (<KB id={445428} />, <KB id={453197} />, <KB id={440630} />). Cloud proxy HAProxy needs every node's FQDN to resolve before it starts (<KB id={437258} />). | Upgrades and bootstrap that need these records fail. A wider DNS loss compounds across the rows above. |
 
-## Using the matrix
+## Faults that look like outages
 
-- **In design reviews,** ask "where does this run, and what is in the row for it?" for each management component. It turns availability choices such as Simple or HA, embedded or instance mode, and the number of cloud proxies into conversations about consequences.
-- **In incidents,** use it to answer "are my workloads affected?" in one sentence. Then use it to scope what else to check.
-- **In runbooks,** pair each row with the recovery KB and the order of restart. The services runtime, for example, must come back control plane first (<KB id={440862} />).
+In these rows a KB or release note gives a narrower cause than component failure, so check them before declaring an outage.
 
-<Callout type="warn">
-The *reasoned* entries are deliberately conservative, but they are still reasoning. Validate them in a lab before quoting them in a customer's operating procedures.
-</Callout>
+| Symptom | Documented cause | Scope |
+|---|---|---|
+| SDDC Manager page blank in VCF Operations, VCF adapter Failed, proxy collection stopped | Communication timeout between the adapter and SDDC Manager services (<KB id={443680} />) | 9.0.x |
+| Upgrade fails at `vmsp_upgrade` or `post_upgrade_inventory_sync`, `CLIENT_IP_BLOCKED` on runtime nodes | On VCF, rotations delete the SDDC lifecycle service accounts, and repeated 401s lock the nodes out of SDDC Manager (<KB id={450375} />) | VCF and VVF |
+| Custom role push shows "Salt infrastructure is down" | Salt services not responding, so restart Salt RaaS and Salt master (<KB id={453736} />) | 9.1.0.0 |
+| Management Services "Not configured"; password policy or fleet DNS tasks may fail for that site | Management services adapter not registered, because it was offline when added, so retry the configure task (<KB id={455296} />) | 9.1 |
+| Log Management installed but Operate > Logs offers to install it; its backup fails | Intermediate CA missing from `platform-trust` after using the automated Microsoft CA URL (<KB id={441515} />) | 9.1.x |
+| Depot stays "Disconnected" while validation succeeds | Firewall blocks Broadcom URLs, and the depot now runs on the runtime's IP pool (<KB id={443216} />) | 9.1.0 |
+| Upgrade fails with `VCFMS-HEALTH-002` | Runtime VMs' cluster, resource pool or network changed (<KB id={452124} />). [Moving them to another pool or folder also breaks later Day-N work](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html). | 9.1 |
+| Used capacity reads high and license assignment may block after patching the license server | [Display issue in VCF Operations; the fix is a cluster offline and online cycle of about an hour](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) | 9.1.1 |
+
+## Restart order for the runbook
+
+Bring up [the management domain first, then workload domains and workloads](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup.html). For the runtime on 9.1.0.x after a graceful shutdown, power on control plane VMs, wait five minutes, power on workers and allow 15 to 20 minutes before manual recovery (<KB id={440862} />). The [9.1.1.0 notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) list the failure to recover automatically as resolved, so the manual steps should be rarer after patching. Don't force power-off while a graceful shutdown runs (<KB id={440874} />).

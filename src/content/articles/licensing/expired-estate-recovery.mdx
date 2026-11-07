@@ -1,63 +1,143 @@
 ---
 title: "Recovering an expired estate when VCF Operations is the thing that's down"
-description: "The chicken-and-egg case: licenses have expired, hosts have disconnected, and the VCF Operations instance that would fix it can't start on unlicensed hosts. The documented way out uses a temporary evaluation host. A community shortcut exists for labs."
+description: "Expired hosts can't start the VCF Operations or 9.1 License Server that would license them. Broadcom's way out is a temporary evaluation host, but a host whose own evaluation expired may need reinstalling. Power nothing off meanwhile. A community esxcli shortcut is for labs only."
 category: licensing
 order: 10
-versions: ["9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Deep dive
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [428053, 440685, 443240, 448638, 404155]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [428053, 440685, 443240, 448638, 404155, 455974, 456295, 457074, 441178]
 sources:
-  - title: "Recovering licensing when VCF Operations is unavailable (9.0)"
+  - title: "Cannot apply licences to ESXi hosts and vCenter 9.0 if the existing licences have already expired and VCF Operations is not available"
     url: "https://knowledge.broadcom.com/external/article/428053"
     by: "Broadcom KB"
-  - title: "License Server VM fails to power on with License expired (9.1)"
+    kind: broadcom
+    date: 2026-03-20
+  - title: "Unable to assign a license to the vCenter Server from VCF Operations 9.1"
     url: "https://knowledge.broadcom.com/external/article/440685"
     by: "Broadcom KB"
-  - title: "How to apply a license to an ESX 9 host without VCF"
+    kind: broadcom
+    date: 2026-10-08
+  - title: "Licensing Model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Licensing Model (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/licensing-overview/licensing-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Licensing Overview (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "License Server Recovery (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-recovery.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Deploy a License Server (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manual-adding-vcf-components-post-deployment/deploy-a-license-server1.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "License Server Downtime Impact (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-downtime-impact.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Registering VCF Operations and a License Server with the VCF Business Services Console (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Single License Server Model, VCF Fleet in a Single Site blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections(1)/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1: Deploying the VCF License Server directly to an ESX host"
+    url: "https://williamlam.com/2026/07/vcf-9-1-deploying-the-vcf-license-server-directly-to-an-esx-host.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-07-24
+  - title: "How To Apply License to ESX 9 Host without VCF Operations (archived copy)"
+    url: "https://web.archive.org/web/20250922181238/https://fojta.wordpress.com/2025/09/17/how-to-apply-license-to-esx-9-host-without-vcf-operations/"
+    by: "Tom Fojta"
+    kind: practitioner
+    date: 2025-09-17
+  - title: "How To Apply License to ESX 9 Host without VCF Operations (repost excerpt)"
     url: "https://vcdx181.com/2025/09/18/how-to-apply-license-to-esx-9-host-without-vcf/"
     by: "Marc Huppert"
-  - title: "ESXCLI licensing namespace (9.0)"
-    url: "https://developer.broadcom.com/xapis/esxcli-command-reference/9.0.0/namespace/esxcli_licensing.html"
+    kind: practitioner
+    date: 2025-09-18
+  - title: "ESXCLI licensing namespace (9.1)"
+    url: "https://developer.broadcom.com/xapis/esxcli-command-reference/9.1.0/namespace/esxcli_licensing.html"
     by: "Broadcom Developer"
+    kind: broadcom
 ---
 
 <InShort>
-If licenses expire and the 90-day window passes, hosts disconnect and VMs can't power on. If VCF Operations, or the 9.1 License Server, runs on those same hosts, it can't start to fix the problem. The documented recovery is to install a **temporary ESX host in evaluation mode**, run VCF Operations (and in 9.1 the License Server) there, register the vCenter, and push a refreshed license (<KB id={428053} />, <KB id={440685} />). There is no supported way to license a 9.x vCenter or host without VCF Operations (<KB id={404155} />).
+Leave everything powered on. On an expired estate, hosts disconnect and [existing workloads aren't stopped but none can start](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html), and vCenter, VCF Operations and the 9.1 License Server are workloads too. Broadcom's recovery is a temporary standalone ESX host in evaluation mode, carrying a fresh VCF Operations and, on 9.1, a License Server. VCF Operations then pushes a license back to vCenter (<KB id={428053} />, <KB id={440685} />). Find out what expired before starting, because a host whose own evaluation ran out may refuse the license and need reinstalling (<KB id={448638} />). vCenter offers no way around this: 9.x has no key field, and there's no supported way to license a vCenter or host without VCF Operations (<KB id={404155} />).
 </InShort>
 
-<Compare rows={[
-  ["If licensing lapsed", "Re-enter a valid key in vCenter", "Get a refreshed license file into VCF Operations"],
-  ["If the licensing tool is down", "Not applicable: keys lived in vCenter", "Bring VCF Operations up on a temporary evaluation host"],
-  ["Per-host licensing tools", "vSphere Client key entry", "esxcli licensing entitlement commands (official namespace, used by community workaround)"],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+This note said to move or redeploy the appliances, run a usage and license cycle, and fix a stopped License Server before "the 180 days" because of evaluation expiry, and it sourced the lab method to Marc Huppert's repost of Tom Fojta's post. The KBs deploy new appliances and apply the license, the evaluation clock is 90 days, and an expired evaluation can change the route entirely.
+</Callout>
 
-## The documented recovery
+## What expired decides the route
 
-1. **Build a temporary ESX host** with a fresh evaluation period. Give it network access to the management VLANs, DNS and NTP.
-2. **Run VCF Operations on it.** Move or redeploy the appliance. In 9.1, do the same for the License Server. Check DNS A and PTR records and time.
-3. **Register the vCenter** in VCF Operations if it isn't already integrated.
-4. **Refresh and assign the license.** Run the connected update or the disconnected usage and license cycle, then assign. vCenter pushes entitlements to its hosts.
-5. **Confirm** under vSphere Client > Administration > Licensing > Assets, and that hosts reconnect.
-6. **Move VCF Operations back** to the management cluster and retire the temporary host.
+| What happened | Route Broadcom documents |
+|---|---|
+| A subscription license expired: a [180-day update was missed and the 90-day window after it ran out](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview.html) | Download an updated license file, per the same page. If VCF Operations or the License Server is off on those hosts, use the temporary host below first. |
+| An estate that was never licensed passed its evaluation | Deploy a new host, whose evaluation lets you redeploy the License Server and finish licensing (<KB id={455974} />, <KB id={456295} />). The [9.1 Licensing Model](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html) says a fleet in this state must be reinstalled. |
+| One host's evaluation expired under a licensed vCenter | Only that host disconnects. [Add it to a vCenter with a valid license and spare capacity](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html). If the license still won't take, and `vim-cmd vimsvc/license --show` reports an expired evaluation while `esxcli licensing entitlement list` shows no Subscription entry, reinstall the host or open a support case (<KB id={448638} />). |
+| A host's date was wrong at install and was later corrected | The evaluation can read as expired at once, blocking power-on of VMs including vCenter. Correct the date and install ESX again (<KB id={457074} />, seen on 9.1.1). |
+| 9.0 only: the evaluation expired and vCenter or VCF Operations has shut down | [Move it to a licensed host. With none available, reinstall ESX](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/licensing-overview/licensing-model.html), which restarts the 90 days. |
 
-## The lab shortcut
+Broadcom's pages disagree on expired evaluations. <KB id={440685} /> ends with hosts showing the VCF license "replacing the expired evaluation mode", while <KB id={448638} /> says an expired evaluation prevents the assignment and the 9.1 Licensing Model says a never-licensed fleet past its evaluation must be reinstalled. <KB id={455974} />, on a registration failing after an evaluation expired, says that behaviour "is scheduled for enhancement in release 9.1.3", so plan on the current behaviour while 9.1.1 is the latest release <AsOf date="2026-11-07" />.
 
-For nested labs left switched off past expiry, a community method extracts the ESX entitlement from the license file and adds it directly on each host with `esxcli licensing entitlement add --file`. It uses an official ESXCLI namespace but isn't a Broadcom procedure. Use it for labs only, and return to normal management through VCF Operations straight away.
+<Callout type="analysis" title="Which way to lean">
+Let the running workloads decide. Production VMs still running on expired hosts justify the temporary host and a Broadcom support case before anything is reinstalled, because a reinstall stops whatever that host is running. A never-licensed build with nothing of value on it is the simpler case for the reinstall the Licensing Model describes. The pages cited here don't rank these routes, and this isn't legal or purchasing advice: contract questions belong with Broadcom or your reseller.
+</Callout>
+
+## The temporary-host recovery
+
+This is the sequence in <KB id={428053} /> (9.0), which labels it a suggested workaround, and <KB id={440685} /> (9.1).
+
+1. **Build a fresh standalone ESX host** on independent hardware or isolated management storage. Set the correct date before installing (<KB id={457074} />), and don't use Auto Deploy, because [stateless hosts have no evaluation period](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html).
+2. **Deploy new appliances on it.** On 9.0 that's a VCF Operations VM from an OVF template through the Host Client. On 9.1 it's VCF Operations and the License Server. Verify NTP and that A and PTR records match exactly between the new appliance and the target vCenter.
+3. **Register the expired vCenter** in VCF Operations and confirm it shows Connected in the vCenter Systems table: under License Management > Licenses on 9.0, and Manage > Licensing > Licenses & Registration on the Version 9+ tab on 9.1.
+4. **Apply the VCF Solution License** in VCF Operations. That pushes the entitlement to vCenter and its connected hosts.
+5. **Confirm** under vSphere Client > Administration > Licensing > Assets that vCenter and the hosts show the license, and that hosts reconnect. On 9.1, also confirm the License Server VM sits on a datastore in the Management Workload Domain and is connected.
+
+Both KBs call the temporary host a 60-day evaluation, while <KB id={448638} />, <KB id={456295} /> and the Licensing Model all say 90. Plan the cutover around 60.
+
+Step 4 hides a dependency. The KBs go straight to applying the license, but an instance [must be registered with the VCF Business Services console](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations.html), by activation code when connected or by exchanging files when disconnected, and on 9.1 the confirmation file lasts 3 hours. That a new instance needs this before step 4 is an inference, though <KB id={456295} /> points the same way by ending on the disconnected registration runbook. Name the person with console access in advance, because the recovery waits on them.
+
+The License Server can't take a shortcut on 9.1, because [it can't be restored from a backup or snapshot, or cloned](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-recovery.html). The replacement is a new appliance: deploy and register it, delete the unavailable registration in the console, add the licenses to the new server, then import the license file so assignments return. Step 2 also runs into a conflict these pages leave unresolved. <KB id={440685} /> puts the License Server on the temporary standalone host, while the [deployment page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manual-adding-vcf-components-post-deployment/deploy-a-license-server1.html) says "You cannot deploy a license server on a standalone ESX host." The one public method found for that placement is William Lam's [July 2026 script](https://williamlam.com/2026/07/vcf-9-1-deploying-the-vcf-license-server-directly-to-an-esx-host.html), which uses OVF Tool and names replacing an existing server as a use case, but he presents it as a demonstration and doesn't discuss expiry. Ask support which applies before an outage forces the question.
+
+<Callout type="analysis" title="Leaving the temporary host">
+The KBs stop at step 5, with no procedure for moving off the temporary host or for the original appliances. That host's evaluation will run out and its appliances then can't restart, so the move is part of the recovery, and step 5's check on 9.1 implies where the License Server should end up. Agree the cutover with support before powering the original VCF Operations back on beside the new one.
+</Callout>
 
 ## Preventing it
 
-- **Don't let VCF Operations and the License Server be the only things that can fix a problem they depend on.** Know which hosts they run on and keep those licensed first.
-- **Watch evaluation hosts.** A host whose own evaluation expired can't take a subscription license and needs a reinstall or a case (<KB id={448638} />).
-- **Treat a stopped License Server as an incident** before the 180 days pass. An evaluation expiring while it's down causes exactly this (<KB id={443240} />).
+The [single-site blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections(1)/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html) chooses one License Server per fleet, no backup, availability through vSphere HA, and on loss a new instance with licenses migrated within 90 days. This site reads that design as no protection against this failure: HA restarts a VM, and starting a VM is what the Licensing Model says an expired host refuses.
 
-<Callout type="field">
-Write the recovery as a runbook before you need it: where the temporary host comes from, which VLANs it needs, who has console access to the Site ID, and how long a disconnected license cycle takes in practice. Name the person with portal access in advance, because the recovery waits on them.
-</Callout>
+The protection is watching two clocks. Evaluation runs [90 days from ESX install](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html), including on a host added to a vCenter with no spare capacity, so know which hosts carry vCenter, VCF Operations and the License Server, and license those first. The [180-day update](/vcf/library/licensing/180-day-cycle/) is the other, and a License Server outage [only starts to matter once that usage report falls due or a new assignment is needed](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-recovery.html).
 
-## Pitfalls
+Broadcom gives two answers on keeping the server up. <KB id={443240} /> says it should stay powered on at all times, while the [downtime page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-downtime-impact.html), updated 5 November 2026, says it doesn't need to be always online. Keep it on and alert on the vSphere banner "One or more vCenter instances are not connected to a license server". An evaluation that runs out during an outage is the case where <KB id={443240} /> has hosts disconnecting and VMs unable to power on.
 
-- **Assuming running VMs are at risk.** They aren't stopped. Powered-off VMs and new workloads are the problem, so avoid restarts until it's fixed.
-- **Using the lab shortcut in production** to avoid the runbook. It isn't supported.
-- **Forgetting to retire the temporary host.** It will expire in turn.
+Write the runbook now: where the temporary host comes from, who holds console access to the Site ID, and how long a disconnected registration takes in practice.
+
+## The lab shortcut
+
+[Tom Fojta's September 2025 post](https://web.archive.org/web/20250922181238/https://fojta.wordpress.com/2025/09/17/how-to-apply-license-to-esx-9-host-without-vcf-operations/) handles nested labs left powered off past expiry: extract the ESX token from the license file, then add it on each host with `esxcli licensing entitlement add --file`, so VCF Operations can start. Return to normal management through it straight away. The original now returns a 404, so the link is an archived copy, and [Marc Huppert's repost](https://vcdx181.com/2025/09/18/how-to-apply-license-to-esx-9-host-without-vcf/) carries only the opening.
+
+The [command is in Broadcom's reference](https://developer.broadcom.com/xapis/esxcli-command-reference/9.1.0/namespace/esxcli_licensing.html), but the procedure isn't Broadcom's, and it doesn't appear in either recovery KB. It isn't supported, so keep it out of production. The post is tagged VCF 9.0, and <KB id={441178} /> describes a 9.1 host rejecting a legacy 9.0-format token, so treat the method as unverified on 9.1 even in a lab.

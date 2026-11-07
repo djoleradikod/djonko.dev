@@ -1,52 +1,125 @@
 ---
 title: "Log collection and network flow collection: the integrations that ride on the VCF account"
-description: "Log management and VCF Operations for networks each need data from vCenter, NSX and hosts, with their own system-managed credentials. When they fail, check how the source was first added, the certificate, and the vCenter 9.1 log agent change."
+description: "On 9.1, enabling log collection overwrites existing log targets on vCenter and NSX, and the vCenter upgrade deletes vCenter's. Plan SIEM forwarding first, use the 9.1.1 SDDC Manager toggle over the blueprint's agent, and pick FQDN or IP for network sources once. Failure table by release."
 category: integrations
 order: 8
-versions: ["9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [425906, 432694, 422606, 424877, 448643, 433089, 451758, 436904]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [425906, 432694, 422606, 424877, 448643, 433089, 451758, 436904, 396643, 440630, 451187]
 sources:
-  - title: "Configuring a VMware Cloud Foundation account (9.1): log and flow collection"
+  - title: "Configuring a Standalone VCF Account in VCF Operations (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/connect-to-data-sources/vmware-cloud-foundation/configuring-vmware-cloud-foundation.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configuring a vCenter Account in VCF Operations (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/connect-to-data-sources/vsphere/configuring-a-vcenter-server-cloud-account-in-vrealize-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Log Management Detailed Design (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "High Availability Log Management Model, VCF Fleet with Multiple Sites Across Multiple Regions blueprint"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-with-multiple-sites-across-multiple-regions-blueprint/management-domain-design-selections(3)/operations-layer(3)/high-availability-logs-management-model(2).html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1 Product Support Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configuring Log Forwarding (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/log-analysis/configuring-log-forwarding.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrade to Log Management 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-vcf-operations-for-logs.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Add VMware NSX Manager (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/network-operationss/working-with-data-sources/adding-a-data-source-in-vrealize-network-insight/supported-vmware-managers/add-vmware-nsx-t-manager.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
 ---
 
 <InShort>
-**Log collection** uses its own system-managed vCenter account per source, named like `svc-li-vc-...@vsphere.local`, with a number that increments on each rotation (<KB id={432694} />). With a VCF licence, the integration between VCF Operations and the logs cluster is configured automatically when the logs cluster is imported; with VVF it is a manual tile (<KB id={425906} />). In 9.1, vCenter ships its own log agent, and upgrading vCenter **wipes the old log configuration**, so re-enable collection afterwards (<KB id={433089} />). **Network and flow collection** fails if NSX was previously added to VCF Operations for networks by IP: remove it, wait two hours, re-add by FQDN (<KB id={448643} />).
+On 9.1, [enabling log collection on vCenter or NSX overwrites whatever log configuration they have](https://knowledge.broadcom.com/external/article/433089), and the vCenter 9.1 upgrade deletes the old agent, its configuration and any syslog targets. So record those targets before the upgrade and settle how a SIEM will get its copy. On SDDC Manager 9.1.1, this site would use the Log Operations toggle on the VCF account, not the agent script Broadcom's blueprint still recommends. For network sources, choose FQDN or IP once: an NSX Manager first added by IP blocks flow collection until it is removed and re-added by FQDN (<KB id={448643} />).
 </InShort>
 
-<Compare rows={[
-  ["Log platform", "Aria Operations for Logs, separate appliance cluster", "9.0: VCF Operations for logs. 9.1: log management on the services runtime."],
-  ["Log credentials", "Your own vCenter account", "System-managed per integration"],
-  ["vCenter log agent", "Syslog configuration", "9.1: built-in agent. The upgrade resets syslog targets."],
-  ["SDDC Manager logs", "Syslog to the log platform", "9.1.1: Log Operations toggle on the VCF account"],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+The read-only fix named a "shared domain credential"; <KB id={422606} /> gives the owner's login, the system-managed credential or a new credential. SDDC Manager logs before 9.1.1 were listed as syslog; Broadcom documents an agent script. "FQDN everywhere" went past its source, and the restore row hid that the download locations in <KB id={436904} /> are unfilled placeholders. Unsourced lines about re-enabling "in minutes" and about auditors are gone, and every failure now carries its release, because a 9.0 fix read as if it applied to 9.1.
+</Callout>
 
-## Log collection failures
+## Decide these before collection goes on
 
-| Symptom | Cause and fix |
-|---|---|
-| VC collection status "Error: Failed to login" | Credential rotation pending or failed. Rotate the integration's credential (<KB id={432694} />). |
-| "You are viewing this account configuration in read-only mode" | Credential ownership. Log in as the owner or use a shared domain credential (<KB id={422606} />). |
-| `certificate_unknown(46)` on 9.0.0 or 9.0.1 | Restart logs nodes, or the forwarder container on a collector (<KB id={424877} />). |
-| vCenter logs stop after upgrading vCenter to 9.1 | Re-enable collection on Configure Collection (<KB id={433089} />). |
-| Banner "logs are getting dropped" with zero drops on the dashboard | A false positive from a tight dynamic threshold (<KB id={451758} />). |
-| No ingestion after restoring to a rebuilt runtime | The documented post-restore step (<KB id={436904} />). |
+**Where does your SIEM get its logs?** The overwrite applies to [vCenter and NSX at 9.1](https://knowledge.broadcom.com/external/article/433089). ESX is different, because VCF Operations adds a destination and leaves the existing ones, and the KB names no overwrite for vCenter and NSX below 9.1. The same KB says only one VCF Operations should manage collection for a component, with undefined behaviour otherwise.
+
+The defaults disagree across Broadcom's pages. The [design guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html) and the [multi-region fleet blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-with-multiple-sites-across-multiple-regions-blueprint/management-domain-design-selections(3)/operations-layer(3)/high-availability-logs-management-model(2).html) say vCenter and NSX collection is off by default, while the [vCenter account page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/connect-to-data-sources/vsphere/configuring-a-vcenter-server-cloud-account-in-vrealize-operations.html) calls Activate Log Collection "activated by default". Check the setting before saving an account on a 9.1 vCenter that has targets you want to keep.
+
+<Callout type="analysis" title="Keeping a SIEM feed">
+The blueprint's recommendation is to activate collection for vCenter and NSX (VCF-LOGS-RCMD-COM-006), so the feed should move to [log forwarding](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/log-analysis/configuring-log-forwarding.html) out of log management. Test it against the SIEM's parsers first. Over syslog the original source is lost, so the receiver can record the forwarder as the sender. Raw sends the log as received, without log management's syslog header, but it's documented as similar to syslog and without RFC compliance. Filtering rules also take precedence, so a filtered log is never forwarded, and the limit is 10 rules. If the SIEM keys on source host, resolve this before the first vCenter goes to 9.1.
+</Callout>
+
+**Direct or cloud proxy?** Direct is the default. The blueprint says to use a cloud proxy for remote sites (COM-010), and the [design guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html) adds what it buys: a proxy group gives high availability and scale, and about 20 GB of disk buffer. Proxy traffic is balanced across all VIPs, and selecting a specific VIP reverts collection to the direct path. For [vCenter](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/connect-to-data-sources/vsphere/configuring-a-vcenter-server-cloud-account-in-vrealize-operations.html) and, on 9.1.1, [SDDC Manager](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/connect-to-data-sources/vmware-cloud-foundation/configuring-vmware-cloud-foundation.html), the default unified proxy can't carry this traffic, so build an advanced one first. VIP field annotations [apply only over HTTP or HTTPS, never to syslog](https://knowledge.broadcom.com/external/article/433089), and [ESX sends syslog](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html).
+
+**SDDC Manager: toggle or agent?** The blueprint recommends installing the agent on SDDC Manager (COM-007) and links <KB id={396643} />, a script whose reason is that 9.0 had no automated way to do this. That KB covers 9.0 and 9.1. [VCF Operations 9.1.1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) sets SDDC Manager log collection up automatically, and the [Log Operations setting](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/connect-to-data-sources/vmware-cloud-foundation/configuring-vmware-cloud-foundation.html) is on by default and overrides any log configuration on SDDC Manager. Reading those together, this site would skip the script on SDDC Manager 9.1.1 and keep it for earlier releases. Broadcom's pages don't state that, and the blueprint page, last updated 5 Nov 2026, still lists the agent.
+
+## What differs by release
+
+| | 9.0 | 9.1 | 9.1.1 |
+|---|---|---|---|
+| Log platform | VCF Operations for Logs cluster | [No separate appliance](https://knowledge.broadcom.com/external/article/440630): a service of VCF Operations and management services | Same |
+| Connecting sources | The link between VCF Operations and the logs cluster: automatic on import with a VCF licence, manual tile with VVF (<KB id={425906} />) | Sources set up in the 9.0 UI [reconfigure automatically on upgrade](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-vcf-operations-for-logs.html); from 8.18 it's manual, and imported forwarders arrive inactive | Same |
+| vCenter agent | An installed agent or syslog targets, if configured | [Ships with vCenter](https://knowledge.broadcom.com/external/article/433089) | Same |
+| SDDC Manager logs | Agent script (<KB id={396643} />) | Agent script | Toggle on the VCF account |
+| Third-party logs content packs | Not covered by the 9.1 notes | [Unusable until converted](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) to management packs | Same |
+
+Log and flow collection each get [a separate system-managed credential](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/connect-to-data-sources/vmware-cloud-foundation/configuring-vmware-cloud-foundation.html) on vCenter and NSX, and rotation happens endpoint by endpoint. Activating system-managed credentials on a VCF account leaves existing vCenter and NSX accounts as they were.
+
+## Failures, by release
+
+| Symptom | Release | Cause and action |
+|---|---|---|
+| vCenter log collection configuration gone after the upgrade | vCenter 9.1 | The upgrade deletes the previous agent, its configuration and syslog targets. Re-enable on the Log Management collection page or the vCenter adapter's cloud account page (<KB id={433089} />). |
+| Workload domain vCenter and NSX accounts stay Stopped | 9.1.1 | They bind to the default legacy collector. [Re-save each account](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html). Collection doesn't start until the adapter does (<KB id={433089} />), so this probably costs logs as well as metrics, which is an inference from those two pages. |
+| vCenter "Failed to configure VC to send logs" | 9.1.1 | False positive. Confirm under Operate > Logs by charting Count of Events over time, grouped by `vmw_vcenter` (<KB id={433089} />). |
+| SDDC Manager status Failed, "Failed to propagate configuration to collector." | 9.1.1 | More than one VCF account existed before the log management integration. Turn collection off and on for that adapter on the VCF account page (<KB id={433089} />). |
+| NSX, HCX, vCenter or Supervisor Failed after certificate rotation | 9.1.x | Cosmetic. Logs keep flowing and the status recovers within an hour (<KB id={433089} />). |
+| The same status with no rotation, on a manually created account | 9.1.x | The credential may lack permissions, so update it (<KB id={433089} />). |
+| Banner "logs are getting dropped", zero drops on the dashboard | 9.1 | False positive when the dynamic threshold sits too close to the normal write response time. Recalculate thresholds, and allow several hours because that runs outside business hours (<KB id={451758} />). |
+| No ingestion after restoring to a new management services cluster | 9.1 | Run a recovery bundle with `--post-restore` (<KB id={436904} />). The KB's download locations are unfilled placeholders <AsOf date="2026-11-07" />, so get the bundle from Broadcom Support before a recovery depends on it. |
+| "Unable to access logs due to user permissions." after a restore | 9.1.1 | Known issue. [Stop and start log management](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) from Fleet LCM. |
+| HCX data plane appliances stop sending syslog | HCX 9.1.1.0 and later | [Redeploy or update the appliances](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) after the HCX upgrade. |
+| "You are viewing this account configuration in read-only mode" | 9.x | Credential ownership, enforced by design. Log in as the owner, or as admin use the system-managed credential or create a new one (<KB id={422606} />). |
+| VC Collection Status "Failed to login", account `svc-li-vc-<guid>-#@vsphere.local` | 9.0.x | Rotation pending or failed, or the logs appliance went back to a snapshot or backup older than the rotation. Rotate on the vCenter adapter, then allow up to 10 minutes plus up to 5 to reach Collecting. The trailing number should go up by one (<KB id={432694} />). |
+| `certificate_unknown(46)` | 9.0.0, 9.0.1 | Known issue with a workaround only. Restart each logs node with the ILB node last, or `vcf-log-forwarder` on a collector (<KB id={424877} />). |
 
 ## Network and flow collection
 
-- **Activate it on the vCenter or NSX account** with the "Activate Network & Flow Collection" option, which creates its own credential.
-- **If NSX was added by IP** in VCF Operations for networks, enabling it fails with "Adapter instance successfully saved but failed to enable Network and Flow Collection feature". Delete the IP-based source, wait two hours, re-add by FQDN (<KB id={448643} />).
+Activate it on the vCenter or NSX account in VCF Operations, where [the option sits under Network Operations and you choose a collector](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/network-operationss/working-with-data-sources/adding-a-data-source-in-vrealize-network-insight/supported-vmware-managers/add-vmware-nsx-t-manager.html). Broadcom's pages spell the label three ways: "[Activate Network and Flow](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/connect-to-data-sources/vsphere/configuring-a-vcenter-server-cloud-account-in-vrealize-operations.html)", "Activate Network & Flow Collection" (<KB id={448643} />) and "Activate Networks & Flow Collection" (<KB id={451187} />). Search on all three.
 
-<Callout type="field">
-Before a vCenter 9.1 upgrade, screenshot the log collection configuration for each vCenter. Re-enabling it afterwards takes minutes when you know what was there, and the gap in logs is visible to auditors.
-</Callout>
+Add [every linked vCenter before NSX](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/network-operationss/working-with-data-sources/adding-a-data-source-in-vrealize-network-insight/supported-vmware-managers/add-vmware-nsx-t-manager.html). The same page gives NSX around four hours to stabilise, and forbids adding a source by both IP and FQDN. Choose FQDN, because registration from VCF Operations defaults to it (<KB id={448643} />) and a [vCenter configured by IP isn't included in VCF accounts](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/connect-to-data-sources/vsphere/configuring-a-vcenter-server-cloud-account-in-vrealize-operations.html).
 
-## Pitfalls
+| Symptom | Release | Cause and action |
+|---|---|---|
+| "Adapter instance successfully saved but failed to enable Network and Flow Collection feature" | 9.x | NSX was first added to VCF Operations for networks by IP. Remove that source, wait the required two hours, re-add by FQDN from VCF Operations. Old metrics stay searchable until the 30-day retention ends (<KB id={448643} />). |
+| "Activate Networks & Flow Collection" greyed out on every VCF adapter | 9.1 | No Networks adapter was auto-created, after a manually created adapter or a proxy needing 407 authentication. The fix goes through the API and a fleet inventory sync (<KB id={451187} />). |
+| Installing Real-time metrics, Log Management and VCF Operations for networks together stalls for about three hours | 9.1.1 | [Install them one at a time](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html). If it has stalled, wait for the timeout and retry. |
 
-- **Adding data sources by IP** anywhere. FQDN everywhere.
-- **Sending SDDC Manager logs through the default unified proxy** in 9.1.1. That path needs an advanced unified proxy.
-- **Using third-party Logs content packs** after 9.1. Convert them to management packs.
+Before upgrading to 9.1.1, check for public cloud sources: [AWS and Azure data sources](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) in VCF Operations for networks are disabled and stop collecting, though collected data stays viewable until you remove them.

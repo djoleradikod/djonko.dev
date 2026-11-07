@@ -179,7 +179,7 @@ Each of these is one KB's specific failure, so match the symptom before using it
 
 From 5.2 the [vCenter upgrade must be RDU](https://blogs.vmware.com/cloud-foundation/2026/06/18/how-to-upgrade-to-vmware-cloud-foundation-9-1/), so don't write in-place as your fallback on that path. A standard upgrade does appear in <KB id={446672} />, for vCenter 8.0 to 9.0, so ask support if you need it.
 
-In the optimized window, NSX Manager [is upgraded before switchover](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html). Cancelling the vCenter upgrade at that point doesn't undo NSX, which is this site's inference from that order, so give NSX its own way back in the plan.
+In the optimized window, NSX Manager [is upgraded before switchover](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html). Cancelling the vCenter upgrade at that point doesn't undo NSX, which is this site's inference from that order, so give NSX its own way back in the plan. On a shared NSX instance [Broadcom's pages disagree on the order](/vcf/library/upgrades/mixed-versions/).
 
 <Diagram viewBox="0 0 820 200" label="Decision flow: a step fails; if the cause is known and the task is retryable, fix and retry; if the status is stale, refresh services; if the KB says revert or the window is closing, revert to the checkpoint; otherwise collect evidence and escalate." caption="Decide at the level of the failed step.">
   <rect class="box warn" x="10" y="74" width="130" height="50" rx="8" /><text class="t" x="24" y="104">Step failed</text>

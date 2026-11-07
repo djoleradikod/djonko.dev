@@ -2,7 +2,7 @@
    Type: Geist for text, Geist Mono for data (counts, dates, KB numbers, code).
    Colour: cool neutrals and one accent, cobalt. VCF 5.x is marked in amber, 9.x in the accent.
    The hub's support clock uses --chart tokens: ink for 9.x, fog for 5.x, an outline for vSphere 8, one vermilion mark for
-   what is unresolved. The home page has its own --dw and --fm tokens and its own type scale, in the home block at the end of this file.
+   what is unresolved. The home page has its own --dw tokens and its own type scale, in the home block at the end of this file.
    Shape: controls 8px, panels 12px, badges fully rounded. Nothing else. */
 :root {
   --bg: #f6f7f9;
@@ -20,7 +20,7 @@
   --line-strong: #98a2af;
   --home-bg: #fafbfc;
   --chart-v9: #12161d; --chart-v5: #838d9c; --chart-other: #838d9c;
-  --dw-ink: #12161d; --dw-red: #d63b17; --dw-red-ink: #b02d0f; --dw-grid: #aab2be; --dw-grid-fine: #e4e7ec; --plate: #12161d; --on-plate: #ffffff; --on-plate-2: #b9c0cb; --fm-band: #eef1f5; --fm-fleet: #12161d; --on-fm-fleet: #ffffff; --fm-inst: #ffffff; --fm-mgmt: #39424f; --on-fm-mgmt: #ffffff; --fm-wl: #e7ebf1;
+  --dw-ink: #12161d; --dw-red: #d63b17; --dw-red-ink: #b02d0f; --dw-grid: #aab2be; --dw-grid-fine: #e4e7ec;
   --chart-signal: #d63b17; --on-signal: #ffffff; --chart-signal-soft: #fdeee9;
   --read-bg: #ffffff;
   --read-text: #1f2733;
@@ -47,7 +47,7 @@
   :root:not([data-theme="light"]) {
     --bg: #0b0e13; --surface: #11161d; --surface-2: #171e27; --ink: #e8ecf1; --ink-2: #b4bdc8; --ink-3: #8b96a3;
     --line: #222a35; --line-2: #313b48; --accent: #8fa3ff; --accent-ink: #a8b8ff; --accent-soft: #18214a; --on-accent: #0b0e13;
-    --line-strong: #4b5765; --home-bg: #0b0e13; --chart-v9: #e4e8ee; --chart-v5: #667183; --chart-other: #667183; --dw-ink: #e4e8ee; --dw-red: #ff6b3d; --dw-red-ink: #ff8f6b; --dw-grid: #4b5765; --dw-grid-fine: #1d242e; --plate: #171e27; --on-plate: #e8ecf1; --on-plate-2: #b4bdc8; --fm-band: #11161d; --fm-fleet: #e4e8ee; --on-fm-fleet: #0b0e13; --fm-inst: #171e27; --fm-mgmt: #4d5768; --on-fm-mgmt: #ffffff; --fm-wl: #222a35; --chart-signal: #ff6b3d; --on-signal: #0b0e13; --chart-signal-soft: #2a130d; --read-bg: #0b0e13; --read-text: #cfd6df; --read-code: #12171f;
+    --line-strong: #4b5765; --home-bg: #0b0e13; --chart-v9: #e4e8ee; --chart-v5: #667183; --chart-other: #667183; --dw-ink: #e4e8ee; --dw-red: #ff6b3d; --dw-red-ink: #ff8f6b; --dw-grid: #4b5765; --dw-grid-fine: #1d242e; --chart-signal: #ff6b3d; --on-signal: #0b0e13; --chart-signal-soft: #2a130d; --read-bg: #0b0e13; --read-text: #cfd6df; --read-code: #12171f;
     --v5: #e3a95c; --v5-soft: #2a2012; --warn: #f0a35a; --warn-soft: #2c1d10; --code-bg: #151b23;
     --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 30px -14px rgb(0 0 0 / 0.6); color-scheme: dark;
   }
@@ -55,7 +55,7 @@
 :root[data-theme="dark"] {
   --bg: #0b0e13; --surface: #11161d; --surface-2: #171e27; --ink: #e8ecf1; --ink-2: #b4bdc8; --ink-3: #8b96a3;
   --line: #222a35; --line-2: #313b48; --accent: #8fa3ff; --accent-ink: #a8b8ff; --accent-soft: #18214a; --on-accent: #0b0e13;
-  --line-strong: #4b5765; --home-bg: #0b0e13; --chart-v9: #e4e8ee; --chart-v5: #667183; --chart-other: #667183; --dw-ink: #e4e8ee; --dw-red: #ff6b3d; --dw-red-ink: #ff8f6b; --dw-grid: #4b5765; --dw-grid-fine: #1d242e; --plate: #171e27; --on-plate: #e8ecf1; --on-plate-2: #b4bdc8; --fm-band: #11161d; --fm-fleet: #e4e8ee; --on-fm-fleet: #0b0e13; --fm-inst: #171e27; --fm-mgmt: #4d5768; --on-fm-mgmt: #ffffff; --fm-wl: #222a35; --chart-signal: #ff6b3d; --on-signal: #0b0e13; --chart-signal-soft: #2a130d; --read-bg: #0b0e13; --read-text: #cfd6df; --read-code: #12171f;
+  --line-strong: #4b5765; --home-bg: #0b0e13; --chart-v9: #e4e8ee; --chart-v5: #667183; --chart-other: #667183; --dw-ink: #e4e8ee; --dw-red: #ff6b3d; --dw-red-ink: #ff8f6b; --dw-grid: #4b5765; --dw-grid-fine: #1d242e; --chart-signal: #ff6b3d; --on-signal: #0b0e13; --chart-signal-soft: #2a130d; --read-bg: #0b0e13; --read-text: #cfd6df; --read-code: #12171f;
   --v5: #e3a95c; --v5-soft: #2a2012; --warn: #f0a35a; --warn-soft: #2c1d10; --code-bg: #151b23;
   --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 30px -14px rgb(0 0 0 / 0.6); color-scheme: dark;
 }
@@ -345,6 +345,13 @@ figcaption .credit { color: var(--ink-3); }
 /* Code blocks: a bar with the language, drawn by the block itself so it needs no script and nothing
    moves when the copy button arrives. The bar stays put while the code scrolls sideways under it. */
 .code-wrap { position: relative; }
+.astro-code .c1 { color: #032563; --shiki-dark: #ADDCFF; }
+.astro-code .c2 { color: #0E1116; --shiki-dark: #F0F3F6; }
+.astro-code .c3 { color: #A0111F; --shiki-dark: #FF9492; }
+.astro-code .c4 { color: #023B95; --shiki-dark: #91CBFF; }
+.astro-code .c5 { color: #702C00; --shiki-dark: #FFB757; }
+.astro-code .c6 { color: #66707B; --shiki-dark: #BDC4CC; }
+.astro-code .c7 { color: #622CBC; --shiki-dark: #DBB7FF; }
 pre.astro-code { margin: 0 0 1.25rem; padding: 0; font-size: 0.8125rem; line-height: 1.6; font-feature-settings: normal; scrollbar-width: thin; scrollbar-color: var(--line-2) transparent; }
 .dl-src pre.astro-code { margin: 0; }
 pre.astro-code > code { display: block; width: max-content; min-width: 100%; padding: 12px 14px 14px; }
@@ -375,7 +382,7 @@ a.badge:hover { border-color: var(--ink-3); color: var(--ink); }
   .copy-btn, .zoom, .video-facade .play, .dl .btn, .pdf-preview { display: none !important; }
 }
 @media print {
-  :root, :root[data-theme="dark"] { --bg: #fff; --surface: #fff; --surface-2: #f4f6f7; --ink: #111; --ink-2: #333; --ink-3: #555; --line: #d5dade; --line-strong: #8a929c; --code-bg: #f4f6f7; --home-bg: #fff; --read-bg: #fff; --read-text: #111; --read-code: #fff; --chart-v9: #12161d; --chart-v5: #838d9c; --chart-other: #838d9c; --dw-ink: #111; --dw-red: #d63b17; --dw-red-ink: #b02d0f; --dw-grid: #aab2be; --dw-grid-fine: #e4e7ec; --plate: #fff; --on-plate: #111; --on-plate-2: #333; --fm-band: #fff; --fm-fleet: #12161d; --on-fm-fleet: #ffffff; --fm-inst: #fff; --fm-mgmt: #39424f; --on-fm-mgmt: #ffffff; --fm-wl: #e7ebf1; --chart-signal: #d63b17; --on-signal: #ffffff; --chart-signal-soft: #fdeee9; color-scheme: light; }
+  :root, :root[data-theme="dark"] { --bg: #fff; --surface: #fff; --surface-2: #f4f6f7; --ink: #111; --ink-2: #333; --ink-3: #555; --line: #d5dade; --line-strong: #8a929c; --code-bg: #f4f6f7; --home-bg: #fff; --read-bg: #fff; --read-text: #111; --read-code: #fff; --chart-v9: #12161d; --chart-v5: #838d9c; --chart-other: #838d9c; --dw-ink: #111; --dw-red: #d63b17; --dw-red-ink: #b02d0f; --dw-grid: #aab2be; --dw-grid-fine: #e4e7ec; --chart-signal: #d63b17; --on-signal: #ffffff; --chart-signal-soft: #fdeee9; color-scheme: light; }
   html, body { background: #fff !important; }
   body { font-size: 10pt; }
   .site-header, .site-footer, .skip, .share, .prev-next, .toc, .no-print { display: none !important; }
@@ -494,7 +501,6 @@ h1, h2, h3, h4, .list .t, .tool p { overflow-wrap: break-word; }
 .report { margin: 12px 0 0; }
 @media print { .related, .report { display: none !important; } }
 tr:target td { background: var(--surface-2); }
-.cites { margin: 0; padding-left: 1.1em; } .cites li { margin: 0 0 4px; }
 
 /* A reading path as one printable document */
 .print-cover { padding-bottom: 12px; border-bottom: 1px solid var(--line); margin-bottom: 28px; }
@@ -958,229 +964,19 @@ input[type="search"] { width: 100%; max-width: 440px; padding: 10px 12px; border
 }
 @media (min-width: 1280px) { .hub-sec, .stand-in { grid-template-columns: 250px minmax(0, 1fr); column-gap: 48px; } }
 
-/* ------------------------------------------------------------------------------------------------
-   Home. Two voices. The support clock is the one drawn object: rules, ticks, hatching and the only red
-   on the page. Everything below it is set rather than drawn, in type, tone and space, each section at
-   its own weight: an index of words, a tinted band of solid blocks, running type, one ink band, a list.
-
-   One type scale, on these tokens, and nothing off it:
-     --t-display  the headline only
-     --t-state    the closing question, the one other change of pace
-     --t-head     every section head, one size
-     --t-sub      sub-heads, release names, the index, What I do
-     --t-body     reading text and dates
-     --t-small    axis labels and list meta
-   Every gap is a multiple of 8px; --sec is the pause between sections.
-   ------------------------------------------------------------------------------------------------ */
-.page-home { --shell: 1320px; --t-display: clamp(2.25rem, 10.2vw, 3.75rem); --t-state: 3rem; --t-head: 2rem; --t-sub: 1.25rem; --t-body: 1rem; --t-small: 0.8125rem; --sec: 128px; --band: 96px; --rule: 1.5px; }
-.page-home.docs { --bg: var(--home-bg); }
-@media (min-width: 901px) { .page-home { --t-display: min(5.75vw, 5.25rem); } }
-@media (max-width: 640px) { .page-home { --t-state: 2rem; --t-head: 1.5rem; --t-sub: 1.125rem; --sec: 80px; --band: 64px; } }
-
-.home-sec { padding-top: var(--sec); }
-.home-h2, .fleet figcaption { margin: 0; font-size: var(--t-head); line-height: 1.15; letter-spacing: -0.022em; font-weight: 600; color: var(--ink); }
-.home-h2 a { color: inherit; text-decoration: none; }
-.home-h2 a:hover { color: var(--accent-ink); }
-.home-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; }
-.home-head .hub-all { margin-top: 0; font-size: var(--t-body); }
-.home-intro { margin: 8px 0 0; max-width: 44rem; font-size: var(--t-body); line-height: 1.5; color: var(--ink-2); }
-
-/* The headline fills the measure on two lines, so nothing else on the screen competes with it. */
-.home-lead { padding-top: 40px; }
-.home-who { margin: 0 0 8px; font-size: var(--t-body); line-height: 1.5; font-weight: 500; color: var(--ink-2); }
-.home-lead h1 { margin: 0; font-size: var(--t-display); line-height: 1.03; letter-spacing: -0.034em; font-weight: 600; }
-.home-photo { display: block; margin-top: 16px; width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 1px solid var(--line); }
-.home-sub { display: grid; gap: 16px 48px; margin-top: 24px; }
-.home-sub > * { min-width: 0; }
-.home-lede { margin: 0; max-width: 34em; font-size: var(--t-sub); line-height: 1.4; color: var(--ink-2); }
-.home-lead .actions { align-items: center; gap: 8px 16px; margin: 0; }
-.home-lead .btn:not(.primary) { padding-inline: 4px; border-color: transparent; background: none; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
-@media (min-width: 1000px) { .home-sub { grid-template-columns: minmax(0, 1fr) auto; align-items: end; } }
-
-/* The clock, one framed object. Columns: release name, plot, a tail the last date runs into. Every row is the same
-   height; a hairline marks where the family changes. --stop is where a bar ends. */
-.sc { --name: 11rem; --tail: 3rem; --ax: 40px; --row: 48px; --h: 12px; display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 48px; padding-top: 64px; }
-.sc > * { min-width: 0; }
-.sc-lead { grid-column: 1; margin: 8px 0 0; max-width: 56rem; font-size: var(--t-body); line-height: 1.5; color: var(--ink-2); }
-.sc-rel { grid-column: 2; grid-row: 1 / span 2; align-self: end; margin: 0; font-size: var(--t-body); line-height: 1.5; }
-.sc-rel > div { display: flex; flex-wrap: wrap; gap: 0 8px; }
-.sc-rel dt { color: var(--ink-2); }
-.sc-rel dd { margin: 0; color: var(--ink); font-variant-numeric: tabular-nums; }
-.sc-rel b { font-weight: 600; }
-.sc-plot { position: relative; grid-column: 1 / -1; margin-top: 24px; }
-.sc-plot::before { content: ""; position: absolute; z-index: 1; left: var(--name); top: var(--ax); bottom: 0; width: 2px; background: var(--dw-ink); }
-.sc-plot::after { content: ""; position: absolute; z-index: 1; left: var(--name); right: 0; bottom: 0; height: var(--rule); background: var(--dw-ink); }
-.sc-t, .sc-t thead, .sc-t thead tr, .sc-t tbody { display: block; }
-.sc-t { margin: 0; font-size: var(--t-body); line-height: 1.3; }
-.sc-t :is(th, td) { display: block; padding: 0; border: 0; color: inherit; font: inherit; }
-.sc-t .sc-axis { position: relative; height: var(--ax); margin-inline: var(--name) var(--tail); font-size: var(--t-small); font-weight: 500; color: var(--ink-2); }
-.sc-axis::after { content: ""; position: absolute; left: 0; right: calc(-1 * var(--tail)); bottom: 0; height: var(--rule); background: var(--dw-ink); }
-.sc-ticks { position: absolute; left: 0; right: 0; top: 0; height: 24px; }
-.sc-ticks span { position: absolute; bottom: 2px; left: 0; transform: translateX(-50%); white-space: nowrap; font-variant-numeric: tabular-nums; }
-.sc-ticks span:first-child { transform: none; }
-.sc-ruler { position: absolute; left: 0; bottom: 0; width: 100%; height: 10px; overflow: visible; }
-.sc-ruler path { fill: none; stroke: var(--dw-ink); stroke-width: 1; vector-effect: non-scaling-stroke; shape-rendering: crispEdges; }
-.sc-grid { position: absolute; z-index: 1; left: var(--name); top: var(--ax); width: calc(100% - var(--name) - var(--tail)); height: calc(100% - var(--ax)); overflow: visible; pointer-events: none; }
-.sc-grid path { fill: none; stroke-width: 1; vector-effect: non-scaling-stroke; shape-rendering: crispEdges; }
-.sc-grid .fine { stroke: var(--dw-grid-fine); }
-.sc-grid .major { stroke: var(--dw-grid); }
-.sc-r { position: relative; display: grid; grid-template-columns: var(--name) minmax(0, 1fr) var(--tail); align-items: center; height: var(--row); }
-.sc-r.g { box-shadow: inset 0 1px 0 var(--line); }
-.sc-t .sc-n { grid-column: 1; grid-row: 1; padding-right: 8px; font-size: var(--t-sub); line-height: 1.3; font-weight: 500; letter-spacing: -0.012em; color: var(--ink); }
-.sc-t .sc-tl { position: relative; grid-column: 2; grid-row: 1; height: 100%; }
-.sc-bar { position: absolute; left: 0; top: 50%; width: var(--end); height: var(--h); margin-top: calc(var(--h) / -2); }
-.sc-r.v9 .sc-bar { background: var(--dw-ink); }
-.sc-r.v5 .sc-bar { box-shadow: inset 0 0 0 var(--rule) var(--dw-ink); }
-.sc-r.other .sc-bar { height: 2px; margin-top: -1px; background: var(--dw-ink); }
-.sc-stop { position: absolute; top: 50%; left: var(--stop); width: 2px; height: 24px; margin: -12px 0 0 -1px; background: var(--dw-ink); }
-.sc-span { position: absolute; top: 50%; left: var(--end); width: calc(var(--to) - var(--end)); height: 20px; margin-top: -10px; background: repeating-linear-gradient(135deg, var(--dw-red) 0 1.5px, transparent 1.5px 6px); }
-.sc-span::before, .sc-span::after { content: ""; position: absolute; top: -6px; bottom: -6px; width: 3px; background: var(--dw-red); }
-.sc-span::before { left: -1px; }
-.sc-span::after { right: -2px; }
-.sc-t .sc-d { position: relative; z-index: 2; grid-column: 2; grid-row: 1; height: 100%; pointer-events: none; }
-.sc-dt { position: absolute; top: 50%; left: calc(var(--stop) + 8px); padding-inline: 4px; background: var(--bg); transform: translateY(-50%); font-size: var(--t-body); line-height: 1.5; font-weight: 500; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--ink); }
-.sc-t .sc-b { position: relative; z-index: 3; grid-column: 2; grid-row: 1; height: 100%; pointer-events: none; }
-/* "Unresolved" sits on the span the way a dimension sits on its line; its mask is taller than the hatching. */
-.sc-b a { position: absolute; top: 50%; left: var(--end); width: calc(var(--to) - var(--end)); display: flex; justify-content: center; transform: translateY(-50%); text-decoration: none; pointer-events: auto; }
-.sc-flag { padding-inline: 8px; background: var(--bg); font-size: var(--t-body); line-height: 24px; font-weight: 600; white-space: nowrap; color: var(--dw-red-ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-.sc-cap { grid-column: 1 / -1; margin: 16px 0 0; max-width: 56rem; font-size: var(--t-body); line-height: 1.5; color: var(--ink-2); }
+/* The home page's own rules are in home.css. These two blocks reach other pages too. */
 @media (forced-colors: active) { .sc-r, .sc-r *, .sc-plot::before, .clock-cell, .clock-cell *, .clock-keys, .clock-keys * { forced-color-adjust: none; } }
 @media (forced-colors: active) { .sc-plot::after, .sc-axis::after { forced-color-adjust: none; } }
 /* The drawn clocks keep their shapes in forced colours, so they must use the system's colours: a stored site theme
-   can clash with a contrast theme. The repeated selector outranks every theme rule. The fleet model is told apart only
-   by fills, which forced colours removes, so it gets outlines. */
+   can clash with a contrast theme. The repeated selector outranks every theme rule. The fleet drawing's frames and connectors are
+   borders, and its solid bar stays solid in the system's own pair of colours. */
 @media (forced-colors: active) {
   :root:root:root { --ink: CanvasText; --ink-2: CanvasText; --ink-3: CanvasText; --bg: Canvas; --line: GrayText; --line-strong: CanvasText; --dw-ink: CanvasText; --dw-grid: GrayText; --dw-grid-fine: GrayText; --dw-red: Highlight; --dw-red-ink: LinkText; --chart-v9: CanvasText; --chart-v5: CanvasText; --chart-other: CanvasText; }
-  .fm-fleet, .fm-inst, .fm-dom { border: 1px solid CanvasText; }
-  .sc-dt, .sc-flag, .sc-n { forced-color-adjust: auto; }
-  .sc-grid .fine { display: none; }
-}
-@media (min-width: 1081px) and (max-height: 820px) { .sc { --row: 40px; padding-top: 48px; } }
-/* Below the width where a name column fits, each name and date sit on one line with the bar under them. */
-@media (max-width: 1080px) {
-  .sc { --name: 0px; --tail: 0px; --row: 24px; display: flex; flex-direction: column; padding-top: 48px; }
-  .sc-plot { order: 1; margin-top: 16px; }
-  .sc-lead { order: 2; margin-top: 24px; }
-  .sc-rel { order: 3; margin-top: 16px; align-self: stretch; }
-  .sc-cap { order: 4; }
-  .sc-grid .fine { display: none; }
-  .sc-r { grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto var(--row); height: auto; margin-top: 8px; }
-  .sc-r.g { box-shadow: none; }
-  .sc-t .sc-n { position: relative; z-index: 2; grid-column: 1; grid-row: 1; justify-self: start; padding: 0 8px 0 0; background: var(--bg); }
-  .sc-t .sc-tl { grid-column: 1 / -1; grid-row: 2; }
-  .sc-t .sc-d { grid-column: 2; grid-row: 1; height: auto; }
-  .sc-dt { position: static; display: block; padding: 0 0 0 8px; transform: none; }
-  .sc-t .sc-b { grid-column: 1 / -1; grid-row: 2; }
-  .sc-b a { left: calc(var(--to) + 6px); width: auto; }
-  .sc-flag { padding-inline: 4px; font-size: var(--t-small); line-height: 20px; }
-  .sc-span { height: 16px; margin-top: -8px; }
-  .sc-span::before, .sc-span::after { top: -4px; bottom: -4px; }
-  .sc-stop { height: 20px; margin-top: -10px; }
-}
-@media (max-width: 640px) {
-  .sc-dt { font-size: var(--t-small); }
-}
-
-/* The index: twelve words on one even grid, read down the columns. Type only. */
-.lx-index { display: grid; grid-auto-flow: column; grid-template-rows: repeat(6, auto); grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; list-style: none; margin: 24px 0 0; padding: 0; }
-.lx-index li { margin: 0; min-width: 0; }
-.lx-index a { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; padding-block: 8px; color: inherit; text-decoration: none; }
-.lx-index .nm { font-size: var(--t-body); line-height: 1.3; font-weight: 600; color: var(--ink); }
-.lx-index .ct { font-size: var(--t-body); line-height: 1.3; color: var(--ink-3); font-variant-numeric: tabular-nums; }
-.lx-index a:hover .nm { color: var(--accent-ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-@media (min-width: 641px) {
-  .lx-index { column-gap: 32px; }
-  .lx-index .nm { font-size: var(--t-sub); letter-spacing: -0.012em; }
-}
-@media (min-width: 900px) { .lx-index { grid-template-rows: repeat(3, auto); grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 32px; } }
-
-/* The fleet model: solid blocks on a tinted band, stacked the way the layers stack. Nesting does the connecting. */
-.home-fleet { margin-top: var(--sec); padding-block: var(--band); background: var(--fm-band); }
-.fleet { margin: 0; }
-.fleet figcaption a { display: block; margin-top: 8px; font-size: var(--t-body); line-height: 1.5; letter-spacing: 0; font-weight: 400; }
-.fm { display: grid; gap: 8px; margin-top: 32px; }
-.fm-fleet { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 16px; padding: 16px 24px 24px; background: var(--fm-fleet); color: var(--on-fm-fleet); }
-.fm-l { width: 100%; margin-bottom: 8px; font-size: var(--t-small); line-height: 1.4; font-weight: 500; }
-.fm-fleet b { font-size: var(--t-sub); line-height: 1.3; font-weight: 600; letter-spacing: -0.012em; }
-.fm-d { font-size: var(--t-body); line-height: 1.5; }
-.fm-insts { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 8px; }
-.fm-inst { display: flex; flex-direction: column; min-width: 0; padding: 16px; background: var(--fm-inst); }
-.fm-name { display: block; margin-bottom: 16px; font-size: var(--t-sub); line-height: 1.3; font-weight: 600; letter-spacing: -0.012em; color: var(--ink); }
-.fm-doms { flex: 1; display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); gap: 8px; }
-.fm-inst.n3 { --cols: 3; }
-.fm-inst.n2 { --cols: 2; }
-.fm-dom { min-width: 0; padding: 16px; background: var(--fm-wl); font-size: var(--t-body); line-height: 1.5; color: var(--ink-2); }
-.fm-dom b { display: block; font-weight: 600; color: var(--ink); }
-.fm-dom.m { background: var(--fm-mgmt); color: var(--on-fm-mgmt); }
-.fm-dom.m b { color: inherit; }
-@media (max-width: 1000px) { .fm-insts { grid-template-columns: minmax(0, 1fr); } }
-@media (max-width: 560px) { .fm-inst.n3, .fm-inst.n2 { --cols: 1; } }
-
-/* What I do: two by two, running type, the heading and its sentence at one size. */
-.do-list { display: grid; gap: 40px 64px; margin-top: 32px; }
-.do-list a { display: block; color: inherit; text-decoration: none; }
-.do-list h3 { margin: 0; font-size: var(--t-sub); line-height: 1.4; letter-spacing: -0.012em; font-weight: 600; color: var(--ink); }
-.do-list a:hover h3 { color: var(--accent-ink); }
-.do-list p { margin: 0; font-size: var(--t-sub); line-height: 1.4; letter-spacing: -0.012em; color: var(--ink-2); }
-@media (min-width: 800px) { .do-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-
-/* The work: the page's one ink band. Local tokens repaint the type; all of it hangs on one three-column grid. */
-.home-work { --ink: var(--on-plate); --ink-2: var(--on-plate-2); --ink-3: var(--on-plate-2); --accent: var(--on-plate); --accent-ink: var(--on-plate); margin-top: var(--sec); padding-block: var(--band); background: var(--plate); color: var(--on-plate); }
-.ex-series { display: grid; grid-template-columns: minmax(0, 1fr); align-items: baseline; gap: 16px 32px; counter-reset: mod; margin-top: 48px; color: inherit; text-decoration: none; }
-.ex-series:hover { color: inherit; }
-.ex-series h3, .ex-col h3 { margin: 0; font-size: var(--t-sub); line-height: 1.3; letter-spacing: -0.012em; font-weight: 600; color: inherit; }
-.ex-series h3 { margin-bottom: 8px; }
-.ex-series:hover h3, .ex-col:hover h3 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-.ex-modules { display: contents; list-style: none; }
-.ex-modules li { display: grid; grid-template-columns: 24px minmax(0, 1fr); align-items: baseline; counter-increment: mod; margin: 0; font-size: var(--t-sub); line-height: 1.3; letter-spacing: -0.012em; font-weight: 500; color: inherit; }
-.ex-modules li::before { content: counter(mod); font-size: var(--t-small); font-weight: 400; letter-spacing: 0; color: var(--ink-2); font-variant-numeric: tabular-nums; }
-.ex-go { display: inline-flex; align-items: center; gap: 8px; padding-left: 24px; font-size: var(--t-body); line-height: 1.5; color: var(--ink-2); }
-.ex-three { display: grid; gap: 32px; margin-top: 64px; }
-.ex-col { display: block; min-width: 0; color: inherit; text-decoration: none; }
-.ex-col:hover { color: inherit; }
-.ex-col p { margin: 8px 0 0; font-size: var(--t-body); line-height: 1.5; color: var(--ink-2); }
-.ex-mini { margin: 8px 0 0; }
-.ex-mini > div { display: flex; align-items: baseline; gap: 8px; font-size: var(--t-body); line-height: 1.5; }
-.ex-mini dt { font-weight: 400; color: var(--ink-2); }
-.ex-mini dd { order: -1; min-width: 24px; margin: 0; font-weight: 600; color: inherit; }
-.ex-ticks { list-style: none; margin: 8px 0 0; padding: 0; }
-.ex-ticks li { margin: 0; font-size: var(--t-body); line-height: 1.5; color: var(--ink-2); }
-@media (min-width: 900px) {
-  .ex-series { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .ex-series h3 { grid-column: 1 / -1; }
-  .ex-three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-
-/* Latest writing: one plain ruled list, every date in its column. */
-.home-new { margin-top: 24px; }
-.page-home .hub-rows { font-size: var(--t-body); }
-.page-home .hub-rows a { padding-block: 12px; }
-.page-home .hub-rows time, .page-home .hub-rows .k { font-size: var(--t-small); }
-.page-home .rows-new a { grid-template-columns: 10.5rem minmax(0, 1fr) auto; }
-
-.home-close { padding-block: var(--sec); }
-.home-close h2 { margin: 0; max-width: 22em; font-size: var(--t-state); line-height: 1.1; letter-spacing: -0.03em; font-weight: 600; }
-.home-close > div { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-top: 24px; }
-.home-close p { margin: 0; font-size: var(--t-sub); line-height: 1.4; color: var(--ink-2); }
-
-@media (max-width: 640px) {
-  .home-lead { padding-top: 24px; }
-  .fm-fleet { padding: 16px; }
-  .fm-inst { padding: 8px; }
-  .fm-name { margin: 8px 8px 16px; }
-  .do-list { gap: 32px; margin-top: 24px; }
-  .ex-series { margin-top: 32px; }
-  .ex-three { margin-top: 48px; }
-  .page-home .rows-new a { grid-template-columns: minmax(0, 1fr) auto; }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .home-lead > *, .sc > * { animation: rise 0.5s var(--ease) both; }
-  .sc > * { animation-delay: 0.05s; }
+  :root:root:root .page-home main { --ink-2: CanvasText; --fm-tint: Canvas; }
 }
 
 @media print {
-  .home-fleet, .home-work { background: none; }
   .home-lead .actions, .hub-start, .lib-filters { display: none !important; }
   .stand { border: 0; background: none; }
-  .clock-bar, .clock-span, .clock-keys i, .sc-bar, .sc-span, .sc-plot::before, .sc-plot::after, .fm-fleet, .fm-inst, .fm-dom { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .clock-bar, .clock-span, .clock-keys i, .sc-bar, .sc-span, .sc-plot::before, .sc-plot::after { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }

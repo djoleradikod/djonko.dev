@@ -4,6 +4,7 @@ import sitemap from '@astrojs/sitemap';
 import { createReadStream, existsSync, statSync } from 'node:fs';
 import { join, normalize, extname } from 'node:path';
 import remarkMermaid from './src/lib/remark-mermaid.mjs';
+import { tokenClasses } from './src/lib/token-classes.mjs';
 import rehypeTableWrap from './src/lib/rehype-table-wrap.mjs';
 
 // Pages that should not appear in the sitemap.
@@ -36,6 +37,10 @@ export default defineConfig({
   redirects: {
     '/vcf/library/troubleshooting/password-and-account-failures/': '/vcf/library/day-2/passwords-service-accounts/',
     '/vcf/library/troubleshooting/certificate-failures/': '/vcf/library/day-2/certificates-in-9/',
+    '/vcf/library/troubleshooting/depot-and-download-failures/': '/vcf/library/upgrades/getting-binaries/',
+    '/vcf/library/labs/offline-depot-in-a-lab/': '/vcf/library/upgrades/getting-binaries/',
+    '/vcf/library/labs/esx-settings-for-labs/': '/vcf/library/labs/choosing-a-lab-approach/',
+    '/vcf/library/labs/nested-lab-automation/': '/vcf/library/labs/choosing-a-lab-approach/',
   },
   prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
   integrations: [mdx(), sitemap({ filter: (page) => !HIDDEN.test(new URL(page).pathname) }), devMedia],
@@ -43,6 +48,9 @@ export default defineConfig({
     remarkPlugins: [remarkMermaid],
     rehypePlugins: [rehypeTableWrap],
     syntaxHighlight: { type: 'shiki', excludeLangs: ['mermaid'] },
-    shikiConfig: { themes: { light: 'github-light-high-contrast', dark: 'github-dark-high-contrast' } },
+    shikiConfig: {
+      themes: { light: 'github-light-high-contrast', dark: 'github-dark-high-contrast' },
+      transformers: [tokenClasses],
+    },
   },
 });

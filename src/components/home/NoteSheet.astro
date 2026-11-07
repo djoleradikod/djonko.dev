@@ -1,0 +1,39 @@
+---
+// One note set open on the page: running head, title, one-line summary, then a real table from the note's own body,
+// always whole rows. Everything comes from the note at build time. The explicit roles keep it a table for a screen reader
+// on a phone, where its rows stack; each answer carries its column's name for that layout. A cell the note itself says has
+// no fixed answer is set in the page's one accent for what is unresolved.
+import { CATEGORIES } from '../../data/categories';
+import { summaryLine } from '../../data/decisions';
+import { allArticles, urlOf } from '../../lib/articles';
+import Icon from '../Icon.astro';
+import { noteTable } from './excerpts';
+
+interface Props {
+  note: Awaited<ReturnType<typeof allArticles>>[number];
+  header: string[]; // the cells the table's header starts with, which is how it is found in the note
+  rowHead?: number; // the column that names each row
+  rows: number; // show this many rows
+  class?: string;
+}
+const { note, header, rowHead = 0, rows, class: cls } = Astro.props;
+
+const table = noteTable(note, header, rows);
+const area = CATEGORIES.find((c) => c.id === note.data.category);
+const reviewed = note.data.reviewed;
+if (!area || !reviewed) throw new Error(`The home page shows ${note.id}'s area and sources-checked date, and one has gone.`);
+const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+---
+<article class:list={['sheet', cls]}>
+  <p class="sheet-run"><span class="sheet-path"><span>{area.short}</span><span>{note.data.level}</span><span>VCF {note.data.versions.join(', ')}</span></span><span>Sources checked <time datetime={reviewed.toISOString().slice(0, 10)}>{fmt(reviewed)}</time></span></p>
+  <h3><a href={urlOf(note)}>{note.data.title}</a></h3>
+  <p class="sheet-sum">{summaryLine(note.data.description)}</p>
+  <table class="sheet-t" role="table">
+    <caption class="sr-only">A table from this note</caption>
+    <thead role="rowgroup"><tr role="row">{table.head.map((h) => <th role="columnheader" scope="col">{h}</th>)}</tr></thead>
+    <tbody role="rowgroup">
+      {table.rows.slice(0, rows).map((r) => <tr role="row">{r.map((c, i) => i === rowHead ? <th role="rowheader" scope="row" set:html={c}></th> : <td role="cell" class={/^Nothing fixed\b/.test(c) ? 'open' : undefined} data-h={i > rowHead ? table.head[i] : undefined} set:html={c}></td>)}</tr>)}
+    </tbody>
+  </table>
+  <p class="sheet-more"><a class="go" href={urlOf(note)}>Read the note <Icon name="arrow-right" size={16} /></a></p>
+</article>

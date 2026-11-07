@@ -1,81 +1,145 @@
 ---
 title: "Licensing errors decoded: the message, what it means, and where to look"
-description: "Licensing messages in 9.x are specific once you know the pattern: reporting, registration, or assignment. A lookup table of the common strings with their usual cause, and the four log files that explain the rest."
+description: "Sort a VCF 9 licensing message by what it threatens: the 180-day reporting clock, the path to the Business Services console, or the link between vCenter and the License Server. Lookup tables give each string's documented cause and fix, plus logs, status codes and when to redeploy."
 category: licensing
 order: 9
-versions: ["9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Deep dive
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [438771, 448518, 439522, 453149, 428209, 432158, 435664, 409220, 447554, 441526, 440471, 440863, 452095, 445428, 454287, 440715, 429696]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [438771, 448518, 439522, 453149, 428209, 432158, 435664, 409220, 444349, 447554, 441526, 440471, 447739, 440863, 424533, 452095, 442564, 440982, 445428, 441747, 454287, 423362, 455886, 440715, 453517, 456737, 429696, 448638]
 sources:
   - title: "Licensing overview (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview.html"
     by: "Broadcom TechDocs"
-  - title: "Ports and protocols (search: license)"
-    url: "https://ports.broadcom.com/"
+    kind: broadcom
+  - title: "License Server overview (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "License Server networking (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-networking.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "License Server security (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-security.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Single License Server Model, VCF Fleet in a Single Site blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections%281%29/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "vCenter 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcenter-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VCF 9.1 frequently asked questions"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
     by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
 ---
 
 <InShort>
-Sort a licensing message into one of three families. **Reporting**: usage is due or overdue, so run the update. **Registration**: VCF Operations can't reach the console, the code is stale, or the Site ID is wrong. **Assignment** (mostly 9.1): vCenter can't reach or trust the License Server, usually because of DNS, case, time or ports. Exact wording varies a little between builds, so search the KB with the string from your screen.
+Sort the message by what it threatens. **Reporting** messages carry the clock: usage is due every 180 days, and 90 days after a license expires hosts disconnect and workloads can't start. **Registration** messages usually mean VCF Operations can't finish its exchange with the Business Services console, and the documented causes include a blocked path, a bad proxy, an expired activation code or a wrong Site ID. **Assignment** messages, mostly on 9.1, usually mean vCenter and the License Server can't work together: check time, TCP 443, DNS, FQDN and the vCenter UUID. Wording shifts between builds, and 9.1.1 [changed licensing errors to carry more detail and remediation guidance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), so search on the stem of the string.
 </InShort>
 
-<Compare rows={[
-  ["Typical licensing failure", "An expired or missing key", "A missed report, a blocked path to the console, or vCenter unable to reach the License Server"],
-  ["Logs", "vCenter licensing service", "VCF Operations licensing plugins and collector, plus vCenter's cis-license log"],
-  ["Restart to try", "vCenter license service", "service-control --restart vmware-cis-license on vCenter, after fixing the cause"],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+This note listed a certificate fault as an assignment cause and HTTP 526 as a License Server response. The Broadcom KBs opened for these messages document neither, so they're gone. A wrong Site ID stays, now cited and limited to the 9.0.1 messages its KB names. It also read the "not connected to a license server" banner as a License Server that was unreachable or off, where <KB id={440471} /> documents one that was never installed, and it credited NTP, port 443 and UUID checks to <KB id={452095} /> when they come from <KB id={424533} />.
+</Callout>
 
-## Reporting
+## How urgent is it?
 
-| Message | Usual cause and fix |
+Treat reporting first. [A usage report is required at least every 180 days](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview.html) and an unreported license expires. Assignments are impacted for the next 90 days. After that, management operations can be blocked, hosts disconnect from vCenter and workloads can't start, though running ones aren't proactively stopped. [The 180-day note](/vcf/library/licensing/180-day-cycle/) has the dates by version.
+
+A License Server outage alone is less pressing, because [running workloads and management operations carry on](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview.html) until the report due date expires or a new assignment is needed. While it's down, though, you can't assign licenses, generate usage reports or import license files. An outage close to a due date therefore becomes a reporting problem. That's an inference from those two rules, and those pages don't state it.
+
+## Don't let a workaround choose your reporting mode
+
+The single-site fleet blueprint [recommends connected mode](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections%281%29/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html) (VCF-OPS-RECD-LIC-001) and keeps disconnected for a policy that bars internet access to management components, at the cost of manual uploads every 180 days. Yet the documented fix for blocked live token validation is to [switch to disconnected](https://knowledge.broadcom.com/external/article/447554).
+
+<Callout type="analysis" title="Which mode to end up in">
+Use that switch to get licensed today, then decide the mode on its merits. If policy allows outbound access, direct or through a proxy, fix the path and switch back within 180 days: <KB id={428209} /> warns that a longer spell disconnected can make the return fail until you enter a new activation code. If policy forbids it, stay disconnected and put the file exchange on a calendar.
+</Callout>
+
+## Redeploying the License Server is a documented fix
+
+The same blueprint says [backup isn't required](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections%281%29/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html): if the server is lost, deploy a new instance and migrate licenses within 90 days. [VCF Operations restores earlier assignment data](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview.html) to the replacement. On this site's reading, then, a rebuild costs less than it sounds. Three documented faults need one: the black-console builds of 9.1.0 (<KB id={441526} />), a wrong domain or FQDN at deployment (<KB id={442564} />) and a proxy on the appliance that other checks don't clear (<KB id={441747} />). A mismatch between the FQDN registered in the console and the deployed one takes only an unregister and re-register (<KB id={452095} />).
+
+Confirm the appliance exists before debugging it. The [FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) (Q22, 4 Nov) and the blueprint both describe automatic deployment during installation or upgrade, yet <KB id={440471} /> and <KB id={453149} /> cover environments where it was never deployed.
+
+## The lookup
+
+Before opening a log, find the reporting mode, the last successful refresh and, on 9.1, the state of the [License Server Health dashboard](https://knowledge.broadcom.com/external/article/424533).
+
+### Reporting
+
+| Message | Documented cause and fix |
 |---|---|
-| "Usage Report overdue today" | A disconnected instance hasn't reported. Run the usage cycle (<KB id={438771} />). |
-| "The due date for submitting your usage report is on ..." | The normal 180-day reminder (<KB id={448518} />). |
-| "To prevent service interruption, download a usage file ..." | Same. If it persists after an update, restart the vCenter license service (<KB id={439522} />). |
-| "... has passed and you will lose access to your service on ..." | Past due. On 9.1, also seen when the License Server was never deployed (<KB id={453149} />). |
+| "Usage Report overdue today" | A disconnected instance hasn't reported. Exchange usage and license files with the console by hand (<KB id={438771} />). |
+| "The due date for submitting your usage report is on ..." or the red "One or more licenses have expired and your service will be degraded on ..." | The expected 180-day heartbeat, even on a multi-year contract. Update licenses by your mode's procedure. If the UI hands you an unsupported .rpt file, use the API route in <KB id={448518} />. |
+| "To prevent service interruption, download a usage file ..." with `One or more licenses expire on <month_year>` in vCenter | Can mean a transient network failure blocked the sync. Click Update Licenses, then update by hand. If that fails, run `service-control --restart vmware-cis-license` on vCenter. Re-registering is the last step (<KB id={439522} />). |
+| "... has passed and you will lose access to your service on ..." | Past due. On 9.1 it also appears when the License Server was never deployed, which blocks UI license updates: deploy it, register it, apply the replacement keys (<KB id={453149} />). |
 
-## Registration
+### Registration
 
-| Message | Usual cause and fix |
+| Message | Documented cause and fix |
 |---|---|
-| "Switching the reporting mode failed. Check your internet connection." | Endpoints blocked, proxy wrong, code expired, or disconnected for more than 180 days. Test from every node, then enter a new code (<KB id={428209} />, <KB id={432158} />). |
-| "This activation code is not valid" | Proxy authentication (407) or no internet (<KB id={435664} />) |
-| "Server returned status code: 0" | Proxy or firewall blocking the console URLs (<KB id={409220} />) |
-| "Your license servers are still pending registration" | 9.1: live validation blocked, so use disconnected mode (<KB id={447554} />), or the early License Server network conflict (<KB id={441526} />) |
+| "Switching the reporting mode failed. Check your internet connection." | Blocked endpoints: test `vcf.broadcom.com` and `eapi.broadcom.com` on 443 from every node (<KB id={428209} />). More than 180 days disconnected, or an expired code with `401` and `invalid_client` in the log, needs a new activation code (<KB id={428209} />, <KB id={432158} />). On 9.0.x, a missing or wrong proxy credential fails the switch too (<KB id={435664} />). |
+| "This activation code is not valid" | On 9.0.x the code can be right and the proxy wrong, with `407 authenticationrequired` in the log. Fix or remove the proxy in Global Settings, then re-enter the code (<KB id={435664} />). |
+| "Server returned status code: 0" | Proxy or firewall blocking the required URLs; the KB links the list (<KB id={409220} />). |
+| "The managed vCenter systems are not licensed by the licenses added to this VCF Operations instance." or "License file cannot be updated." | 9.0.1, with Update Licenses failing silently and a false expiry warning. A wrong Site ID at registration, commonly because the configured primary tenant is inactive, gets the licensing request rejected. Check the Site ID against your entitlements, generate a new activation code in Connected mode and enter it (<KB id={444349} />). |
+| "Your license servers are still pending registration" | 9.1, with two unrelated causes. If a proxy or security device blocks live token validation, switch to disconnected (<KB id={447554} />) and read the mode section above. If the License Server console is black, its Docker bridge conflicts with 172.17.0.0/16: 9.1.0.0200 fixes it, and an existing 9.1.0 deployment must be replaced (<KB id={441526} />). |
 
-## Assignment and the License Server (9.1)
+### Assignment and the License Server (9.1)
 
-| Message | Usual cause and fix |
+| Message | Documented cause and fix |
 |---|---|
-| "One or more vCenter instances are not connected to a license server." | No License Server, or it's unreachable or off (<KB id={440471} />) |
-| "The current vCenter Server is not licensed by a licensing server." | vCenter upgraded before VCF Operations (<KB id={440863} />) |
-| "License could not be assigned to vCenters." | DNS, FQDN, NTP, port 443, certificate or UUID (<KB id={452095} />) |
-| "vCenter is unable to resolve the license server host name." | Missing A or PTR, FQDN mismatch, uppercase letters (<KB id={445428} />) |
-| "Licenses could not be synchronized with vCenters" | License Server unreachable, or a stale entity in vCenter's directory (<KB id={454287} />) |
-| "This license is no longer associated with this VCF Operations instance, but could not be fully removed." | Run the full cycle and reassign, or toggle License Management (<KB id={440715} />) |
-| vCenter "Cis License Health Alarm" | The directory service was briefly down, for example during an upgrade (<KB id={429696} />) |
+| "One or more vCenter instances are not connected to a license server." | After a 9.1 upgrade out of order, the License Server isn't installed: upgrade VCF Operations, deploy, register, assign (<KB id={440471} />). A stale `LicenseEntity` in vCenter's directory shows the same banner (<KB id={447739} />). |
+| "The current vCenter Server is not licensed by a licensing server." | During an ESX upgrade: vCenter went to 9.1 before VCF Operations. Apply the .pak, reconnect licensing, confirm licenses reach vCenter, rerun the host upgrade (<KB id={440863} />). |
+| "License could not be assigned to vCenters." and close variants | The broadest message. <KB id={424533} /> is the checklist: VM power, time, TCP 443, DNS, FQDN, UUID case, appliance health. Specific causes: console FQDN differs from the deployed one, with `503` in `collector.log` (<KB id={452095} />); wrong FQDN at deployment, with `Read timed out` (<KB id={442564} />); uppercase UUID, with `403 Forbidden` (<KB id={440982} />). |
+| "vCenter is unable to resolve the license server host name." | Missing or wrong A or PTR records, or an FQDN mismatch. Keep every record lowercase (<KB id={445428} />). |
+| "Licenses could not be synchronized with vCenters" | A stale vSphere+ `LicenseEntity` in vCenter's directory: snapshot, delete it with `ldapmodify`, restart `cis-license` (<KB id={454287} />). With `CONNECTION_FAILED` in the plugin log, VCF Operations can't resolve vCenter, so set the VCF Operations DNS in vApp Options (<KB id={423362} />). |
+| "This license is no longer associated with this VCF Operations instance, but could not be fully removed." | Disconnected: run the full file exchange, then assign (<KB id={440715} />). If DNS lookups fail, fix the records (<KB id={445428} />). If "No licenses are assignable" appears too, turn License Management off and on for that vCenter, waiting 15 minutes each way (<KB id={453517} />). |
+| No message: vCenter missing from the Licensing page | A stale vSphere+ license in vCenter's LDAP database (<KB id={455886} />), still listed as a [known issue in the 9.1.1 notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) <AsOf date="2026-11-07" />. |
+| License Server "Not Connected" with a proxy configured on the appliance | Internal management traffic shouldn't route through a proxy. If the 443, DNS and time checks don't clear it, redeploy without one (<KB id={441747} />). |
+| Overuse warning after patching the License Server to 9.1.1 | [A display fault in VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) that can still block assignment; the Business Services console's figures stay correct. The workaround is to restart the VCF Operations cluster, and taking it offline can take about an hour. |
+| vCenter "License inventory is not compliant. Licenses are overused." | False alarm from an override license and 8.x hosts. It re-triggers every 24 hours, so disable it on the affected objects until the planned fix (<KB id={456737} />). |
+| vCenter "Cis License Health Alarm" | vmdir went offline during an upgrade or maintenance. Once services are back, acknowledge it and reset to green (<KB id={429696} />). |
+
+The uppercase UUID cause deserves care. The fix [shipped in vCenter 9.1.0.0200](https://knowledge.broadcom.com/external/article/440982) and the [vCenter 9.1.1 notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcenter-9-1-1-0-release-notes.html) list it as resolved, while the manual workaround on older builds changes the UUID, which breaks VMware Live Recovery. This site's reading is that upgrading vCenter is the safer route wherever it's possible. A vCenter upgraded from 5.x can still carry an uppercase `instanceUuid`, so [check it with `grep`](https://knowledge.broadcom.com/external/article/424533) first, which changes nothing.
+
+Two of the stale-entry rows share a fingerprint: `Invalid productRestrictionsData or entitlementLicenseDetailsData are null.` in `license.log` (<KB id={454287} />, <KB id={455886} />). Before deleting anything, confirm the entry isn't assigned, so that you don't remove live vSphere 8 subscription keys (<KB id={455886} />). Assets using a removed license become unlicensed (<KB id={447739} />).
+
+## Test the path properly
+
+Don't ping the appliance. ICMP is [disabled "in the current released version"](https://knowledge.broadcom.com/external/article/442564), with enablement promised for later releases and no version named <AsOf date="2026-11-07" />. Test TCP 443 with `curl -v -k` or `openssl s_client` instead, on all three legs: vCenter to License Server, License Server to VCF Operations, VCF Operations to vCenter (<KB id={424533} />). [All other License Server traffic can be blocked](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-security.html) beyond the listed ports, and [latency to a vCenter must stay within 300 ms](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-networking.html).
+
+A connected status isn't proof either, because VCF Operations can show it while DNS records are missing (<KB id={424533} />). Compare clocks on the License Server's ESX host, vCenter and VCF Operations in quick succession too: if they're more than 30 seconds apart, point all of them at one NTP source (<KB id={424533} />).
 
 ## The logs
 
-```text
-VCF Operations   /storage/log/vcops/log/vcf-licensing-plugin.log   registration, entitlements
-                 /storage/log/vcops/log/license-usage-plugin*.log   usage, reporting mode
-                 /storage/log/vcops/log/collector.log               License Server responses (503, 526)
-                 /storage/log/vcops/log/adapters/ManagementAdapter/ assignment tasks
-vCenter          /var/log/vmware/cis-license/license.log            entitlement fetches, License Server errors
-ESX              esxcli licensing entitlement list                  what the host actually holds
-```
+| Where | Path or command | Shows |
+|---|---|---|
+| VCF Operations | `/storage/log/vcops/log/vcf-licensing-plugin.log`, sometimes with a `-<uid>` suffix | Registration and entitlements; `CONNECTION_FAILED`, `LICENSE_SERVER_FAILURE` (<KB id={423362} />, <KB id={440982} />) |
+| VCF Operations | `/storage/log/vcops/log/license-usage-plugin.log`, sometimes with a UUID suffix | Usage, registration and reporting mode (<KB id={432158} />, <KB id={447554} />) |
+| VCF Operations | `/storage/log/vcops/log/collector.log` | License Server responses such as `503` (<KB id={452095} />) |
+| VCF Operations | `/storage/log/vcops/log/adapters/ManagementAdapter/ManagementAdapter_##.log` | Assignment tasks (<KB id={442564} />) |
+| vCenter | `/var/log/vmware/cis-license/license.log` | Entitlement fetches and License Server errors (<KB id={424533} />, <KB id={440982} />) |
+| ESX | `esxcli licensing entitlement list` | What the host actually holds. No `Subscription` entry means the subscription license wasn't applied to the host (<KB id={448638} />) |
 
-Some KBs give `/storage/vcops/log/` instead of `/storage/log/vcops/log/`. Check both.
+<KB id={435664} /> and <KB id={441526} /> write the base path as `/storage/vcops/log/`, so check both.
 
-<Callout type="field">
-For any licensing ticket, ask three questions before opening a log: which mode, when was the last successful refresh, and is the License Server healthy (9.1)? The answers place the problem in one of the three families, and the table above gives the next step.
-</Callout>
+A status code narrows the cause: `401` pointed to an expired code in <KB id={432158} />, `403` to the UUID case mismatch in <KB id={440982} />, `407` to proxy authentication in <KB id={435664} /> and `503` to the FQDN mismatch in <KB id={452095} />. Match the rest of that KB's symptoms before acting on one.
 
-## Pitfalls
-
-- **Restarting services before fixing the network path.** The message comes back.
-- **Pinging the License Server.** ICMP is disabled. Test TCP 443.
-- **Trusting a banner seen during an upgrade.** An alarm can be transient. Re-check after the upgrade settles.
+This note covers technical errors. It isn't legal or purchasing advice, and your subscription terms and [Broadcom's licensing documentation](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview.html) are the primary source.

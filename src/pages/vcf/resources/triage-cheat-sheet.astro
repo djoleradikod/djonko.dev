@@ -3,88 +3,21 @@ import { Code } from 'astro:components';
 import Base from '../../../layouts/Base.astro';
 import Pdf from '../../../components/Pdf.astro';
 import { kbInfo } from '../../../data/kb';
-
-// Each step: what to do, the command or place to look, what a good result looks like, and the next
-// action when it is not good. KBs only where the next action is a KB script.
-type Step = { t: string; run: string; lang?: string; where?: string; good: string; not: string };
-const steps: Step[] = [
-  {
-    t: 'Capture the IDs',
-    where: 'Task details: SDDC Manager Tasks, or VCF Operations Build > Lifecycle > VCF Management > Tasks (9.1)',
-    run: 'date -u    # logs are in UTC, the UI shows local time',
-    good: 'The ticket has the task ID, the reference ID or token, the failed subtask, and the time in UTC.',
-    not: 'Do not retry yet. A retry creates a new task and the first failure becomes harder to find.',
-  },
-  {
-    t: 'Read the cause',
-    run: `grep -Ril "<reference-id>" /var/log/vmware/vcf/
-grep -n -B 20 -A 60 "<reference-id>" /var/log/vmware/vcf/<service>/<service>.log | less`,
-    good: 'The last "Caused by" names something concrete: a host, an account, a certificate, a file system.',
-    not: 'Search by the UTC minute instead of the ID. For a management component, read the runtime pod logs (toolkit below).',
-  },
-  {
-    t: 'Check for locks and stale credentials',
-    run: '/opt/vmware/sddc-support/sos --health-check --domain-name <domain>',
-    good: 'No active locks, and no "Failed to get details" against an account.',
-    not: 'Lock with nothing running: cancel the owner task (API below), fix why it failed, then retry. "Failed to get details": remediate with the password that works on the component today.',
-  },
-  {
-    t: 'Check DNS',
-    run: `ip=$(dig +short <fqdn> | tail -1); dig +short -x "$ip"`,
-    good: 'The reverse record returns the same FQDN, in lowercase. Run it from the component that failed.',
-    not: 'Fix the record or its case, wait for the TTL, then Retry Precheck.',
-  },
-  {
-    t: 'Check time',
-    run: `chronyc tracking 2>/dev/null | grep -E 'System time|Leap' || ntpq -p
-date -u`,
-    good: 'Every node uses the same source and shows the same UTC time to within a second or two.',
-    not: 'Fix NTP first: token errors, 401s and stalled upgrades follow drift. After an NTP change, confirm the setting on the appliance itself.',
-  },
-  {
-    t: 'Check disk',
-    run: `# SDDC Manager
-df -h /data /opt /var/log 2>/dev/null
-# vCenter
-df -h /storage/log /storage/seat /storage/db /storage/core`,
-    good: 'SDDC Manager: more than 10 GB free in /opt and more than 1 GB for the database (the precheck\'s critical limits). vCenter: no partition close to full.',
-    not: 'Collect a support bundle before you clean anything. Then use the documented clean-up (bundle_cleanup.py for old bundles), not rm.',
-  },
-  {
-    t: 'Check the path',
-    run: 'curl -skv --max-time 10 https://<target>/ -o /dev/null 2>&1 | grep -E "Connected|SSL|HTTP/"',
-    good: 'Connected, a TLS handshake, an HTTP status. Test from the address that makes the call: in 9.1, often a runtime node.',
-    not: 'Timeout: firewall or route. TLS error: inspection proxy or untrusted CA. 403: allowlist or token.',
-  },
-  {
-    t: 'Retry the smallest thing',
-    where: 'Retry Precheck, or Retry Task: fleet and SDDC lifecycle tasks resume at the failed step. These commands change state.',
-    run: `# TOKEN: accessToken from POST https://localhost/v1/tokens (SDDC Manager admin)
-# Retry a failed task
-curl -sk -X PATCH -H "Authorization: Bearer $TOKEN" https://localhost/v1/tasks/<id>
-# Cancel a task that will not complete
-curl -sk -X DELETE -H "Authorization: Bearer $TOKEN" https://localhost/v1/tasks/<id>
-# Cancel a failed password task
-curl -sk -X DELETE -H "Authorization: Bearer $TOKEN" \\
-  https://localhost/v1/credentials/tasks/<id>`,
-    good: 'The task resumes and passes the failed step.',
-    not: 'Same error again: back to step 2, the cause is not fixed. Password tasks are cancelled and run again, never retried with the generic API.',
-  },
-];
+import { TRIAGE_STEPS as steps } from '../../../data/triage';
 
 // Symptom -> first check -> next action. The check is a command where one exists.
 const playbook: [string, string, string][] = [
   ['UnknownHostException, installer DNS validation, 502 in the installer', 'dig +short <fqdn>; dig +short -x <ip>', 'Add or fix the record in lowercase, then Retry Precheck.'],
-  ['"JWT token is expired", IAM_401_INVALID_TOKEN, intermittent 401', 'chronyc tracking on every node', 'Fix the time source, then retry. Rotating tokens before time is right does nothing.'],
-  ['"Resource is already locked", "Error in acquiring resource locks"', 'sos --health-check; GET /v1/tasks/<owner>', 'Cancel the owner task, fix why it failed, retry. Delete a lock row only with a snapshot and the lock KB.'],
-  ['Account locked, InvalidLogin, 403 in operationsmanager.log', 'sos --health-check (Failed to get details)', 'Unlocking first fails while a service still holds the old password. For the NSX service account: add SDDC Manager to the lockout-immune list, rotate it, verify, then rotate the rest (KB 449684).'],
+  ['"JWT token is expired" on 9.0 embedded SSO', 'date -u on VCF Operations and on vCenter', 'Clocks differ: fix the time source, then retry (KB 409353).'],
+  ['"Resource is already locked", "Error in acquiring resource locks"', 'The log names the holder; GET /v1/tasks/<owner>', 'In progress and hung: cancel it. Failed: fix the cause and retry. Nothing to cancel: delete a lock row only with a snapshot and the lock KB.'],
+  ['Account locked, InvalidLogin, 403 in operationsmanager.log', 'sos --health-check on 9.0 (Failed to get details)', 'Unlocking first fails while a service still holds the old password. For the NSX service account: add SDDC Manager to the lockout-immune list, rotate it, verify, then rotate the rest (KB 449684).'],
   ['PKIX path building failed, certificate_unknown(46)', 'openssl s_client -connect <host>:443 </dev/null | openssl x509 -noout -issuer -enddate', 'Expired: replace. Unknown issuer: TLS inspection on the path, exempt it, or import the CA.'],
   ['Signed certificate rejected', 'openssl x509 -in cert.crt -pubkey -noout | sha256sum; openssl req -in csr.csr -pubkey -noout | sha256sum', 'Hashes differ: the certificate was signed from another CSR. Sign the current one.'],
-  ['"no healthy upstream" on vCenter', 'df -h; service-control --status --all; the VECS expiry loop', 'Free the full partition or replace the expired certificate, then start services. Rebooting alone ends in the same place.'],
-  ['VCFMS- precheck codes, 9.1 runtime tasks stuck', 'kubectl get pods -A | grep -vE \'Running|Completed\'', 'Fix pod health first. Restart a lifecycle service with lcm_service_support.sh, not kubectl delete.'],
-  ['Depot 403, "Bundle not found", download stalls', 'curl -I https://eapi.broadcom.com from a runtime node', 'Allow every runtime node, not only SDDC Manager. Check the token or activation code, and TLS inspection.'],
-  ['NSX host preparation or TEP failures', 'vmkping ++netstack=vxlan -d -s 1572 -I vmk10 <edge-tep>', 'Fails with -d: MTU on the path is under 1600. Fix the network, then Resolve in NSX.'],
-  ['VCF Operations slow, node offline, cluster not ready', 'curl -sk https://<node>/casa/cluster/status; df -h /storage/db /storage/log', 'One node must be MASTER. Add disk to every node, identically sized. Never revert to a snapshot.'],
+  ['"no healthy upstream" on vCenter', 'df -h; service-control --status --all; the VECS expiry loop', 'Free the full partition or replace the expired certificate, then start services. A reboot alone frees no partition and replaces no certificate.'],
+  ['9.1 runtime tasks stuck', 'kubectl get pods -A | grep -vE \'Running|Completed\'', 'Fix pod health first. Restart a lifecycle service with lcm_service_support.sh, and delete pods only where a KB names them.'],
+  ['Depot 403, "Bundle not found", download stalls', 'curl -I https://eapi.broadcom.com from a runtime node', 'Allow the Fleet components (KB 443166) and the runtime IP pool (KB 443216), not only SDDC Manager. Check the token or activation code, and TLS inspection.'],
+  ['NSX host preparation or TEP failures', 'vmkping -S vxlan -s 1572 -I vmk10 -d <edge-tep>', 'Fails with -d: MTU on the path is under 1600. Fix the network, then Resolve in NSX.'],
+  ['VCF Operations slow, node offline, cluster not ready', 'df -h /storage/db /storage/log on each node', 'Near 90% on /storage/db: take the cluster offline and add a new disk to every analytics node, all at equal capacity (KB 318768). Don\'t revert to cure slowness or a full disk without asking support. Reverting all nodes and proxies is the documented way back from a failed upgrade: see Rollback checkpoints.'],
 ];
 const kb = (id: number) => kbInfo(id).url;
 ---
@@ -102,8 +35,7 @@ const kb = (id: number) => kbInfo(id).url;
         <thead><tr><th></th><th>Management component</th><th>Core infrastructure</th></tr></thead>
         <tbody>
           <tr><th>What</th><td>VCF Operations, VCF Automation, identity broker, Ops for networks, log management, services runtime</td><td>vCenter, ESX, NSX Managers and Edges, vSAN, SDDC Manager</td></tr>
-          <tr><th>Tasks</th><td>Build &gt; Lifecycle &gt; VCF Management &gt; Tasks</td><td>SDDC Manager Tasks, Build &gt; Lifecycle &gt; VCF Instances</td></tr>
-          <tr><th>Errors</th><td><code>VCF_LCM_…</code> with a reference ID, <code>VCFMS-</code>, <code>VCFA-</code></td><td>Enum codes with a reference token</td></tr>
+          <tr><th>Tasks</th><td>Build &gt; Lifecycle &gt; VCF Management &gt; Tasks</td><td>SDDC Manager Tasks, Build &gt; Tasks &gt; VCF Instances</td></tr>
           <tr><th>Logs</th><td>Runtime pods in <code>vcf-fleet-lcm</code>, <code>vcf-sddc-lcm</code></td><td><code>/var/log/vmware/vcf/</code> on SDDC Manager</td></tr>
         </tbody>
       </table>
@@ -123,7 +55,7 @@ const kb = (id: number) => kbInfo(id).url;
         </li>
       ))}
     </ol>
-    <p class="small muted no-print">Why the order matters: <a href="/vcf/library/troubleshooting/seven-step-triage/">A seven-step triage for any VCF 9.x failure</a>.</p>
+    <p class="small muted no-print">Why the order matters: <a href="/vcf/library/troubleshooting/seven-step-triage/">A seven-step triage for a failed VCF task</a>.</p>
   </section>
 
   <section class="cs">
@@ -160,7 +92,7 @@ const kb = (id: number) => kbInfo(id).url;
         <li><strong>VCF Operations:</strong> Control Panel &gt; Support Bundles.</li>
         <li><strong>Runtime down, fleet lifecycle unreachable:</strong> the standalone bundle script (<a href={kb(444466)} target="_blank" rel="noopener">KB 444466</a>).</li>
         <li><strong>UI problems:</strong> a browser HAR file.</li>
-        <li><strong>Always:</strong> the IDs from step 1, the UTC time, and every action taken since.</li>
+        <li><strong>Always:</strong> the IDs from step 1, the time with its UTC offset, and every action taken since.</li>
       </ul>
       <h2 class="rules-h">Rules</h2>
       <p class="rules">One operation at a time on a scope. Health before retry, retry before rebuild. Bundle before clean-up. Snapshot before any database change, and make database changes only when a KB for your exact build says to.</p>
@@ -168,22 +100,22 @@ const kb = (id: number) => kbInfo(id).url;
   </div>
 
   <section class="cs">
-    <h2>Services runtime toolkit (9.1, read-only)</h2>
-    <Code lang="bash" wrap code={`# Control-plane node IP: Build > Lifecycle > Components > VCF Services Runtime > Nodes
+    <h2>Services runtime toolkit (9.1)</h2>
+    <Code lang="bash" wrap code={`# Control-plane node IP: Build > Lifecycle > VCF Management > Components > VCF Services Runtime > Nodes
 ssh vmware-system-user@<control-plane-node>
-sudo su -
+sudo -i
 export KUBECONFIG=/etc/kubernetes/admin.conf
 kubectl get nodes -o wide
 kubectl get pods -A | grep -vE 'Running|Completed'
-kubectl get events -n vcf-fleet-lcm --sort-by=.lastTimestamp | tail -30
-P=$(kubectl get pods -n vcf-fleet-lcm -l app=fleetbuild -o jsonpath='{.items[0].metadata.name}')
-kubectl logs $P -n vcf-fleet-lcm --tail=200
+kubectl get events -n vcf-fleet-lcm --sort-by=.metadata.creationTimestamp | tail -30
+kubectl get pods -n vcf-fleet-lcm   # copy a fleet build pod's name
+kubectl logs <pod> -n vcf-fleet-lcm --tail=200
 kubectl -n vcf-fleet-lcm exec vcf-fleet-lcm-db-0 -- patronictl list  # one leader, no lag
 
-# Changes. Stuck fleet or SDDC lifecycle task (KB 435569): report, then restart one service
-lcm_service_support.sh -t
-lcm_service_support.sh -r fleetbuild    # or fleetupgrade, sddcbuild, sddcupgrade`} />
-    <p class="small muted">Find <code>lcm_service_support.sh</code> and run it as <a href={kb(435569)} target="_blank" rel="noopener">KB 435569</a> describes for your build. Never delete pods or <code>vcf-svc-*</code> VMs to restart them. More in <a href="/vcf/library/troubleshooting/services-runtime-kubectl/">the services runtime for VI admins</a>.</p>
+# Changes, on SDDC Manager. Stuck fleet or SDDC lifecycle task (KB 435569): report, then restart one service
+lcm_service_support.sh -u <admin_user> -s <runtime-fqdn> -t <task_id>
+lcm_service_support.sh -u <admin_user> -s <runtime-fqdn> -r fleetbuild    # or fleetupgrade, sddcbuild, sddcupgrade`} />
+    <p class="small muted">Find <code>lcm_service_support.sh</code> and run it as <a href={kb(435569)} target="_blank" rel="noopener">KB 435569</a> describes for your build. Don't delete pods or <code>vcf-svc-*</code> VMs to restart them, unless a KB names them for your symptom, as <a href={kb(443718)} target="_blank" rel="noopener">KB 443718</a> does. More in <a href="/vcf/library/troubleshooting/services-runtime-kubectl/">the services runtime for VI admins</a>.</p>
   </section>
 
   <p class="small muted">Not official vendor guidance. Confirm against current Broadcom documentation for your build before changing production.</p>

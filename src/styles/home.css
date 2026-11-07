@@ -1,0 +1,393 @@
+/* The home page. Loaded by src/pages/index.astro alone, so other pages don't carry its weight.
+   Forced colours stay last: .page-home.docs sets --bg above, and this has to come after it. */
+
+/* ------------------------------------------------------------------------------------------------
+   Home. Ink on paper on one continuous surface, with no bands. The fold is the support clock, with its label and plot columns.
+   Below it the page is paced like a sequence of screens: full width on the page's own left and right edges, one dominant
+   thing at a time (the field note first, the fleet drawing second) with quiet material between them, and air, not rules, at
+   every section seam.
+
+   Emphasis is the clock's language and nothing else: rule weight, solid against hollow, scale, and one red pencil for what
+   is unresolved, which appears nowhere else. The clock is the only chart. Hatching means unresolved and stays in the clock.
+
+   Rules:
+     1px ink       the clock's axis and column line, and a table's header rule
+     1px --dw-grid hairlines inside a section
+     3 / 2 / 1px   the fleet drawing's solid bar, instances and domains
+
+   One type scale, on these tokens, and nothing off it:
+     --t-display  72  the headline
+     --t-head     44  section headings: one size, one weight
+     --t-title    28  the featured note's title
+     --t-sub      24  other titles
+     --t-q        22  the decision table's questions and answers
+     --t-lead     20  the lede, the takeaway, row names on the clock
+     --t-body     18  reading text and links
+     --t-note     16  index heads, tables, steps, dates and quiet lines
+     --t-meta     14  source metadata
+     --t-small    13  axis labels, the source line, and the clock's dates on a phone
+   Every gap is a multiple of 4px. --sec is the air between sections; --head is the air under a section heading.
+   ------------------------------------------------------------------------------------------------ */
+.page-home { --shell: 1320px; --t-display: clamp(1.75rem, 8.2vw, 3.75rem); --t-head: max(2.125rem, calc(var(--t-display) * 0.62)); --t-title: max(1.5rem, calc(var(--t-display) * 0.39)); --t-sub: 1.5rem; --t-q: 1.375rem; --t-lead: 1.25rem; --t-body: 1.125rem; --t-note: 1rem; --t-meta: 0.875rem; --t-small: 0.8125rem; --sec: 224px; --head: 72px; --name: 11rem; --inset: 24px; --row: 48px; }
+.page-home.docs { --bg: var(--home-bg); }
+/* Below the fold the only colours are ink and the red pencil, so links and focus go to ink here. */
+.page-home main { --ink-2: #646d79; --fm-tint: #eaedf1; --accent: var(--ink); --accent-ink: var(--ink); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .page-home main { --ink-2: #97a1ad; --fm-tint: #1b222c; } }
+:root[data-theme="dark"] .page-home main { --ink-2: #97a1ad; --fm-tint: #1b222c; }
+@media (min-width: 901px) { .page-home { --t-display: min(5vw, 4.5rem); } }
+/* Below the width where the clock's plot fits, the clock folds. */
+@media (max-width: 1080px) { .page-home { --name: 0px; --inset: 0px; --sec: 160px; --head: 56px; --t-q: 1.25rem; --t-sub: 1.25rem; } }
+@media (max-width: 640px) { .page-home { --t-head: 1.625rem; --t-title: 1.3125rem; --t-sub: 1.125rem; --t-q: 1.125rem; --t-lead: 1.125rem; --t-body: 1rem; --sec: 112px; --head: 32px; } }
+
+/* A section below the fold: air above it and nothing else at the seam. An optional kicker, as the hero has, then one heading. */
+.home-sec { padding-top: var(--sec); }
+.home-kick { margin: 0 0 12px; font-size: var(--t-note); line-height: 1.5; color: var(--ink-2); }
+.home-kick a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.home-h { margin: 0; max-width: 24em; font-size: var(--t-head); line-height: 1.12; letter-spacing: -0.028em; font-weight: 500; color: var(--ink); text-wrap: pretty; }
+.home-hrow { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 16px 40px; }
+
+/* The page's one kind of link out of a section: reading size, ink, an arrow, on a 2px rule. */
+.go { display: inline-flex; align-items: center; gap: 8px; padding-bottom: 4px; border-bottom: 2px solid currentColor; font-size: var(--t-body); line-height: 1.4; font-weight: 500; color: var(--ink); text-decoration: none; }
+.go:hover { color: var(--accent-ink); }
+.page-home .btn.primary:hover { background: var(--ink); border-color: var(--ink); color: var(--bg); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+/* The hero: air above the eyebrow, then gaps that grow in step, up to the pause before the clock. All of it, the five rows,
+   the takeaway and the source line fit above 900px at 1440 wide. */
+.home-lead { padding-top: 40px; }
+.home-who { margin: 0 0 12px; font-size: var(--t-note); line-height: 1.5; font-weight: 400; color: var(--ink-2); }
+.home-lead h1 { margin: 0; font-size: var(--t-display); line-height: 1.03; letter-spacing: -0.034em; font-weight: 600; color: var(--ink); }
+.home-photo { display: block; margin-top: 16px; width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 1px solid var(--line); }
+.home-sub { display: grid; gap: 24px; margin-top: 20px; }
+.home-sub > * { min-width: 0; }
+.home-lede { margin: 0; max-width: 34em; font-size: var(--t-lead); line-height: 1.4; color: var(--ink-2); }
+.home-lead .actions { align-items: center; gap: 8px 16px; margin: 0; }
+.home-lead .btn:not(.primary) { padding-inline: 4px; border-color: transparent; background: none; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+
+/* The clock, the page's first section. Columns: release name, then the plot. Its frame is its own rules: the axis has the
+   ticks on it, the left edge is the column line that ends at the source line, and the only other line is a hairline under
+   the last row. There are no lines inside the plot, so nothing can run through a date, and each date sits
+   right after its bar's end. --stop is where a bar ends; --tail is the room past the axis that the last date runs into.
+   Every row is the same height, with no rule between rows. */
+.sc { --tail: 72px; --ax: 32px; --h: 12px; display: grid; grid-template-columns: minmax(0, 1fr); padding-top: 56px; }
+.sc > * { min-width: 0; }
+.sc-label { grid-row: 1; grid-column: 1; z-index: 2; justify-self: start; max-width: var(--name); margin: 0; font-size: var(--t-note); line-height: 24px; letter-spacing: 0; font-weight: 600; color: var(--ink); }
+.sc-plot { position: relative; grid-row: 1; grid-column: 1; }
+.sc-plot::before { content: ""; position: absolute; z-index: 1; left: var(--name); top: var(--ax); bottom: 0; width: 1px; background: var(--dw-ink); }
+.sc-plot::after { content: ""; position: absolute; z-index: 1; left: var(--name); right: 0; bottom: 0; height: 1px; background: var(--dw-grid); }
+.sc-t, .sc-t thead, .sc-t thead tr, .sc-t tbody { display: block; }
+.sc-t { position: relative; z-index: 1; margin: 0; font-size: var(--t-note); line-height: 1.3; }
+.sc-t thead tr { position: relative; }
+.sc-t :is(th, td) { display: block; padding: 0; border: 0; color: inherit; font: inherit; }
+.sc-t .sc-axis { position: relative; height: var(--ax); margin-inline: var(--name) var(--tail); font-size: var(--t-small); font-weight: 500; color: var(--ink-2); }
+.sc-axis::after { content: ""; position: absolute; left: 0; right: calc(-1 * var(--tail)); bottom: 0; height: 1px; background: var(--dw-ink); }
+.sc-t .sc-endh { position: absolute; right: 0; top: 5px; font-size: var(--t-small); font-weight: 400; white-space: nowrap; color: var(--ink-2); }
+.sc-ticks { position: absolute; left: 0; right: 0; top: 0; height: 24px; }
+.sc-ticks span { position: absolute; bottom: 2px; left: 0; transform: translateX(-50%); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.sc-ticks span:first-child { transform: none; }
+.sc-ruler { position: absolute; left: 0; bottom: 0; width: 100%; height: 10px; overflow: visible; }
+.sc-ruler path { fill: none; stroke: var(--dw-ink); stroke-width: 1; vector-effect: non-scaling-stroke; shape-rendering: crispEdges; }
+.sc-r { position: relative; display: grid; grid-template-columns: var(--name) minmax(0, 1fr) var(--tail); align-items: center; height: var(--row); }
+.sc-t .sc-n { grid-column: 1; grid-row: 1; padding-right: 8px; font-size: var(--t-lead); line-height: 1.3; font-weight: 400; letter-spacing: -0.012em; color: var(--ink); }
+.sc-t .sc-tl { position: relative; grid-column: 2; grid-row: 1; height: 100%; }
+.sc-bar { position: absolute; left: 1px; top: 50%; width: calc(var(--end) - 1px); height: var(--h); margin-top: calc(var(--h) / -2); }
+.sc-r.v9 .sc-bar { background: var(--dw-ink); }
+.sc-r:not(.v9) .sc-bar { background: var(--bg); box-shadow: inset 0 0 0 2px var(--dw-ink); }
+.sc-stop { position: absolute; top: 50%; left: var(--stop); width: 2px; height: 24px; margin: -12px 0 0 -1px; background: var(--dw-ink); }
+.sc-span { position: absolute; top: 50%; left: var(--end); width: calc(var(--to) - var(--end)); height: 20px; margin-top: -10px; background: repeating-linear-gradient(135deg, var(--dw-red) 0 1.5px, transparent 1.5px 6px) var(--bg); }
+.sc-span::before, .sc-span::after { content: ""; position: absolute; top: -6px; bottom: -6px; width: 3px; background: var(--dw-red); }
+.sc-span::before { left: -1px; }
+.sc-span::after { right: -2px; }
+.sc-t .sc-d { grid-column: 2; grid-row: 1; justify-self: start; margin-left: calc(var(--stop) + 12px); }
+.sc-dt { display: block; font-size: var(--t-note); line-height: 1.5; font-weight: 400; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--ink); }
+.sc-t .sc-b { position: relative; z-index: 3; grid-column: 2; grid-row: 1; height: 100%; pointer-events: none; }
+/* "Unresolved" sits on the span the way a dimension sits on its line; its mask is taller than the hatching. */
+.sc-b a { position: absolute; top: 50%; left: var(--end); width: calc(var(--to) - var(--end)); display: flex; justify-content: center; transform: translateY(-50%); text-decoration: none; pointer-events: auto; }
+.sc-flag { padding-inline: 8px; background: var(--bg); font-size: var(--t-note); line-height: 24px; font-weight: 500; white-space: nowrap; color: var(--dw-red-ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+/* Under the plot, on the spine: the takeaway at regular weight, so the chart stays the one object; the release facts beside it; then the source as one quiet line. */
+.sc-foot, .sc-cap { margin-left: var(--name); padding-left: var(--inset); border-left: 1px solid var(--dw-ink); }
+/* The same inset either side, so the release facts don't run into the page edge. */
+.sc-foot { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px 40px; padding-top: 20px; padding-right: var(--inset); }
+.sc-lead { min-width: 0; max-width: 52rem; margin: 0; font-size: var(--t-lead); line-height: 28px; font-weight: 400; letter-spacing: -0.008em; color: var(--ink); }
+.sc-rel { flex: none; margin: 0; font-size: var(--t-note); line-height: 28px; }
+.sc-rel > div { display: flex; flex-wrap: wrap; gap: 0 8px; }
+.sc-rel dt { color: var(--ink-2); }
+.sc-rel dd { margin: 0; color: var(--ink); font-variant-numeric: tabular-nums; }
+.sc-rel b { font-weight: 500; }
+.sc-cap { margin-block: 0; padding-block: 12px 0; padding-right: var(--inset); font-size: var(--t-small); line-height: 20px; color: var(--ink-2); }
+.sc-cap a { color: inherit; }
+@media (min-width: 1081px) and (max-height: 820px) { .home-lead { padding-top: 24px; } .sc { --row: 40px; padding-top: 40px; } }
+/* Below the width where the plot fits, the clock is recomposed: a ruler on top, then each row is its name and date on one
+   line, every date at the right margin, with the bar directly under them. "Unresolved" sits on the bar's line, right after
+   the hatching, so it never shares a line with the date. */
+@media (max-width: 1080px) {
+  .sc { --tail: 0px; display: flex; flex-direction: column; padding-top: 56px; }
+  .sc-label { max-width: none; margin-bottom: 8px; }
+  .sc-plot::before, .sc-plot::after { display: none; }
+  .sc-t .sc-endh { top: -32px; line-height: 24px; }
+  .sc-r { grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: 24px 16px; column-gap: 16px; align-items: center; height: auto; margin-top: 16px; }
+  .sc-t .sc-n { padding: 0; line-height: 24px; }
+  .sc-t .sc-d { grid-column: 2; grid-row: 1; justify-self: end; margin: 0; }
+  .sc-dt { line-height: 24px; }
+  .sc-t .sc-tl { grid-column: 1 / -1; grid-row: 2; height: 16px; }
+  .sc-t .sc-b { grid-column: 1 / -1; grid-row: 2; height: 16px; }
+  .sc-b a { display: block; left: calc(var(--to) + 8px); width: auto; }
+  .sc-flag { display: block; padding: 0; background: none; line-height: 16px; }
+  .sc-bar { left: 0; width: var(--end); }
+  .sc-span { height: 12px; margin-top: -6px; }
+  .sc-span::before, .sc-span::after { top: -2px; bottom: -2px; }
+  .sc-stop { height: 16px; margin-top: -8px; }
+  .sc-foot, .sc-cap { border-left: 0; }
+  .sc-foot { flex-direction: column; align-items: stretch; padding-top: 24px; }
+}
+@media (max-width: 640px) {
+  .sc { padding-top: 40px; }
+  .sc-r { margin-top: 12px; }
+  .sc-t .sc-n { font-size: var(--t-note); letter-spacing: -0.02em; }
+  .sc-dt, .sc-flag { font-size: var(--t-small); }
+  .sc-foot { padding-top: 24px; }
+}
+
+/* A sheet: a real page from the site, set open on the page. It ends on a complete row, then a line saying where the rest is. */
+.sheet { display: flex; flex-direction: column; min-width: 0; color: var(--ink); }
+.sheet > * { flex: none; }
+.sheet h3 { margin: 0; font-size: var(--t-sub); line-height: 1.25; letter-spacing: -0.016em; font-weight: 500; text-wrap: pretty; }
+.sheet h3 a { color: inherit; text-decoration: none; }
+.sheet h3 a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.sheet-sum { margin: 8px 0 0; font-size: var(--t-body); line-height: 1.5; color: var(--ink-2); }
+.sheet-more { margin: auto 0 0; padding-top: 32px; line-height: 1; }
+.sheet-t { margin: 24px 0 0; font-size: var(--t-note); line-height: 1.5; color: var(--ink-2); }
+.sheet-t :is(th, td) { padding: 12px 16px 12px 0; border-bottom: 1px solid var(--dw-grid); font-size: inherit; font-weight: 400; color: inherit; }
+.sheet-t :is(th, td):last-child { padding-right: 0; }
+.sheet-t thead th { padding-top: 0; border-bottom: 1px solid var(--dw-ink); font-weight: 500; color: var(--ink); }
+.sheet-t tbody th { font-weight: 500; color: var(--ink); }
+
+/* Field Notes. The heading, then the note set open at full width: the first screen's one dominant thing. Open type on
+   horizontal rules, flush to both page edges, every cell on the first baseline. */
+.sheet-q { margin-top: var(--head); }
+.sheet-run { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 24px; margin: 0 0 16px; font-size: var(--t-note); line-height: 1.5; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.sheet-path { display: flex; flex-wrap: wrap; gap: 0 16px; }
+.sheet-path span:first-child { color: var(--ink); }
+.sheet-q h3 { font-size: var(--t-title); line-height: 1.2; letter-spacing: -0.02em; font-weight: 500; }
+.sheet-q .sheet-sum { margin-top: 12px; max-width: 52rem; font-size: var(--t-lead); line-height: 1.4; }
+.sheet-q .sheet-t { margin: 56px 0 0; font-size: var(--t-q); line-height: 1.3; }
+.sheet-q .sheet-t :is(th, td) { padding: 28px 40px 28px 0; vertical-align: baseline; }
+.sheet-q .sheet-t :is(th, td):last-child { padding-right: 0; }
+.sheet-q .sheet-t thead th { padding-block: 0 12px; font-size: var(--t-note); line-height: 1.5; font-weight: 500; color: var(--ink-2); vertical-align: bottom; }
+.sheet-q thead th:nth-child(1) { width: 56px; }
+.sheet-q thead th:nth-child(2) { width: 42%; }
+.sheet-q thead th:nth-child(3) { width: 25%; }
+.sheet-q .sheet-t :is(th, td):first-child { padding-right: 0; }
+.sheet-q td:first-child { font-variant-numeric: tabular-nums; letter-spacing: -0.012em; color: var(--ink-2); }
+.sheet-q .sheet-t tbody th { font-size: inherit; line-height: inherit; letter-spacing: -0.012em; font-weight: 400; color: var(--ink); }
+.sheet-q td:nth-child(3) { font-weight: 600; letter-spacing: -0.012em; color: var(--ink); }
+.sheet-q td:nth-child(4) { font-size: var(--t-body); line-height: 1.4; color: var(--ink-2); }
+/* Where the note itself says nothing is fixed: the one unresolved answer, in the red pencil. */
+.sheet-q td.open { color: var(--dw-red-ink); }
+/* Too narrow for four columns: each row stacks, and each answer says which column it came from. */
+@media (max-width: 760px) {
+  .sheet-q .sheet-t { margin-top: 32px; }
+  .sheet-q .sheet-t, .sheet-q tbody { display: block; width: 100%; }
+  .sheet-q thead { display: none; }
+  .sheet-q tbody tr { display: grid; grid-template-columns: 32px minmax(0, 1fr); align-items: baseline; padding-block: 24px; border-bottom: 1px solid var(--dw-grid); }
+  .sheet-q tbody tr:first-child { border-top: 1px solid var(--dw-ink); }
+  .sheet-q .sheet-t :is(th, td), .sheet-q .sheet-t :is(th, td):first-child, .sheet-q .sheet-t :is(th, td):last-child { display: block; padding: 0; border: 0; }
+  .sheet-q td:first-child { grid-row: 1 / span 3; }
+  .sheet-q td[data-h] { grid-column: 2; margin-top: 8px; font-size: var(--t-note); line-height: 1.5; }
+  .sheet-q td[data-h]::before { content: attr(data-h) ": "; font-weight: 400; color: var(--ink-2); }
+}
+/* The sources and the index: quiet. Small heads on a hairline, plain type under them, and no boxes. */
+.fn-src { margin-top: 96px; }
+.ix-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--dw-grid); }
+.ix-h { margin: 0; font-size: var(--t-note); line-height: 24px; letter-spacing: 0; font-weight: 600; color: var(--ink); }
+.ix-h a { color: inherit; text-decoration: none; }
+.ix-h a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.fn-more { font-size: var(--t-note); line-height: 24px; color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.fn-strip { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); column-gap: 40px; list-style: none; margin: 0; padding: 0; }
+.fn-strip li { min-width: 0; margin: 0; }
+.fn-strip a { display: flex; flex-direction: column; gap: 12px; height: 100%; padding-top: 16px; color: inherit; text-decoration: none; }
+.fn-strip a:hover .t { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.fn-strip .t { display: block; font-size: var(--t-note); line-height: 1.4; color: var(--ink); }
+.fn-strip .m { display: block; margin-top: auto; font-size: var(--t-meta); line-height: 1.4; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+/* No room for five columns: the same sources as ruled rows. */
+@media (max-width: 1240px) {
+  .fn-strip { grid-template-columns: minmax(0, 1fr); }
+  .fn-strip li { border-bottom: 1px solid var(--dw-grid); }
+  .fn-strip a { gap: 4px; padding-block: 12px; }
+}
+@media (max-width: 640px) { .fn-src { margin-top: 64px; } }
+
+/* The cheat sheet's steps: large numerals, and commands on a rule, with no tint. */
+.tri { display: grid; gap: 32px; counter-reset: tri; list-style: none; margin: 32px 0 0; padding: 0; }
+.tri li { position: relative; counter-increment: tri; margin: 0; padding-left: 48px; font-size: var(--t-note); line-height: 1.5; color: var(--ink-2); }
+.tri li::before { content: counter(tri); position: absolute; left: 0; top: 0; font-size: var(--t-title); line-height: 28px; font-weight: 400; letter-spacing: -0.024em; color: var(--ink); font-variant-numeric: tabular-nums; }
+.tri-t { margin: 0; font-size: var(--t-lead); line-height: 28px; font-weight: 500; color: var(--ink); }
+.tri-w { margin: 0; }
+.tri pre { margin: 8px 0 0; padding: 4px 0 4px 16px; overflow: visible; border: 0; border-left: 2px solid var(--dw-ink); border-radius: 0; background: none; color: var(--ink); font-size: var(--t-note); line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+.tri pre code { font-size: inherit; color: inherit; }
+.tri dl { margin: 8px 0 0; }
+.tri dl > div { display: grid; grid-template-columns: 56px minmax(0, 1fr); column-gap: 8px; }
+.tri dl > div + div { margin-top: 8px; }
+.tri dt { font-weight: 500; color: var(--ink); }
+.tri dd { margin: 0; }
+.sheet-tools .grp { font-weight: 500; color: var(--ink-2); }
+.sheet-tools tbody tr:not(:first-child) th { font-weight: 400; }
+@media (max-width: 640px) {
+  .sheet-tools :is(th, td):nth-child(2) { display: none; }
+  .tri li { padding-left: 32px; }
+}
+
+/* Library and Reference, one quiet index on a four-column grid: three columns of areas, one of reference items. Names and
+   counts in plain type on hairlines. A count of notes doesn't get a mark. */
+.ix { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 40px; }
+.ix-lib { grid-column: span 3; min-width: 0; }
+.ix-ref { min-width: 0; }
+.ix-rows { columns: 3; column-gap: 40px; list-style: none; margin: 0; padding: 0; }
+.ix-ref .ix-rows { columns: 1; }
+.ix-rows li { break-inside: avoid; margin: 0; border-bottom: 1px solid var(--dw-grid); }
+.ix-rows a { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding-block: 12px; font-size: var(--t-body); line-height: 1.4; color: var(--ink); text-decoration: none; }
+.ix-rows a:hover .ix-n { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.ix-rows a:focus-visible { outline-offset: -2px; }
+.ix-n { min-width: 0; }
+.ix-c { flex: none; font-size: var(--t-note); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+@media (max-width: 1080px) {
+  .ix { grid-template-columns: minmax(0, 1fr); row-gap: 56px; }
+  .ix-lib { grid-column: auto; }
+  .ix-ref .ix-rows { columns: 3; }
+}
+@media (max-width: 760px) { .ix-rows, .ix-ref .ix-rows { columns: 1; } }
+
+/* The fleet model, the second big moment: full width, reading-size type, and three levels that look different. The fleet is a
+   solid ink bar with paper text, instances are medium outlines, domains are light boxes with the management domains tinted.
+   --fm-gap and the columns keep each connector's ends on the same centre line as the box it lands on: a bus is built from one
+   segment per box, starting from that box's own centre, so a bus cannot miss its drop. Each drop stops at the inner edge of
+   the frame's border, so it lands on the border and enters nothing. --fm-trunk is the fleet-to-instance run and --fm-drop
+   the stub-to-domain run; the paddings above each row of boxes are derived from them so the bus sits on both. */
+.fm-fig { --fl-1: 3px; --fl-2: 2px; --fl-3: 1px; --fm-gap: 40px; --fm-dom-gap: 16px; --fm-trunk: 34px; --fm-drop: 25px; margin: var(--head) 0 0; }
+.fm-fleet { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 32px; padding: 24px 32px; border: var(--fl-1) solid var(--dw-ink); background: var(--dw-ink); font-size: var(--t-body); line-height: 32px; color: var(--bg); print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+.fm-fleet b { font-size: var(--t-q); line-height: 40px; font-weight: 400; letter-spacing: -0.012em; color: var(--bg); }
+.fm-fleet .fm-l { font-size: var(--t-head); line-height: 56px; font-weight: 600; letter-spacing: -0.028em; }
+.fm-fleet span { margin-left: auto; color: var(--bg); }
+.fm-insts { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--fm-gap); padding-top: calc(var(--fm-trunk) * 2 - 4px); }
+/* The trunk, from the fleet's bottom border to the bus. */
+.fm-insts::before { content: ""; position: absolute; left: 50%; top: 0; height: var(--fm-trunk); margin-left: -1px; border-left: var(--fl-2) solid var(--dw-ink); }
+.fm-inst { position: relative; min-width: 0; border: var(--fl-2) solid var(--dw-ink); }
+/* One drop from the bus to the instance's top border at its centre, and the bus segment that reaches it. */
+.fm-inst::before { content: ""; position: absolute; left: 50%; top: calc(-1 * var(--fm-trunk)); height: var(--fm-trunk); margin-left: -1px; border-left: var(--fl-2) solid var(--dw-ink); }
+.fm-inst::after { content: ""; position: absolute; top: calc(-1 * var(--fm-trunk)); height: 0; border-top: var(--fl-2) solid var(--dw-ink); }
+.fm-inst:first-child::after { left: 50%; right: calc(-1 * (var(--fm-gap) / 2 + 3px)); margin-left: -1px; }
+.fm-inst:last-child::after { left: calc(-1 * (var(--fm-gap) / 2 + 3px)); right: 50%; margin-right: -1px; }
+.fm-name { display: block; padding: 16px 24px; border-bottom: var(--fl-3) solid var(--dw-ink); font-size: var(--t-sub); line-height: 32px; font-weight: 500; letter-spacing: -0.016em; color: var(--ink); }
+/* Inside: a stub under the title strip to the bus, then one drop to each domain's top centre. */
+.fm-doms { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--fm-dom-gap); padding: calc(var(--fm-drop) * 2 - 2px) 24px 24px; }
+.fm-doms::before { content: ""; position: absolute; left: 50%; top: 0; height: var(--fm-drop); border-left: var(--fl-3) solid var(--ink-2); }
+.fm-dom { position: relative; min-width: 0; padding: 16px; border: var(--fl-3) solid var(--ink-2); font-size: var(--t-body); line-height: 28px; color: var(--ink); }
+.fm-mgmt { background: var(--fm-tint); print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+.fm-dom::before { content: ""; position: absolute; left: 50%; top: calc(-1 * var(--fm-drop)); height: var(--fm-drop); border-left: var(--fl-3) solid var(--ink-2); }
+.fm-dom::after { content: ""; position: absolute; top: calc(-1 * var(--fm-drop)); left: calc(-1 * (var(--fm-dom-gap) / 2 + 2px)); right: calc(-1 * (var(--fm-dom-gap) / 2 + 2px)); height: 0; border-top: var(--fl-3) solid var(--ink-2); }
+.fm-dom:first-child::after { left: 50%; }
+.fm-dom:last-child::after { right: calc(50% - 1px); }
+.fm-dom b { display: block; width: min-content; margin-bottom: 12px; font-size: var(--t-lead); line-height: 26px; font-weight: 600; letter-spacing: -0.012em; color: var(--ink); }
+.fm-dom span { display: block; }
+.fm-more { margin: 40px 0 0; line-height: 1; }
+@media (max-width: 1240px) {
+  .fm-fig { --fm-gap: 32px; --fm-dom-gap: 12px; }
+  .fm-fleet span { margin-left: 0; width: 100%; }
+}
+@media (max-width: 1240px) and (min-width: 1121px) {
+  .fm-doms { padding-inline: 16px; }
+  .fm-dom { padding: 12px; font-size: var(--t-note); line-height: 24px; }
+  .fm-dom b { font-size: var(--t-body); }
+}
+/* Instances stack: the trunk becomes a spine down the left, with a branch landing on each instance's left border at its
+   centre. It ends at the last branch. */
+@media (max-width: 1120px) {
+  .fm-insts { grid-template-columns: minmax(0, 1fr); row-gap: 24px; padding: 24px 0 0 24px; }
+  .fm-insts::before { display: none; }
+  .fm-inst::before { left: -26px; top: -26px; bottom: -26px; height: auto; margin: 0; }
+  .fm-inst:last-child::before { bottom: calc(50% - 2px); }
+  .fm-inst::after, .fm-inst:first-child::after, .fm-inst:last-child::after { left: -26px; right: 100%; top: 50%; margin: 0; }
+}
+/* Domains stack too: a spine from under the title strip, with a branch to each box's left border at its centre. */
+@media (max-width: 640px) {
+  .fm-fleet { padding: 16px; gap: 0 16px; }
+  .fm-fleet .fm-l { line-height: 40px; }
+  .fm-fleet b { line-height: 32px; }
+  .fm-fleet span { line-height: 24px; }
+  .fm-insts { padding: 16px 0 0 16px; row-gap: 16px; }
+  .fm-inst::before { left: -18px; top: -18px; bottom: -18px; }
+  .fm-inst::after, .fm-inst:first-child::after, .fm-inst:last-child::after { left: -18px; }
+  .fm-name { padding: 4px 12px; }
+  .fm-doms { grid-template-columns: minmax(0, 1fr); row-gap: 12px; padding: 16px 12px 12px 32px; }
+  .fm-doms::before { display: none; }
+  .fm-dom { padding: 12px; font-size: var(--t-body); line-height: 24px; }
+  .fm-dom::before { left: -17px; top: -13px; bottom: -13px; height: auto; }
+  .fm-dom:first-child::before { top: -17px; }
+  .fm-dom:last-child::before { bottom: calc(50% - 1px); }
+  .fm-dom::after, .fm-dom:first-child::after, .fm-dom:last-child::after { left: -17px; right: 100%; top: 50%; }
+  .fm-dom b { width: auto; margin-bottom: 4px; }
+}
+
+/* What I do: four open blocks with air between them and no rules. */
+.do-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 64px 96px; margin-top: var(--head); }
+.do-list a { display: block; min-width: 0; color: inherit; text-decoration: none; }
+.do-list h3 { margin: 0; font-size: var(--t-sub); line-height: 1.25; letter-spacing: -0.016em; font-weight: 500; color: var(--ink); text-wrap: pretty; }
+.do-list a:hover h3 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.do-list p { margin: 12px 0 0; max-width: 34em; font-size: var(--t-body); line-height: 1.5; color: var(--ink-2); }
+@media (max-width: 760px) { .do-list { grid-template-columns: minmax(0, 1fr); gap: 40px; } }
+
+/* The work: two real pages side by side, then the workshops and the open tools, on air. */
+.ex-arts, .ex-more { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 64px 96px; }
+.ex-arts { margin-top: var(--head); }
+.ex-more { margin-top: 96px; }
+.ex-arts > *, .ex-more > * { min-width: 0; }
+.ex-series h3, .ex-col h3 { margin: 0; font-size: var(--t-sub); line-height: 1.25; letter-spacing: -0.016em; font-weight: 500; color: var(--ink); }
+.ex-series:hover h3, .ex-col:hover h3 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.ex-col p { margin: 8px 0 0; font-size: var(--t-body); line-height: 1.5; color: var(--ink-2); }
+.ex-series, .ex-col { display: block; color: inherit; text-decoration: none; }
+.ex-series:focus-visible, .ex-col:focus-visible { outline-offset: 2px; }
+.ex-series { counter-reset: mod; }
+.ex-go { display: block; margin-top: 8px; font-size: var(--t-body); line-height: 1.5; color: var(--ink-2); }
+.ex-modules { display: grid; gap: 8px; list-style: none; margin: 24px 0 0; padding: 0; }
+.ex-modules li { display: grid; grid-template-columns: 32px minmax(0, 1fr); align-items: baseline; counter-increment: mod; margin: 0; font-size: var(--t-lead); line-height: 1.3; letter-spacing: -0.012em; font-weight: 400; color: var(--ink); }
+.ex-modules li::before { content: counter(mod); font-size: var(--t-note); font-weight: 400; letter-spacing: 0; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.ex-ticks { list-style: none; margin: 16px 0 0; padding: 0; }
+.ex-ticks li { margin: 0; font-size: var(--t-body); line-height: 1.5; color: var(--ink); }
+@media (max-width: 1080px) { .ex-arts, .ex-more { grid-template-columns: minmax(0, 1fr); } .ex-more { margin-top: 64px; } }
+
+/* Latest writing: one ruled list, every date in its column, flush to both page edges. */
+.page-home .home-new { margin-top: 40px; border-top: 1px solid var(--dw-grid); }
+.page-home .hub-rows { font-size: var(--t-body); }
+.page-home .hub-rows > li { border-bottom-color: var(--dw-grid); }
+.page-home .hub-rows > li:last-child { border-bottom: 0; }
+.page-home .hub-rows a { padding: 16px 0; }
+.page-home .hub-rows a:hover .t { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.page-home .hub-rows time, .page-home .hub-rows .k { font-size: var(--t-note); color: var(--ink-2); }
+.page-home .rows-new a { grid-template-columns: 10.5rem minmax(0, 1fr) auto; }
+
+.home-close { padding-bottom: var(--sec); }
+.home-close h2 { max-width: 22em; }
+.home-close-go { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-top: 32px; }
+.home-close-go p { margin: 0; font-size: var(--t-lead); line-height: 1.4; color: var(--ink-2); }
+
+/* The phone hero is tightened so the whole clock is on the first screen: a one-line eyebrow, three lines of headline. */
+@media (max-width: 640px) {
+  .home-lead { padding-top: 24px; }
+  .home-who { margin-bottom: 8px; white-space: nowrap; }
+  .home-sub { gap: 16px; margin-top: 16px; }
+  .home-lede { font-size: var(--t-body); }
+  .page-home .rows-new a { grid-template-columns: minmax(0, 1fr) auto; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .home-lead > *, .sc > * { animation: rise 0.5s var(--ease) both; }
+  .sc > * { animation-delay: 0.05s; }
+}
+
+@media (forced-colors: active) {
+  .page-home.docs { --bg: Canvas; }
+  .sc-dt, .sc-flag, .sc-n { forced-color-adjust: auto; }
+  .fm-fleet, .fm-fleet * { forced-color-adjust: none; }
+}
+
+@media print {
+  :root .page-home main, :root[data-theme="dark"] .page-home main, :root:not([data-theme="light"]) .page-home main { --ink-2: #333; --fm-tint: #eee; }
+}

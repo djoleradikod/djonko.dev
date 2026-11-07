@@ -86,31 +86,31 @@ sources:
 ---
 
 <InShort>
-**You have to act if an NSX Load Balancer on VCF 9.0 or 9.1 serves anything beyond VCF appliances and Layer 4 for vSphere Supervisor.** Broadcom lets that use continue until 30 May 2027, on condition you hold Avi licences at 100 qualified VCF cores to 1 Service Unit, co-termed with your VCF licence. The KB counts cores by NSX Manager instance and never mentions VIPs, so size Service Engines separately and work to the larger number. Appliance and Supervisor L4 use has no date. 204 days remain from 7 Nov 2026.
+**You have to act if an NSX Load Balancer on VCF 9.0 or 9.1 serves anything beyond VCF appliances and Layer 4 for vSphere Supervisor.** Broadcom lets that use continue until 30 May 2027, on condition you hold Avi licences at 100 qualified VCF cores to 1 Service Unit, co-termed with your VCF licence. That count runs on cores per NSX Manager instance, and the KB never mentions VIPs, so size Service Engines separately and work to the larger number. Appliance and Supervisor L4 use has no date. 204 days remain from 7 Nov 2026.
 </InShort>
 
-This note isn't purchasing or legal advice. <KB id={439411} /> is the primary source, and it sends questions to a support case or your sales team.
+This note isn't purchasing or legal advice. The primary source is <KB id={439411} />, and questions go where it sends them: a support case or your sales team.
 
-## What Broadcom wrote
+## The boundary and the condition
 
-<KB id={439411} /> is short. Customers using the load balancer in VCF 9.0/9.1 "may continue to use NSX Load Balancer until May 30, 2027, provided they have secured the equivalent Avi licenses." The requirement is "100 qualified VCF cores = 1 Avi Service Unit (SU)", where you "only count VCF cores associated with NSX Manager instances with NSX Load Balancer enabled". The licences "must be co-termed with the customer's VCF license term".
+General-purpose load balancing is "no longer part of the VCF entitlement", while VCF appliances and Layer 4 for Supervisor stay supported (<KB id={401492} /> and the [9.0 NSX notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-nsx.html), 2 Nov 2026). This note takes that to mean only the general-purpose side needs the bridge. The [deprecation radar](/vcf/library/architecture/deprecation-radar/) carries the same position as one row.
 
-[Footnote 12 of the Feature Comparison](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-feature-comparison-and-upgrade-paths) (4 Nov 2026, p19) gives the same date in different words: customers "who need additional time to migrate" may keep "full VCF load balancing capabilities" if they "have purchased the required Avi licenses". Plan on purchased, the firmer word.
+The bridge's terms come from a short KB. Customers using the load balancer in VCF 9.0/9.1 "may continue to use NSX Load Balancer until May 30, 2027, provided they have secured the equivalent Avi licenses" (<KB id={439411} />). The requirement is "100 qualified VCF cores = 1 Avi Service Unit (SU)", where you "only count VCF cores associated with NSX Manager instances with NSX Load Balancer enabled", and the licences "must be co-termed with the customer's VCF license term".
 
-The boundary comes from <KB id={401492} /> and the [9.0 NSX notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-nsx.html) (2 Nov 2026): general-purpose load balancing is "no longer part of the VCF entitlement", while VCF appliances and Layer 4 for Supervisor stay supported. The [deprecation radar](/vcf/library/architecture/deprecation-radar/) carries the same position as one row.
+Plan on having purchased those licences, because that's the firmer of Broadcom's two wordings. [Footnote 12 of the Feature Comparison](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-feature-comparison-and-upgrade-paths) (4 Nov 2026, p19) gives the same date in different words: customers "who need additional time to migrate" may keep "full VCF load balancing capabilities" if they "have purchased the required Avi licenses".
 
 ## Walk the tree
 
-Run it once per NSX Manager instance, because that's the unit the KB counts.
+Run it once per NSX Manager instance, the unit the count uses.
 
 | Question | Your answer | Outcome |
 |---|---|---|
 | 1. Which load balancer serves the virtual server? | Avi | Not on this clock. Avi is already licensed by Service Unit. |
-| | Foundation Load Balancer | Not on this clock. [Fisher's July blog](https://blogs.vmware.com/cloud-foundation/2026/07/13/choosing-the-right-load-balancer-for-vsphere-supervisor-in-vsphere-9-0-and-vmware-cloud-foundation-9-0/) has it included with VVF and VCF, Layer 4 on VDS only. |
-| | Distributed Load Balancer | Unclear, so ask. The KB doesn't name it. <KB id={440901} /> treats it as an upgrade matter: a default instance with connectivity path "ALL" is an error on the way to 9.1. |
+| | Foundation Load Balancer | Not on this clock. It's included with VVF and VCF, Layer 4 on VDS only, says [Fisher's July blog](https://blogs.vmware.com/cloud-foundation/2026/07/13/choosing-the-right-load-balancer-for-vsphere-supervisor-in-vsphere-9-0-and-vmware-cloud-foundation-9-0/). |
+| | Distributed Load Balancer | Unclear, so ask: <KB id={439411} /> doesn't name it. It does surface as an upgrade matter, since a default instance with connectivity path "ALL" is an error on the way to 9.1 (<KB id={440901} />). |
 | | NSX Load Balancer, also called VCF Load Balancer | Go to 2. |
 | 2. Which release and entitlement? | NSX 4.x or NSX-T 3.x entitlements | "Not impacted" until that release's end of life, for all traffic types (<KB id={401492} />). Go to 5. |
-| | VCF 9.0 or 9.1 | Go to 3. The KB lists "VCF 9.0 / VCF 9.1" and no maintenance release. Reading 9.1.1 as covered is this site's inference. |
+| | VCF 9.0 or 9.1 | Go to 3. The KB lists "VCF 9.0 / VCF 9.1" and no maintenance release, so reading 9.1.1 as covered is an inference. |
 | 3. What does it serve? | Only VCF appliances, Layer 4 for Supervisor, or both | Entitled, with no date. See the first open question below. |
 | | Anything else: workload VIPs at Layer 4 or Layer 7 | Go to 4. |
 | 4. Do you hold the Avi licences the count below gives? | Yes | Bridged until 30 May 2027. Migrate within it. |
@@ -131,50 +131,54 @@ Assumptions: 32 cores per host, four NSX Manager instances, all on VCF 9.1. Host
 | NSX-C | 22 | 704 | On | 6 workload VIPs | 7.04 |
 | NSX-D | 90 | 2,880 | Off | Nothing | Not counted |
 
-The words of <KB id={439411} /> don't exempt NSX-A, while <KB id={401492} /> entitles what NSX-A does. So there are two defensible totals, and the KB doesn't say how fractions round or at what level.
+NSX-A is what splits the total. The words of <KB id={439411} /> don't exempt it, yet what it does is entitled under <KB id={401492} />, so there are two defensible totals. Each then has two rounded figures, since the KB doesn't say how fractions round or at what level.
 
 | Reading | Sum of cores | SU | Rounded up across the estate | Rounded up per instance |
 |---|---|---|---|---|
 | Every instance with the load balancer on | 256 + 1,280 + 704 = 2,240 | 22.40 | 23 | 3 + 13 + 8 = 24 |
 | Only instances with workload VIPs | 1,280 + 704 = 1,984 | 19.84 | 20 | 13 + 8 = 21 |
 
-The answer runs from 20 to 24 SU, and the wording alone can't settle it. Whole-unit rounding is this site's assumption, since the KB gives only the ratio. The KB's count has no VIP term, so on its wording six VIPs on NSX-C cost the same 7.04 as six hundred would, and turning the load balancer on for one VIP on NSX-D would add 28.80 SU. That's why [NSX in 9](/vcf/library/architecture/nsx-in-9/) raises consolidating workload VIPs, if Broadcom confirms the count holds for that layout.
+The answer runs from 20 to 24 SU, and the wording alone can't settle it. Those whole numbers are themselves an assumption, since the KB gives only the ratio.
+
+In the constructed estate, where the load balancer is on moves the figure far more than either of those readings. The count has no VIP term, so on the KB's wording six VIPs on NSX-C cost the same 7.04 as six hundred would, and turning the load balancer on for one VIP on NSX-D would add 28.80 SU. That's why [NSX in 9](/vcf/library/architecture/nsx-in-9/) raises consolidating workload VIPs, if Broadcom confirms the count holds for that layout.
 
 ## What those Service Units have to carry
 
-The ratio is measured on the NSX side, and Avi consumes on the Service Engine side. The [Avi program documentation](https://ftpdocs.broadcom.com/cadocs/0/VMware_Avi_Load_Balancer_Specific_Program_Documentation_2026_08_13.pdf) (13 Aug 2026) says that in a virtual environment "each licensed Service Unit can service a single Core", and lets you deploy up to the number of Service Units paid for. The [31.2 licensing overview](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/avi-load-balancer/avi-load-balancer/31-2/vmware-avi-load-balancer-administration-guide/licensing/overview.html) (31 Oct 2026) says units are consumed by each deployed Service Engine and released when it's destroyed, and that the control plane consumes none.
+The ratio is measured on the NSX side, and Avi consumes on the Service Engine side. In a virtual environment "each licensed Service Unit can service a single Core", and you can deploy up to the number of Service Units paid for ([Avi program documentation](https://ftpdocs.broadcom.com/cadocs/0/VMware_Avi_Load_Balancer_Specific_Program_Documentation_2026_08_13.pdf), 13 Aug 2026). Each deployed Service Engine consumes units and releases them when it's destroyed, and the control plane consumes none ([31.2 licensing overview](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/avi-load-balancer/avi-load-balancer/31-2/vmware-avi-load-balancer-administration-guide/licensing/overview.html), 31 Oct 2026).
 
-<Callout type="analysis" title="This site's reading">
-Neither document says how the two fit together. Read side by side, the ratio sets the bridge condition and the core rule sets what you can run. In the constructed estate, two 8-core Service Engines on NSX-B and two 4-core on NSX-C need 16 + 8 = 24 SU, one more than 23 and four more than 20. The overview doesn't mention standby engines, but its "each deployed Service Engine" would include them, so budget for them and confirm with Broadcom. Broadcom documents a [`max_num_se_dps` cap](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/avi-load-balancer/avi-load-balancer/31-2/vmware-avi-load-balancer-administration-guide/licensing/nsx-advanced-load-balancer-editions/additional-configuration-options.html): at 4, an 8-core engine consumes four units. Size from your traffic, and take the larger number to Broadcom.
+<Callout type="analysis" title="Reading the ratio against the core rule">
+Neither document says how the two fit together, so this is an inference: the ratio sets the bridge condition and the core rule sets what you can run. In the constructed estate, two 8-core Service Engines on NSX-B and two 4-core on NSX-C need 16 + 8 = 24 SU, one more than 23 and four more than 20, so a count that meets the condition can still fall short of the engines. The overview doesn't mention standby engines, but its "each deployed Service Engine" would include them, so budget for them and confirm with Broadcom. Broadcom's documented [`max_num_se_dps` cap](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/avi-load-balancer/avi-load-balancer/31-2/vmware-avi-load-balancer-administration-guide/licensing/nsx-advanced-load-balancer-editions/additional-configuration-options.html) pulls the other way: at 4, an 8-core engine consumes four units. Size from your traffic, and take the larger number to Broadcom.
 </Callout>
 
-Co-terming has its own consequence. The bridge ends on 30 May 2027, but the licence runs to the end of your VCF term. On a constructed term ending 31 Dec 2028, that's 19 months of Avi after the date, so budget it as the replacement product.
+Co-terming can make the licence outlast the bridge. The bridge ends on 30 May 2027, but the licence runs to the end of your VCF term: on a constructed term ending 31 Dec 2028, that's 19 months of Avi after the date. Budget it as the replacement product.
 
-## What the KB leaves open
+## Open questions for Broadcom
 
-These gaps stood on 7 Nov 2026. Don't fill them with assumptions in a plan.
+These gaps stood on 7 Nov 2026. None of them belongs in a plan as an assumption.
 
 - **Whether cores count where the load balancer serves only appliances or Supervisor.** That's the 20-versus-23 gap above.
-- **Rounding, and whether "qualified" means licensed or physical cores.**
-- **What happens on 31 May 2027.** Broadcom states a date and no technical or contractual behaviour.
-- **What "currently utilizing" is measured against.** No reference date is given, and nothing says whether you can add VIPs during the bridge or whether an estate reaching 9 later qualifies.
-- **Which Avi edition.** The KB is silent. Fisher's blog says "Avi Enterprise License" for Supervisor use.
+- **What happens on 31 May 2027.** Broadcom states a date and no technical or contractual behaviour, so plan to finish by 30 May.
+- **What "currently utilizing" is measured against.** No reference date is given, and nothing says whether you can add VIPs during the bridge or whether an estate reaching 9 later qualifies. Question 5 of the tree depends on this.
+- **Rounding, and whether "qualified" means licensed or physical cores.** Rounding moves the constructed count by one SU.
+- **Which Avi edition.** The KB is silent. For Supervisor use it's "Avi Enterprise License", [Fisher's blog](https://blogs.vmware.com/cloud-foundation/2026/07/13/choosing-the-right-load-balancer-for-vsphere-supervisor-in-vsphere-9-0-and-vmware-cloud-foundation-9-0/) says, so ask before pricing workload VIPs on that edition.
 - **Whether the L4 load balancer on the 9.1 Virtual Network Appliance counts**, a question [NSX in 9](/vcf/library/architecture/nsx-in-9/) also lists.
 
 ## What to do first
 
-<Callout type="analysis" title="This site's order of work">
+<Callout type="analysis" title="Order of work">
 1. **This week, list every NSX Manager instance** with its cores, whether the load balancer is on, and what each virtual server serves. Walk the tree.
 2. **Run both counts** and send the table to Broadcom with the open questions above. Get the answers in writing.
-3. **Size Service Engines per NSX instance.** The [9.1 design page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-load-balancing-detailed-design/avi-load-balancer-detailed-design.html) (5 Nov 2026) requires a 1:1 relationship between Avi and NSX Manager, so NSX-B and NSX-C each need a controller cluster.
+3. **Size Service Engines per NSX instance.** Avi must have a 1:1 relationship with NSX Manager ([9.1 design page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-load-balancing-detailed-design/avi-load-balancer-detailed-design.html), 5 Nov 2026), so NSX-B and NSX-C each need a controller cluster.
 4. **Run the conversion early.** The size of its manual bucket is your best schedule estimate.
 5. **Move workload VIPs before Supervisor**, since Supervisor Layer 4 has no date.
 </Callout>
 
-The tool is vACT in the KB and ALBCT in the docs. [Its NSX workflow](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/avi-load-balancer/avi-load-balancer-conversion-tool/guide/migration-workflows-using-albct/using-avi-load-balancer-conversion-tool-for-nsx-t.html) (7 Aug 2026) needs an NSX-T cloud on Avi first. Virtual services land in [Needs Review or Auto-Converted](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/avi-load-balancer/avi-load-balancer-conversion-tool/guide/using-avi-load-balancer-conversion-tool-for-nsx-t/converting-nsx-t-configuration-to-avi-load-balancer-configuration.html) (3 Mar 2026), with a generated rollback file. Supervisor is stricter: the [workflow page](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/avi-load-balancer/avi-load-balancer-conversion-tool/guide/migration-workflows-using-albct/migrating-nsx-lb-supervisor-to-avi-load-balancer.html) (25 May 2026) warns "you cannot revert changes" once started, and [its companion](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/avi-load-balancer/avi-load-balancer-conversion-tool/guide/integrating-avi-load-balancer-with-nsx-for-wcp-bring-up-on-vcf-supervisor-clusters.html) (3 Mar 2026) excludes NSX VPC deployments.
+The conversion tool is vACT in the KB and ALBCT in the docs. [Its NSX workflow](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/avi-load-balancer/avi-load-balancer-conversion-tool/guide/migration-workflows-using-albct/using-avi-load-balancer-conversion-tool-for-nsx-t.html) (7 Aug 2026) needs an NSX-T cloud on Avi first. Virtual services land in [Needs Review or Auto-Converted](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/avi-load-balancer/avi-load-balancer-conversion-tool/guide/using-avi-load-balancer-conversion-tool-for-nsx-t/converting-nsx-t-configuration-to-avi-load-balancer-configuration.html) (3 Mar 2026), with a generated rollback file, and this note reads Needs Review as the manual bucket in step 4. Supervisor is stricter. Once started, "you cannot revert changes" ([workflow page](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/avi-load-balancer/avi-load-balancer-conversion-tool/guide/migration-workflows-using-albct/migrating-nsx-lb-supervisor-to-avi-load-balancer.html), 25 May 2026), and [its companion](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/avi-load-balancer/avi-load-balancer-conversion-tool/guide/integrating-avi-load-balancer-with-nsx-for-wcp-bring-up-on-vcf-supervisor-clusters.html) (3 Mar 2026) excludes NSX VPC deployments.
 
 ## One controller or three
 
-Controller count doesn't change the Service Unit figure, since the control plane consumes none. It changes the compute you set aside. Read [William Lam's post](https://williamlam.com/2025/07/single-node-vmware-avi-load-balancer-with-vcf-9-0.html) (22 Jul 2025, updated 10 Jul 2026) for a lab: his script deploys one controller where SDDC Manager defaults to three, and his July update says single-node is officially supported as of Avi 31.2.1 for small environments and edge sites. He doesn't cover licensing, and his script and feature flag are a lab route.
+Controller count doesn't change the Service Unit figure, since the control plane consumes none. It changes the compute you set aside.
 
-For production, Broadcom's 9.1 design page recommends a 3-node cluster and lists single-controller as "Available as an option in the UI in 9.1.1". It also requires Avi to be integrated with NSX before Supervisor activation, so place Avi early on any instance where a Supervisor is still to come.
+Plan production on a 3-node cluster, which the [9.1 design page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-load-balancing-detailed-design/avi-load-balancer-detailed-design.html) recommends, while listing single-controller as "Available as an option in the UI in 9.1.1". The same page requires Avi to be integrated with NSX before Supervisor activation, so place Avi early on any instance where a Supervisor is still to come.
+
+For a lab, read [William Lam's post](https://williamlam.com/2025/07/single-node-vmware-avi-load-balancer-with-vcf-9-0.html) (22 Jul 2025, updated 10 Jul 2026). His script deploys one controller where SDDC Manager defaults to three, and single-node is officially supported as of Avi 31.2.1 for small environments and edge sites, his July update says. The post doesn't cover licensing, so take that from the sources above, and his script and feature flag are a lab route.

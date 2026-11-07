@@ -1,69 +1,112 @@
 ---
 title: "\"No healthy upstream\" on vCenter: certificates, full partitions and stopped services"
-description: "\"No healthy upstream\" means vCenter's reverse proxy has nothing healthy behind it. That is a symptom, not a cause. Check for an expired certificate, a full partition, a crashed vpxd, or a service that never started after a reboot."
+description: "\"No healthy upstream\" is vCenter's HTTP 503. Rule out the client's network, then check partitions, certificates and services in that order. Take the rollback the fix requires first, and open a support case before running vCert, which Broadcom intends for use at its direction."
 category: troubleshooting
 order: 7
-versions: ["5.x", "9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [344201, 385107, 427237, 434671, 399535, 410118, 453758, 344917]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [390105, 446856, 344201, 385107, 427237, 434671, 399535, 410118, 453758, 344917, 384498, 405611]
 sources:
-  - title: "vCenter services fail due to expired certificates"
+  - title: "Error: \"no healthy upstream\" or \"503 Service Unavailable\" when accessing vCenter Server"
     url: "https://knowledge.broadcom.com/external/article/344201"
     by: "Broadcom KB"
-  - title: "vCert: vCenter certificate management utility"
+    kind: broadcom
+  - title: "vCert: scripted vCenter expired certificate replacement"
     url: "https://knowledge.broadcom.com/external/article/385107"
     by: "Broadcom KB"
+    kind: broadcom
+  - title: "\"no healthy upstream\" error when attempting to access the vCenter Server vSphere Client"
+    url: "https://knowledge.broadcom.com/external/article/390105"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "VCF Component Backup and Restore (9.1 design blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-backup-and-restore.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Managing Certificates in VMware Cloud Foundation (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "vCenter 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcenter-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "vCenter 9.1.1.0100 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-1-x/vsphere/vcenter/vcenter-9-1-1-0100-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-10-12
+  - title: "VCF Operations 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-03
 ---
 
 <InShort>
-The vSphere Client sits behind a proxy (Envoy). "No healthy upstream" means the services behind it aren't responding. Find out which, then why. Work in this order: **check partitions** (`df -h`, especially `/storage/log` and `/storage/seat`), **check certificates** (the VECS expiry loop), **check services** (`service-control --status --all`), then read the log of the first service that failed. Rebooting again won't clear an expired certificate or a full disk.
+"No healthy upstream" is an [alternate message for HTTP 503](https://knowledge.broadcom.com/external/article/390105), so it names no cause. If only one remote user sees it, look at their VPN. If everyone does, check partitions, then certificates, then services, and read the log of the first service that failed. Hold any reboot until you've looked, and open a support case before running vCert.
 </InShort>
 
-<Compare rows={[
-  ["Symptom", "No healthy upstream, 503", "The same"],
-  ["Causes to check first", "Expired certificates, full partitions", "The same, plus host syslog filling /storage/log when hosts point at vCenter"],
-  ["Tools", "vCert, VDT, service-control", "The same tools"],
-  ["VCF impact", "SDDC Manager workflows fail on the domain", "Also fleet lifecycle, licensing and SSO for that vCenter"],
-]} />
-
-## The first five minutes
-
-```bash
-# 1. Disk
-df -h | grep -E 'storage|/$'
-
-# 2. Services: which ones are stopped?
-service-control --status --all
-
-# 3. Certificates: anything expired? (loop from KB 344201)
-for store in $(/usr/lib/vmware-vmafd/bin/vecs-cli store list | grep -v TRUSTED_ROOT_CRLS); do
-  echo "[*] $store"; /usr/lib/vmware-vmafd/bin/vecs-cli entry list --store $store --text | grep -ie "Alias" -ie "Not After"
-done
-
-# 4. Time
-date -u
-```
-
-The VCF Diagnostic Tool for vCenter runs a broader set of checks in one go (<KB id={344917} />).
-
-## Cause by cause
-
-| Finding | Fix |
-|---|---|
-| A certificate past "Not After" | Snapshot, then vCert to check and replace, then restart all services (<KB id={344201} />, <KB id={385107} />) |
-| STS signing expired on 9.0.1, SSH refused | Unmask and start sshd, then vCert STS replacement (<KB id={427237} />) |
-| `/storage/log` full from `/storage/log/vmware/esx/` | Hosts are sending syslog to vCenter. Remove the target from the hosts, clear the folder, start services (<KB id={434671} />). An unrotated `vmon` log is another known cause (<KB id={399535} />). |
-| `/storage/seat` full | Event and task tables bloated. Purge or grow the disk as the KB describes, with no snapshot on the disk you grow (<KB id={410118} />) |
-| vpxd crashes with "Excessive depth in document" | A VM with hundreds of snapshots in its chain. Identify it, consolidate on the host, start vpxd (<KB id={453758} />) |
-
-<Callout type="field">
-Add vCenter certificate expiry and partition usage to the same monthly report as backups, so you see an expiring certificate or a filling partition before a user sees "no healthy upstream".
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to offer vCert as the first-line fix, without saying Broadcom [intends it for use at the direction of Global Support](https://knowledge.broadcom.com/external/article/385107). It also listed an unrotated `vmon` log as a live cause, though that's [fixed from 8.0U2](https://knowledge.broadcom.com/external/article/399535), and claimed 5.x coverage and SDDC Manager, licensing and SSO impacts that no cited source supports, so those are gone.
 </Callout>
 
-## Pitfalls
+## Everyone, or one user?
 
-- **Rebooting repeatedly.** If a certificate expired or a disk is full, the reboot ends in the same place.
-- **Snapshots on linked vCenters.** Use the cold-snapshot approach the KBs describe before certificate work.
-- **Deleting logs that explain the outage.** Copy them off first if a root cause analysis will be needed.
+Split-tunnel VPN users whose home subnet overlaps the vCenter management subnet get this same error while [other sites and the internal network log in normally](https://knowledge.broadcom.com/external/article/446856). Ping still works for them, so it proves nothing. Envoy's access logs on the appliance show 503 with UT or UH. The fix is on the client side: lower the VPN adapter's metric, or move the home network to a range that doesn't overlap. Nothing on the appliance needs touching.
+
+If everyone is locked out, run these on the appliance. They change nothing:
+
+```bash
+df -h; df -i /storage/log                # partitions and inodes
+service-control --status --all           # what is stopped
+date -u                                  # the clock
+
+# certificate expiry, from KB 344201
+for store in $(/usr/lib/vmware-vmafd/bin/vecs-cli store list | grep -v TRUSTED_ROOT_CRLS); do echo "[*] Store :" $store; /usr/lib/vmware-vmafd/bin/vecs-cli entry list --store $store --text | grep -ie "Alias" -ie "Not After";done;
+```
+
+The [VCF Diagnostic Tool for vSphere](https://knowledge.broadcom.com/external/article/344917) covers the same ground and more in one read-only run: certificates, disk space, vPostgres, DNS, time sync and services, each reported as PASS, FAIL or WARN. Version 2.3.2 supports vCenter 7.x to 9.x, but Broadcom still describes the script as beta, so confirm a FAIL by hand before acting on it.
+
+Partitions come first because they're the quickest to read and clearing them doesn't depend on certificate work. That order is this site's call, as none of the KBs here sets one.
+
+## Finding to fix
+
+Apart from the machine account alert, the [vCenter 9.1.1.0](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcenter-9-1-1-0-release-notes.html) and [9.1.1.0100](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-1-x/vsphere/vcenter/vcenter-9-1-1-0100-release-notes.html) notes list no fix for the causes below (checked 7 Nov 2026), so don't count on a 9.1.1 patch to clear the rows scoped to 9.x.
+
+| Finding | What's happening | Fix | Scope in the KB |
+|---|---|---|---|
+| A certificate past "Not After" | STS, Machine SSL or solution user certificates expired, and `vpxd` may not start | Take the rollback below, then vCert with support: option 1 to identify, option 6 to reset if several stores are affected. Restart all services (<KB id={344201} />) | vCenter 6.x to 9.x |
+| `/storage/log` full or out of inodes, `/storage/log/vmware/esx/` large | Hosts send syslog to vCenter, whose collector has no rotation or retention for them. It can start when vCenter inherits a retired syslog server's IP | Clear `Syslog.global.logHost` on every host or repoint it to a real collector, then archive what you need, delete the folder and restart services. The delete can't be undone (<KB id={434671} />) | No versions listed |
+| `/storage/seat` at 100%, old files in `eventtblsp` and `tasktblsp` | vPostgres won't extend data files on low space, services can't log events, and vacuum and truncate fail too | Truncate after moving a folder aside, or run the retention script, or grow the disk, the route the KB lists last. Growing allows no snapshot at all (<KB id={410118} />) | Appliance 7.x to 9.x |
+| `vpxd` panics, log shows "Excessive depth in document: 256" | A snapshot chain passed the 256-level XML limit, typically at 250 or more snapshots | Find the VM in VCDB, consolidate from the ESX host because `vpxd` is down, then start `vpxd` (<KB id={453758} />) | vCenter 9.x |
+| Services won't start, certificates and disks are fine | Machine account password mismatch. Before 9.1.1.0 this failed without notice | 9.1.1.0 [raises an error naming the KB, plus an alarm](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcenter-9-1-1-0-release-notes.html), so follow that KB | vCenter 9.1.1.0 |
+| Clock wrong, `/etc/hosts` edited, or `vpxd` at the 2,000-session limit | Listed causes of `vpxd`, SSO or Lookup service failure | Set the time with `date -s`, restore `/etc/hosts` to its default, and follow the KB for the session limit (<KB id={390105} />) | vCenter 7.x, 8.x |
+| "Failed to start sps, sts services", SSH refused, `sshd` masked | Expired or invalid STS certificates. The client says "vSphere Client service has stopped working", and VAMI returns 503 | Unmask and start `sshd`, regenerate STS with vCert and support (option 3, then 8), restart services, reboot (<KB id={427237} />) | VCF 9.0.1 |
+| All services running, "envoy overloaded" in `websso.log` | `envoy-sidecar` hit its 1 GB heap limit, often from frequent authentication by an external tool | Upgrade to 9.0.1.0 or later. A reboot only helps for a while (<KB id={384498} />) | vCenter 9.0.0.0, 8.0 U3g and lower |
+| Console shows a failed filesystem check, boot stops in emergency mode | The datastore holding the vCenter VM is full, or the appliance's filesystems are corrupted | Free datastore space, snapshot, then run fsck from GRUB (<KB id={405611} />) | vCenter 7.x, 8.x |
+
+## vCert, and what to do about the conflict
+
+Broadcom's own material pulls two ways. The KB for this error lists [vCert options 1 and 6 as resolution steps](https://knowledge.broadcom.com/external/article/344201), while the vCert page says the script is ["intended to be used at the direction of Broadcom Global Support"](https://knowledge.broadcom.com/external/article/385107). Follow the stricter page: open the case first, and use the expiry loop and the diagnostic tool to bring evidence to it. A failed replacement can [leave vCenter inaccessible](https://knowledge.broadcom.com/external/article/344201), so the case costs less than the risk.
+
+Runbooks need one change for 9.1.1: [`ls_update_certs.py` is gone, replaced by the Lookup Service Doctor](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcenter-9-1-1-0-release-notes.html). After any renewal, read the new solution user dates, above all on builds older than 9.1.1.0. Before it, answering Y at the config-file prompt gave 2-year certificates where N gave the documented 10, and the 9.1.1.0 notes list that under resolved issues. Replacing vCenter's Machine SSL certificate can also [strand the Supervisor adapter in VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html); the wider walk is in [certificates in 9.1.1](/vcf/library/day-2/certificates-in-9/).
+
+## Rollback, and when not to reboot
+
+Certificate work on a standalone vCenter needs a backup or a powered-off snapshot, preferably taken from the host. [Linked vCenters are powered off together and each snapshotted, and vCenter HA is removed first](https://knowledge.broadcom.com/external/article/344201). Growing `/storage/seat` is the opposite case, where [the KB forbids a snapshot](https://knowledge.broadcom.com/external/article/410118).
+
+Those snapshots are the rollback for an outage already under way. The [9.1 backup blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-backup-and-restore.html) recommends file-based vCenter backups, with SFTP as the target, and names a certificate update as a reason to take one. Schedule them before you need them, because a design that relies on an emergency snapshot has no restore point older than the failure.
+
+An early reboot won't clear an expired certificate or a full partition. Expired STS certificates [surfaced after a restart and after a full power cycle](https://knowledge.broadcom.com/external/article/427237), and the documented fixes for certificates and full partitions change state first. That's an inference from those fixes, and none of these KBs says it outright. If a root cause analysis will be needed, copy logs off before deleting any. Partition housekeeping in depth is in [disk space housekeeping](/vcf/library/day-2/disk-space-housekeeping/).
+
+<Callout type="analysis" title="Catching it before users do">
+VCF Operations 9.1.1 [raises expiry alarms across VCF components, including certificates it doesn't manage, and now manages STS](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html). Use it, but keep your own check too, because the [9.1 certificate page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0.html) contradicts itself on monitoring system-managed certificates and doesn't say which category vCenter's fall into. Run the expiry loop, `df -h` and `df -i` on a schedule, and add the results to the same monthly report as your backups. The snapshot query in <KB id={453758} /> lists VMs over an adjustable threshold, 200 by default, which leaves room to act before the 256-level limit.
+</Callout>

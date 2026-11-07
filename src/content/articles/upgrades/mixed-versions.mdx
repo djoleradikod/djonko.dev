@@ -1,62 +1,149 @@
 ---
 title: "Running mixed versions: a 9.x management domain with 5.x workload domains"
-description: "Workload domains can follow the management domain on their own schedule. That flexibility is real, but a mixed estate is a transition state with limits, and it should have an end date."
+description: "A 9.1 management domain can manage 5.x, 9.0 and 9.1 workload domains, so a domain on 5.2 or later with its own NSX Manager can be staggered. Domains sharing NSX upgrade together. Date the last 5.x domain before general support ends on 11 Oct 2027, and license each upgraded vCenter inside an evaluation of up to 90 days."
 category: upgrades
 order: 11
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
 kbs: [440630]
 sources:
-  - title: "Upgrading to VCF 9.1.x (workload domains as Day-N)"
+  - title: "Upgrading to VMware Cloud Foundation 9.1.x"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
     by: "Broadcom TechDocs"
-  - title: "VCF 9 deployment guide: version evolution (mixed environments)"
-    url: "https://vcf9-deployment-guide.pages.dev/overview/version-evolution"
-    by: "Community guide"
-  - title: "10 VCF 9 enhancements simplifying your Day-2 operations"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Mixed-Version Environments (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/pre-version-9-licenses-and-support.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Mixed-Version Environments (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/licensing-overview/pre-version-9-licenses-and-support.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Licensing Model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrading vCenter and NSX Manager (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/updating-vcenter-and-nsx.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrading VMware Cloud Foundation Workload Domains to 9.1.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/upgrade-workload-domains-to-vcf-5-2.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Create a New Workload Domain without a vSphere Cluster (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/create-a-workload-domain-without-an-esx-cluster.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Management Domain Model (9.1 design library)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/workload-domain-deployment-models/management-domain-deployment-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Fleet in a Single Site (9.1 blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "What's new in VCF Operations (9.1.0 release notes)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware Cloud Foundation 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "SDDC Manager Functionality During an Upgrade to VCF 9.0"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/apply-cloud-foundation-5-2-update-bundle/sddc-functionality-limitations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "VMware Cloud Foundation 9.1 General FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "Customer favorite capabilities: accelerating your path to VCF 9.1.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/10/13/customer-favorite-capabilities-accelerating-your-path-to-vcf-9-1-1/"
+    by: "Brandon Hahn, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-10-13
+  - title: "10 VCF 9.0 enhancements: simplifying your Day 2 operations"
     url: "https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/"
-    by: "VMware Cloud Foundation blog"
-  - title: "Major enhancements to the VCF 9.1 Upgrade Planner tool (workload domain paths)"
+    by: "Brandon Hahn, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-09-18
+  - title: "Major enhancements to the VCF 9.1 Upgrade Planner tool"
     url: "https://williamlam.com/2026/10/major-enhancements-to-vcf-9-1-upgrade-planner-tool.html"
     by: "William Lam"
+    kind: practitioner
+    date: 2026-10-22
 ---
 
 <InShort>
-In the upgrade documentation, workload domains are Day-N. They are upgraded after their instance's management domain, in later windows if needed. During that period a 9.x management domain manages workload domains still on the 5.x bill of materials. This is a supported transition, but it is not a destination. The 9.x Day-2 experience (vCenter-based host, cluster and network pool operations, VCF SSO, auto-renewal and rotation) assumes 9.x domains. Every month in a mixed state is a month of two operating procedures.
+A workload domain on 5.2 or later with its own NSX Manager can be staggered, and domains that share one upgrade together. Broadcom documents that [a 9.1 management domain can manage workload domains on 5.x, 9.0 and 9.1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/pre-version-9-licenses-and-support.html), and that workload domain upgrades [can follow at any time after that instance's management domain](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) as Day-N work (<KB id={440630} />). The mixed state still needs an end date: [general support for the VCF 5.x stack ends on 11 October 2027](https://blogs.vmware.com/cloud-foundation/2026/10/13/customer-favorite-capabilities-accelerating-your-path-to-vcf-9-1-1/) <AsOf date="2026-11-07" />.
 </InShort>
 
-<Compare rows={[
-  ["Upgrade unit", "Each workload domain was upgraded separately by SDDC Manager", "The same. Workload domains follow the management domain as Day-N."],
-  ["Operating model during transition", "One model: SDDC Manager", "Two: 9.x workflows for upgraded domains, SDDC Manager workflows for the rest"],
-  ["Day-2 features", "Uniform across domains", "Some 9.x Day-2 tasks in vCenter need VCF SSO and vCenter linking, which a 5.x domain doesn't have"],
-  ["Licensing", "Keys per component", "Upgraded vCenters use the licence file. The rest keep keys until upgraded, and an upgraded vCenter starts a 90-day evaluation until licensed."],
-]} />
-
-## Why it's attractive
-
-- **Smaller windows.** Each workload domain upgrade is its own change, with its own owners and rollback points.
-- **Application calendars.** Business units with freeze periods can be scheduled around.
-- **Shared NSX.** Where workload domains share an NSX instance, they have to move together in any case. Domains that don't share NSX can be staggered.
-
-## What to put in place for the transition
-
-1. **An end date** for the mixed state, with a named owner. Without one, the last workload domain stays on 5.x until it falls out of support.
-2. **A support check.** Confirm in the Interop Matrix that your exact management domain build supports your exact workload domain builds, and recheck at every management domain patch.
-3. **Two runbooks,** clearly labelled. Operators need to know which procedure applies to which domain, for example where host commissioning happens.
-4. **A licensing plan.** Each upgraded vCenter moves to the licence file. Make sure it is licensed before the evaluation window closes.
-5. **A monitoring check.** Confirm VCF Operations collects from every domain, old and new, through the right cloud proxy.
-
-## Shared NSX is the exception
-
-When several domains share an NSX instance, upgrade NSX, vCenter and ESX on all of them. Don't cancel the plans that are created automatically on the dependent domains. Start the edge cluster upgrade and NSX finalize from the management domain. In an optimized (RDU) plan, the NSX Manager upgrade waits for every domain sharing it to finish its vCenter switchover (<KB id={440630} />).
-
-<Callout type="field">
-A useful rule for customers: "No new workload on a domain that is still on 5.x." It stops the old domains growing while they wait, and it gives application owners a reason to agree a window.
+<Callout type="note" title="Corrected on 7 November 2026">
+This note said an unlicensed vCenter past its evaluation "becomes an outage": hosts disconnect and workloads can't start, but running ones aren't proactively stopped. It also put non-upgraded domains wholly on SDDC Manager workflows, while VCF Operations 9.1 can manage certificates and passwords for 5.2.x components, and it cited the shared NSX rules to KB 440630, when they're in the upgrade guide.
 </Callout>
 
-## Pitfalls
+## Which domains can wait
 
-- **Forgetting the old domains in automation.** Scripts updated for 9.x APIs may fail against domains still on 5.x, and the reverse.
-- **Leaving licensing to the end.** An upgraded vCenter left unlicensed past its evaluation window becomes an outage.
-- **Mixing up NSX sharing.** Domains that share NSX cannot be staggered freely. Map NSX sharing before you promise anyone a schedule.
+Find each workload domain's row, and map NSX sharing before you promise anyone a schedule. Staggering makes each domain's upgrade its own change and lets you work around business freeze periods, but your NSX topology and source build decide this more than the application calendar does.
+
+| Workload domain | Can it stay behind? | What limits it |
+|---|---|---|
+| On 5.2.x, with its own NSX Manager | Yes | The 11 October 2027 date, so give it a window well before that |
+| On 5.2.4 | Yes, and its target is 9.1.1, not 9.1.0 | [A target must be released after the source](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html), so 5.2.4 goes to 9.1.1. The [9.1.1 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html) allow a direct upgrade from 5.2.x |
+| Below 5.2 | No | [The management domain and all workload domains must reach 5.2 or later](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) before the move to 9.1. "5.x" on the mixed-version page therefore means 5.2.x for an estate arriving by upgrade |
+| Sharing NSX with a domain you're upgrading | No | The group's upgrade plans are tied together (below) |
+| On 9.0, under a 9.1 management domain | Yes | [General support for 9.0 ends on 17 September 2027](https://blogs.vmware.com/cloud-foundation/2026/10/13/customer-favorite-capabilities-accelerating-your-path-to-vcf-9-1-1/), before 5.x does |
+
+A management domain staying on 9.0 is narrower: it [manages 5.x and 9.0 workload domains](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/licensing-overview/pre-version-9-licenses-and-support.html) and loses general support first. The support dates here come from a Broadcom post arguing for the upgrade, and the [support clock](/vcf/library/upgrades/support-clock/) weighs them. William Lam's [22 October post](https://williamlam.com/2026/10/major-enhancements-to-vcf-9-1-upgrade-planner-tool.html) reports that the [Upgrade Planner](https://vmware.github.io/vcf-upgrade-planner/) now covers additional instances and workload domains, so use it for each domain's path. Finish by checking your exact management and workload domain builds in the [Interoperability Matrix](https://interopmatrix.broadcom.com/Upgrade?productId=851), which the upgrade guide names for further component limits, and repeat that check whenever the management domain is patched.
+
+## Shared NSX removes the choice
+
+[Domains sharing an NSX instance must upgrade NSX, vCenter and ESX on all of them](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/updating-vcenter-and-nsx.html). NSX finalizes only after every dependent domain has finished its vCenter and ESX work. Don't cancel the automatically created plan on a dependent domain, because that cancels it on every domain sharing that instance and you then build a new one. When a management domain is in the group, start the edge cluster upgrade and NSX finalize from the management domain only. In an Optimized sequence Broadcom's pages disagree: [the parent page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/updating-vcenter-and-nsx.html) says the NSX Manager upgrade can't proceed until every sharing domain finishes its vCenter Reduced Downtime Upgrade switchover, and [the procedure](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/updating-vcenter-and-nsx/optimized-update-of-vcenter-and-nsx-manager.html) upgrades NSX first and confirms those switchovers before this domain's own. On either reading the slowest domain's window sets the pace, so settle the order in your pre-upgrade review.
+
+Two details on [the workload domain creation page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/create-a-workload-domain-without-an-esx-cluster.html) catch shared estates. A domain with no vSphere cluster blocks patching and upgrades for every domain sharing its NSX Manager until a cluster is added. New NSX 9.1 features also stay inactive until all ESX hosts in all attached domains match.
+
+That same page lists NSX 9.1 with vCenter 8.0.x as a "pinned state", with features limited to vCenter 8.0, for a domain joining an existing NSX Manager. The upgrade guide still requires every sharing domain to finish before finalize, so treat the pinned state as a rule for joining and don't plan to rest a shared domain there. That's an inference from the two pages, and neither states it.
+
+Broadcom's design recommendation keeps the management domain out of such a group. [VCF-MGMT-RCMD-NSX-001](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/workload-domain-deployment-models/management-domain-deployment-model.html) says to use a dedicated NSX Manager for the management domain, because it "decouples the lifecycle management of the management stack from workload domains". The price is more NSX Managers to host and patch. The [single-site blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint.html) gives each workload domain a vCenter and NSX Manager. A workload domain that shares the management domain's NSX Manager gives up the staggering this note is about.
+
+## Where each task runs meanwhile
+
+| Task | 5.x workload domain | 9.x workload domain |
+|---|---|---|
+| Hosts, clusters, network pools | [SDDC Manager on 5.2](https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/) | vCenter. Cluster and pool work needs VCF SSO and vCenter linking on the workload domain, which a 5.x domain doesn't have |
+| Certificates, passwords | [VCF Operations 9.1 can manage 5.2.x components](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html) | VCF Operations |
+| Licensing | [License keys, unchanged](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) (FAQ Q10) | A primary license on each vCenter |
+| Upgrade | [SDDC Manager UI procedure, or VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/upgrade-workload-domains-to-vcf-5-2.html) | VCF Operations |
+
+Write the runbook by task, since the split no longer falls neatly by domain. The first row comes from Brandon Hahn's 2025 post on 9.0, and Broadcom's 9.0 guide says that [in a mixed BoM, available SDDC Manager operations vary per workload domain with that domain's state](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/apply-cloud-foundation-5-2-update-bundle/sddc-functionality-limitations.html). That page has no counterpart at the matching 9.1 path (checked 7 Nov 2026), so try host commissioning, cluster and pool changes against each domain state on non-production before the runbook relies on them. [The SDDC Manager UI is being deprecated and will be removed in a future release](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html), so a runbook built on it has a limited life.
+
+## Licensing runs on separate clocks
+
+Domains left on 5.x keep their keys, and [Broadcom allows both models side by side](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs). Each vCenter upgraded to 9.1 then [needs a primary license with sufficient capacity inside an evaluation of up to 90 days](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/pre-version-9-licenses-and-support.html). Staggered domains therefore have staggered deadlines, so put each one in the change plan. [ESXi 8.x hosts left under a 9.1 vCenter need a pre-version 9 key and also use capacity from your 9+ license](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/pre-version-9-licenses-and-support.html), so allocate capacity for them in a domain upgraded in stages.
+
+If an evaluation lapses, [management operations are prevented, the vCenter's hosts disconnect and workloads can't start, though existing ones aren't proactively stopped](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html). A vCenter recovers when it's assigned a valid license, but the same page says a VCF fleet licensed too late has to be reinstalled, and it doesn't say whether an upgraded estate counts as one. Treat the end of the evaluation as a hard stop.
+
+Broadcom's two pages differ on who gets the 90 days. The Licensing Model limits evaluation to new deployments and upgrades from 8.x, while the Mixed-Version page says it of vCenters upgraded to 9.1 without that limit. A 5.2 domain gets the window under both, because its vCenter is on 8.0. A 9.0 domain is the one in doubt, so plan for no fresh window there, the same call [licensing through upgrades](/vcf/library/licensing/licensing-through-upgrades/) makes. None of this is legal or purchasing advice, so check your terms with Broadcom.
+
+<Callout type="analysis" title="Rules that keep the mixed state short">
+Name an owner and a finish date for the last 5.x domain, because Broadcom's "at any time" wording sets no deadline of its own. Stop placing new workloads on domains still on 5.x, so they don't grow while they wait and application owners have a reason to agree a window. Test automation against both versions, since the tasks above run in different places depending on the domain, and scripts updated for 9.x APIs may fail against 5.x domains, and the reverse.
+</Callout>

@@ -1,13 +1,16 @@
 ---
 import Base from '../layouts/Base.astro';
+import '../styles/home.css';
 import Icon from '../components/Icon.astro';
 import FleetModel from '../components/home/FleetModel.astro';
+import FieldNotes from '../components/home/FieldNotes.astro';
 import SupportClock from '../components/home/SupportClock.astro';
 import { SITE } from '../data/site';
 import { CATEGORIES } from '../data/categories';
 import { SUPPORT_NOTE } from '../data/releases';
 import { KB_INDEX } from '../data/kb';
-import { TOOLS } from '../data/tools';
+import { JOBS, MAKERS, TOOLS } from '../data/tools';
+import { TRIAGE_STEPS } from '../data/triage';
 import { allArticles, urlOf } from '../lib/articles';
 import { allPosts, allProjects, postUrl, fmtDate } from '../lib/posts';
 import { readingPaths } from '../lib/paths';
@@ -23,22 +26,40 @@ const latest = [
   ...notes.map((a) => ({ title: a.data.title, date: a.data.updated ?? a.data.pubDate, pub: a.data.pubDate, href: urlOf(a), kind: 'VCF note' })),
 ].sort((a, b) => +b.date - +a.date || +b.pub - +a.pub || a.title.localeCompare(b.title)).slice(0, 6);
 
-const perArea = CATEGORIES.map((c) => ({ ...c, n: notes.filter((a) => a.data.category === c.id).length }));
+// The library as a quiet index: every area's real note count, largest first. The build fails rather than list an empty area
+// or counts that no longer add up to the total beside them.
+const perArea = CATEGORIES.map((c) => ({ ...c, n: notes.filter((a) => a.data.category === c.id).length })).sort((a, b) => b.n - a.n);
+if (perArea.some((c) => c.n === 0) || perArea.reduce((sum, c) => sum + c.n, 0) !== notes.length) throw new Error('The library index on the home page needs a note in every area, and its counts must add up to every note.');
+
+const reference = [
+  { label: 'Reading paths', href: '/vcf/paths/', n: paths.length },
+  { label: 'Tools for VCF 9.x', href: '/vcf/tools/', n: TOOLS.length },
+  { label: 'KB index', href: '/vcf/resources/kb-index/', n: KB_INDEX.length },
+];
+if (reference.some((r) => r.n === 0)) throw new Error('A reference item on the home page has nothing left to count.');
 
 const clock = notes.find((a) => a.id === SUPPORT_NOTE);
 if (!clock) throw new Error(`The home page names "${SUPPORT_NOTE}", which is not a published note.`);
-const makers = [
-  { label: 'Broadcom', n: TOOLS.filter((t) => t.maker === 'broadcom').length },
-  { label: 'Flings', n: TOOLS.filter((t) => t.maker === 'fling').length },
-  { label: 'Community and open source', n: TOOLS.filter((t) => ['community', 'opensource'].includes(t.maker)).length },
-];
 const modules = ['Meet the fleet', 'Upgrading to VCF 9.1, the right way round', 'How it all connects', 'Mind the licensing clock', 'Follow the signposts'];
 
+// The pages shown below the fold are real ones, read at build time. Each lookup fails the build if its source has gone.
+const named = (id: string) => {
+  const note = notes.find((a) => a.id === id);
+  if (!note) throw new Error(`The home page shows a page of "${id}", which is not a published note.`);
+  return note;
+};
+const fleetNote = named('architecture/one-fleet-or-several');
+const modelNote = named('architecture/vcf9-mental-model');
+if (TRIAGE_STEPS.length !== 8) throw new Error(`The home page says the cheat sheet has eight checks; it now has ${TRIAGE_STEPS.length}.`);
+const firstJob = JOBS[0];
+const firstTools = TOOLS.filter((t) => t.job === firstJob.id);
+if (firstTools.length === 0) throw new Error(`The home page shows tools for "${firstJob.id}", which has none left.`);
+
 const focus = [
-  { icon: 'tree-structure', t: 'Architecture and design reviews', d: 'The VCF 9 fleet, instance and domain model, identity and management services, and how a 5.x estate maps onto it.', href: '/vcf/library/architecture/' },
-  { icon: 'arrow-circle-up', t: 'Upgrades from 5.x to 9.x', d: 'Readiness assessments, target builds, the order that matters, and runbooks with real go/no-go and rollback points.', href: '/vcf/library/upgrades/' },
-  { icon: 'lifebuoy', t: 'Operations and troubleshooting', d: 'Day-2 operating models, a repeatable triage method, and escalations that arrive with the evidence attached.', href: '/vcf/library/troubleshooting/' },
-  { icon: 'chalkboard-teacher', t: 'Enablement and technical leadership', d: 'Workshops, runbooks and decision records that leave a team able to run the platform without me.', href: '/vcf/library/leadership/' },
+  { t: 'Architecture and design reviews', d: 'The VCF 9 fleet, instance and domain model, identity and management services, and how a 5.x estate maps onto it.', href: '/vcf/library/architecture/' },
+  { t: 'Upgrades from 5.x to 9.x', d: 'Readiness assessments, target builds, the order that matters, and runbooks with real go/no-go and rollback points.', href: '/vcf/library/upgrades/' },
+  { t: 'Operations and troubleshooting', d: 'Day-2 operating models, a repeatable triage method, and escalations that arrive with the evidence attached.', href: '/vcf/library/troubleshooting/' },
+  { t: 'Enablement and technical leadership', d: 'Workshops, runbooks and decision records that leave a team able to run the platform without me.', href: '/vcf/library/leadership/' },
 ];
 const ld = [
   personLd(Astro.site),
@@ -46,70 +67,96 @@ const ld = [
 ];
 ---
 <Base jsonLd={ld} shell page="home">
-  <section class="wrap home-lead" id="content-start" tabindex="-1">
-    <p class="home-who">{SITE.author}, {SITE.role}</p>
-    <h1>I help teams design, upgrade and run VMware Cloud Foundation.</h1>
-    {SITE.photo && <img class="home-photo" src={SITE.photo} alt={`Photo of ${SITE.author}`} width="72" height="72" />}
-    <div class="home-sub">
-      <p class="home-lede">Architecture reviews, 5.x to 9.x upgrades, day-2 operations and hard escalations, written down so your team can run VCF itself.</p>
-      <div class="actions">
-        <a class="btn primary" href="/vcf/">Read the VCF notes <Icon name="arrow-right" size={16} /></a>
-        <a class="btn" href="/about/">How I work</a>
+  <div class="wrap home-sheet">
+    <section class="home-lead" id="content-start" tabindex="-1">
+      <p class="home-who">{SITE.author}, {SITE.role}</p>
+      <h1>I help teams design, upgrade and run VMware Cloud Foundation.</h1>
+      {SITE.photo && <img class="home-photo" src={SITE.photo} alt={`Photo of ${SITE.author}`} width="72" height="72" />}
+      <div class="home-sub">
+        <p class="home-lede">Architecture reviews, 5.x to 9.x upgrades, day-2 operations and hard escalations, written down so your team can run VCF itself.</p>
+        <div class="actions">
+          <a class="btn primary" href="/vcf/">Read the VCF notes <Icon name="arrow-right" size={16} /></a>
+          <a class="btn" href="/about/">How I work</a>
+        </div>
       </div>
+    </section>
+
+    <SupportClock note={clock} />
+
+    <FieldNotes note={fleetNote} noteCount={notes.length} areaCount={CATEGORIES.length} />
+
+    <div class="home-sec ix">
+      <nav class="ix-lib" aria-labelledby="lb-h">
+        <div class="ix-head">
+          <h2 class="ix-h" id="lb-h"><a href="/vcf/library/">Library</a></h2>
+          <span class="ix-c">{notes.length} notes</span>
+        </div>
+        <ul class="ix-rows" role="list">
+          {perArea.map((c) => <li><a href={`/vcf/library/${c.id}/`}><span class="ix-n">{c.short}</span><span class="ix-c">{c.n}<span class="sr-only"> notes</span></span></a></li>)}
+        </ul>
+      </nav>
+      <nav class="ix-ref" aria-labelledby="rf-h">
+        <div class="ix-head"><h2 class="ix-h" id="rf-h">Reference</h2></div>
+        <ul class="ix-rows" role="list">
+          {reference.map((r) => <li><a href={r.href}><span class="ix-n">{r.label}</span><span class="ix-c">{r.n}</span></a></li>)}
+        </ul>
+      </nav>
     </div>
-  </section>
 
-  <SupportClock note={clock} />
+    <FleetModel note={modelNote} />
 
-  <section class="wrap home-sec" aria-labelledby="lx-h">
-    <div class="home-head">
-      <h2 class="home-h2" id="lx-h"><a href="/vcf/">{SITE.vcfName}</a></h2>
-      <a class="hub-all" href="/vcf/library/">Library {notes.length} <Icon name="arrow-right" size={14} /></a>
-    </div>
-    <p class="home-intro">{notes.length} notes in {CATEGORIES.length} areas. Each one links the sources behind it, and where 5.x and 9.x differ it says how.</p>
-    <nav aria-label="Library">
-      <ul class="lx-index">
-        {perArea.map((c) => <li><a href={`/vcf/library/${c.id}/`}><span class="nm">{c.short}</span><span class="ct">{c.n}<span class="sr-only"> notes</span></span></a></li>)}
-        <li><a href="/vcf/paths/"><span class="nm">Reading paths</span><span class="ct">{paths.length}</span></a></li>
-        <li><a href="/vcf/tools/"><span class="nm">Tools for VCF 9.x</span><span class="ct">{TOOLS.length}</span></a></li>
-        <li><a href="/vcf/resources/kb-index/"><span class="nm">KB index</span><span class="ct">{KB_INDEX.length}</span></a></li>
-      </ul>
-    </nav>
-  </section>
+    <section class="home-sec" aria-labelledby="do-h">
+      <h2 class="home-h" id="do-h">What I do</h2>
+      <div class="do-list">
+        {focus.map((f) => (
+          <a href={f.href}>
+            <h3>{f.t}</h3>
+            <p>{f.d}</p>
+          </a>
+        ))}
+      </div>
+    </section>
 
-  <div class="home-fleet">
-    <div class="wrap"><FleetModel /></div>
-  </div>
-
-  <section class="wrap home-sec">
-    <h2 class="home-h2">What I do</h2>
-    <div class="do-list">
-      {focus.map((f) => (
-        <a href={f.href}>
-          <h3>{f.t}</h3>
-          <p>{f.d}</p>
-        </a>
-      ))}
-    </div>
-  </section>
-
-  <section class="home-work">
-    <div class="wrap">
-      <h2 class="home-h2">Selected work</h2>
-      <a class="ex-series" href="/talks/">
-        <h3>A five-part VCF 9 workshop series</h3>
-        <ol class="ex-modules" role="list">{modules.map((m) => <li>{m}</li>)}</ol>
-        <span class="ex-go">Delivered to engineers and to customers <Icon name="arrow-right" size={15} /></span>
-      </a>
-      <div class="ex-three">
-        <a class="ex-col" href="/vcf/resources/triage-cheat-sheet/">
-          <h3>VCF 9.x triage cheat sheet</h3>
-          <p>Eight checks in order, each with a command, what good looks like and what to do when it is not.</p>
-        </a>
-        <a class="ex-col" href="/vcf/tools/">
-          <h3>Tools for VCF 9.x</h3>
-          <p>The tools worth knowing, grouped by job, with support status and a link to each publisher.</p>
-          <dl class="ex-mini">{makers.map((m) => <div><dt>{m.label}</dt><dd class="num">{m.n}</dd></div>)}</dl>
+    <section class="home-sec" aria-labelledby="ex-h">
+      <h2 class="home-h" id="ex-h">Selected work</h2>
+      <div class="ex-arts">
+        <article class="sheet">
+          <h3><a href="/vcf/resources/triage-cheat-sheet/">VCF 9.x triage cheat sheet</a></h3>
+          <p class="sheet-sum">Eight checks in order, each with a command, what good looks like and what to do when it is not.</p>
+          <ol class="tri" role="list">
+            {TRIAGE_STEPS.slice(0, 2).map((s) => (
+              <li>
+                <p class="tri-t">{s.t}</p>
+                {s.where && <p class="tri-w">{s.where}</p>}
+                <pre><code>{s.run}</code></pre>
+                <dl>
+                  <div><dt>Good</dt><dd>{s.good}</dd></div>
+                  <div><dt>If not</dt><dd>{s.not}</dd></div>
+                </dl>
+              </li>
+            ))}
+          </ol>
+          <p class="sheet-more"><a class="go" href="/vcf/resources/triage-cheat-sheet/">All {TRIAGE_STEPS.length} checks <Icon name="arrow-right" size={16} /></a></p>
+        </article>
+        <article class="sheet">
+          <h3><a href="/vcf/tools/">Tools for VCF 9.x</a></h3>
+          <p class="sheet-sum">The tools worth knowing, grouped by job, with support status and a link to each publisher.</p>
+          <table class="sheet-t sheet-tools">
+            <caption class="sr-only">The tools for the first job on the page</caption>
+            <thead><tr><th scope="col">Tool</th><th scope="col">Maker</th><th scope="col">VCF versions</th></tr></thead>
+            <tbody>
+              <tr><th colspan="3" scope="rowgroup" class="grp">{firstJob.title}</th></tr>
+              {firstTools.map((t) => <tr><th scope="row">{t.name}</th><td>{MAKERS[t.maker].label}</td><td>{t.versions.length > 0 ? t.versions.join(', ') : 'Not stated'}</td></tr>)}
+            </tbody>
+          </table>
+          <p class="sheet-more"><a class="go" href="/vcf/tools/">All {TOOLS.length} tools <Icon name="arrow-right" size={16} /></a></p>
+        </article>
+      </div>
+      <div class="ex-more">
+        <a class="ex-series" href="/talks/">
+          <h3>A five-part VCF 9 workshop series</h3>
+          <span class="ex-go">Delivered to engineers and to customers</span>
+          <ol class="ex-modules" role="list">{modules.map((m) => <li>{m}</li>)}</ol>
         </a>
         <a class="ex-col" href="/projects/">
           <h3>Open tools for VCF Operations</h3>
@@ -121,26 +168,26 @@ const ld = [
           </ul>
         </a>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="wrap home-sec">
-    <div class="home-head">
-      <h2 class="home-h2">Latest writing</h2>
-      <a class="hub-all" href="/blog/">All posts <Icon name="arrow-right" size={14} /></a>
-    </div>
-    <ol class="hub-rows rows-new home-new">
-      {latest.map((i) => (
-        <li><a href={i.href}><time class="num" datetime={i.date.toISOString().slice(0, 10)}>{fmtDate(i.date)}</time><span class="t">{i.title}</span><span class="k">{i.kind}</span></a></li>
-      ))}
-    </ol>
-  </section>
+    <section class="home-sec" aria-labelledby="new-h">
+      <div class="home-hrow">
+        <h2 class="home-h" id="new-h">Latest writing</h2>
+        <a class="go" href="/blog/">All posts <Icon name="arrow-right" size={16} /></a>
+      </div>
+      <ol class="hub-rows rows-new home-new">
+        {latest.map((i) => (
+          <li><a href={i.href}><time class="num" datetime={i.date.toISOString().slice(0, 10)}>{fmtDate(i.date)}</time><span class="t">{i.title}</span><span class="k">{i.kind}</span></a></li>
+        ))}
+      </ol>
+    </section>
 
-  <section class="wrap home-close">
-    <h2>Working through a VCF 9 upgrade, or an escalation that will not close?</h2>
-    <div>
-      <p>Tell me where it stands and what has been tried so far.</p>
-      <a class="btn primary" href="/contact/">Contact</a>
-    </div>
-  </section>
+    <section class="home-sec home-close" aria-labelledby="close-h">
+      <h2 class="home-h" id="close-h">Working through a VCF 9 upgrade, or an escalation that will not close?</h2>
+      <div class="home-close-go">
+        <p>Tell me where it stands and what has been tried so far.</p>
+        <a class="btn primary" href="/contact/">Contact</a>
+      </div>
+    </section>
+  </div>
 </Base>

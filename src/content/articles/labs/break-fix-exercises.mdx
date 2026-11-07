@@ -1,55 +1,122 @@
 ---
 title: "Break-fix exercises for a VCF 9 lab: eight faults worth practising"
-description: "Build troubleshooting skill by diagnosing faults you planted yourself, in a lab you can roll back. Eight exercises, each tied to a ticket class such as DNS case, clock drift or a stale lock, with the symptom to expect and the skill it trains."
+description: "Plant one fault at a time in a disposable lab, with rollback planned per component: NSX Managers and Edges get file backups, never VM snapshots. Three exercises fit a session, four are best planted beforehand and the uppercase FQDN one needs a fresh 9.0 or 9.1.0 deployment."
 category: labs
 order: 10
-versions: ["9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [403626, 409353, 444986, 436398, 434671, 426042, 443166, 344201]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [403626, 409353, 444986, 436398, 434671, 426042, 443166, 443216, 344201, 433822, 342576, 436047, 385107]
 sources:
+  - title: "VCF Troubleshooting Blueprint: Troubleshooting Concepts (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Troubleshooting Blueprint: Environment (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/environment.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Troubleshooting Blueprint: Troubleshooting Scenarios (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-scenarios.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Installer 9.1 known issues"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/known-issues/vcf-installer-91-known-issues.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Installer 9.1 resolved issues"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/resolved-issues/vcf-installer-91-resolved-issues.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
   - title: "Announcing the general availability of Holodeck 9.0"
     url: "https://blogs.vmware.com/cloud-foundation/2025/06/30/announcing-the-general-availability-of-holodeck-9-0/"
-    by: "VMware Cloud Foundation blog"
+    by: "Jatin Purohit, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-06-30
 ---
 
 <InShort>
-Take a snapshot of the whole lab, plant one fault, and let someone else find it using only the [seven-step triage](/vcf/library/troubleshooting/seven-step-triage/). Each exercise below matches a ticket class: **DNS case**, **clock drift**, **a stale lock**, **password drift**, **a full vCenter partition**, **cloud proxy DNS**, **blocked runtime egress** and **an expired certificate**. The facilitator knows the answer. The learner writes the ticket summary, the evidence and the fix. Then roll back and swap roles.
+Run one fault at a time in a disposable lab, with a rollback planned per component, because NSX Managers and Edges must stay out of any VM snapshot. Exercises 4, 7 and 8 fit a single session. Exercises 2, 3, 5 and 6 should be planted beforehand, and exercise 6 has to be, because its proxy goes offline only every 4 to 8 hours. Exercise 1 needs a fresh 9.0 or 9.1.0 deployment, so run it only when you're rebuilding anyway. The learner has to finish with the change that causes the fault and the reversal that clears it.
 </InShort>
 
-<Compare v5Label="Facilitator" v9Label="Learner" title="Roles" rows={[
-  ["Before", "Snapshot the lab, plant the fault, note the expected symptom", "Nothing: arrive cold"],
-  ["During", "Answer only what a customer would know", "Triage, collect evidence, write the ticket"],
-  ["After", "Compare the fix with the planted fault", "Explain the diagnosis path in two minutes"],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to plant mixed-case DNS or a removed PTR under KB 403626 and expect validation failures naming the component, and to block a runtime node's 443 for intermittent 403s; those KBs describe an uppercase SDDC Manager FQDN failing a 9.0 deployment and a proxy or firewall stopping Fleet components. It also said to snapshot the whole lab, which Broadcom rules out for NSX Managers and Edges.
+</Callout>
+
+## Set up the rollback first
+
+The Broadcom pages behind [the rollback note](/vcf/library/upgrades/rollback-checkpoints/) describe no whole-platform rollback, so "snapshot the lab" has to become one line per component.
+
+| Component | Rollback point | Why |
+|---|---|---|
+| NSX Managers and Edges | File backup to SFTP or FTP, no VM snapshots | Snapshots can destabilise the cluster or corrupt the database, and restoring means a new OVA of the same version (<KB id={433822} />) |
+| VCF Operations nodes and cloud proxies | Cluster offline, then a snapshot of every node, proxies included, without memory or quiescing | Delete it within 72 hours to avoid performance issues (<KB id={342576} />). One reported 9.0.x revert, with no proxy backups or snapshots, was followed by a database and collector mismatch and ended in a full restore. The exact cause wasn't determined (<KB id={436047} />) |
+| vCenter | Backup or powered-off snapshot | The same precaution as the expired-certificate fix (<KB id={344201} />) |
+| SDDC Manager | Offline snapshot | The same precaution as the lock fix (<KB id={444986} />) |
+
+None of the eight exercises needs to touch NSX, so leave it out of the revert set and choose a different target for the rotation in exercise 3. Revert SDDC Manager and that target together after exercise 3. Reverting only one side could leave the stored password disagreeing with the real one, which is exercise 4's fault. That's an inference from <KB id={436398} />.
+
+Rebuilding is the other way back. [Holodeck](/vcf/library/labs/holodeck/) is pitched for testing and training as an [automated, repeatable way to build nested VCF](https://blogs.vmware.com/cloud-foundation/2025/06/30/announcing-the-general-availability-of-holodeck-9-0/), in Jatin Purohit's June 2025 announcement. Use a rebuild when a revert leaves the lab behaving oddly, since the 9.0.x case above ended in a full restore anyway.
+
+The lab should also carry the tools learners will use. Broadcom's [Troubleshooting Blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/environment.html) expects VCF Operations and Log Management to be in place before an incident, so a lab without Log Management rehearses a thinner process than the one it recommends.
 
 ## The exercises
 
-| # | Plant this | Expect | Trains |
-|---|---|---|---|
-| 1 | Change a component's DNS record to mixed case, or remove its PTR | Validation failures naming the component (<KB id={403626} />) | Reading validation errors, DNS discipline |
-| 2 | Move VCF Operations' NTP to a different, drifting source | "JWT token is expired" on SSO (<KB id={409353} />) | Clock checks across components |
-| 3 | Start a password rotation, then make the target unreachable mid-task | A failed task holding a lock (<KB id={444986} />) | Lock ownership, cancel before delete |
-| 4 | Change an ESX root password directly on the host | Account shows Disconnected (<KB id={436398} />) | Remediate versus rotate |
-| 5 | Point a host's syslog at vCenter and generate noise | `/storage/log` filling (<KB id={434671} />) | Fixing the cause, not the symptom |
-| 6 | Remove a VCF Operations node's record from the cloud proxy's resolver | Proxy goes offline periodically (<KB id={426042} />) | Testing from the right place |
-| 7 | Block one runtime node's outbound 443 (9.1) | Intermittent depot 403s (<KB id={443166} />) | 9.1 traffic sources |
-| 8 | Let a lab vCenter's certificate expire by moving the clock, then restore | "No healthy upstream" (<KB id={344201} />) | The vCenter certificate checks |
+<Callout type="analysis" title="Where the plants come from">
+The Expect and Fix columns are Broadcom's. None of the KBs explains how to cause its fault, so each plant is designed from the documented cause. Rehearse each plant once before a class, because a fault can show differently on your build.
+</Callout>
+
+| # | Plant this | Expect | Fix to look for | Documented for |
+|---|---|---|---|---|
+| 1 | Give a fleet components, instance components, identity broker, services runtime or VCF Automation FQDN an uppercase letter in a new deployment | [Deployment fails](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/known-issues/vcf-installer-91-known-issues.html) | Start again with lowercase FQDNs | 9.1 |
+| 1a | On 9.0, the same with the SDDC Manager FQDN | `SDDC Manager services did not start`, `CS_APPLIANCE_CERT_ALIAS_LOWERCASE` in `domainmanager.log` (<KB id={403626} />) | Lowercase the DNS record and retry | 9.0, [resolved in 9.1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/resolved-issues/vcf-installer-91-resolved-issues.html) |
+| 2 | Point VCF Operations' `/etc/ntp.conf` at a server other than vCenter's, one whose time differs | "Failed to log in with VCF SSO service. JWT token is expired." while vCenter and NSX still accept the same account (<KB id={409353} />) | Match vCenter's NTP server, `ntpd.service` running, `systemd-timesyncd.service` inactive | VCF Operations 9.0 |
+| 3 | Start a password rotation, then cut off the target so the retries fail | Later tasks fail with `Resource is already locked by OPERATIONS_MANAGER service` (<KB id={444986} />) | Cancel the credential task with `DELETE /v1/credentials/tasks/{id}` | 9.0 |
+| 4 | Change an ESX root password directly on the host | Root shows Disconnected, SOS shows "Failed to get details", direct login still works (<KB id={436398} />) | Remediate in VCF Operations with the password the host accepts now | SDDC Manager 9.0 |
+| 5 | Set the hosts' `Syslog.global.logHost` to vCenter and generate log volume | `/storage/log` at 100% or out of inodes, services such as `trustmanagement` and `sps` down, sometimes "no healthy upstream" (<KB id={434671} />) | Stop the forwarding on the hosts first, then clear the logs and start services | vCenter, no version given |
+| 6 | Remove a VCF Operations node's record from the DNS a cloud proxy uses | Proxy offline in the UI every 4 to 8 hours, recovered by a reboot (<KB id={426042} />) | `nslookup` each node's FQDN from the proxy | 9.x |
+| 7 | Have an intercepting proxy reject the Fleet components' outbound 443 while still allowing SDDC Manager. Variant: block them at a firewall instead | Activation code validation fails: "Expected HTTP status 200 but received 403" (<KB id={443166} />). Variant: the depot shows "Disconnected" with "Network is unreachable" in its log (<KB id={443216} />) | Allow the Fleet sources | 9.1, and 9.1.0 for the variant |
+| 8 | Move a lab vCenter's clock past its certificates' expiry | "no healthy upstream" or 503, plus `[SSL: CERTIFICATE_VERIFY_FAILED]` (<KB id={344201} />) | Check expiry with `vecs-cli`, replace with the vCert tool, which Broadcom intends for use at Global Support's direction (<KB id={385107} />) | vCenter 6.x to 9.x |
+
+Four of these teach more than the table suggests, and each carries a trap for the facilitator.
+
+**Exercise 1 depends on the build.** The [VCF Operations 9.1.1.0 notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) list the runtime's mixed-case failure as resolved and say "all FQDNs can use mixed case", while other 9.1 pages still ask for lowercase, a conflict [the DNS note](/vcf/library/day-2/dns-ntp-proxy/) sets out <AsOf date="2026-11-07" />. So a 9.1.1 deployment may simply succeed. Run this one on 9.0 or 9.1.0, and keep production names lowercase whatever the lab shows.
+
+**Exercise 2 fails only if the clocks really diverge.** <KB id={409353} /> names the cause as appliance time out of sync with vCenter and gives no threshold, so check the offset before the session. Before 9.1.1, an out-of-sync clock could also [stop the UI loading and some services starting](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), which the notes list as resolved, so a 9.1.0 learner may see that instead of the JWT message.
+
+**Exercise 7 can mislead with a good 403.** A working path [returns 403 from `dl.broadcom.com` and `vvs.broadcom.com`](https://knowledge.broadcom.com/external/article/443216) in Broadcom's curl test, so a learner who reads any 403 as the fault will be wrong. The failing log in <KB id={443166} /> shows the 403 carrying a proxy's server header (`Server: Zscaler/6.2`), and that's the evidence to ask for. The plant needs a lab on an online depot with an activation code. Expect the 403 only where a proxy or firewall answers the request, and the variant's symptom where the connection is simply cut. That split is an inference from the two KBs.
+
+**Exercise 8 is the least faithful plant.** <KB id={344201} /> gives no way to expire a certificate on demand, and moving the clock also adds exercise 2's fault to the lab, so a learner may find time problems that a real expiry wouldn't have. Revert to the powered-off snapshot afterwards rather than moving the clock back. Run exercise 5 in another session to pair with it: both can end in "no healthy upstream", so the learner has to tell a full `/storage/log` from an expired certificate.
 
 ## Running a session
 
-1. **Ten minutes**: brief the symptom only, as a customer would report it.
-2. **Thirty minutes**: learners work, the facilitator answers as the customer.
-3. **Ten minutes**: each learner presents the evidence, the cause and the fix.
-4. **Roll back** to the snapshot before the next exercise.
+The times below are a suggested shape, and only exercise 6's delay comes from a Broadcom page.
 
-<Callout type="field">
-Score the ticket, not the speed. A correct fix with a clear one-line cause and the evidence attached is the habit you want in production. Speed follows.
+| Slot | Facilitator | Learner |
+|---|---|---|
+| Before | Set the rollback points, plant the fault, note the expected symptom | Arrives cold |
+| 10 minutes | Briefs the symptom only, as a customer would report it | Listens and asks |
+| 30 minutes | Answers only what a customer would know | Triages, collects evidence, writes the ticket |
+| 10 minutes | Compares the fix with the plant | Presents the evidence, the cause and the fix, and explains the diagnosis path in two minutes |
+| After | Rolls back before the next exercise | Swaps roles |
+
+Plant only one fault per session, since two at once teach guessing. Exercises 2, 3, 5 and 6 go in the evening before, and you brief them when the symptom has appeared. Keep the lab off anything others depend on. The blueprint wants a [reproduction environment kept fully isolated](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html) from live systems, and the same reasoning applies here.
+
+Start learners in Workbench, which the [blueprint recommends "for all incidents of significance"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html), narrowed to the period the symptom appeared. Its [four scenarios](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-scenarios.html) cover performance, connectivity, intermittent problems and reboots or crashes, with nothing on the DNS, time, certificate, credential or disk causes here. So pair Workbench with the [seven-step triage](/vcf/library/troubleshooting/seven-step-triage/), which checks locks, DNS, NTP and disk, though not certificates or credentials. The blueprint targets production and says nothing about planted faults, so this pairing is analysis rather than Broadcom's method.
+
+<Callout type="field" title="What to score">
+Score the ticket, and hold it to the blueprint's [validation test](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html): applying the change causes the problem, reversing it stops the problem, and the theory accounts for every symptom. A learner who rebooted the proxy in exercise 6 and saw it return has met none of that test. A correct fix with a one-line cause and the evidence attached earns the marks, and speed doesn't.
 </Callout>
-
-## Pitfalls
-
-- **Planting two faults at once.** It teaches guessing, not diagnosis.
-- **Forgetting the snapshot.** Exercise 3 in particular can leave a mess.
-- **Practising on a shared lab** others depend on. Use a disposable one.

@@ -1,82 +1,174 @@
 ---
 title: "Why the upgrade order changed: SDDC Manager first in 5.x, VCF Operations first in 9.x"
-description: "The order is not arbitrary. It follows who manages whom. Once you see the dependency chain, the 9.1 sequence and the 9.1.1 patch rules stop looking like trivia."
+description: "On a path to 9.1, upgrade VCF Operations first, then follow Broadcom's table for your source version: the 9.1 lifecycle tools don't exist until step 7. Go straight to 9.1.1 where you can. The 9.1.1 patch dependencies bind 9.1.0.x environments, and Express Patches have no required order."
 category: upgrades
 order: 2
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
 updated: 2026-11-07
-kbs: [440630, 390634, 440282, 457245, 449075]
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [440630, 390634, 405275, 440282, 457245, 449075]
 sources:
+  - title: "Upgrading to VMware Cloud Foundation 9.1.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
   - title: "VCF 9.1.1 release notes: getting to 9.1.1"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html"
     by: "Broadcom TechDocs"
-  - title: "Upgrading to VCF 9.1.x"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    kind: broadcom
+    date: 2026-09-03
+  - title: "Lifecycle Management (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "What's new in VCF Operations (9.1 release notes)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrade VCF Operations to 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/install-a-software-update.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrading to VCF Operations 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrade SDDC Manager to 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/apply-cloud-foundation-5-2-update-bundle.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Deploy VCF Management Services and License Server as Part of VCF Upgrade to 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1 general FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "How to Upgrade to VMware Cloud Foundation 9.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/06/18/how-to-upgrade-to-vmware-cloud-foundation-9-1/"
+    by: "Jonathan McDonald, Broadcom"
+    kind: broadcom
+    date: 2026-06-18
+  - title: "Installing Express Patches with VMware Cloud Foundation 9.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/06/29/installing-express-patches-with-vmware-cloud-foundation-9-1/"
+    by: "Jonathan McDonald, Broadcom"
+    kind: broadcom
+    date: 2026-06-29
+  - title: "Deploying Workload Domains with Async Patches in VCF 5.2"
+    url: "https://blogs.vmware.com/cloud-foundation/2024/08/19/deploying-workload-domains-with-async-patches-in-vcf-5-2/"
+    by: "Eric Gray, VMware"
+    kind: broadcom
+    date: 2024-08-19
   - title: "VCF 9.1: understanding VCF Express Patches"
     url: "https://williamlam.com/2026/07/vcf-9-1-understanding-vcf-express-patches.html"
     by: "William Lam"
+    kind: practitioner
+    date: 2026-07-08
   - title: "VCF 9.1 lifecycle: one control plane and the real work to get there"
     url: "https://humbledgeeks.com/vcf-91-lifecycle-one-control-plane-and-the-real-work-to-get-there/"
-    by: "humbledgeeks"
+    by: "Allen, humbledgeeks"
+    kind: practitioner
+    date: 2026-07-19
 ---
 
 <InShort>
-The rule is that **whatever manages a component is upgraded before the component**. In 5.x, SDDC Manager managed everything, so it went first. In 9.x, VCF Operations is the console, the licence holder and, in 9.1, the orchestrator of fleet and SDDC lifecycle, so it goes first. After it come the services it uses, then SDDC Manager, then the management services, then each domain's core. The 9.1.1 patch rules apply the same logic one level down. Fleet lifecycle is patched first, and a service is patched before anything that runs on it.
+On a path to 9.1, **upgrade VCF Operations first** (Aria Operations on a 5.2 source) and then follow Broadcom's table for your source version, step by step. The 9.1 lifecycle tools don't exist until step 7, and the table requires the steps before it first. Go straight to 9.1.1 where your source allows it. The 9.1.1 patch dependencies below bind environments already on 9.1.0.x. Express Patches are a separate matter and can go in any order, though William Lam suggests considering one that contains fleet lifecycle first.
 </InShort>
 
 <Compare rows={[
-  ["Who orchestrates", "SDDC Manager", "VCF Operations, through fleet lifecycle and SDDC lifecycle in 9.1"],
-  ["First step", "SDDC Manager (then Aria Suite Lifecycle, if VCF-aware)", "VCF Operations. On a 9.0 target, patch Aria Suite Lifecycle to 8.18 Patch 2 first if you have it."],
-  ["Core order", "NSX, then vCenter, then ESX", "The same, with HCX first and edges and NSX finalize after ESX. 9.1 offers sequential or optimized (RDU) vCenter plans."],
-  ["New in the middle", "Nothing", "9.1: deploy management services, the License Server and the depot after SDDC Manager"],
-  ["Patching", "Async patch tool, built into SDDC Manager from 5.2", "Express Patches per component. Fleet lifecycle first, and no parallel VCF Operations patching."],
+  ["Who orchestrates", "SDDC Manager, with Aria Suite Lifecycle alongside it", "VCF Operations, through fleet lifecycle, SDDC lifecycle and the software depot in 9.1"],
+  ["First step", "SDDC Manager, then Aria Suite", "VCF Operations. On a 9.0 target, patch Aria Suite Lifecycle to 8.18 Patch 2 first if you have it."],
+  ["Core order", "NSX, then vCenter, then ESX", "The same, with HCX first and edges and NSX finalize after ESX"],
+  ["vCenter method", "Not covered here", "From 5.2, reduced downtime upgrade (RDU) is required. From 9.0.x, choose it or in-place. 9.1 adds an optimized NSX and vCenter window."],
+  ["New in the middle", "Nothing", "9.1: deploy management services and the license server, then configure the depot, after SDDC Manager"],
+  ["Patching", "Async patches from the SDDC Manager UI from 5.2", "Express Patches per component, in any order. A maintenance release can add its own dependencies, as 9.1.1 does."],
 ]} />
 
-## The 9.1 sequence, and the reason for each step
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to apply the 9.1.1 dependency rules to Express Patches, say an async patch tool was built into SDDC Manager, and say a powered-on fleet appliance causes authentication failures later in a 9.0 upgrade. The rules bind the move from 9.1.0.x to 9.1.1, 5.2 added async patching from the UI, and the appliance failure on record is a 401 at precheck on a 9.1.0.x patch.
+</Callout>
 
-The sequence is a table in [Broadcom's upgrade guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) (updated 5 Nov 2026), listing components "in the order that you must upgrade each component". <KB id={440630} /> says the sequence is mandatory and sends you to that guide. On a 9.0 source one step can come first: a broker appliance on an NSX overlay segment outside the VCF management network has to be redeployed before VCF Operations, as [the Identity Broker note](/vcf/library/architecture/identity-broker/) explains.
+## Why VCF Operations moved to the front
 
-The table doesn't give reasons, so these are this site's:
+In 9.1, VCF Operations [uses fleet lifecycle, SDDC lifecycle and the software depot to orchestrate lifecycle work](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html). Broadcom's table gives no reasons, so reading that as why it goes first is this site's call. Several early steps are stated as dependencies. The 9.1 binaries won't appear on a 9.0 environment until VCF Operations has been upgraded by PAK file, and SDDC Manager and the depot follow (<KB id={440282} />). Management services [need VCF Operations and SDDC Manager at 9.1.x](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html), and the fleet-level depot has to be configured before the remaining components can proceed. Starting with SDDC Manager out of 5.x habit therefore gets you nowhere on a 9.0 source: the symptom is an empty binary list.
 
-1. **VCF Operations first.** It holds the lifecycle UI and the licence file, and on a 9.0 source it receives the fleet appliance's inventory during its own upgrade. The 9.1 binaries do not even appear in VCF Operations 9.0 until it is upgraded (<KB id={440282} />).
-2. **vSphere Replication, Live Site Recovery, vSAN Data Protection and Avi.** These are compatibility gates. Avi must already be supported by the SDDC Manager you are about to install.
-3. **SDDC Manager.** This is the engine that will deploy the management services and later upgrade the core.
-4. **Management services, License Server and software depot (9.1).** Fleet lifecycle and SDDC lifecycle must exist before they can upgrade anything. Configure the depot before any further component upgrades.
-5. **Identity broker, then VCF Automation, then the rest of the management components** (Orchestrator, Operations for networks, log management). These are clients of the runtime and of SSO.
-6. **Core, per domain.** HCX, then NSX and vCenter according to the plan, then ESX, NSX edges and finalize.
+The 5.x sequence was SDDC Manager, Aria Suite, NSX, vCenter, ESX (<KB id={405275} />). Allen at humbledgeeks [describes the common pre-9.1 order differently](https://humbledgeeks.com/vcf-91-lifecycle-one-control-plane-and-the-real-work-to-get-there/), with the Aria stack first through Aria Suite Lifecycle, and his summary of the new world is the one to remember: "Fleet gates instance, never the reverse." A move to a 9.0 target rather than 9.1 has one extra step at the front: Aria Suite Lifecycle, if you have it, gets patched to 8.18 Patch 2 before VCF Operations (<KB id={390634} />).
 
-<Diagram viewBox="0 0 820 120" label="Manager before managed: VCF Operations, then SDDC Manager, then management services, then management components, then each domain's core." caption="Each box manages, hosts or authenticates the boxes to its right.">
-  <rect class="box accent" x="10" y="30" width="140" height="56" rx="8" /><text class="t" x="22" y="56">VCF Ops</text><text class="s" x="22" y="74">console, licences</text>
-  <rect class="box v9" x="175" y="30" width="140" height="56" rx="8" /><text class="t" x="187" y="56">SDDC Manager</text><text class="s" x="187" y="74">engine</text>
+<Callout type="analysis" title="How far the manager-first reading goes">
+Manager before managed explains steps 1, 6 and 7 and fleet before instance. Broadcom's table gives no reason for the placement of the replication and data protection products, or for Automation and the other management components sitting ahead of the core, so don't use the principle to reorder them.
+</Callout>
+
+## The sequence for your source
+
+Broadcom [publishes one table for a 9.0.x source and one for 5.2.x](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) (updated 5 Nov 2026), each listing components "in the order that you must upgrade" them, and <KB id={440630} /> calls the sequence mandatory. Only fleet-level components and management domains have to reach 9.1.x. Start with the instance hosting the fleet's VCF Operations, move to the other instances' management domains, and upgrade workload domains whenever suits after their instance's management domain.
+
+Where you can, target 9.1.1 directly. The guide allows it from 5.2.x and 9.0.x, the forward-only rule makes it the only choice from 5.2.4 (9.1.0 was released earlier), and the [9.1.1 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html) say to use the latest available binaries when you deploy, upgrade or patch.
+
+| 9.0.x step | 5.2.x step | Component | What to know |
+|---|---|---|---|
+| 0 | | Identity broker appliance on an NSX overlay segment outside the VCF management network | The guide says redeploy first, while <KB id={440630} /> says contact Support for a 9.0.x broker on a non-management network, so ask Support. [The Identity Broker note](/vcf/library/architecture/identity-broker/) has the rule. Embedded mode upgrades with vCenter. |
+| 1 | 1 | VCF Operations and cloud proxy (5.2: Aria Operations) | [Needs the fleet appliance root password](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/install-a-software-update.html) on 9.0.x. Aria Operations [must be at 8.18 first](https://blogs.vmware.com/cloud-foundation/2026/06/18/how-to-upgrade-to-vmware-cloud-foundation-9-1/). |
+| 2-5 | 2-5 | vSphere Replication, Live Site Recovery, vSAN Data Protection, Avi | [Verify Avi's version is compatible](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/apply-cloud-foundation-5-2-update-bundle.html) before SDDC Manager. |
+| 6 | 6 | SDDC Manager | From 5.2, [start in the SDDC Manager UI](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/apply-cloud-foundation-5-2-update-bundle.html). From 9.0.x, start in VCF Operations. |
+| 7 | 7 | Management services and license server, then the depot | New in 9.1. On a 9.0.x source, licences transfer from VCF Operations to the license server after this step; 5.2.x has its own registration page. |
+| 8 | 8 | Identity broker (5.2: VMware Identity Manager) | vIDM has no upgrade path. The 9.1 broker arrives with management services, and vIDM keeps serving VCF Automation until you [migrate it](/vcf/library/architecture/identity-broker/). |
+| 9-12 | 9-12 | VCF Automation, Operations orchestrator, Operations for networks, logs | Logs is a deploy of log management, not an upgrade. |
+| 13-16 | 13-15 | HCX, Data Services Manager (9.0.x only), NSX Global Manager, NSX Manager | From 5.2, upgrade all paired HCX appliances afterwards or pairing breaks. |
+| 17-19 | 16-18 | vCenter, vSphere Kubernetes Service, Supervisor | Use the VKS Upgrade Planner. |
+| 20-22 | 19-21 | vSAN witness, ESX, NSX Edge and finalize | |
+| 23-28 | 22-26 | Distributed switch, DSM databases (9.0.x only), VMware Tools, VM compatibility, vSAN format, vSAN File Service | |
+
+The vCenter method depends on the source. [McDonald's June guide](https://blogs.vmware.com/cloud-foundation/2026/06/18/how-to-upgrade-to-vmware-cloud-foundation-9-1/) says a 5.2 source must use reduced downtime upgrade, while 9.0.x can choose it or in-place, so don't write an in-place fallback into a 5.2 runbook. VCF Operations can also schedule [an optimized scenario](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html) that shortens the window: reduced downtime preparation runs first with no outage, then the window holds the NSX Manager update followed by the vCenter switchover. On a shared NSX instance [Broadcom's pages disagree on that order](/vcf/library/upgrades/mixed-versions/).
+
+McDonald's guide also disagrees with the table on where the management components sit. It lists the core management domain as step 5 and Automation, Operations for networks and logs as step 6, on the grounds that they aren't required for the core stack upgrade. The table puts them ahead of NSX, vCenter and ESX, and contains no exception for reordering. Plan from the table, which was updated in November and says "must", and run the [VCF Upgrade Planner](https://vmware.github.io/vcf-upgrade-planner/) against your own source if a window forces a different split.
+
+<Diagram viewBox="0 0 820 120" label="Condensed 9.1 order: VCF Operations, then SDDC Manager, then management services, then management components, then each domain's core." caption="The 9.0.x table, condensed. Some products and final cleanup are left out.">
+  <rect class="box accent" x="10" y="30" width="140" height="56" rx="8" /><text class="t" x="22" y="56">VCF Ops</text><text class="s" x="22" y="74">lifecycle console</text>
+  <rect class="box v9" x="175" y="30" width="140" height="56" rx="8" /><text class="t" x="187" y="56">SDDC Manager</text><text class="s" x="187" y="74">gate for services</text>
   <rect class="box v9" x="340" y="30" width="150" height="56" rx="8" /><text class="t" x="352" y="56">Mgmt services</text><text class="s" x="352" y="74">runtime, depot, LS</text>
-  <rect class="box" x="515" y="30" width="140" height="56" rx="8" /><text class="t" x="527" y="56">IdB, VCFA, …</text><text class="s" x="527" y="74">runtime clients</text>
+  <rect class="box" x="515" y="30" width="140" height="56" rx="8" /><text class="t" x="527" y="56">IdB, VCFA, …</text><text class="s" x="527" y="74">other management</text>
   <rect class="box" x="680" y="30" width="130" height="56" rx="8" /><text class="t" x="692" y="56">Domain core</text><text class="s" x="692" y="74">NSX, vCenter, ESX</text>
   <path class="wire accent" d="M150 58 L173 58" marker-end="url(#arra)" /><path class="wire" d="M315 58 L338 58" marker-end="url(#arr)" /><path class="wire" d="M490 58 L513 58" marker-end="url(#arr)" /><path class="wire" d="M655 58 L678 58" marker-end="url(#arr)" />
 </Diagram>
 
-## The 9.1.1 patch rules follow the same logic
+## What step 1 takes away until step 7
 
-Within 9.1, patches arrive per component as Express Patches. The release notes set dependencies that only make sense with the manager-before-managed rule in mind:
+A 9.0.x source loses capability once VCF Operations moves. Until management services are deployed and the data has transferred, [certificate, password and lifecycle operations aren't available from VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore.html), and Automation, the identity broker, logs and networks stay out of reach for those tasks until each reaches 9.1. So renew anything that would expire inside that span before you begin, and, on this site's reading, keep steps 1 to 12 close together.
 
-- **Patch fleet lifecycle first.** It is the tool that applies every other patch.
-- **Don't use "Upgrade All"** until the dependencies below are met.
-- **Never patch VCF Operations in parallel** with anything else.
-- **Patch VCF Operations and the License Servers before moving ESX** from 9.1.0.x to 9.1.1.
-- **Patch the services runtime before the identity broker and Salt RaaS** that run on it. The broker precheck enforces this with `VCFMS-PRECHECK-VIDB-VMSP-VERSION-001` (<KB id={457245} />).
-- **Patch VCF Automation before the migration service engine.**
-- **Let a software depot patch finish.** It blocks all other patches while it runs.
+A license sync error, "Licenses could not be synchronized with vCenter instances", [clears once the license server is deployed and registered](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/install-a-software-update.html), so don't chase it between those steps. The 4 Nov 2026 [FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) describes the license server as deployed during the VCF Operations upgrade, and the upgrade guide gives it a step of its own. Plan for the step, since the guide is the procedure.
 
-Express Patches are cumulative, so you can skip intermediate ones. If an Express Patch contains fleet lifecycle, apply that one first.
-
-<Callout type="warn" title="The 9.0 fleet appliance after the upgrade">
-Once VCF Operations is upgraded from 9.0, the fleet management appliance is decommissioned and powered off. Its inventory is kept until the management services are deployed. Powering it back on causes authentication failures later in the upgrade (<KB id={449075} />). Keep it powered off, and delete it once the environment is on 9.1 (<KB id={440630} />).
+<Callout type="warn" title="The 9.0 fleet appliance stays off">
+The VCF Operations upgrade transfers the fleet appliance's inventory, then decommissions and powers off the appliance, and [VCF Operations holds that inventory until management services are deployed](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/install-a-software-update.html). Keep it powered off, do no upgrades with it, and delete it once the environment is on 9.1 (<KB id={440630} />). If it's left on, it keeps authenticating with an outdated `lcm-ops` password, which fails VCF Operations prechecks with HTTP 401 on a move from 9.1.0.0100 to 9.1.0.0400 (<KB id={449075} />). FAQ questions 76 and 77, on upgrading and being notified through fleet management, read as older text: <KB id={440630} /> says the appliance is no longer available in 9.1.
 </Callout>
 
-## Pitfalls
+## Getting from 9.1.0.x to 9.1.1
 
-- **Starting with SDDC Manager out of 5.x habit.** On a 5.2 source the SDDC Manager UI still drives its own upgrade, but only after the management components are ready.
-- **Running lifecycle tasks in parallel to save time.** Fleet lifecycle serializes work for a reason. A stuck "In Progress" subtask blocks later patches until it is cleared.
-- **Assuming a patch order that worked last time.** Re-read "Getting to 9.1.1" in the target's release notes before every window. The rules change between patches.
+These dependencies come from the [9.1.1 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html). Patch fleet lifecycle to 9.1.1 before any other component, and leave "Upgrade All" alone until you've met the rest.
+
+| Before you patch | Do this first |
+|---|---|
+| Any other component | Fleet lifecycle to 9.1.1 |
+| VCF Operations | Confirm no other lifecycle operation is running. It must not be patched in parallel with other components, and nothing else should start until it finishes. |
+| ESX, 9.1.0.x to 9.1.1.0 | VCF Operations and its connected license servers |
+| Identity broker | The services runtime hosting it. The precheck fails with `VCFMS-PRECHECK-VIDB-VMSP-VERSION-001` otherwise (<KB id={457245} />). |
+| Salt RaaS | The services runtime hosting it |
+| Migration service engine | VCF Automation |
+| VCF Automation, with Data Services Manager integrated | Review the DSM upgrade guidance |
+
+A software depot patch also blocks other patching until it finishes, so give it its own slot in the window.
+
+These rules don't carry over to Express Patches. [TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html) says no patch order is enforced in general and warns that dependencies may apply for certain releases, which is why the release notes for your target need reading before every window. [William Lam's July post](https://williamlam.com/2026/07/vcf-9-1-understanding-vcf-express-patches.html) is the clearest account: Express Patches "can be applied in any order", 0100 needn't precede 0200, and the latest version of a component includes earlier fixes. If one contains fleet lifecycle, he says to consider applying it first because fleet lifecycle drives the rest, and [McDonald's walkthrough](https://blogs.vmware.com/cloud-foundation/2026/06/29/installing-express-patches-with-vmware-cloud-foundation-9-1/) starts there too, management components before core.
+
+On 5.2 the equivalent was [async patching from the SDDC Manager UI](https://blogs.vmware.com/cloud-foundation/2024/08/19/deploying-workload-domains-with-async-patches-in-vcf-5-2/), which Eric Gray's 2024 post compares favourably with the Async Patch Tool CLI.

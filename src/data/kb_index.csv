@@ -200,8 +200,8 @@ kb,topic,decks,url
 442998,Avi after a certificate swap; Remediate,How it all connects,https://knowledge.broadcom.com/external/article/442998
 443082,"LS console ""Not configured and Disconnected""",Mind the licensing clock,https://knowledge.broadcom.com/external/article/443082
 443106,Cloud proxy registration validation (Unified cloud proxy),"Upgrading to VCF 9.1, the right way round; How it all connects",https://knowledge.broadcom.com/external/article/443106
-443166,9.1 depot 403: egress from runtime nodes,Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/443166
-443216,Management services runtime components (9.1),Meet the fleet,https://knowledge.broadcom.com/external/article/443216
+443166,9.1 depot 403: downloads moved to Fleet components,Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/443166
+443216,Disconnected depot status: depot on the runtime IP pool (9.1.0),Meet the fleet,https://knowledge.broadcom.com/external/article/443216
 443240,Evaluation runs out while Ops or LS is down,Meet the fleet; Mind the licensing clock,https://knowledge.broadcom.com/external/article/443240
 443279,"ESX: add-on downgrade, incompatible compliance","Upgrading to VCF 9.1, the right way round; Follow the signposts",https://knowledge.broadcom.com/external/article/443279
 443327,"Fleet Management ""get started"" prerequisites",How it all connects,https://knowledge.broadcom.com/external/article/443327
@@ -231,7 +231,7 @@ kb,topic,decks,url
 444718,9.1 inventory sync location,How it all connects,https://knowledge.broadcom.com/external/article/444718
 444734,Identity broker on a non-management network,Meet the fleet,https://knowledge.broadcom.com/external/article/444734
 444938,Two NSX plugins with Federation,How it all connects,https://knowledge.broadcom.com/external/article/444938
-444986,Cancel a credential task holding a lock,"Upgrading to VCF 9.1, the right way round; Follow the signposts",https://knowledge.broadcom.com/external/article/444986
+444986,Cancel a credential task holding a lock (9.0),"Upgrading to VCF 9.1, the right way round; Follow the signposts",https://knowledge.broadcom.com/external/article/444986
 445084,RDU switchover: foreign key error,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/445084
 445179,"""Failed to bootstrap VCF services runtime"": mixed case",Meet the fleet,https://knowledge.broadcom.com/external/article/445179
 445301,Fleet LCM DB leader (patronictl),Follow the signposts,https://knowledge.broadcom.com/external/article/445301
@@ -264,7 +264,7 @@ kb,topic,decks,url
 447995,OBTU not supported for SDDC Manager 9.x,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/447995
 448054,VCF Ops 9.0 to 9.1 stuck at 10/14: node time drift,Meet the fleet,https://knowledge.broadcom.com/external/article/448054
 448068,UPGRADE_SPEC_NSXT_ID_EMPTY: half-registered Edge,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/448068
-448518,Licenses expire: 180-day update missed,Mind the licensing clock,https://knowledge.broadcom.com/external/article/448518
+448518,Usage report due warning: the rolling 180-day window,Mind the licensing clock,https://knowledge.broadcom.com/external/article/448518
 448522,Duplicate trusted certificate breaks Lifecycle,How it all connects,https://knowledge.broadcom.com/external/article/448522
 448618,Runtime internal certificate expired (9.1.0),Meet the fleet; How it all connects; Follow the signposts,https://knowledge.broadcom.com/external/article/448618
 448638,Host with expired evaluation cannot be licensed,Mind the licensing clock,https://knowledge.broadcom.com/external/article/448638

@@ -1,75 +1,177 @@
 ---
-title: "Host commissioning, network pools and cluster expansion, now done from vCenter"
-description: "Adding capacity moved from SDDC Manager into vCenter, and SDDC Manager still runs the validations underneath. Failures sort into five groups: names, trust, network shape, IP pools, and leftovers from the last decommission."
+title: "Host commissioning, network pools and cluster expansion: what to decide first and why they fail"
+description: "In 9.1 the task pages for network pools, commissioning and clusters start in the vSphere Client, with the SDDC Manager UI as the alternative. Size pool subnets up front because they can't change, settle host certificates early, and sort failures into names, trust, network shape, IP pools and leftovers."
 category: day-2
 order: 5
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [415767, 424728, 424242, 451550, 412127, 416946, 428877, 316098, 417229, 456013, 453788]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [423908, 380003, 415767, 448781, 424728, 456013, 412127, 428877, 453788, 316098, 417229, 416946, 451550, 424242, 454415]
 sources:
+  - title: "Commission ESX Hosts (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/commission-hosts.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Decommission ESX Hosts (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/decommission-hosts.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Network Pool Management (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/about-network-pools.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Size a Network Pool (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/about-network-pools/sizing-a-network-pool.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Create a Network Pool (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/about-network-pools/create-a-network-pool.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Add a Network Pool IP Address Range (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/about-network-pools/add-or-remove-a-network-pool-ip-address-range.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Add an SDDC Cluster to a VCF Domain (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/expand-a-workload-domain/add-a-cluster-to-a-workload-domain-using-the-sddc-manager-ui.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Add an ESX Host to an SDDC Cluster in a VCF Domain (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/expand-a-workload-domain/add-a-host-to-a-vsphere-cluster-using-the-sddc-manager-ui.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Dual Stack IP Addressing Model (VCF 9.1 design library)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/datacenter-network-requirements/infrastucture-ip-addressing-models/dual-stack-ip-addressing-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "ESX Certificate Management (VCF 9.1 fleet management blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/vsphere-certificate-management/esx-certificate-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "ESX Model (VCF 9.1 fleet in a single site blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/common-design-selection-between-management-and-workload-domain/virtual-infrastructure-layer-fleet-single-site1/esx-model-fleet-single-site.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configure NTP on hosts (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/preparing-your-environment/preparing-esx-hosts-for-vmware-cloud-foundation-or-vmware-vsphere-foundation/configure-ntp-on-vmware-cloud-foundation-hosts.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Installer / SDDC Manager 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/sddc-manager-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Installer 9.1 resolved issues"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/resolved-issues/vcf-installer-91-resolved-issues.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
   - title: "10 VCF 9 enhancements simplifying your Day-2 operations"
     url: "https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/"
     by: "VMware Cloud Foundation blog"
-  - title: "VMware Cloud Foundation 9.0 release notes"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes.html"
-    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2025-09-18
 ---
 
 <InShort>
-In 9.x you create network pools, commission hosts and create or expand clusters from **vCenter**: Global Inventory List > Hosts for pools and unassigned hosts, and New SDDC Cluster for clusters. For workload domains this needs VCF SSO and vCenter linking. SDDC Manager still runs the guardrail validations and the work underneath, so its log (`operationsmanager.log` for commissioning, `domainmanager.log` for clusters) is where failures are explained. Sort a failure into one of five groups: names, trust, network shape, IP pools, or leftovers.
+In 9.1 network pools, commissioning and cluster work all start in the vSphere Client, and [each task page keeps the SDDC Manager UI as the alternative](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/commission-hosts.html). Make three choices before hosts arrive: pool subnets, whether clusters share a pool, and host certificates. SDDC Manager still runs the validations and the work underneath, so when a task fails, read its `operationsmanager.log` for commissioning and `domainmanager.log` for clusters, then sort the failure into names, trust, network shape, IP pools or leftovers.
 </InShort>
 
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to say these tasks had moved to vCenter, that vmnic mapping must match existing hosts, and that a different vendor add-on fails image compliance. Broadcom's 9.1 pages keep the SDDC Manager UI as an alternative, allow different NIC enumeration, and remediate new hosts to the image. It also gave a flat 10 GbE minimum, which 9.1.1 relaxes for management NICs, and a CA-signed-host certificate failure the KB doesn't cover.
+</Callout>
+
 <Compare rows={[
-  ["Network pools", "SDDC Manager: Administration > Network Settings", "vCenter: Global Inventory List > Hosts > Network Pools"],
-  ["Commission hosts", "SDDC Manager: Inventory > Hosts", "vCenter: Global Inventory List > Hosts > Unassigned Hosts"],
-  ["Create or expand clusters", "SDDC Manager: Workload Domains > Add Cluster or Add Hosts", "vCenter: New Cluster > New SDDC Cluster, and add hosts from there"],
-  ["Minimum NIC speed", "10 GbE recommended", "Validated: pNICs below 10 GbE fail commissioning (<a href='https://knowledge.broadcom.com/external/article/412127' target='_blank' rel='noopener'>KB 412127</a>)"],
+  ["Network pools", "SDDC Manager: Administration > Network Settings > Network Pool", "vSphere Client: Global Inventory Lists > Hosts > Network Pools"],
+  ["Commission hosts", "SDDC Manager: Inventory > Hosts", "vSphere Client: Global Inventory Lists > Hosts > Unassigned Hosts > Commission Hosts"],
+  ["Create a cluster", "SDDC Manager: Inventory > Workload Domains > Clusters > Add Cluster", "vSphere Client, on the datacenter: Actions > New Cluster > Create SDDC Cluster"],
+  ["Expand a cluster", "SDDC Manager: Inventory > Workload Domains > Clusters > Add Hosts > Add Unassigned Hosts", "vSphere Client, on the cluster: Actions > Add Hosts > Add Unassigned Hosts"],
   ["Logs", "operationsmanager.log, domainmanager.log", "The same logs on SDDC Manager"],
 ]} />
 
-## The five groups of failures
+The 5.2 paths come from the [VCF blog's September 2025 comparison](https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/), the 9.1 paths from the TechDocs task pages. The vSphere Client route needs access to the management domain vCenter, or [VCF SSO with vCenter linking](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/about-network-pools/add-or-remove-a-network-pool-ip-address-range.html). Without those, use the SDDC Manager UI. The [SDDC Manager logs](/vcf/library/troubleshooting/reading-sddc-manager-logs/) explain the failure on either route.
 
-**Names.** Guardrail validation reaches NSX Manager by name. A DNS failure shows up as `HOST_COMMISSION operation validation failed`, with `UnknownHostException` in the log. Fix DNS before anything else.
+## Decide these before the hosts arrive
 
-**Trust.**
-- If the host presents a default certificate while the domain uses CA-signed certificates, or the other way round, SDDC Manager refuses to trust it (<KB id={415767} />).
-- Offline depots with vSAN HCL data older than 90 days fail the HCL check (<KB id={424728} />).
-- In 9.1, a locked or out-of-sync NSX service account fails cluster creation at host selection (<KB id={456013} />).
+### Pool subnets and sharing
 
-**Network shape.**
-- vSwitch0 must have exactly one uplink, and pNICs must be 10 GbE or faster (<KB id={412127} />).
-- On expansion, uplink names and vmnic mapping must match the existing hosts on the VDS (<KB id={428877} />).
-- In API specs, storage type values are case sensitive: `VSAN_ESA`, not `vsan_esa` (<KB id={453788} />).
+A pool's [subnet can't change after it is deployed](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/about-network-pools/sizing-a-network-pool.html), so Broadcom recommends a larger subnet than you need today, with inclusion ranges limiting what gets used. Growth then means [adding a range](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/about-network-pools/add-or-remove-a-network-pool-ip-address-range.html), because [existing ranges can't be edited](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/about-network-pools/create-a-network-pool.html).
 
-**IP pools.**
-- Network pool exhausted: extend it, or clean stale IP addresses left by rebuilt hosts (<KB id={316098} />).
-- NSX TEP pool exhausted: that is NSX's pool, not SDDC Manager's. Create a larger one, update the transport node profile, and re-run (<KB id={417229} />).
+TEP addresses are a separate budget. Broadcom's [dual-stack addressing model](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/datacenter-network-requirements/infrastucture-ip-addressing-models/dual-stack-ip-addressing-model.html) counts one vMotion address per host, one storage address per host per VMkernel adapter, and one host TEP per VDS uplink per host. Take a constructed example, so replace each number with your own: 16 vSAN hosts with one vSAN adapter each on two uplinks need 16 vMotion and 16 vSAN addresses from the network pool and 32 TEP addresses from NSX. A network pool with room to spare says nothing about that second figure. A static TEP pool [must hold enough addresses for the hosts you add](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/expand-a-workload-domain/add-a-host-to-a-vsphere-cluster-using-the-sddc-manager-ui.html), and transport nodes fail when it runs out (<KB id={417229} />).
 
-**Leftovers.**
-- VMs registered on the host fail the add-host check (<KB id={416946} />).
-- A stale `svc-vcf-*` account left on a host by an unclean decommission fails "Create New Local ESX Host User" (<KB id={451550} />).
-- A stale host row in SDDC Manager's database after a rebuild needs a support-led clean-up (<KB id={424242} />).
+Clusters in a workload domain [can share a pool or have one each](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/about-network-pools.html). Two rules narrow that choice. A subnet can sit in [only one pool per network type within a VCF instance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/about-network-pools/create-a-network-pool.html), even with non-overlapping ranges. And on 9.1.1, [reusing another cluster's VDS as is requires the same pool](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/expand-a-workload-domain/add-a-cluster-to-a-workload-domain-using-the-sddc-manager-ui.html), while reuse with new port groups allows a different one.
 
-## A pre-flight for every new host
-
-```text
-[ ] Forward and reverse DNS for the host, lowercase, resolving from SDDC Manager
-[ ] Same ESX build and vendor add-on as the target cluster image
-[ ] Certificate mode matches the domain (VMCA or CA-signed)
-[ ] vSwitch0: one uplink; all pNICs >= 10 GbE; vmnic layout matches the cluster
-[ ] No VMs registered; no stale svc-vcf-* local accounts (esxcli system account list)
-[ ] Free IPs in the network pool (vMotion, vSAN) and in the NSX TEP pool
-[ ] NTP configured and in sync
-```
-
-<Callout type="field">
-Decommission cleanly. Removing a host by re-imaging it, without decommissioning it, leaves the leftovers described above. If a host is dead and can't be decommissioned cleanly, record it, because its IP addresses and accounts will need a clean-up later.
+<Callout type="analysis" title="One pool per Layer 2 network">
+Separate pools need separate subnets for the same network type, so two clusters on one vMotion subnet have to share a pool. Plan one pool for each set of vMotion and storage subnets, and share it across the clusters on them. Add a pool when hosts sit on a different Layer 2 network or use external NFS or VMFS on FC, the [cases Broadcom names](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/about-network-pools.html). Broadcom doesn't publish this as a rule; it follows from the limits above.
 </Callout>
 
-## Pitfalls
+### Host certificates
 
-- **Looking for the old buttons.** If Add Host is greyed out in SDDC Manager, use the vCenter path. For workload domains, check VCF SSO and vCenter linking first.
-- **Mixed images.** A new host with a different vendor add-on fails cluster image compliance. Build or update the cluster image first.
-- **Forgetting TEP addresses.** Plan NSX TEP pool capacity with the network pool, not separately.
+VMCA is ["the default and recommended option for VCF fleets"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/vsphere-certificate-management/esx-certificate-management.html) in the 9.1 fleet management blueprint, whose stated drawback is that host certificates don't chain to the enterprise CA. Choosing external certificates adds a step to every later host build. A host on a default certificate fails with "Host SSL certificate is not trusted by SDDC Manager" when the management domain uses external ones (<KB id={415767} />), and [all later hosts must use them too](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/commission-hosts.html). The KB's two routes, depending on how the environment was set up, are to install an external certificate, or to change the ESX certificate mode in vCenter to VMCA, commission, then revert.
+
+### Host sameness
+
+The platform will accept more variation than the blueprint recommends. A mismatched host raises a [balance warning that can be dismissed](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/expand-a-workload-domain/add-a-host-to-a-vsphere-cluster-using-the-sddc-manager-ui.html), and different NIC enumeration is allowed. The [single-site blueprint's ESX model](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/common-design-selection-between-management-and-workload-domain/virtual-infrastructure-layer-fleet-single-site1/esx-model-fleet-single-site.html) still recommends 25GbE, with the same NIC speed, vendor and model across a cluster.
+
+NIC speed differs by release. <KB id={412127} /> quotes the VCF 9 documentation, "All physical NICs must have a minimum speed of 10 Gbps". The 9.1 commission page lists no speed, and the [9.1.1.0 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/sddc-manager-9-1-1-0-release-notes.html) resolve the block on sub-10 Gbit NICs used only for management, stating that hosts with 1Gbit NICs are supported <AsOf date="2026-11-07" />. The item is framed around management traffic, so keep vSAN, vMotion and NSX on 10 Gbit or faster. That's an inference from its title, and Validate All will show what a given host passes.
+
+Images are less of a trap than the storage type. A host whose add-on or component version differs from the cluster image [is remediated to that image](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/expand-a-workload-domain/add-a-cluster-to-a-workload-domain-using-the-sddc-manager-ui.html) during cluster creation, and on expansion [remediation covers only the new hosts](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/expand-a-workload-domain/add-a-host-to-a-vsphere-cluster-using-the-sddc-manager-ui.html), so existing drift stays until you deal with it. Storage type is fixed at commissioning: [an ESA host only joins ESA clusters and an OSA host only OSA clusters](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/commission-hosts.html). A wrong choice means decommissioning and commissioning again, without a re-image [if the host never joined a domain](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/decommission-hosts.html).
+
+## Pre-flight for every new host
+
+Most lines come from the [9.1 commission prerequisites](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/commission-hosts.html). The NSX DNS, NTP and leftovers lines come from the failures below.
+
+```text
+[ ] Network pool exists and supports the host's storage type, with free addresses
+[ ] Static TEP pool has an address per uplink for each new host
+[ ] Forward and reverse DNS for the host; hostname equals the FQDN, same capitalisation as DNS
+[ ] Forward and reverse DNS for the NSX Manager FQDN from SDDC Manager, VCF Operations, vCenter
+[ ] Self-signed certificate regenerated from the FQDN, or external certificate already installed
+[ ] Supported ESX release; drivers and firmware on the compatibility guide; no hardware errors
+[ ] Only one physical NIC on the standard switch, carrying all management traffic
+[ ] All HDD and SSD partitions deleted; no registered VMs; no stale svc- local accounts
+[ ] NTP set and UDP 123 open to the NTP servers
+[ ] MAC address filtering checked, because it can fail vMotion validation
+```
+
+With Skip failed hosts on, a batch can finish without the host you needed, so check the task result host by host.
+
+## The five groups of failures
+
+| Group | What you see | Cause | Fix |
+|---|---|---|---|
+| Names | `java.net.UnknownHostException`, "Cannot connect to" NSX Manager, in guardrail validation | Wrong DNS for the NSX Manager FQDN | Correct forward and reverse records (<KB id={423908} />) |
+| Names | `HOST_COMMISSION operation validation failed` | SDDC Manager can't connect to NSX Manager | Check the NSX credentials are active, then restart the task (<KB id={380003} />); see [the service account note](/vcf/library/day-2/passwords-service-accounts/) |
+| Trust | `SDDC_TRUST_HOST_SSL_CERT_FAILED` | Default certificate on the host, external ones in the management domain | Install an external certificate, or use the temporary mode change (<KB id={415767} />) |
+| Trust | Fails at 39%, `NoRouteToHostException`, `checkTime` fault | UDP 123 blocked, clocks drift, the temporary VMCA certificate looks invalid | Open NTP and resync; the KB is written for SDDC Manager 5.x (<KB id={448781} />) |
+| Trust | "Unable to verify vSAN HCL" | HCL data older than 90 days, on 9.0.x | Refresh the offline depot, or unblock SDDC Manager's internet path (<KB id={424728} />) |
+| Trust | `InternalServerError` at Host Selection, HTTP 403 in `domainmanager.log`, on 9.1 | NSX service account locked, missing or out of sync | Align the NSX Manager password with the stored one, then call Support, because the next step edits the database (<KB id={456013} />) |
+| Network shape | "vSwitch0 must have only one NIC as Uplink" | In the KB, vmnic0 at 1000 Mbps: the message names the uplink and the cause is speed | Check speed as well as uplink count (<KB id={412127} />) |
+| Network shape | `INPUT_SPEC_UPLINKS_DO_NOT_MATCH_WITH_EXISTING_CLUSTER_HOST` | Uplink names in the spec differ from the VDS | Make names identical and vmnic IDs right for that host's hardware (<KB id={428877} />) |
+| Network shape | `500 OK` on `hosts/prechecks`, "Failed to validate vSAN HCL status", via API or JSON | Lowercase storage type | Use `VSAN_ESA` (<KB id={453788} />) |
+| IP pools | "Insufficient free IPs for VSAN Network" | Address held by a host removed by hand after a rebuild, or stray characters in an address | Check `freeIps` through the API, snapshot SDDC Manager, run `staleIpCleanup.py` (<KB id={316098} />). If the range is really full, add one |
+| IP pools | `ipAddressPool` "is exhausted", transport nodes fail | NSX TEP pool empty; [VCF doesn't own it](https://knowledge.broadcom.com/external/article/417229) | Create a larger pool in NSX, update the transport node profile, rerun (<KB id={417229} />) |
+| Leftovers | "One or more VMs found on host" | Registered VMs | Unregister them; deleting isn't needed (<KB id={416946} />) |
+| Leftovers | "Create New Local ESX Host User" in error | Stale service account from an incomplete decommission | Find it with `esxcli system account list`, remove it, retry (<KB id={451550} />) |
+| Leftovers | "Host(s) already present in inventory" | Stale host row in the SDDC Manager database after a rebuild | Support, because the fix edits the SDDC Manager database (<KB id={424242} />) |
+
+One issue sits outside those groups. Broadcom lists a [9.1.1.0 known issue](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/sddc-manager-9-1-1-0-release-notes.html) where a new cluster in a VLAN-backed VPC workload domain gets no network span or transit gateway. Check for it after creating such a cluster, and schedule the fix with care, because associating a span re-prepares the hosts (<KB id={454415} />).
+
+## Decommission before you rebuild
+
+The documented order for moving a host is [decommission, re-image, commission](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/decommission-hosts.html), and a host that was in a domain must be re-imaged before it returns. The stale account, stale host row and stale address failures above all trace to a decommission that didn't finish or was bypassed. Unreachable hosts were one way in: SDDC Manager finished the decommission without returning their VMkernel addresses to the pool, an issue on the [9.1 resolved list](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/resolved-issues/vcf-installer-91-resolved-issues.html). On older releases, or when a dead host is removed by hand, record its addresses and FQDN at the time, so the later clean-up of addresses and accounts starts from a list.

@@ -8,7 +8,7 @@ level: Overview
 pubDate: 2026-11-02
 updated: 2026-11-07
 reviewed: 2026-11-07
-kbs: [440630, 443240, 441816]
+kbs: [440630, 443240, 441816, 405275]
 sources:
   - title: "Fleet deployment models (VCF 9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-operations-deployment-models.html"
@@ -113,11 +113,11 @@ A domain is unchanged in meaning: one vCenter, with NSX either dedicated or shar
 
 ## Why the layers matter in practice
 
-**Upgrades go top-down.** The fleet is upgraded before any instance, and an instance's management plane before its domains. In 9.1, VCF Operations must be upgraded first (<KB id={440630} />). A useful rule of thumb from [humbledgeeks](https://humbledgeeks.com/vcf-91-lifecycle-one-control-plane-and-the-real-work-to-get-there/) is "Fleet gates instance, never the reverse." In 5.x, the order started at SDDC Manager because there was nothing above it.
+**Upgrades go top-down.** The fleet is upgraded before any instance, and an instance's management plane before its domains. In 9.1, VCF Operations must be upgraded first (<KB id={440630} />). A useful rule of thumb from [humbledgeeks](https://humbledgeeks.com/vcf-91-lifecycle-one-control-plane-and-the-real-work-to-get-there/) is "Fleet gates instance, never the reverse." In 5.x, the order started at SDDC Manager (<KB id={405275} />).
 
 **The blast radius follows the layer.** If one domain's vCenter goes down, the damage stays inside that domain. If the first instance's management domain goes down, every instance loses the fleet-level services that live there. When VCF Operations itself is unavailable, workloads keep running and existing licences stay valid, but new licence assignments and capacity updates are blocked (<KB id={443240} />). The lifecycle and configuration screens are also unavailable.
 
-**Day-2 tasks moved up a layer.** Certificates, passwords, backup configuration, DNS and NTP settings for an instance, and workload domain creation all start in VCF Operations now. Host commissioning, network pools, cluster creation and edge clusters moved into vCenter. The <a href="/vcf/library/day-2/where-did-that-button-go/">Day-2 task map</a> lists them all.
+**Day-2 tasks moved up a layer.** Certificates, passwords, backup configuration, DNS and NTP settings (named fleet settings on 9.1) and workload domain creation all start in VCF Operations now. Host commissioning, network pools, cluster creation and edge clusters moved into vCenter. The <a href="/vcf/library/day-2/where-did-that-button-go/">Day-2 task map</a> lists them all.
 
 <Callout type="field">
 When a 9.x ticket or design question is vague, the first thing to settle is which layer it is about. "Certificates are failing" means something different for a fleet management component, such as VCF Operations or the identity broker, than it does for an instance's core infrastructure, such as vCenter, NSX or ESX. Different services own them, and they log to different places.
@@ -133,5 +133,5 @@ When a 9.x ticket or design question is vague, the first thing to settle is whic
 ## Pitfalls
 
 - **Treating "instance" as a 9.x name for "domain".** It is not. An instance contains domains.
-- **Planning a 5.2 upgrade without planning the fleet.** VCF Operations is [required with each fleet](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs), so a 5.2 estate with no Aria components gets it [as part of the upgrade](https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/), according to McDonald's December 2025 answers for 9.0. The [9.1 upgrade](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) also deploys VCF management services and the license server. Their sizing, IP addresses and DNS records need to be ready before the window.
-- **Assuming the fleet-level services are spread out.** In 9.1 they sit in the first instance's services runtime. If you lose that runtime, you lose fleet lifecycle and log management for every instance.
+- **Planning a 5.2 upgrade without planning the fleet.** VCF Operations is [required with each fleet](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs), so a 5.2 estate with no Aria components gets it [as part of the upgrade](https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/), according to McDonald's December 2025 answers for 9.0. On 9.1 with no Aria Operations 8.18.x, [you deploy it yourself before the upgrade can proceed](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/deploy-vcf-operations.html). The [9.1 upgrade](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) also deploys VCF management services and the license server. Their sizing, IP addresses and DNS records need to be ready before the window.
+- **Assuming the fleet-level services are spread out.** In 9.1 they sit in the first instance's services runtime. Losing that runtime would take fleet lifecycle and log management with it for every instance, which is this site's inference from that placement.

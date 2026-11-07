@@ -101,7 +101,7 @@ Run the session a week before the window, and again the day before, because pass
 Read together, the stated causes point to three habits that head off several rows at once:
 
 - **Leave VMs where VCF put them, or list every move.** Moves between datastores or folders sit behind <KB id={446929} />, <KB id={448384} /> and scenario 5 of <KB id={441285} />. The first needs Support to edit the SDDC Manager database, so a move discovered late can cost you the window.
-- **Power off the 9.0 fleet appliance and keep its DNS record.** Left on, it causes 401 errors in later prechecks (<KB id={449075} />). With the record deleted, the VCF Automation precheck can't confirm the address is unused and fails (<KB id={443874} />).
+- **Power off the 9.0 fleet appliance and keep its DNS record.** Left on, it causes 401 errors in later prechecks, documented moving from 9.1.0.0100 to 9.1.0.0400 (<KB id={449075} />). With the record deleted, the VCF Automation precheck can't confirm the address is unused and fails (<KB id={443874} />).
 - **Replace certificates through VCF Operations, not directly on the component.** A certificate changed directly on NSX Manager leaves SDDC Manager distrusting it (<KB id={442766} />). That KB, from 3 Jun 2026, names SDDC Manager as the managed route, but the 5 Nov 2026 [blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html) says "Avoid using the SDDC Manager for certificate management", so follow the newer page.
 
 [The route chooser](/vcf/library/upgrades/upgrade-route-chooser/) sends you to 9.1.1, which may close some of these, but the articles won't always tell you: <KB id={450225} /> names 9.1.0 in its Environment line, while <KB id={444283} /> says only "VMware Cloud Foundation 9.x". Read each article's Environment line against your source and target before acting on it. Several fixes edit a database or a pod, so take the snapshot or backup the article asks for first.
@@ -223,7 +223,7 @@ The [9.1.1 notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and
 |---|---|---|---|
 | `VCFMS-PRECHECK-VIDB-VMSP-VERSION-001`, though the runtime may already be at the right version | "Last lifecycle metadata sync time" isn't old or N/A | Sync under VCF Management, then Retry | <KB id={458395} />, 7 Oct 2026 |
 | "Backup workflow failed for component: vcf-fleet-lcm" | SFTP backup username has no backslash | Change to `user@domain`, rerun | <KB id={450561} />, 28 Sep 2026 |
-| `ops_precheck` 401, with repeated `DELETE /casa/authorize` from the fleet appliance's address | The 9.0 fleet appliance is powered off | Power it off, rerun | <KB id={449075} />, 21 Jul 2026 |
+| `ops_precheck` 401, with repeated `DELETE /casa/authorize` from the fleet appliance's address | The 9.0 fleet appliance is still powered on | Power it off, rerun | <KB id={449075} />, 21 Jul 2026 |
 | `ops_precheck`, Reference Code 70BACE6F, 401, after an analytics node rebooted during the run | Suggested: avoid node reboots during prechecks | Collect a support bundle and revert. With no snapshot, edit the pack history as the KB shows | <KB id={452677} />, 22 Oct 2026 |
 
 ## Before you close the session
