@@ -1,0 +1,179 @@
+---
+title: "Private AI: what is in VCF, what needs the add-on, and when to bother"
+description: "Broadcom's catalogue marks Private AI Services for VCF and VCF Edge, not VVF, yet its 9.1 requirements page puts them behind a Private AI Foundation with NVIDIA licence line. Check your console first. vGPU adds NVIDIA licences per GPU; passthrough doesn't. LLM workloads only."
+category: value
+order: 13
+versions: ["9.0", "9.1", "9.1.1"]
+level: Practitioner
+pubDate: 2026-11-07
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+sources:
+  - title: "VCF 9.1.1 and vSphere Foundation 9.1.1: Feature Comparison & Upgrade Paths"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-feature-comparison-and-upgrade-paths"
+    by: "VMware by Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "Requirements for Deploying VMware Private AI Foundation with NVIDIA (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/private-ai/foundation-with-nvidia/9-1/deploying-private-ai-foundation-with-nvidia/requirements-for-deploying-private-ai-foundation-with-nvidia.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "Preparing VCF for Private AI Workload Deployment (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/private-ai/foundation-with-nvidia/9-1/deploying-private-ai-foundation-with-nvidia.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "Assign the Private AI Foundation License to the Management Domain (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/private-ai/foundation-with-nvidia/9-1/deploying-private-ai-foundation-with-nvidia/assign-the-private-ai-foundation-license-to-the-management-domain.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "Add-on Licenses Included in Your VCF or vSphere Foundation Subscription"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/add-on-licenses-in-vcf-9-0.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1 Licensing: Private License Files"
+    url: "https://vcf.broadcom.com/vcf/clm/assets/VCF-9.1-Licensing-Private-License-Files.pdf"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-08-24
+  - title: "VCF 9.1 Frequently Asked Questions"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "VMware by Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "VCF Edge Specific Program Documentation, June 2026"
+    url: "https://ftpdocs.broadcom.com/cadocs/0/VCF_Edge_SPD_June2026.pdf"
+    by: "Broadcom"
+    kind: broadcom
+  - title: "Private AI Services (VCF 9.1 design library)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/private-ai-platform-detailed-design/private-ai-services.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Private AI Services Consumption Blueprint"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/application-modernization/private-ai-services-blueprint(1).html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Implement AI on VCF with VMware Private AI Foundation with NVIDIA (solution overview)"
+    url: "https://www.vmware.com/docs/vcf-private-ai-solution-brief"
+    by: "VMware by Broadcom"
+    kind: broadcom
+    date: 2026-05-07
+  - title: "Unleashing the Power of Private AI: New Innovations from Broadcom with NVIDIA"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/08/26/vmware-private-ai-foundation-with-nvidia-explore25/"
+    by: "Shobhit Bhutani, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-08-26
+  - title: "Private AI Services: New in VMware Private AI Foundation with NVIDIA in VCF 9.0"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/19/private-ai-services-new-in-vmware-private-ai-foundation-with-nvidia-in-vcf-9-0/"
+    by: "Justin Murray, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-06-19
+  - title: "Broadcom Updates VMware Portfolio to Protect and Accelerate Private AI Cloud Deployments"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/11/04/broadcom-vcf-portfolio-updates/"
+    by: "VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "VCF 9.1.1: Deploying your own AI models with VCF Private AI Services (PAIS) 3.0"
+    url: "https://williamlam.com/2026/09/vcf-9-1-1-deploying-your-own-ai-models-with-vcf-private-ai-services-pais-3-0.html"
+    by: "William Lam, Broadcom"
+    kind: practitioner
+    date: 2026-09-10
+  - title: "MS-A2 VCF 9.0 Lab: Installing VMware Private AI Services (PAIS)"
+    url: "https://williamlam.com/2025/09/ms-a2-vcf-9-0-lab-installing-vmware-private-ai-services-pais.html"
+    by: "William Lam, Broadcom"
+    kind: practitioner
+    date: 2025-09-24
+  - title: "NVIDIA AI Enterprise licensing guide"
+    url: "https://docs.nvidia.com/ai-enterprise/planning-resource/licensing-guide/latest/licensing.html"
+    by: "NVIDIA"
+    kind: vendor
+    date: 2026-09-02
+  - title: "Defiant Broadcom calls for tech to go back where it belongs: On-premises"
+    url: "https://www.theregister.com/2025/08/26/vmware_explore_vcf_evolution/"
+    by: "Simon Sharwood, The Register"
+    kind: press
+    date: 2025-08-26
+  - title: "VMware Explore Paris 2025: Our Take On Private AI And Private Cloud Sovereignty"
+    url: "https://www.forrester.com/blogs/vmware-explore-paris-2025-our-take-on-private-ai-and-private-cloud-sovereignty/"
+    by: "Dario Maisto, Forrester"
+    kind: analyst
+    date: 2025-10-20
+---
+
+<InShort>
+**Private AI Services is catalogued for VCF and VCF Edge and not for VVF, and you should plan on needing a licence line to switch it on.** Broadcom's 9.1 requirements page puts it behind the "Private AI Foundation with NVIDIA" add-on licence, even where that product comes with VCF in your region. Look for that line on your site ID in the VCF Business Services console before anyone prices this. vGPU adds NVIDIA licences per GPU, and passthrough doesn't. Pursue it for LLM inference and RAG on data that can't leave your estate. Private AI Services can't run vision, speech or time-series models. Current on <AsOf date="2026-11-07" />. This isn't purchasing advice: your order document decides what you hold.
+</InShort>
+
+## Ships with VCF, needs another licence
+
+| Item | Position | Source |
+|---|---|---|
+| Private AI Services, Model Store, Model Runtime, CPU-only AI workloads, Agent Builder, vector databases | Marked for Edge and VCF, blank for VVF, no footnote on these rows | [Feature Comparison](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-feature-comparison-and-upgrade-paths) p9, p16-17 (4 Nov 2026). [FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) Q15 lists Private AI Services in the VCF licence |
+| VCF Automation's Private AI rows: catalog setup wizard, GPU VM and VKS provisioning, DSM integration, vector DBs, data indexing, Agent Builder, MCP | Marked for Edge and VCF, under a heading with footnote 6, "Available in Org for All Apps", and footnote 10, "Requires PAIF-N add-on". Agent Builder and vector DBs therefore appear both with and without the footnote | Feature Comparison p10, footnotes p19 |
+| Private AI Services, DSM pgvector provisioning, the deep learning VM image, the vSphere guided workflow | Add-on licence required | [Requirements, 9.1](https://techdocs.broadcom.com/us/en/vmware-cis/private-ai/foundation-with-nvidia/9-1/deploying-private-ai-foundation-with-nvidia/requirements-for-deploying-private-ai-foundation-with-nvidia.html) (4 Nov 2026) |
+| AI workloads with or without a Supervisor, GPU metrics in vCenter and VCF Operations | VCF licence | Same page |
+| NVIDIA AI Enterprise, for vGPU, and for NIM per Broadcom's August 2025 blog | Bought separately, [per GPU](https://docs.nvidia.com/ai-enterprise/planning-resource/licensing-guide/latest/licensing.html) (2 Sep 2026) | Requirements page; [solution overview](https://www.vmware.com/docs/vcf-private-ai-solution-brief) (May 2026) |
+| GPU passthrough | "You do not need an NVIDIA AI Enterprise license". No vMotion, and feature-branch software | [Preparing VCF](https://techdocs.broadcom.com/us/en/vmware-cis/private-ai/foundation-with-nvidia/9-1/deploying-private-ai-foundation-with-nvidia.html) (4 Nov 2026) |
+| VCF Edge | Only "to the extent indicated" in your transaction document | [Edge SPD](https://ftpdocs.broadcom.com/cadocs/0/VCF_Edge_SPD_June2026.pdf) (June 2026) |
+
+For Express, see the [November portfolio note](/vcf/library/licensing/november-2026-portfolio/). The [entitlement matrix](/vcf/library/value/using-what-vcf-includes/) records this conflict as number 4.
+
+## Reconciling "included" with "add-on"
+
+In August 2025 [Broadcom's blog](https://blogs.vmware.com/cloud-foundation/2025/08/26/vmware-private-ai-foundation-with-nvidia-explore25/) said the services were "previously sold separately" and would come "without an additional purchase". [The Register](https://www.theregister.com/2025/08/26/vmware_explore_vcf_evolution/) reported the same day: "at no extra cost". TechDocs now says that from 3 November 2025, "based on your VCF subscription, you might also [receive a license](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/add-on-licenses-in-vcf-9-0.html)" (5 Nov 2026). The requirements page adds that even if the product is "available as part of VCF for your geographical region", you still need the licence.
+
+<Callout type="analysis" title="This site's reading">
+These statements fit together if the add-on is a licence line that some subscriptions receive at no separate charge. No Broadcom page says that outright. Treat the requirements page and footnote 10 as the operating rule, and the line's presence on your site ID as the test. The [private license guide](https://vcf.broadcom.com/vcf/clm/assets/VCF-9.1-Licensing-Private-License-Files.pdf) (August 2026) names it "VMware Private AI Foundation with NVIDIA (cores)".
+</Callout>
+
+Broadcom's pages (checked 7 Nov 2026) leave these open, so get them in writing:
+
+- which subscriptions or regions receive the line
+- the add-on's price if yours doesn't
+- whether a CPU-only deployment needs it: the requirements list has no exception, and the [assignment page](https://techdocs.broadcom.com/us/en/vmware-cis/private-ai/foundation-with-nvidia/9-1/deploying-private-ai-foundation-with-nvidia/assign-the-private-ai-foundation-license-to-the-management-domain.html) allocates capacity "only to the GPU-enabled workload domains"
+- whether the unfootnoted catalogue rows work without the line
+
+NVIDIA's guide gives the metric and no dollar figure. Constructed example: three hosts with two GPUs each need six NVIDIA licences on vGPU, and none on passthrough without NIMs.
+
+## PAIS and PAIF: who means what
+
+| Source and date | Usage |
+|---|---|
+| [Murray, VMware blog](https://blogs.vmware.com/cloud-foundation/2025/06/19/private-ai-services-new-in-vmware-private-ai-foundation-with-nvidia-in-vcf-9-0/), 19 Jun 2025 | PAIS is a set of services "within" Private AI Foundation with NVIDIA |
+| [Lam](https://williamlam.com/2025/09/ms-a2-vcf-9-0-lab-installing-vmware-private-ai-services-pais.html), 24 Sep 2025 | PAIS "now included" in VCF. PAIF unused |
+| Solution overview, May 2026 | Private AI Foundation with NVIDIA is the joint platform: Private AI Services plus NVIDIA's software |
+| Feature Comparison, 4 Nov 2026 | "PAIF-N" names the add-on |
+| [Design library](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/private-ai-platform-detailed-design/private-ai-services.html), 5 Nov 2026 | PAIS is the platform. PAIF appears only inside recommendation IDs |
+
+Current usage, as this site reads the November 2026 pages: PAIS is the software in VCF, and PAIF-N is the licence line and the documentation set. When a quote says "PAIF", ask which it means.
+
+## Prerequisites that change the answer
+
+- **Hosts:** at least three GPU-enabled hosts in the workload domain's initial cluster (requirements page). CPU-only needs no GPUs, and the [blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/application-modernization/private-ai-services-blueprint(1).html) offers it for embedding models.
+- **Networking:** the design library says enabling through VCF Automation means "NSX VPC networking model only" and an All Apps organization, while the vCenter path takes VDS or NSX VPC with no VCF Automation dependency. The blueprint names only the Centralized and Distributed VLAN connectivity models. Neither page rules out [VLAN-backed VPC](/vcf/library/architecture/vpc-connectivity-choice/) in so many words, but it's off the blueprint, so get Broadcom's confirmation before designing on it.
+- **Capacity:** the design library estimates 2-5 TB of Harbor for 10-20 LLMs, about twice GPU memory as system RAM, and two or more replicas per endpoint. PostgreSQL with pgvector is needed unless you run the model-endpoints-only profile.
+
+For the build, read Lam's [10 September 2026 post](https://williamlam.com/2026/09/vcf-9-1-1-deploying-your-own-ai-models-with-vcf-private-ai-services-pais-3-0.html) on PAIS 3.0 in 9.1.1, a passthrough lab run that doesn't cover licensing. AI Infrastructure Quickstart is only [planned for the next release](https://blogs.vmware.com/cloud-foundation/2026/11/04/broadcom-vcf-portfolio-updates/), so keep it out of a design.
+
+## Is it worth doing
+
+Broadcom documents one hard limit: the service "cannot run" computer vision, time-series, optimization or audio and speech models. The rest is positioning. The Register reports Broadcom's argument that renting AI brings bigger bills. [Forrester's Maisto](https://www.forrester.com/blogs/vmware-explore-paris-2025-our-take-on-private-ai-and-private-cloud-sovereignty/) (20 Oct 2025) reports VMware highlighting contact centres for ROI, and says a subscription fits poorly with sovereignty strategies. Neither gives figures for your estate.
+
+<Callout type="analysis" title="This site's fit advice">
+
+| Your position | Do this |
+|---|---|
+| LLM inference or RAG on data that can't leave, on VCF with a Supervisor on VDS or NSX VPC, or an All Apps org on NSX VPC if you enable through VCF Automation | Check the console, then pilot |
+| Same, with no GPUs yet | Trial embedding models on the blueprint's CPU-only option once the licence question is answered. Size GPU hosts before serving LLMs |
+| Vision, speech or time-series | Stop. These services won't run them |
+| VVF | Stop. The catalogue doesn't mark it |
+| Data may go to a public model | Leave it. Remote models need no GPUs, but your data leaves, which removes the reason to run this |
+
+A written Broadcom statement on who receives the line, or a published add-on price, would change the first step.
+</Callout>
