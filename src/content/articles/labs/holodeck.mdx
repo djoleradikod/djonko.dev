@@ -1,56 +1,88 @@
 ---
-title: "Holodeck for VCF 9: standard nested environments for teams and training"
-description: "Holodeck builds self-contained nested VCF environments with their own DNS, NTP, BGP and DHCP, so each one needs only a single external IP and several can run side by side. That makes it the natural choice for team training and repeatable demos."
+title: "Holodeck for VCF 9.1: when it beats a script or a physical box, and what it doesn't do"
+description: "Choose Holodeck when a team needs identical nested VCF environments with their own routing and services, on a large host. Toolkit 9.1.1 (October 2026) deploys 5.2, 9.0 and 9.1. It is unsupported, and its 9.1 recommendation is double 9.0's memory. One person with small hardware should look elsewhere."
 category: labs
 order: 3
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
 updated: 2026-11-06
+reviewed: 2026-11-06
 kbs: []
 sources:
+  - title: "Holodeck documentation, Getting Started"
+    url: "https://vmware.github.io/Holodeck/latest/"
+    by: "VMware on GitHub"
+    kind: broadcom
+  - title: "Holodeck release notes"
+    url: "https://vmware.github.io/Holodeck/latest/release_notes/"
+    by: "VMware on GitHub"
+    kind: broadcom
   - title: "Announcing the general availability of Holodeck 9.0"
     url: "https://blogs.vmware.com/cloud-foundation/2025/06/30/announcing-the-general-availability-of-holodeck-9-0/"
-    by: "VMware Cloud Foundation blog"
+    by: "Jatin Purohit, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-06-30
   - title: "Add clusters and hosts in VCF using Holodeck"
     url: "https://blogs.vmware.com/cloud-foundation/2025/11/09/add-clusters-and-hosts-in-vcf-using-holodeck/"
-    by: "VMware Cloud Foundation blog"
-  - title: "Holodeck documentation"
-    url: "https://vmware.github.io/Holodeck/"
-    by: "VMware on GitHub"
+    by: "Jatin Purohit, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-11-09
+  - title: "VCF 9.1: automated VCF and VVF nested lab deployment"
+    url: "https://williamlam.com/2026/05/vcf-9-1-automated-vmware-cloud-foundation-vcf-vmware-vsphere-foundation-vvf-nested-lab-deployment.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-05-14
+  - title: "VCF 9.1.1 in a Box"
+    url: "https://github.com/lamw/vcf-91-in-box"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-10-23
+  - title: "VCF Infrastructure Services (VIS) appliance for VCF 9.1 lab/PoC"
+    url: "https://williamlam.com/2026/07/vcf-infrastructure-services-vis-appliance-for-vcf-9-1-lab-poc.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-07-20
 ---
 
 <InShort>
-Holodeck is a toolkit that deploys a **complete nested VCF** environment, including the management domain and workload domains, onto a single ESX host or a cluster with enough capacity. Each environment brings its own **DNS, NTP, BGP and DHCP** and needs only **one external IP**, so it avoids VLAN and routing conflicts with your network. Holodeck 9.0 supports both **VCF 5.2.x and 9.0**, which makes it useful for upgrade rehearsal. A typical 9.0 build with a four-node management domain and a three-node workload domain needs about **30 cores, 325 GB of memory and 1.1 TB of disk**. Binaries come from the support portal and need a VCF entitlement.
+Use **Holodeck** when several people need the same nested VCF environment and you have a large host to put it on. Each environment brings its own DNS, DHCP, NTP and BGP through the Holorouter and needs one external IP, so it stays off your lab's network design. **One person on modest hardware should build something else**: its recommended 9.1 size is a lot of memory for a solo lab. Figures for every build are in [Sizing a VCF 9.1 lab](/vcf/library/labs/sizing-a-vcf-9-lab/).
 </InShort>
 
-<Compare v5Label="Holodeck" v9Label="Hand-built nested lab" title="Why a toolkit" rows={[
-  ["Network services", "Built in: DNS, NTP, BGP, DHCP", "You provide them"],
-  ["Isolation", "Self-contained, several environments side by side", "Shares your lab networks"],
-  ["Repeatability", "The same environment every time, for every student", "Depends on your notes"],
-  ["Versions", "5.2.x and 9.0 from one toolkit", "Whatever you built"],
-  ["Flexibility", "Opinionated layout", "Anything you want"],
-]} />
+<Callout type="note" title="Corrected on 6 November 2026">
+This note used to say Holodeck covers VCF 5.2.x and 9.0, left 9.1 open, and gave the 9.0 size as a typical build. Toolkit 9.1.1 deploys 5.2, 9.0 and 9.1, and its 9.1 memory recommendation is twice the 9.0 figure. The numbers now live only in the sizing note.
+</Callout>
+
+## Holodeck against the alternatives
+
+| What you need | Holodeck | [Lam's nested script](/vcf/library/labs/nested-lab-automation/) | [Lam's physical build](https://github.com/lamw/vcf-91-in-box) |
+|---|---|---|---|
+| Layout | 4 management and 3 workload domain nested hosts; dual site available | 3 nested hosts, optional workload domain | 1 to 3 physical hosts |
+| Network services | Built in | Yours, or his [VIS appliance](https://williamlam.com/2026/07/vcf-infrastructure-services-vis-appliance-for-vcf-9-1-lab-poc.html) | Yours, or VIS |
+| Network footprint | One external IP per environment | A routable portgroup, 17 addresses for the fleet | At least 5 VLANs |
+| Runs on | Standalone ESX host or vSphere cluster | vCenter-managed vSphere | Bare metal |
+| Good for | Teaching, shared exercises, dual-site work | Fast personal rebuilds | vSAN ESA and tiering on real devices |
+
+<Callout type="analysis" title="This site's view">
+Holodeck's value is network isolation and sameness, and you pay for both in memory. If neither matters to you, the sizing note shows smaller builds that still reach a complete fleet. Lam himself [moved from nested to physical](https://williamlam.com/2026/05/vcf-9-1-automated-vmware-cloud-foundation-vcf-vmware-vsphere-foundation-vvf-nested-lab-deployment.html), mainly for lack of resources, and on the VIS post he points people who don't meet Holodeck's requirements to that appliance.
+</Callout>
+
+## What toolkit 9.1.1 covers
+
+The [release notes](https://vmware.github.io/Holodeck/latest/release_notes/) date this toolkit to October 2026. The `-Version` parameter in the [docs](https://vmware.github.io/Holodeck/latest/) accepts 9.1.1.0, 9.1.0.0, 9.0.2.0, 9.0.1.0, 9.0.0.0 and 5.2 through 5.2.4. VVF needs 9.0.0.0 or later. VCF Installer 9.0.0.0 is "no longer supported" for nested deployments, and the 9.0.2 notes say Installer 9.0.2.0 can deploy 9.0.0.0 environments. <AsOf date="2026-11-06" />
+
+Two switches change what you deploy. VCF Automation stays out unless you pass `-DeployVcfAutomation`, and `-ManagementOnly` drops the workload domain. The sizing note covers what those are worth. The docs have tested vSphere 8.0 U3 and 9.0 as the target and ask for SSD or NVMe backing storage.
 
 ## Using it well
 
-- **Training**: one environment per student, reset between sessions. Everyone sees the same names and addresses, which makes exercises easy to write.
-- **Upgrade rehearsal**: deploy at 5.2.x, practise the move to 9.0, then repeat until the runbook is boring.
-- **Day-2 practice**: adding clusters and hosts is covered in the Holodeck blog series, which mirrors the real vCenter-based workflow.
-- **Break-fix**: snapshot, break something on purpose, and let the team diagnose. See [break-fix exercises](/vcf/library/labs/break-fix-exercises/).
+- **Training.** Give each student one environment and write exercises against the names and addresses in your Holodeck config. The docs set no maximum for environments on a host, only "sufficient capacity", so memory for a class is the sizing note's figure times the head count.
+- **Day-2 practice.** Jatin Purohit's [9 Nov 2025 post](https://blogs.vmware.com/cloud-foundation/2025/11/09/add-clusters-and-hosts-in-vcf-using-holodeck/) walks through adding hosts and clusters on Holodeck 9.0. Check the commands against 9.1.1 docs before building a lesson on them.
+- **Break-fix.** Snapshot, break something on purpose and have the team diagnose it. See [break-fix exercises](/vcf/library/labs/break-fix-exercises/).
+- **Upgrade rehearsal, with care.** Holodeck can stand up a 5.2 or 9.0 starting point, which makes a rehearsal possible. The docs describe no nested upgrade workflow, though: 9.1.1's patch support is "greenfield deployment", and the docs' one migration entry moves the Holorouter to 9.0.2. Treat the upgrade itself as your own exercise, and don't expect it to predict timings on real hardware.
 
-## What to check first
+## Before you commit
 
-- Host capacity for the layout you want, especially memory.
-- The current Holodeck documentation for supported VCF versions. 9.1 support depends on the toolkit release you download.
-- A download token or entitlement for the offline depot.
-
-<Callout type="field">
-For internal enablement, write the exercises against Holodeck's standard names. A session can then start with "everyone open the same vCenter at the same address".
-</Callout>
-
-## Pitfalls
-
-- **Treating Holodeck performance as representative.** Nested environments are slower. Use it for workflows, not benchmarks.
-- **Running it on a host that also runs your daily tools.** One build can take most of a large host.
-- **Skipping the documentation** for version-specific steps. The toolkit changes with each release.
+- **It's unsupported.** The docs say Holodeck 9 "is not a VMware supported product, it is similar to a Fling", meant for testing and training.
+- **You still need entitlement and binaries.** The docs assume entitlement for downloads from the Broadcom Support Portal and leave licensing to you. See [choosing a lab](/vcf/library/labs/choosing-a-lab-approach/) for the routes.
+- **Under-sizing warns without stopping you.** The docs say 9.1 "allows deployment with lower resources, but performance may be impacted", so a passing pre-check isn't evidence the lab will behave.
+- **Old known issues may not be gone.** The notes for 9.0 through 9.0.2 warn that memory tiering on the host may destabilise nested workloads and that nested vSAN ESA may use more storage than expected. The 9.1 and 9.1.1 notes have no known-issues section, which leaves both unconfirmed either way, though Lam reports nested ESX VMs now run on tiered hosts from 9.1. If you see instability on a tiered host, turn tiering off first.
