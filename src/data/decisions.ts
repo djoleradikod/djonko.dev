@@ -1,6 +1,7 @@
 // Notes that end in a choice, listed on the VCF hub. Each entry is an article id (<category>/<file name>).
 // The build fails if one does not exist, so a renamed note cannot leave a gap in the index.
 export const DECISION_NOTES = [
+  'value/october-2027-decision',
   'upgrades/support-clock',
   'upgrades/upgrade-route-chooser',
   'upgrades/vcf-automation-side-by-side',

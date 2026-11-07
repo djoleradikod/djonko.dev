@@ -8,7 +8,7 @@ for VCF Operations, and a CV. Static, fast, accessible, and portable between Het
 | `/` | Portfolio home | `src/pages/index.astro` |
 | `/about/`, `/contact/`, `/talks/` | About, contact, workshop series | `src/pages/*.astro` |
 | `/cv/` | Print-ready CV (hidden until published) | `src/data/cv.ts` |
-| `/vcf/` | VCF Field Notes: 103 notes in 9 areas, KB index, cheat sheet, glossary | `src/content/articles/`, `src/pages/vcf/` |
+| `/vcf/` | VCF Field Notes: 105 notes in 9 areas, KB index, cheat sheet, glossary | `src/content/articles/`, `src/pages/vcf/` |
 | `/blog/` | Write-ups, case studies, videos; tags, reading time, related posts | `src/content/posts/` |
 | `/projects/<slug>/` | One page per tool, facts from the repo's release `project.json` | `src/content/projects/`, `src/data/projects/` |
 | `/guide/` | Authoring guide with a live example of every content type (hidden) | `src/pages/guide/index.mdx` |
