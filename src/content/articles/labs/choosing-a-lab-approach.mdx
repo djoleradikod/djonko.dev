@@ -1,66 +1,261 @@
 ---
-title: "Choosing a VCF 9 lab: Holodeck, nested scripts, a physical box, or hosted labs"
-description: "There are four practical ways to get hands-on with VCF 9, and they suit different goals. A comparison by cost, realism, effort and what each is good for, so the lab matches what you need to learn or prove."
+title: "Choosing a VCF 9 lab: what each route costs, how you get a licence, and which page has the steps"
+description: "Start with free Hands-on Labs. For your own lab, VMUG Advantage plus VCP-VCF costs about $335 in year one but is personal use only, so work labs need a subscription, a partner NFR or the 90-day evaluation. Physical builds, nested scripts, Holodeck and hosted options, compared and routed to the right page."
 category: labs
 order: 1
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Overview
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: []
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [437242, 373980, 443647]
 sources:
-  - title: "Announcing the general availability of Holodeck 9.0"
-    url: "https://blogs.vmware.com/cloud-foundation/2025/06/30/announcing-the-general-availability-of-holodeck-9-0/"
-    by: "VMware Cloud Foundation blog"
+  - title: "VCF AI assistants, gated lab licenses and a new Vegas venue: my highlights of Explore 2026"
+    url: "https://virtualizationreview.com/articles/2026/09/10/vcf-ai-assistants-gated-lab-licenses-and-a-new-vegas-venue-my-highlights-of-explore-2026.aspx"
+    by: "Tom Fenton, Virtualization Review"
+    kind: press
+    date: 2026-09-10
+  - title: "VMUG Advantage Home Lab License Guide"
+    url: "https://blogs.vmware.com/code/2025/03/19/vmug-advantage-home-lab-license-guide/"
+    by: "Eric Nielsen, VMware"
+    kind: broadcom
+    date: 2025-03-19
+  - title: "Free home-lab licenses for VMware Certified Professionals"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/04/14/free-home-lab-licenses-for-vmware-certified-professionals/"
+    by: "Shirley Arteaga, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-04-14
+  - title: "VMUG Advantage"
+    url: "https://vmug.com/advantage"
+    by: "VMUG"
+    kind: vendor
+  - title: "Exciting updates to the VMware certification program"
+    url: "https://blogs.vmware.com/cloud-foundation/2024/05/06/exciting-updates-to-the-vmware-certification-program/"
+    by: "Shirley Arteaga, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2024-05-06
+  - title: "How to deploy VVF/VCF 9.0 using VMUG Advantage and VCP-VCF certification entitlement"
+    url: "https://williamlam.com/2025/07/how-to-deploy-vvf-vcf-9-0-using-vmug-advantage-vcp-vcf-certification-entitlement.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2025-07-30
+  - title: "Not for Resale VMware License Information (KB 373980)"
+    url: "https://knowledge.broadcom.com/external/article/373980"
+    by: "Broadcom"
+    kind: broadcom
+  - title: "Getting started with VCF or VVF V9 licensing (KB 437242)"
+    url: "https://knowledge.broadcom.com/external/article/437242"
+    by: "Broadcom"
+    kind: broadcom
+  - title: "Download token replaced by Activation Code in VCF Installer 9.1 (KB 443647)"
+    url: "https://knowledge.broadcom.com/external/article/443647"
+    by: "Broadcom"
+    kind: broadcom
+  - title: "VMware Cloud Foundation trials license (community thread)"
+    url: "https://community.broadcom.com/vmware-cloud-foundation/discussion/vmware-cloud-foundation-trials-license"
+    by: "Broadcom Community forum"
+    kind: reference
+    date: 2025-07-20
+  - title: "Holodeck documentation"
+    url: "https://vmware.github.io/Holodeck/latest/"
+    by: "VMware on GitHub"
+    kind: broadcom
+  - title: "The next generation of Hands-on Labs"
+    url: "https://blogs.vmware.com/hol/2026/09/the-next-generation-of-hands-on-labs.html"
+    by: "Kelly Smith, VMware"
+    kind: broadcom
+    date: 2026-09-21
+  - title: "VCF 9.1 is available: explore the new features in Hands-on Labs"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/12/vcf-9-1-is-available-explore-the-new-features-in-hands-on-labs/"
+    by: "Kelly Smith, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-05-12
+  - title: "VMware Cloud Foundation 9.0 Hands-on Labs"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/19/vmware-cloud-foundation-9-0-hands-on-labs-dive-in-and-unlock-your-potential/"
+    by: "David D'Entremont, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-06-19
+  - title: "Amazon EVS pricing"
+    url: "https://aws.amazon.com/evs/pricing/"
+    by: "AWS"
+    kind: vendor
+  - title: "VCF 9.0 and 9.1 on Amazon EVS"
+    url: "https://aws.amazon.com/blogs/migration-and-modernization/vmware-cloud-foundation-vcf-9-0-and-9-1-on-amazon-evs/"
+    by: "AWS"
+    kind: vendor
+    date: 2026-07-06
+  - title: "What's New in VMware Cloud Foundation (V9.1)"
+    url: "https://www.globalknowledge.com/en-gb/courses/vmware/virtualisation/vmvcfwn91/v"
+    by: "Global Knowledge"
+    kind: vendor
+  - title: "VCF 9.1: automated VCF and VVF nested lab deployment"
+    url: "https://williamlam.com/2026/05/vcf-9-1-automated-vmware-cloud-foundation-vcf-vmware-vsphere-foundation-vvf-nested-lab-deployment.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-05-14
+  - title: "vcf-fleet-automated-lab-deployment"
+    url: "https://github.com/lamw/vcf-fleet-automated-lab-deployment"
+    by: "William Lam"
+    kind: practitioner
   - title: "Lab deployment scripts"
     url: "https://williamlam.com/lab-deployment-scripts"
     by: "William Lam"
-  - title: "VMware Cloud Foundation homelab hardware options"
-    url: "https://williamlam.com/2024/12/vmware-cloud-foundation-vcf-homelab-hardware-options.html"
+    kind: practitioner
+  - title: "Automated VCF 9.0 lab deployment script"
+    url: "https://williamlam.com/2025/09/automated-vmware-cloud-foundation-vcf-9-0-lab-deployment-script.html"
     by: "William Lam"
-  - title: "How to deploy VVF and VCF 9.0 using VMUG Advantage and VCP-VCF entitlement"
-    url: "https://williamlam.com/2025/07/how-to-deploy-vvf-vcf-9-0-using-vmug-advantage-vcp-vcf-certification-entitlement.html"
+    kind: practitioner
+    date: 2025-09-02
+  - title: "Automated VVF 9.0 lab deployment script"
+    url: "https://williamlam.com/2025/09/automated-vmware-vsphere-foundation-vvf-9-0-lab-deployment-script.html"
     by: "William Lam"
+    kind: practitioner
+    date: 2025-09-03
+  - title: "Automated VCF 5.2 import lab deployment script"
+    url: "https://williamlam.com/2024/07/automated-vmware-cloud-foundation-vcf-5-2-import-lab-deployment-script.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2024-07-31
+  - title: "Automated lab deployment script updated for VCF 5.1"
+    url: "https://williamlam.com/2024/01/automated-lab-deployment-script-updated-to-support-vmware-cloud-foundation-vcf-5-1.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2024-01-31
+  - title: "VCF 9.1.1 in a Box"
+    url: "https://github.com/lamw/vcf-91-in-box"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-10-23
+  - title: "VCF 9.1: VMUG x Intel x Micron single VCF host deployment"
+    url: "https://williamlam.com/2026/06/vcf-9-1-vmug-x-intel-x-micron-collaboration-on-single-vcf-host-deployment-for-vmug-connect.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-06-01
+  - title: "VCF 9.1.1: single ESX host for VCF fleet, workload domain or cluster"
+    url: "https://williamlam.com/2026/09/vcf-9-1-1-single-esx-host-for-vcf-fleet-vcf-workload-domain-or-vcf-cluster.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-09-30
+  - title: "VCF 9.1: comprehensive ESX configuration workarounds for lab deployments"
+    url: "https://williamlam.com/2026/05/vcf-9-1-comprehensive-esx-configuration-workarounds-for-lab-deployments.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-05-11
+  - title: "VCF 9.1: comprehensive VCF Installer and SDDC Manager workarounds for lab deployments"
+    url: "https://williamlam.com/2026/05/vcf-9-1-comprehensive-vcf-installer-sddc-manager-configuration-workarounds-for-lab-deployments.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-05-11
+  - title: "Ultimate lab resource for VCF 9.0"
+    url: "https://williamlam.com/2025/06/ultimate-lab-resource-for-vcf-9-0.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2025-06-25
+  - title: "Quick tip: configure nested ESX cores per CPU for optimal licensing"
+    url: "https://williamlam.com/2025/11/quick-tip-configure-nested-esx-cores-per-cpu-for-optimal-licensing.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2025-11-11
 ---
 
-<InShort>
-- **Holodeck** gives repeatable, isolated, nested environments with built-in DNS, NTP, BGP and DHCP. It is best for teams and training.
-- **Nested automation scripts** deploy a VCF or VVF fleet onto an existing vSphere host in about half an hour. They are best for individuals who rebuild often.
-- **A physical "VCF in a box"** on one or two capable hosts is closest to real hardware behaviour. It is best for testing features like vSAN ESA, NSX edges or the Supervisor.
-- **Hosted hands-on labs** cost nothing and need no setup, but you can't break or keep them.
+| Your situation | Approach | What it costs or needs | Entitlement route | Steps |
+|---|---|---|---|---|
+| Learning 9.1 with no hardware, starting today | Hands-on Labs in the browser | No infrastructure. [About 60 to 150 minutes](https://blogs.vmware.com/cloud-foundation/2026/05/12/vcf-9-1-is-available-explore-the-new-features-in-hands-on-labs/) a lab in the May 2026 set | HOL account only | [HOL-27xx catalog](https://labs.hol.vmware.com/HOL/catalog?search=HOL-27) |
+| Personal learning, and you have a vCenter host with memory free | Lam's nested script | [336 GB of nested host memory](https://github.com/lamw/vcf-fleet-automated-lab-deployment/blob/master/sample-william-vcf-9.1.0.ps1) for management (3 × 112), a [routable portgroup, 17 addresses](https://github.com/lamw/vcf-fleet-automated-lab-deployment) | [VMUG Advantage + VCP-VCF](https://blogs.vmware.com/code/2025/03/19/vmug-advantage-home-lab-license-guide/), $335 in year one | [Lam, 14 May 2026](https://williamlam.com/2026/05/vcf-9-1-automated-vmware-cloud-foundation-vcf-vmware-vsphere-foundation-vvf-nested-lab-deployment.html) |
+| Personal learning, buying one machine | Lam's physical build, one host | [14 cores, 256 GB, 2 × 1 TB NVMe](https://williamlam.com/2026/06/vcf-9-1-vmug-x-intel-x-micron-collaboration-on-single-vcf-host-deployment-for-vmug-connect.html). No price published | [VMUG Advantage + VCP-VCF](https://blogs.vmware.com/code/2025/03/19/vmug-advantage-home-lab-license-guide/) | [VCF 9.1.1 in a Box, 23 Oct 2026](https://github.com/lamw/vcf-91-in-box) |
+| vSAN and vMotion must behave as they do across hosts | Lam's physical build, three hosts | $7,281 for three hosts, then switch and tier drives. 5 VLANs | [VMUG Advantage + VCP-VCF](https://blogs.vmware.com/code/2025/03/19/vmug-advantage-home-lab-license-guide/), or a subscription | [VCF 9.1.1 in a Box](https://github.com/lamw/vcf-91-in-box) |
+| A team needs identical environments | Holodeck | 48 cores, 650 GB, 2.2 TB, plus the Holorouter | Your subscription or partner NFR. 90 days until a licence is applied | [Holodeck note](/vcf/library/labs/holodeck/) |
+| Rehearsing an employer's or customer's upgrade | Nested lab at their starting version | As the nested or Holodeck rows | Subscription or NFR. VMUG keys bar work use | [Lam's script index](https://williamlam.com/lab-deployment-scripts) |
+| Short feature check, and your employer holds a subscription | Any build above in evaluation mode | Up to 90 days | [Downloads still need entitlement](https://github.com/lamw/vcf-fleet-automated-lab-deployment) | <KB id={437242} /> |
+| You want an instructor | Paid course with lab exercises | £3,995 headline, £4,599 on dated sessions, excl. VAT, five days | None to arrange | [Global Knowledge](https://www.globalknowledge.com/en-gb/courses/vmware/virtualisation/vmvcfwn91/v) |
+| You want real metal you don't own | Amazon EVS | $35,049.51 a month in AWS's four-host example | Your own VCF licences [after evaluation](https://aws.amazon.com/blogs/migration-and-modernization/vmware-cloud-foundation-vcf-9-0-and-9-1-on-amazon-evs/) | [AWS pricing](https://aws.amazon.com/evs/pricing/) |
 
-All but the last need binaries and an entitlement, such as a trial, NFR, or VMUG Advantage with VCP-VCF.
-</InShort>
+Start with Hands-on Labs, because the first useful hour costs nothing and may answer the question. Past that, the licence decides more than the hardware does. The cheap route bars work use, so a lab for your job needs your employer's or partner's entitlement before anyone prices servers. Hardware figures come from [Sizing a VCF 9.1 lab](/vcf/library/labs/sizing-a-vcf-9-lab/), which also says what to cut.
 
-<Compare v5Label="Nested (Holodeck or scripts)" v9Label="Physical box" title="Nested or physical" rows={[
-  ["Realism", "Good for workflows. Hardware behaviour simulated.", "Real NICs, real NVMe, real vSAN ESA behaviour"],
-  ["Resets", "Minutes: redeploy", "Hours: reinstall"],
-  ["Hardware", "One large host, or a cluster with spare capacity", "One or more hosts that meet VCF 9 minimums"],
-  ["Networking", "Self-contained, one external IP (Holodeck)", "You build VLANs, routing and DNS"],
-  ["Best for", "Upgrades, lifecycle, break-fix practice, teaching", "Feature testing, performance shape, hardware quirks"],
-]} />
-
-## Match the lab to the goal
-
-| Goal | Best fit |
-|---|---|
-| Learn the 9.x fleet model and workflows | Hosted labs first, then Holodeck |
-| Rehearse a customer's 5.2 to 9.x upgrade | Nested lab built at the customer's starting version |
-| Practise troubleshooting | Nested lab you can snapshot and break. See [break-fix exercises](/vcf/library/labs/break-fix-exercises/). |
-| Test vSAN ESA, NVMe tiering or edge performance | Physical box |
-| Develop automation | Any lab, plus API access. See [PowerCLI and the APIs](/vcf/library/labs/powercli-and-apis/). |
-| Teach a team | Holodeck: one standard environment per student |
-
-## Entitlement and binaries
-
-You need an entitlement to download VCF 9 binaries and, in 9.0, a download token for the depot. VMUG Advantage members who hold the VCP-VCF certification are entitled to non-commercial licenses. Trials and partner NFR licenses are the other routes. Everything also runs in **90-day evaluation** after deployment, which is enough for a short project. Plan the depot early: see [an offline depot for your lab](/vcf/library/upgrades/getting-binaries/).
-
-<Callout type="field">
-Keep one long-lived lab at the version your estates run, and build disposable ones for the version they're moving to. Upgrade rehearsals are only useful when the starting point matches.
+<Callout type="note" title="Corrected on 7 November 2026">
+This note said nested scripts deploy a fleet in about half an hour. Lam's roughly 25 minutes covers the stages up to the start of the fleet deployment, and his README says the deployment can take several hours. It also listed VMUG with VCP-VCF without the personal-use limit, and didn't mention that passing the exam gates the keys.
 </Callout>
 
-## Pitfalls
+## Getting a licence
 
-- **Under-sizing memory.** Size it first. See [sizing a VCF 9 lab](/vcf/library/labs/sizing-a-vcf-9-lab/).
-- **Treating lab workarounds as production advice.** Label them clearly. See [ESX settings for labs](/vcf/library/labs/esx-settings-for-labs/).
-- **Building a lab nobody can rebuild.** Script it, or use a toolkit that does.
+Evaluation mode doesn't solve the first problem. A 9.x deployment runs [90 days without a licence](https://vmware.github.io/Holodeck/latest/) (60 for 5.2), but the binaries and the nested ESX appliance [need an active entitlement](https://github.com/lamw/vcf-fleet-automated-lab-deployment) to download. On those terms, someone with no entitlement can't reach evaluation mode alone.
+
+| Route | Who qualifies | Cost | Term | Rules that bite |
+|---|---|---|---|---|
+| [VMUG Advantage + VCP-VCF](https://blogs.vmware.com/code/2025/03/19/vmug-advantage-home-lab-license-guide/) | Members who pass the exam | [$210 a year](https://vmug.com/advantage), plus an exam at [$250](https://blogs.vmware.com/cloud-foundation/2024/05/06/exciting-updates-to-the-vmware-certification-program/) less [$125 for members](https://vmug.com/advantage) | One year, refreshable for two more | Personal use only, not "work environments of any kind". Clock runs from your exam pass date |
+| VCP certification alone | VCP-VVF or VCP-VCF holders | Exam only | One year | [32 cores of vSphere Standard](https://blogs.vmware.com/cloud-foundation/2025/04/14/free-home-lab-licenses-for-vmware-certified-professionals/). No VCF |
+| [Partner NFR](https://knowledge.broadcom.com/external/article/373980) | Pinnacle, Premier or Select resellers in the Broadcom Advantage Partner program | Not stated | One year, renewal requested within 30 days of expiry | Test, enablement and pre-sales labs. No production, customer-hosted labs, customer POCs or revenue-generating use. Customers can't receive one |
+| [Trial](https://community.broadcom.com/vmware-cloud-foundation/discussion/vmware-cloud-foundation-trials-license) | Enterprise customers with a site ID, per a July 2025 forum reply | Not stated | Up to 90 days, "Try & Buy" | Forum post by an unaffiliated user, so confirm through the Trials & Beta tab or your account team |
+| Your subscription | Current VCF or VVF customers | Already paid | Your contract | Holodeck's docs send you to [your account team](https://vmware.github.io/Holodeck/latest/) for licences. Ask whether lab cores count against what you bought |
+
+The VMUG sum is $210 + ($250 − $125) = $335 for year one, and 3 × $210 + $125 = $755 over three years if prices hold <AsOf date="2026-11-07" />. VMUG also [advertises free on-site exams](https://vmug.com/advantage) at its 2026 Connect events, which have their own ticket. Buy the membership before the exam, because the discount needs it and joining later [won't extend the licence](https://blogs.vmware.com/code/2025/03/19/vmug-advantage-home-lab-license-guide/). Use the same email for VMUG and the exam. Requests go through Broadcom's certification portal, and delivery [can take over a day](https://blogs.vmware.com/code/2025/03/19/vmug-advantage-home-lab-license-guide/).
+
+The 128 cores cover less than they seem to if you go nested. Lam's [licensing tip of 11 Nov 2025](https://williamlam.com/2025/11/quick-tip-configure-nested-esx-cores-per-cpu-for-optimal-licensing.html) shows nested CPU layout changing the count: a 32 vCPU host needs 32 core licences as one CPU and 512 as 32 single-core CPUs. His [repo sample](https://github.com/lamw/vcf-fleet-automated-lab-deployment/blob/master/sample-william-vcf-9.1.0.ps1) allocates 3 × 32 = 96 for management, which fits. Add his workload domain at 3 × 16 = 48 and it's 144. That's an inference from his tip and sample, and Broadcom doesn't state it, so skip the workload domain or trim its hosts if you mean to stay licensed. Three physical 16-core hosts need 48.
+
+An NFR can serve several labs. Keys [may be reused](https://knowledge.broadcom.com/external/article/373980) across demo environments, including Holodeck, if the request says so. A paid customer rehearsal sits close to the "revenue-generating" exclusion, so ask your partner manager first.
+
+### Where the terms are unclear
+
+**Whether the VMUG route reaches 9.1 cleanly.** Check this before paying, because it's the one gap that could strand you. VCF 9.1 [replaced download tokens with an Activation Code](https://knowledge.broadcom.com/external/article/443647), generated in the VCF Business Services console. Broadcom's VMUG guide still describes generating "VCF 9 Tokens" and doesn't mention 9.1 or activation codes. A [12 May 2026 reader comment](https://williamlam.com/2025/07/how-to-deploy-vvf-vcf-9-0-using-vmug-advantage-vcp-vcf-certification-entitlement.html) on Lam's post reports a token that failed in the Installer, with no reply. Ask in the VMUG community whether certified members currently get an activation code, or plan on 9.0.
+
+**How long the licence lasts.** The guide says VCF for three years, a one-year token, and refreshes for two more years. Those fit if three years means one plus two refreshes, though that's a reading the guide doesn't confirm.
+
+**The refresher.** Tom Fenton's Explore report describes an [open-book, 30-question exam every 12 months](https://virtualizationreview.com/articles/2026/09/10/vcf-ai-assistants-gated-lab-licenses-and-a-new-vegas-venue-my-highlights-of-explore-2026.aspx). The guide says under 20 questions, within 60 days of expiry, with a 14-day wait before a retake. The press report is newer and second-hand, so expect a short exam and read your VMUG email for the current version.
+
+**Which exams qualify.** The [April 2025 post](https://blogs.vmware.com/cloud-foundation/2025/04/14/free-home-lab-licenses-for-vmware-certified-professionals/) lists VCP-VCF Administrator, Architect and Support. Fenton names Administrator and Architect. Take one of those two.
+
+**Hands-on Labs pricing.** Broadcom called them ["completely free"](https://blogs.vmware.com/cloud-foundation/2025/06/19/vmware-cloud-foundation-9-0-hands-on-labs-dive-in-and-unlock-your-potential/) in June 2025, and the [September 2026 post](https://blogs.vmware.com/hol/2026/09/the-next-generation-of-hands-on-labs.html) retiring the HOL-26xx labs doesn't mention price.
+
+The VMUG keys also carry [vDefend at 128 cores and ALB at 12 tokens](https://blogs.vmware.com/code/2025/03/19/vmug-advantage-home-lab-license-guide/), in the guide's terms.
+
+## Physical or nested
+
+Choose physical when the behaviour under test lives in the hardware: vSAN ESA, NVMe tiering, edge performance. Choose nested when you rebuild often and already own the capacity. Lam himself [moved to physical](https://williamlam.com/2026/05/vcf-9-1-automated-vmware-cloud-foundation-vcf-vmware-vsphere-foundation-vvf-nested-lab-deployment.html), mainly for lack of resources.
+
+The three-host figure is from his bill of materials: $789 + $1,195 + $44.09 + $399 = $2,427.09 a host, so $7,281.27 for three. It leaves out the tiering NVMe, which he lists as previously owned, plus switching and transceivers. Only the memory carries a date: his row lists $279.99, then "$1195 USD as of 01/07/26". The sum takes the dated figure. At $279.99 three hosts would be $4,536.24, so check that price first. The one-host spec comes from a [Lenovo ThinkStation P5](https://williamlam.com/2026/06/vcf-9-1-vmug-x-intel-x-micron-collaboration-on-single-vcf-host-deployment-for-vmug-connect.html) given away at VMUG Connect events, so it has no price to borrow. On one host, a new fleet works from the 9.1.1 UI, but workload domains and clusters [still need the SDDC Manager API](https://williamlam.com/2026/09/vcf-9-1-1-single-esx-host-for-vcf-fleet-vcf-workload-domain-or-vcf-cluster.html).
+
+## Which nested script
+
+| Target | Script | Bring-up |
+|---|---|---|
+| VCF or VVF 9.1 | [Main repo](https://github.com/lamw/vcf-fleet-automated-lab-deployment), updated for 9.1 on 12 May 2026 | VCF Installer |
+| VCF 9.0 | [Lam, 2 Sep 2025](https://williamlam.com/2025/09/automated-vmware-cloud-foundation-vcf-9-0-lab-deployment-script.html) | VCF Installer |
+| VVF 9.0 | [Lam, 3 Sep 2025](https://williamlam.com/2025/09/automated-vmware-vsphere-foundation-vvf-9-0-lab-deployment-script.html) | VCF Installer |
+| 5.2, starting from vSphere | [Import lab, 31 Jul 2024](https://williamlam.com/2024/07/automated-vmware-cloud-foundation-vcf-5-2-import-lab-deployment-script.html) | VCF Import Tool |
+| 5.1 | [Lam, 31 Jan 2024](https://williamlam.com/2024/01/automated-lab-deployment-script-updated-to-support-vmware-cloud-foundation-vcf-5-1.html) | Cloud Builder |
+
+The 9.1 run deploys three nested ESX VMs, initialises the Installer, syncs the depot, generates the JSON and starts the fleet deployment, with settings in one file passed through `-EnvConfigFile`. These details sit across his post, its comments and the README, so check them before the first run:
+
+- Binaries come first. An offline depot must have no basic auth for the script to use it, so build it with [Getting binaries](/vcf/library/upgrades/getting-binaries/) to suit. The README's online option still says "Download Token", which 9.1 no longer accepts.
+- The 9.1 nested ESX appliance has no default password, so set one at OVF deployment.
+- A [reader reports](https://williamlam.com/2026/05/vcf-9-1-automated-vmware-cloud-foundation-vcf-vmware-vsphere-foundation-vvf-nested-lab-deployment.html) the script waiting forever on the OVA until PowerCLI is set to ignore invalid certificates. The script doesn't set that itself.
+- Log Management isn't deployed. Lam calls it a Day-N activity in the comments.
+- Every name in the file needs a DNS record. A hard-coded domain was [reported on 31 May 2026 and fixed on 1 June](https://williamlam.com/2026/05/vcf-9-1-automated-vmware-cloud-foundation-vcf-vmware-vsphere-foundation-vvf-nested-lab-deployment.html), so pull the latest copy before reporting a naming bug.
+
+Keep one environment file per lab variant in version control, without passwords. Upgrade rehearsals need a starting point that matches the real estate, so keep a long-lived lab at that version and disposable ones at the target. Copy the estate's naming and network shape with placeholder addresses. Write down how long each phase takes, but don't quote those times as a production window, since nested timings won't predict real hardware.
+
+## Lab hardware misbehaving
+
+<Callout type="warn" title="Lab workarounds, not production settings">
+Lam publishes these lists for "non-production usage", functional testing and education. Neither presents them as supported, so treat every one as unsupported for production. Nothing here recommends them.
+</Callout>
+
+Find your symptom, then read that section of his page for your build.
+
+| Symptom | Where |
+|---|---|
+| High CPU on consumer AMD (Zen 4 or 5), slow entropy | [ESX workarounds, 11 May 2026](https://williamlam.com/2026/05/vcf-9-1-comprehensive-esx-configuration-workarounds-for-lab-deployments.html): AMD Ryzen and CPU Entropy |
+| VMs fail to power on with NVMe tiering on consumer AMD | Same page: AMD Ryzen and NVMe Tiering |
+| NSX Edge or VNA won't deploy on consumer AMD, which lacks DPDK | Same page: AMD Ryzen and NSX Edge |
+| Poor throughput on Intel X710, including the MS-A2 | Same page: Intel x710 and LRO/TSO |
+| vSAN compression hurting a CPU-limited host | Same page: vSAN Compression Algorithm |
+| Installer error on mixed hardware vendors | Same page: Fake Server Hardware Vendor |
+| Nested vSAN on physical vSAN fails or won't reclaim space | Same page: the two nested vSAN entries |
+| pNIC error alarms in a small lab | Same page: vSAN High pNIC Error Rate |
+| Installer refuses host count, 10 GbE, HCL, MTU, or times out | [Installer and SDDC Manager workarounds, 11 May 2026](https://williamlam.com/2026/05/vcf-9-1-comprehensive-vcf-installer-sddc-manager-configuration-workarounds-for-lab-deployments.html) |
+| A lab on 9.0, or checking a CPU or NIC against ESX 9 | [Ultimate Lab Resource, 25 Jun 2025](https://williamlam.com/2025/06/ultimate-lab-resource-for-vcf-9-0.html) |
+
+Apply only what your hardware needs, and note why. Keep the settings in one script headed "LAB ONLY", out of any host profile or template shared with production. Re-check after each upgrade: his HTTP depot workaround became [natively supported in 9.1.1](https://williamlam.com/2026/05/vcf-9-1-comprehensive-vcf-installer-sddc-manager-configuration-workarounds-for-lab-deployments.html), and his nested tiering workaround for 9.0 [isn't needed from 9.1](https://williamlam.com/2026/05/vcf-9-1-automated-vmware-cloud-foundation-vcf-vmware-vsphere-foundation-vvf-nested-lab-deployment.html). Don't benchmark a nested lab, since these settings get it running and say nothing about speed.
+
+Once a lab is up, [break-fix exercises](/vcf/library/labs/break-fix-exercises/) and [PowerCLI and the APIs](/vcf/library/labs/powercli-and-apis/) are the natural next pages.

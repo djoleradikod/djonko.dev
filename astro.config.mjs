@@ -38,6 +38,8 @@ export default defineConfig({
     '/vcf/library/troubleshooting/certificate-failures/': '/vcf/library/day-2/certificates-in-9/',
     '/vcf/library/troubleshooting/depot-and-download-failures/': '/vcf/library/upgrades/getting-binaries/',
     '/vcf/library/labs/offline-depot-in-a-lab/': '/vcf/library/upgrades/getting-binaries/',
+    '/vcf/library/labs/esx-settings-for-labs/': '/vcf/library/labs/choosing-a-lab-approach/',
+    '/vcf/library/labs/nested-lab-automation/': '/vcf/library/labs/choosing-a-lab-approach/',
   },
   prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
   integrations: [mdx(), sitemap({ filter: (page) => !HIDDEN.test(new URL(page).pathname) }), devMedia],

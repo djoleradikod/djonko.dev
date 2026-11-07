@@ -1,76 +1,97 @@
 ---
 title: "Health checks and SoS: what to run, where to look, and what changed in 9.x"
-description: "The SoS utility is still the backbone of VCF supportability, but 9.x added options, moved some bundles into VCF Operations and gave the services runtime its own health views. A practical map of what to run before a change and before a support case."
+description: "On 9.1, sos --health-check leaves out management services, VCF Automation and VCF Operations, and SoS defaults to the management domain. Run it with --domain-name ALL, read the Health and Diagnostics dashboard, and collect the bundle that matches what failed."
 category: day-2
 order: 9
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
 kbs: [385749, 402476, 439473, 436398, 417255, 451560, 444466, 443789, 433768]
 sources:
-  - title: "SoS utility options for SDDC Manager"
+  - title: "Collecting SDDC Manager and VMSP logs"
     url: "https://knowledge.broadcom.com/external/article/385749"
     by: "Broadcom KB"
-  - title: "Collecting VCF 9.x log bundles, including management services"
+    kind: broadcom
+  - title: "Collecting VCF Installer logs and VMSP logs"
     url: "https://knowledge.broadcom.com/external/article/402476"
     by: "Broadcom KB"
-  - title: "VCF management services health and diagnostics"
+    kind: broadcom
+  - title: "VCF Management Services: Health and Diagnostics"
     url: "https://knowledge.broadcom.com/external/article/417255"
     by: "Broadcom KB"
-  - title: "Troubleshooting VMware Cloud Foundation or vSphere Foundation deployments (9.1)"
+    kind: broadcom
+  - title: "Troubleshooting VMware Cloud Foundation or vSphere Foundation Deployments (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Troubleshooting Blueprint: Troubleshooting Concepts"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "What's new in VCF Operations 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VCF Operations 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1 Frequently Asked Questions"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
 ---
 
 <InShort>
-`/opt/vmware/sddc-support/sos` on SDDC Manager is still where health checks and log bundles start. `sos --health-check` is the fastest way to see **stale locks** and **disconnected accounts** before they block a change (<KB id={439473} />, <KB id={436398} />). What changed in 9.x is everything around it. VCF Operations shows fleet and component health, 9.1 adds a **management services** dashboard with volume and pod health (<KB id={417255} />), and bundles for VCF Operations, VCF Automation and the runtime come from their own consoles or from fleet lifecycle, not only from SoS.
+A green `sos --health-check` covers less than it appears to. On 9.1 it [leaves out VCF management services, VCF Automation and VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html), and SoS operations default to the management domain. Before a change, run it with `--domain-name ALL` and read the Health and Diagnostics dashboard in VCF Operations as well. For a support case, use Log Assist for the components it covers while VCF Operations is up, and the table below otherwise.
 </InShort>
 
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to say `--domain-name MANAGEMENT` narrows a slow run, but MANAGEMENT is already the SoS default. It also gave the 80, 90 and 95% bands as volume thresholds, listed pod health on the dashboard and `LCM` as a lock owner, offered `--vcf-installer-logs` as an SDDC Manager option, and sent VCF Automation bundles through fleet lifecycle; the sources support none of those, and the versions below replace them.
+</Callout>
+
 <Compare rows={[
-  ["Health view", "SDDC Manager dashboard, sos --health-check", "VCF Operations: VCF Health and the fleet views. 9.1 adds the management services dashboard with thresholds."],
-  ["Log bundle, core", "sos --sddc-manager-logs, --collect-all-logs", "The same, plus --vcf-installer-logs. 9.0 adds --operations-logs and --operations-fleet-logs. 9.1 adds --vcf-mgmt-svcs-logs and --hcx-manager-logs."],
-  ["Management components", "Aria Suite Lifecycle or each product", "Fleet lifecycle: component > Logs > Generate. VCF Operations bundles from its own Control Panel."],
-  ["When the runtime is unhealthy", "Not applicable", "A KB script collects the runtime bundle without fleet lifecycle (<a href='https://knowledge.broadcom.com/external/article/444466' target='_blank' rel='noopener'>KB 444466</a>)"],
+  ["Health check", "SDDC Manager dashboard, sos --health-check", "sos --health-check from SDDC Manager, which on 9.1 excludes management services, VCF Automation and VCF Operations. The Health and Diagnostics dashboard covers the management services, and VCF Operations also has VCF Health and the fleet views."],
+  ["Log flags", "--sddc-manager-logs, --collect-all-logs, --automation-logs, --operations-for-logs, --lifecycle-logs", "The 9.x list adds --operations-logs and --operations-fleet-logs. The 9.1 list adds --vcf-mgmt-svcs-logs and --hcx-manager-logs, and neither it nor the 9.1 TechDocs page has --operations-fleet-logs or --lifecycle-logs (<a href='https://knowledge.broadcom.com/external/article/385749' target='_blank' rel='noopener'>KB 385749</a>)."],
+  ["Management component bundles", "Aria Suite Lifecycle or each product", "VCF Operations from its own Control Panel, VCF Automation from sos --automation-logs, Identity Broker from fleet lifecycle."],
+  ["Fleet lifecycle unavailable", "Not applicable", "A script collects the management services bundle through the VCF Services Runtime API (<a href='https://knowledge.broadcom.com/external/article/444466' target='_blank' rel='noopener'>KB 444466</a>)."],
 ]} />
 
-## The health check before every change
+Anything that scripts SoS against the older flags needs a re-test on 9.1. TechDocs points to `sos --help` for what a given appliance supports <AsOf date="2026-11-07" />.
 
-Run it before an upgrade, a password rotation, a host commission or a certificate replacement. It takes minutes and it answers two questions that can stop a workflow halfway: is something already holding a lock, and are the stored credentials still valid?
+## The health check before a change
+
+Locks and disconnected accounts are findings that can stop a workflow halfway. On VCF 5.x and 9.0.x a stale lock [fails backup and password rotation tasks and takes host commissioning and backup target editing out of the UI](https://knowledge.broadcom.com/external/article/439473), so run the check before any of those, before an upgrade and before a certificate replacement.
 
 ```bash
-# On SDDC Manager, as root
-/opt/vmware/sddc-support/sos --health-check
+# On SDDC Manager: SSH as vcf, then su to root
+/opt/vmware/sddc-support/sos --health-check --domain-name ALL
 
-# Narrow the scope when the full run is slow
-/opt/vmware/sddc-support/sos --health-check --domain-name MANAGEMENT
+# The same, showing failures and warnings only
+/opt/vmware/sddc-support/sos --health-check --domain-name ALL --short
 ```
 
-Read the output for three things:
+`--domain-name` [defaults to MANAGEMENT and takes ALL](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html). The page states that for SoS operations in general and doesn't spell it out for `--health-check`, so a plain run reading as management-only is an inference: confirm it on your appliance before trusting a clean result for a workload domain change.
 
-- **Active locks** owned by `OPERATIONS_MANAGER` or `LCM`. If no task is running, a lock is stale. See [stuck tasks and locks](/vcf/library/day-2/stuck-tasks-locks/).
-- **"Failed to get details"** against an account. That usually means the stored password no longer matches the component, often after an out-of-band change (<KB id={436398} />).
-- **Red items you can explain.** Some checks have known false positives in specific releases, so read the release notes before chasing a red line that only appeared after an upgrade.
+After deployment, run health checks from SDDC Manager. The Installer carries a subset of the options, and `--dns-health`, `--password-health`, `--storage-health` and `--version-health` (bill of materials drift) are SDDC Manager only. Their narrow scope suits a re-test after a fix, which is inference rather than TechDocs advice. `--force` runs SoS while workflows are in progress, and TechDocs says to use it with caution. Health checks are among the [workflows that can leave a lock behind](https://knowledge.broadcom.com/external/article/439473) if they time out, so a quiet window is the safer call. That advice is inference from the KB's cause.
 
-## Log bundles, by situation
+Two results have a documented fix:
 
-| Situation | What to collect |
-|---|---|
-| SDDC Manager workflow failed | `sos --sddc-manager-logs --zip` |
-| Failure spans hosts, vCenter or NSX | `sos --collect-all-logs --zip --domain-name <name>` |
-| 9.1 runtime, fleet lifecycle or depot | Add `--vcf-mgmt-svcs-logs`. If it fails with `access_denied`, restart `commonsvcs` and retry (<KB id={451560} />). |
-| Runtime unhealthy, fleet lifecycle down | The standalone runtime bundle script (<KB id={444466} />) |
-| VCF Operations | Its Control Panel: Support Bundles, Light or Full (<KB id={443789} />) |
-| VCF Automation, identity broker | Fleet lifecycle: component > Logs > Generate (<KB id={433768} />) |
-| Deployment from the installer | The installer UI support bundle in 9.1, or `--vcf-installer-logs` (<KB id={402476} />) |
+- **An error naming active locks for `OPERATIONS_MANAGER`** when the UI shows earlier tasks finished. The cause is a stale record in the `lock` table of the `platform` database, and the fix is a database edit after a powered-off snapshot of SDDC Manager. <KB id={439473} /> is scoped to VCF 5.x and 9.0.x, so on 9.1 start from [stuck tasks and locks](/vcf/library/day-2/stuck-tasks-locks/).
+- **`Failed to get details` in the State column for an ESXi root account**, while root login still works. The stored password no longer matches, which may follow a change made outside SDDC Manager or VCF Operations. On SDDC Manager 9.0 the fix is Remediate Password in VCF Operations, using the password that works today (<KB id={436398} />). On 9.1 read [passwords and service accounts](/vcf/library/day-2/passwords-service-accounts/) first.
 
-Use `--log-dir <path>` when the default location is short on space, and check `/var/log/vmware/vcf/sddc-support/` for the output.
+## The management services dashboard
 
-## The 9.1 management services dashboard
+Use the [VCF Management Services: Health and Diagnostics](https://knowledge.broadcom.com/external/article/417255) dashboard for the management services, which the health check leaves out. The KB names no release, but its paths run through Build > Lifecycle, [where Lifecycle sits on 9.1.0](https://knowledge.broadcom.com/external/article/433768), so read it as 9.1 guidance. Its utilisation summary sets these bands for overall memory, node memory and disk:
 
-The runtime is Kubernetes underneath, but the first stop is the dashboard, not `kubectl`. It shows node and pod health, volume utilisation and backup status for the management services, with documented thresholds (<KB id={417255} />):
-
-<Diagram viewBox="0 0 760 150" label="Volume utilisation thresholds on the management services dashboard" caption="Act at warning, not at critical. Check log management and the depot first.">
+<Diagram viewBox="0 0 760 150" label="Utilisation bands for overall memory, node memory and disk on the management services dashboard" caption="At Severe or Critical, scale the services runtime to its next size through Build > Lifecycle > VCF services runtime > Actions (KB 417255).">
   <rect class="box v9" x="20" y="40" width="300" height="56" rx="8"/>
   <text class="t" x="170" y="66" text-anchor="middle">Good</text>
   <text class="s" x="170" y="86" text-anchor="middle">up to 80%</text>
@@ -83,18 +104,40 @@ The runtime is Kubernetes underneath, but the first stop is the dashboard, not `
   <rect class="box warn" x="610" y="40" width="130" height="56" rx="8"/>
   <text class="t" x="675" y="66" text-anchor="middle">Critical</text>
   <text class="s" x="675" y="86" text-anchor="middle">over 95%</text>
-  <text class="lbl" x="20" y="125">Plan capacity here</text>
-  <text class="lbl" x="480" y="125">Lifecycle tasks may fail here</text>
+  <text class="lbl" x="480" y="125">Scale the runtime up</text>
 </Diagram>
 
-When the dashboard is not enough, the read-only commands in [services runtime and kubectl](/vcf/library/troubleshooting/services-runtime-kubectl/) are the next step.
+Most of what the KB adds is how long to wait before acting on a red item:
 
-<Callout type="field">
-Attach the health check output to the change record. It costs nothing, it proves the platform was clean before you started, and it is ready for a support engineer if the change goes wrong.
+| Dashboard signal | When to act | What to do |
+|---|---|---|
+| Component unhealthy (any replica down) | Status refreshes every 15 minutes, so watch for 30 minutes | Check maintenance, alerts and stability, try a lifecycle restart, then collect logs and open a case |
+| Kernel deadlock or Kubelet not ready | Replacement starts after 3 minutes and takes up to 1.5 hours | Wait for the node to be replaced |
+| Disk pressure on a node | After 15 minutes or more | Check VM network and storage latency and APD or PDL alerts, then reduce load or add instances |
+| Memory pressure | Sustained over an hour | One node: reduce its load. Several nodes: scale up |
+| Component volume near capacity | The KB gives no percentage | Resize through the lifecycle component action |
+| Backup failures | On failure | Check SFTP reachability, free space and the password in Backup and Restore |
+
+On 9.1.0, watch the logging disk as well. VCF Operations 9.1.1.0 lists as resolved a services runtime issue where a [full logging disk fails platform health checks and blocks platform operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html). When the dashboard isn't enough, the next step is the read-only commands in [services runtime and kubectl](/vcf/library/troubleshooting/services-runtime-kubectl/).
+
+## Log bundles, by what failed
+
+[Log Assist can send bundles to Broadcom support from the VCF Operations console](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) (FAQ, 4 Nov 2026), and 9.1 [adds automatic bundle generation](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html) for the VCF Operations cluster, VCF management services, cloud proxies, log management and the identity broker. That makes Log Assist look like the shorter path for those components while VCF Operations is up, though neither page says so. For everything else, and when it's down:
+
+| What failed | What to collect |
+|---|---|
+| SDDC Manager workflow | `sos --sddc-manager-logs --zip` (<KB id={385749} />) |
+| Hosts, vCenter or NSX | `sos --collect-all-logs --zip --domain-name <name>`, or `ALL`. On SDDC Manager this [excludes WCP and system debug logs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html), so add `--wcp-logs` for a WCP problem |
+| 9.1 management services, including the runtime, fleet lifecycle or depot | `sos --sddc-manager-logs --vcf-mgmt-svcs-logs --zip` (<KB id={385749} />) |
+| Same, ending in `access_denied` | A bundle still appears, with the subtask FAILED in `report.json`. Run `systemctl restart commonsvcs` on SDDC Manager and collect again, because `svc-sddc-manager-admin` is out of sync (<KB id={451560} />) |
+| Fleet lifecycle UI or API unavailable | The script in <KB id={444466} />. Its lookback defaults to 2 days, so extend it for an older fault |
+| VCF Operations | Operate tab (9.1), Administration > Control Panel > Support Bundles > Add, Light or Full (<KB id={443789} />). SoS `--operations-logs` needs `--setup-json` on SDDC Manager and omits cloud proxy logs |
+| VCF Automation | `sos --automation-logs` ([TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html)) |
+| Identity broker | Fleet Management > Lifecycle (Build > Lifecycle on 9.1.0) > VCF Management > Components > Identity Broker > More Actions > Logs > Generate Logs (<KB id={433768} />) |
+| Deployment, on the Installer | 9.1: Support Bundle in the Installer's user menu, or `sos --vcf-installer-logs --vcf-mgmt-svcs-logs --zip` (<KB id={402476} />). [SoS collects only from the latest deployment](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html) |
+
+Output lands in [`/var/log/vmware/vcf/sddc-support/`](https://knowledge.broadcom.com/external/article/385749) unless `--log-dir` points elsewhere, which you'll want when that location is short on space. Check two defaults before a second run: SoS [removes existing log folders unless you pass `--no-clean-old-logs`](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html), so copy the first bundle off or pass that flag, and collection runs a health check unless you pass `--no-health-check`.
+
+<Callout type="analysis" title="Where SoS fits in an incident">
+["The SoS Utility is not a debug tool"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html), and the method in Broadcom's [Troubleshooting Blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html) (5 Nov 2026) runs through VCF Operations instead: narrow to the exact period, check events for a change, and use the Workbench "Potential Evidence" tab rather than scanning logs by hand. So diagnose in VCF Operations and treat a bundle as the evidence you hand to support. Collect it when you open the case and give the failure time, starting narrow and adding scope when the logs point somewhere else. If a disk fills mid-incident, collect to another `--log-dir` before cleaning, since what you'd delete may be the evidence. For a change record, `--json-output-dir` writes the health check results to a file, and that file says nothing about the components the check excludes, so record the dashboard state beside it.
 </Callout>
-
-## Pitfalls
-
-- **Collecting everything, every time.** A full bundle across every domain can take an hour and fill a partition. Start narrow and add scope when the logs point somewhere else.
-- **Cleaning before collecting.** If a disk is full mid-incident, collect a bundle first, then clean. The rotated logs may be the evidence.
-- **Waiting for support to ask.** Collect the bundle when you open the case, with the exact time of the failure, so the first reply can be analysis rather than a request.

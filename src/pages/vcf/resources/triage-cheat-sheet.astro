@@ -116,7 +116,7 @@ kubectl -n vcf-fleet-lcm exec vcf-fleet-lcm-db-0 -- patronictl list  # one leade
 # Changes. Stuck fleet or SDDC lifecycle task (KB 435569): report, then restart one service
 lcm_service_support.sh -t
 lcm_service_support.sh -r fleetbuild    # or fleetupgrade, sddcbuild, sddcupgrade`} />
-    <p class="small muted">Find <code>lcm_service_support.sh</code> and run it as <a href={kb(435569)} target="_blank" rel="noopener">KB 435569</a> describes for your build. Never delete pods or <code>vcf-svc-*</code> VMs to restart them. More in <a href="/vcf/library/troubleshooting/services-runtime-kubectl/">the services runtime for VI admins</a>.</p>
+    <p class="small muted">Find <code>lcm_service_support.sh</code> and run it as <a href={kb(435569)} target="_blank" rel="noopener">KB 435569</a> describes for your build. Don't delete pods or <code>vcf-svc-*</code> VMs to restart them, unless a KB names them for your symptom, as <a href={kb(443718)} target="_blank" rel="noopener">KB 443718</a> does. More in <a href="/vcf/library/troubleshooting/services-runtime-kubectl/">the services runtime for VI admins</a>.</p>
   </section>
 
   <p class="small muted">Not official vendor guidance. Confirm against current Broadcom documentation for your build before changing production.</p>
