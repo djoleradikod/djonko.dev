@@ -11,6 +11,10 @@ reviewed: 2026-11-07
 reviewDue: 2027-02-15
 kbs: [440471, 440685, 443082, 441251, 441526, 441747, 445428, 451990, 442564, 452095, 424533, 443240, 443251, 444094, 456295, 441175]
 sources:
+  - title: "License Server Recovery (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-recovery.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
   - title: "License Server Overview (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview.html"
     by: "Broadcom TechDocs"
@@ -113,11 +117,13 @@ Protection is [vSphere HA on the cluster that hosts it](https://techdocs.broadco
 
 [Backup isn't required: deploy a new instance and migrate the licenses within 90 days](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections(1)/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html), the blueprint says. The [overview](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview.html) agrees on the method and gives no deadline, adding that VCF Operations restores assignment data to the new instance.
 
+[License Server Recovery](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-recovery.html) sets the order. You can't restore a server from backup or snapshot, or clone it. Deploy a new server and register it with the console, then delete the unavailable server's registration, add the deleted server's licenses to the new one and import the license file. The licenses go back to the same assets automatically.
+
 <Callout type="analysis" title="Which deadline to write down">
 Neither page says what happens on day 91 or how the 90 days relate to the 180-day period. Put the earlier of the two dates in the runbook, and start [deploying the replacement](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manual-adding-vcf-components-post-deployment/deploy-a-license-server1.html) well before either.
 </Callout>
 
-Three traps sit on the way out. If licenses were on the outgoing server, follow Broadcom's removal procedure (<KB id={441175} />). And don't just delete the VM: a server removed from vCenter without cleanup leaves stale registrations in the VCF Business Services console, and the new server shows Disconnected until the old entry goes (<KB id={444094} />). Don't delete a registration to restart licensing either: <KB id={456295} /> describes that, with evaluations lapsing, ending in a locked cluster that couldn't take a replacement VM.
+Three traps sit on the way out. If licenses were on the outgoing server, follow Broadcom's removal procedure (<KB id={441175} />). And don't just delete the VM: a server removed from vCenter without cleanup leaves stale registrations in the VCF Business Services console, and the new server shows Disconnected until the old entry goes (<KB id={444094} />). Don't delete a registration to restart licensing before a replacement is registered either: <KB id={456295} /> describes that, with evaluations lapsing, ending in a locked cluster that couldn't take a replacement VM.
 
 For disaster recovery, write this procedure in yourself. The [design elements of Broadcom's VCF disaster recovery blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-disaster-recovery/design-elements-for-vcf-disaster-recovery.html) don't name the License Server (checked 7 Nov 2026). In the Continuous Availability model it sits [in the primary availability zone only](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-operations.html), so plan on this replacement if you lose that zone.
 

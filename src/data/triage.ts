@@ -6,8 +6,8 @@ export const TRIAGE_STEPS: TriageStep[] = [
   {
     t: 'Capture the IDs',
     where: 'Task details: SDDC Manager Tasks, or VCF Operations Build > Lifecycle > VCF Management > Tasks (9.1)',
-    run: 'date -u    # logs are in UTC, the UI shows local time',
-    good: 'The ticket has the task ID, the reference ID or token, the failed subtask, and the time in UTC.',
+    run: 'date -u    # keep the time with its offset, and check the offset each log file shows',
+    good: 'The ticket has the task ID, the reference ID or token, the failed subtask, and the time with its UTC offset.',
     not: 'Do not retry yet. A retry creates a new task and the first failure becomes harder to find.',
   },
   {
@@ -15,13 +15,13 @@ export const TRIAGE_STEPS: TriageStep[] = [
     run: `grep -Ril "<reference-id>" /var/log/vmware/vcf/
 grep -n -B 20 -A 60 "<reference-id>" /var/log/vmware/vcf/<service>/<service>.log | less`,
     good: 'The last "Caused by" names something concrete: a host, an account, a certificate, a file system.',
-    not: 'Search by the UTC minute instead of the ID. For a management component, read the runtime pod logs (toolkit below).',
+    not: 'Search by the minute instead of the ID, in the offset that log uses. For a management component, read the runtime pod logs (toolkit below).',
   },
   {
     t: 'Check for locks and stale credentials',
     run: '/opt/vmware/sddc-support/sos --health-check --domain-name <domain>',
-    good: 'No active locks, and no "Failed to get details" against an account.',
-    not: 'Lock with nothing running: cancel the owner task (API below), fix why it failed, then retry. "Failed to get details": remediate with the password that works on the component today.',
+    good: 'A clean run. On 5.x and 9.0.x a stale lock fails this check even with every task complete. On 9.0, so can "Failed to get details" against an ESXi root account.',
+    not: 'The log line names the lock holder. In progress and really hung: cancel it (API below). Failed: fix the cause and retry, because cancel returns 409. Nothing to cancel: a lock-row KB, with a snapshot. "Failed to get details": remediate with the password that works on the component today.',
   },
   {
     t: 'Check DNS',
@@ -34,7 +34,7 @@ grep -n -B 20 -A 60 "<reference-id>" /var/log/vmware/vcf/<service>/<service>.log
     run: `chronyc tracking 2>/dev/null | grep -E 'System time|Leap' || ntpq -p
 date -u`,
     good: 'Every node uses the same source and shows the same UTC time to within a second or two.',
-    not: 'Fix NTP first: token errors, 401s and stalled upgrades follow drift. After an NTP change, confirm the setting on the appliance itself.',
+    not: 'Fix NTP first: on 9.0 embedded SSO, drift shows as "JWT token is expired" (KB 409353). After an NTP change, confirm the setting on the appliance itself.',
   },
   {
     t: 'Check disk',
@@ -43,7 +43,7 @@ df -h /data /opt /var/log 2>/dev/null
 # vCenter
 df -h /storage/log /storage/seat /storage/db /storage/core`,
     good: 'SDDC Manager: more than 10 GB free in /opt and more than 1 GB for the database (the precheck\'s critical limits). vCenter: no partition close to full.',
-    not: 'Collect a support bundle before you clean anything. Then use the documented clean-up (bundle_cleanup.py for old bundles), not rm.',
+    not: 'Collect a support bundle before you clean anything. Then use the documented clean-up, not rm: on 9.x, DELETE DOWNLOAD under Binary Management, then bundle_cleanup.py if that fails.',
   },
   {
     t: 'Check the path',
@@ -53,16 +53,16 @@ df -h /storage/log /storage/seat /storage/db /storage/core`,
   },
   {
     t: 'Retry the smallest thing',
-    where: 'Retry Precheck, or Retry Task: fleet and SDDC lifecycle tasks resume at the failed step. These commands change state.',
+    where: 'Retry Precheck, or Retry Task. Broadcom doesn\'t document where a manual retry restarts, so check what the failed step left behind. These commands change state.',
     run: `# TOKEN: accessToken from POST https://localhost/v1/tokens (SDDC Manager admin)
 # Retry a failed task
 curl -sk -X PATCH -H "Authorization: Bearer $TOKEN" https://localhost/v1/tasks/<id>
-# Cancel a task that will not complete
+# Cancel a task still in progress that will not complete (a failed one returns 409)
 curl -sk -X DELETE -H "Authorization: Bearer $TOKEN" https://localhost/v1/tasks/<id>
 # Cancel a failed password task
 curl -sk -X DELETE -H "Authorization: Bearer $TOKEN" \\
   https://localhost/v1/credentials/tasks/<id>`,
-    good: 'The task resumes and passes the failed step.',
-    not: 'Same error again: back to step 2, the cause is not fixed. Password tasks are cancelled and run again, never retried with the generic API.',
+    good: 'The task passes the step that failed.',
+    not: 'Same error again: back to step 2, the cause is not fixed. Password tasks stay on the credentials path, never the generic API.',
   },
 ];

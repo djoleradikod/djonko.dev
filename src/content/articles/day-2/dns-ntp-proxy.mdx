@@ -125,7 +125,7 @@ The [Public URLs page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-
 | VCF Installer, vCenter, VCF Operations, VCF Download Tool, every runtime IP pool hosting a software depot | `dl.broadcom.com`, `eapi.broadcom.com`, `vvs.broadcom.com`, `vsanhealth.vmware.com`; from 9.1.1, `vcf.packages.broadcom.com` | Binaries |
 | VCF Installer, SDDC Manager, VCF Download Tool | `vvs.broadcom.com` | Compatibility data |
 | VCF Installer, SDDC Manager, vCenter, VCF Download Tool | `vsanhealth.vmware.com`, `eapi.broadcom.com` | vSAN HCL |
-| VCF Operations | `eapi.broadcom.com` | Licensing |
+| VCF Operations | `vcf.broadcom.com`, `eapi.broadcom.com` | Licensing |
 | Cloud proxy | `eapi.broadcom.com` | Log bundles |
 | License Server | None | It [doesn't communicate with the internet](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-networking.html) |
 
@@ -136,6 +136,8 @@ The `vcf.packages.broadcom.com` entry applies from 9.1.1, so raise that firewall
 for h in dl.broadcom.com eapi.broadcom.com vvs.broadcom.com vsanhealth.vmware.com; do
   echo "$h $(curl -s -o /dev/null -w '%{http_code}' https://$h)"
 done
+# Licensing, from VCF Operations. That KB gives no expected code for this host.
+curl -s -o /dev/null -w '%{http_code}\n' https://vcf.broadcom.com
 ```
 
 ## Proxy: one setting per runtime, with exceptions

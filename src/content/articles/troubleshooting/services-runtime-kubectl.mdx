@@ -111,7 +111,7 @@ export KUBECONFIG=/etc/kubernetes/admin.conf
 kubectl get nodes -o wide   # must return the node list
 ```
 
-The steps are [Broadcom's](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/configuring-management-components/enable-ssh-access-to-the-vcf-services-runtime-cluster.html), and the SSH password is the one set at deployment. `lcm_service_support.sh` prompts for the admin password instead, and that one [may no longer match](https://knowledge.broadcom.com/external/article/435569) `vmware-system-user`'s, so if it's rejected, go to <KB id={444456} /> for `admin@vsp.local`.
+The steps are [Broadcom's](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/configuring-management-components/enable-ssh-access-to-the-vcf-services-runtime-cluster.html), and the SSH password is the one set at deployment. `lcm_service_support.sh` prompts for the admin password instead, and that one [may no longer match](https://knowledge.broadcom.com/external/article/435569) `vmware-system-user`'s, so if it's rejected, go to <KB id={444456} /> for the runtime's admin account.
 
 ## The namespace map
 

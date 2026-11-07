@@ -8,15 +8,15 @@ import { TRIAGE_STEPS as steps } from '../../../data/triage';
 // Symptom -> first check -> next action. The check is a command where one exists.
 const playbook: [string, string, string][] = [
   ['UnknownHostException, installer DNS validation, 502 in the installer', 'dig +short <fqdn>; dig +short -x <ip>', 'Add or fix the record in lowercase, then Retry Precheck.'],
-  ['"JWT token is expired", IAM_401_INVALID_TOKEN, intermittent 401', 'chronyc tracking on every node', 'Fix the time source, then retry. Rotating tokens before time is right does nothing.'],
-  ['"Resource is already locked", "Error in acquiring resource locks"', 'sos --health-check; GET /v1/tasks/<owner>', 'Cancel the owner task, fix why it failed, retry. Delete a lock row only with a snapshot and the lock KB.'],
-  ['Account locked, InvalidLogin, 403 in operationsmanager.log', 'sos --health-check (Failed to get details)', 'Unlocking first fails while a service still holds the old password. For the NSX service account: add SDDC Manager to the lockout-immune list, rotate it, verify, then rotate the rest (KB 449684).'],
+  ['"JWT token is expired" on 9.0 embedded SSO', 'date -u on VCF Operations and on vCenter', 'Clocks differ: fix the time source, then retry (KB 409353).'],
+  ['"Resource is already locked", "Error in acquiring resource locks"', 'The log names the holder; GET /v1/tasks/<owner>', 'In progress and hung: cancel it. Failed: fix the cause and retry. Nothing to cancel: delete a lock row only with a snapshot and the lock KB.'],
+  ['Account locked, InvalidLogin, 403 in operationsmanager.log', 'sos --health-check on 9.0 (Failed to get details)', 'Unlocking first fails while a service still holds the old password. For the NSX service account: add SDDC Manager to the lockout-immune list, rotate it, verify, then rotate the rest (KB 449684).'],
   ['PKIX path building failed, certificate_unknown(46)', 'openssl s_client -connect <host>:443 </dev/null | openssl x509 -noout -issuer -enddate', 'Expired: replace. Unknown issuer: TLS inspection on the path, exempt it, or import the CA.'],
   ['Signed certificate rejected', 'openssl x509 -in cert.crt -pubkey -noout | sha256sum; openssl req -in csr.csr -pubkey -noout | sha256sum', 'Hashes differ: the certificate was signed from another CSR. Sign the current one.'],
   ['"no healthy upstream" on vCenter', 'df -h; service-control --status --all; the VECS expiry loop', 'Free the full partition or replace the expired certificate, then start services. A reboot alone frees no partition and replaces no certificate.'],
-  ['VCFMS- precheck codes, 9.1 runtime tasks stuck', 'kubectl get pods -A | grep -vE \'Running|Completed\'', 'Fix pod health first. Restart a lifecycle service with lcm_service_support.sh, and delete pods only where a KB names them.'],
+  ['9.1 runtime tasks stuck', 'kubectl get pods -A | grep -vE \'Running|Completed\'', 'Fix pod health first. Restart a lifecycle service with lcm_service_support.sh, and delete pods only where a KB names them.'],
   ['Depot 403, "Bundle not found", download stalls', 'curl -I https://eapi.broadcom.com from a runtime node', 'Allow every runtime node, not only SDDC Manager. Check the token or activation code, and TLS inspection.'],
-  ['NSX host preparation or TEP failures', 'vmkping ++netstack=vxlan -d -s 1572 -I vmk10 <edge-tep>', 'Fails with -d: MTU on the path is under 1600. Fix the network, then Resolve in NSX.'],
+  ['NSX host preparation or TEP failures', 'vmkping -S vxlan -s 1572 -I vmk10 -d <edge-tep>', 'Fails with -d: MTU on the path is under 1600. Fix the network, then Resolve in NSX.'],
   ['VCF Operations slow, node offline, cluster not ready', 'curl -sk https://<node>/casa/cluster/status; df -h /storage/db /storage/log', 'One node must be MASTER. Add disk to every node, identically sized. Never revert to a snapshot.'],
 ];
 const kb = (id: number) => kbInfo(id).url;
@@ -36,7 +36,6 @@ const kb = (id: number) => kbInfo(id).url;
         <tbody>
           <tr><th>What</th><td>VCF Operations, VCF Automation, identity broker, Ops for networks, log management, services runtime</td><td>vCenter, ESX, NSX Managers and Edges, vSAN, SDDC Manager</td></tr>
           <tr><th>Tasks</th><td>Build &gt; Lifecycle &gt; VCF Management &gt; Tasks</td><td>SDDC Manager Tasks, Build &gt; Lifecycle &gt; VCF Instances</td></tr>
-          <tr><th>Errors</th><td><code>VCF_LCM_…</code> with a reference ID, <code>VCFMS-</code>, <code>VCFA-</code></td><td>Enum codes with a reference token</td></tr>
           <tr><th>Logs</th><td>Runtime pods in <code>vcf-fleet-lcm</code>, <code>vcf-sddc-lcm</code></td><td><code>/var/log/vmware/vcf/</code> on SDDC Manager</td></tr>
         </tbody>
       </table>
@@ -56,7 +55,7 @@ const kb = (id: number) => kbInfo(id).url;
         </li>
       ))}
     </ol>
-    <p class="small muted no-print">Why the order matters: <a href="/vcf/library/troubleshooting/seven-step-triage/">A seven-step triage for any VCF 9.x failure</a>.</p>
+    <p class="small muted no-print">Why the order matters: <a href="/vcf/library/troubleshooting/seven-step-triage/">A seven-step triage for a failed VCF task</a>.</p>
   </section>
 
   <section class="cs">

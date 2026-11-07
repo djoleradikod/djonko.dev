@@ -51,11 +51,6 @@ sources:
     by: "Broadcom TechDocs"
     kind: broadcom
     date: 2026-11-05
-  - title: "Fleet Management blueprint (VCF 9.1)"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint.html"
-    by: "Broadcom TechDocs"
-    kind: broadcom
-    date: 2026-11-05
   - title: "VCF 9.1 general FAQs"
     url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
     by: "Broadcom"
@@ -119,11 +114,11 @@ Manager before managed explains steps 1, 6 and 7 and fleet before instance. Broa
 
 Broadcom [publishes one table for a 9.0.x source and one for 5.2.x](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) (updated 5 Nov 2026), each listing components "in the order that you must upgrade" them, and <KB id={440630} /> calls the sequence mandatory. Only fleet-level components and management domains have to reach 9.1.x. Start with the instance hosting the fleet's VCF Operations, move to the other instances' management domains, and upgrade workload domains whenever suits after their instance's management domain.
 
-Where you can, target 9.1.1 directly. The guide allows it from 5.2.x and 9.0.x, the forward-only rule makes it the only choice from 5.2.4 (9.1.0 was released earlier), and the [Fleet Management blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint.html) says to use the latest available binaries when you deploy, upgrade and patch. It carries no upgrade order of its own and defers to the release notes.
+Where you can, target 9.1.1 directly. The guide allows it from 5.2.x and 9.0.x, the forward-only rule makes it the only choice from 5.2.4 (9.1.0 was released earlier), and the [9.1.1 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html) say to use the latest available binaries when you deploy, upgrade or patch.
 
 | 9.0.x step | 5.2.x step | Component | What to know |
 |---|---|---|---|
-| 0 | | Identity broker appliance on an NSX overlay segment outside the VCF management network | Redeploy first; [the Identity Broker note](/vcf/library/architecture/identity-broker/) has the rule. Embedded mode upgrades with vCenter. |
+| 0 | | Identity broker appliance on an NSX overlay segment outside the VCF management network | The guide says redeploy first, while <KB id={440630} /> says contact Support for a 9.0.x broker on a non-management network, so ask Support. [The Identity Broker note](/vcf/library/architecture/identity-broker/) has the rule. Embedded mode upgrades with vCenter. |
 | 1 | 1 | VCF Operations and cloud proxy (5.2: Aria Operations) | [Needs the fleet appliance root password](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/install-a-software-update.html) on 9.0.x. Aria Operations [must be at 8.18 first](https://blogs.vmware.com/cloud-foundation/2026/06/18/how-to-upgrade-to-vmware-cloud-foundation-9-1/). |
 | 2-5 | 2-5 | vSphere Replication, Live Site Recovery, vSAN Data Protection, Avi | [Verify Avi's version is compatible](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/apply-cloud-foundation-5-2-update-bundle.html) before SDDC Manager. |
 | 6 | 6 | SDDC Manager | From 5.2, [start in the SDDC Manager UI](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/apply-cloud-foundation-5-2-update-bundle.html). From 9.0.x, start in VCF Operations. |
@@ -150,7 +145,7 @@ McDonald's guide also disagrees with the table on where the management component
 
 ## What step 1 takes away until step 7
 
-A 9.0.x source loses capability once VCF Operations moves. Until management services are deployed and the data has transferred, [certificate, password and lifecycle operations aren't available from VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore.html), and Automation, the identity broker, logs and networks stay out of reach for those tasks until each reaches 9.1. So renew anything that would expire inside that span before you begin, and keep steps 1 to 12 close together.
+A 9.0.x source loses capability once VCF Operations moves. Until management services are deployed and the data has transferred, [certificate, password and lifecycle operations aren't available from VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore.html), and Automation, the identity broker, logs and networks stay out of reach for those tasks until each reaches 9.1. So renew anything that would expire inside that span before you begin, and, on this site's reading, keep steps 1 to 12 close together.
 
 A license sync error, "Licenses could not be synchronized with vCenter instances", [clears once the license server is deployed and registered](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/install-a-software-update.html), so don't chase it between those steps. The 4 Nov 2026 [FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) describes the license server as deployed during the VCF Operations upgrade, and the upgrade guide gives it a step of its own. Plan for the step, since the guide is the procedure.
 

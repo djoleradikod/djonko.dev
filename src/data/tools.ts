@@ -151,7 +151,7 @@ export const TOOLS: Tool[] = [
   },
   {
     name: 'SoS utility', job: 'upgrade', maker: 'broadcom', publisher: 'Broadcom (built into SDDC Manager)', versions: ['5.x', '9.0', '9.1'],
-    what: 'The supportability tool on SDDC Manager. `sos --health-check` checks the components SDDC Manager manages, including active locks; other options collect log bundles for support. The 9.1 upgrade-readiness KB pairs it with VDT on each vCenter.',
+    what: 'The supportability tool on SDDC Manager. `sos --health-check` checks the components SDDC Manager manages, and on 5.x and 9.0.x it fails on active locks; other options collect log bundles for support. The 9.1 upgrade-readiness KB pairs it with VDT on each vCenter.',
     know: 'Run as root on SDDC Manager from /opt/vmware/sddc-support/sos. Health checks are read-only; log collection writes bundles to disk, so check free space first.',
     get: { label: 'Health checks for 9.1 upgrade readiness', url: 'https://knowledge.broadcom.com/external/article/454898' },
     kbs: [454898, 439473, 385749],
