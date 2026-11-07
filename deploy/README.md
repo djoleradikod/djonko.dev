@@ -10,7 +10,7 @@ host it, and you can switch between them without changing the site.
 | Rollback | Instant, last 5 releases kept | Instant from the dashboard | Redeploy the previous build | Instant from the dashboard |
 | Switch-over | Atomic | Atomic | File by file during upload | Atomic |
 | Cost | The server you already have | Free | The plan you already have | Free tier |
-| Set-up | `bootstrap.sh` once, then `deploy.sh` or CI | Connect the repo or `wrangler` | cPanel domain, then `deploy.sh` or CI | Connect the repo |
+| Set-up | `bootstrap.sh` once, then `deploy.sh` | Connect the repo or `wrangler` | cPanel domain, then `deploy.sh` | Connect the repo |
 
 Recommended set-up: Hetzner serves the site and media; Cloudflare sits in front for DNS, caching and DDoS
 protection (orange-cloud proxy, SSL mode **Full (strict)**). Pages stays available as a fallback that needs
@@ -95,7 +95,7 @@ Then choose where DNS lives:
 ### Once: prepare the server
 
 ```bash
-# on your laptop: a key for deployments (CI uses the same one)
+# on your laptop: a key for deployments
 ssh-keygen -t ed25519 -f ~/.ssh/djonko_deploy -C djonko-deploy
 
 scp deploy/hetzner/bootstrap.sh deploy/hetzner/Caddyfile root@<server>:/root/
@@ -139,32 +139,46 @@ DEPLOY_HOST=deploy@<server> deploy/hetzner/rollback.sh --list    # releases on t
 DEPLOY_HOST=deploy@<server> deploy/hetzner/rollback.sh           # back one release
 ```
 
-## GitHub Actions (build, check, deploy)
+## Checks before a merge
 
-`.github/workflows/site.yml` runs on every pull request and push, and weekly:
+`npm run gate` runs what a change has to pass, on a clean copy of the commit you have checked out:
 
 1. `npm ci`, refresh tool facts from each repo's release `project.json`, build (privacy scan and link check included).
 2. Browser audit of every page: accessibility (WCAG 2.2 AA rules), security-policy and console errors,
    broken images, and a page-weight budget.
-3. Validate the Caddyfile with the official Caddy image.
-4. On `main`, deploy to whichever targets are switched on.
+3. Validate the Caddyfile, with a local `caddy` or the official Caddy image.
 
-Repository settings, under Secrets and variables, then Actions:
+| Command | What it adds |
+|---|---|
+| `npm run gate -- --status` | Records the result on GitHub as a commit status named `gate` |
+| `npm run gate -- --external` | Checks every external link too, and reports the result without failing the gate |
 
-| Name | Type | Value |
-|---|---|---|
-| `DEPLOY_HETZNER` | variable | `true` |
-| `HETZNER_HOST` | secret | `deploy@<server ip>` |
-| `HETZNER_SSH_KEY` | secret | contents of `~/.ssh/djonko_deploy` |
-| `HETZNER_KNOWN_HOSTS` | secret | output of `ssh-keyscan <server ip>` |
-| `DEPLOY_PAGES` | variable | `true` to also (or instead) deploy to Cloudflare Pages |
-| `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` | secrets | for Pages |
-| `SITE_URL`, `PUBLIC_NOINDEX` | variables | only before launch, see below |
+The audit needs Chromium: install one with `npx playwright install chromium`, or point `CHROMIUM_PATH` at one.
+
+This repository has no GitHub Actions, so no check runs when you push and GitHub deploys nothing. Nothing forces
+the gate either, unless a ruleset requires the `gate` status (see below). Before a merge:
+
+1. If the branch is behind `main`, merge `main` into it. The gate checks the commit you have, not the merge result.
+2. Run `npm run gate -- --status`.
+3. Merge.
+
+Then publish from a clean checkout of `main`, using the command for your host. Run `npm run sync:projects` first to
+pick up the tools' latest releases. Settings that aren't in the repository go in front of the command: `SITE_URL`
+and `PUBLIC_NOINDEX` before launch, as the stages above show, and `PUBLIC_MEDIA_URL`, `PUBLIC_CF_ANALYTICS_TOKEN`
+and `PUBLIC_PLAUSIBLE_DOMAIN` if you use them.
+
+| Host | Publish with |
+|---|---|
+| Hetzner | `DEPLOY_HOST=deploy@<server> SSH_OPTS="-i ~/.ssh/djonko_deploy" deploy/hetzner/deploy.sh` |
+| Cloudflare Pages, repository connected | Merging to `main`: Cloudflare runs that build itself |
+| Cloudflare Pages, direct upload | `npm run deploy:pages` |
+| Blacknight | `BN_HOST=... BN_USER=... BN_PASS=... BN_DIR=... deploy/blacknight/deploy.sh` |
+| Netlify, repository connected | Merging to `main`: Netlify runs that build itself |
 
 ## Cloudflare Pages with GitHub
 
 This is the set-up in use: the Pages project `djonko-dev` is connected to the GitHub account `djoleradikod`.
-Cloudflare builds and deploys; the GitHub Actions workflow is the gate that checks every change. Before
+Cloudflare builds and deploys; `npm run gate` is what checks a change before it merges. Before
 launch, every Cloudflare address is closed with Cloudflare Access, so only you can open it.
 
 ### 1. GitHub: limit what Cloudflare can see
@@ -176,7 +190,7 @@ launch, every Cloudflare address is closed with Cloudflare Access, so only you c
    access choose **Only select repositories** and pick `djonko.dev`. "All repositories" gives Cloudflare
    read access to every repository on the account, including ones created later.
 4. Settings, Rules, Rulesets, new branch ruleset for `main`: block force pushes and deletion, require a pull
-   request, and require the status checks `build` (this workflow) and `Cloudflare Pages`. Add yourself to the
+   request, and require the status checks `gate` (recorded by `npm run gate -- --status`) and `Cloudflare Pages`. Add yourself to the
    bypass list so you can still push a fix directly when needed.
 
 ### 2. Cloudflare: create the project from the repository
@@ -197,8 +211,8 @@ Workers & Pages, Create, Pages, **Connect to Git**, choose `djoleradikod/djonko.
 Node comes from `.node-version` (22). Under Settings, Build, keep the build system at version 3.
 
 Under Settings, Build, **Branch control**: production deployments on for `main`; preview deployments for
-**Custom branches**, include `*`, exclude `dependabot/*`. Dependabot pull requests are checked by the GitHub
-workflow; previews of them only spend the 500 builds a month on the free plan.
+**Custom branches**, include `*`, exclude `dependabot/*`. Check Dependabot pull requests by running the gate on
+their branch; previews of them only spend the 500 builds a month on the free plan.
 
 ### 3. Cloudflare Access: close the site until launch
 
@@ -226,12 +240,12 @@ than `djonko.dev`. That keeps it out of search results, but it does not keep peo
 
 ### 4. Day to day
 
-- A pull request gets a GitHub check from the workflow and a protected preview at
-  `https://<branch>.djonko-dev.pages.dev`. Merging to `main` deploys production.
+- A pull request gets a protected preview at `https://<branch>.djonko-dev.pages.dev`. Run
+  `npm run gate -- --status` on its branch before merging. Merging to `main` deploys production.
 - Rollback: Pages project, Deployments, the previous production deployment, **Rollback**. It is instant and
   needs no rebuild.
-- Leave the workflow variable `DEPLOY_PAGES` unset. It is for direct uploads only, and with the repository
-  connected it would deploy a second time, racing Cloudflare's own build.
+- Don't also run `npm run deploy:pages`. It is for direct uploads only, and with the repository connected it
+  would deploy a second time, racing Cloudflare's own build.
 - Free plan limits that apply: 500 builds a month, 20 minutes per build, 25 MiB per file, 20,000 files. The
   site uses about 450 files, none over 5 MiB. Video and large PDFs go to R2 or Hetzner through
   `PUBLIC_MEDIA_URL`.
@@ -251,7 +265,7 @@ than `djonko.dev`. That keeps it out of search results, but it does not keep peo
 `deploy/blacknight/deploy.sh` uploads `dist/` over SFTP (or FTPS with `BN_PROTO=ftps`) using `lftp`, adds an
 `.htaccess` with HTTPS and www redirects, security headers, caching and the 404 page, and uploads `./media`
 to `/media`. Get the server name and credentials from the Blacknight control panel (cPanel, FTP Accounts, or
-the welcome email). In CI, set `DEPLOY_BLACKNIGHT=true` and the `BN_*` secrets.
+the welcome email).
 
 ## Netlify
 
@@ -338,4 +352,4 @@ and deploying. Remove the registration in `src/scripts/enhance.ts` (section 8) a
   privacy-enhanced domain and Vimeo.
 - YouTube and Vimeo players load only when a reader presses play. Until then no request goes to them.
 - Servers add HSTS, `X-Frame-Options`, `nosniff`, a strict referrer policy and a locked-down permissions policy.
-- The `deploy` user cannot use sudo. CI holds only that user's key.
+- The `deploy` user cannot use sudo. Whoever deploys holds only that user's key.

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Check every external link in the built site (dist/) still resolves.
-// Run after `npm run build`: `npm run check:external`. CI runs it weekly.
+// Run after `npm run build`: `npm run check:external`. `npm run gate -- --external` runs it too.
 //
 // Result per URL:
 //   ok       2xx or 3xx after redirects
@@ -10,7 +10,7 @@
 //   broken   404, 410, other 4xx, 5xx after one retry, DNS failure or timeout. Fails the run.
 //
 // Options: CONCURRENCY (default 6), TIMEOUT_MS (default 20000), ONLY=<substring> to check a subset.
-import { readdir, readFile, appendFile } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 const DIST = 'dist';
@@ -80,13 +80,4 @@ console.log(`${results.length} external links: ${by('ok').length} ok, ${blocked.
 for (const r of broken) console.log(`BROKEN   ${r.detail.padEnd(9)} ${r.url}\n         on ${where(r.url)}`);
 for (const r of blocked) console.log(`blocked  ${r.detail.padEnd(9)} ${r.url}`);
 
-if (process.env.GITHUB_STEP_SUMMARY) {
-  const rows = (list) => list.map((r) => `| ${r.detail} | ${r.url} | ${where(r.url)} |`).join('\n');
-  await appendFile(process.env.GITHUB_STEP_SUMMARY, [
-    `### External links`, ``,
-    `${results.length} checked: ${by('ok').length} ok, ${blocked.length} blocked automated requests, ${broken.length} broken.`, ``,
-    broken.length ? `#### Broken\n\n| Result | URL | Linked from |\n|---|---|---|\n${rows(broken)}\n` : '',
-    blocked.length ? `<details><summary>Blocked automated requests (${blocked.length}), check by hand if in doubt</summary>\n\n| Result | URL | Linked from |\n|---|---|---|\n${rows(blocked)}\n\n</details>\n` : '',
-  ].join('\n'));
-}
 process.exit(broken.length ? 1 : 0);

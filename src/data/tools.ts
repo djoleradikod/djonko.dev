@@ -6,7 +6,7 @@
 //   public page mentions them.
 // - Describe in our own words what the tool does and what to know before using it.
 // - `checked` is the date the links and facts were last confirmed against the source.
-//   scripts/check-external.mjs re-checks every link weekly in CI.
+//   scripts/check-external.mjs re-checks every link (`npm run gate -- --external`).
 
 export type Job = 'plan' | 'deploy' | 'upgrade' | 'diagnose' | 'operate' | 'automate' | 'lab';
 export type Maker = 'broadcom' | 'fling' | 'opensource' | 'vendor' | 'community' | 'commercial';

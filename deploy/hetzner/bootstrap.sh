@@ -72,6 +72,6 @@ cat <<DONE
 Done. Next:
   1. Point DNS for ${DOMAIN} and www.${DOMAIN} at this server (A and AAAA records).
      Caddy gets certificates on the first request once DNS resolves here.
-  2. From your laptop or CI:  DEPLOY_HOST=deploy@<this server> deploy/hetzner/deploy.sh --media
+  2. From your laptop:  DEPLOY_HOST=deploy@<this server> deploy/hetzner/deploy.sh --media
   3. If you also use the Hetzner Cloud Firewall, allow TCP 80, 443 and UDP 443 there too.
 DONE
