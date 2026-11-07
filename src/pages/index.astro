@@ -47,12 +47,10 @@ const ld = [
 ---
 <Base jsonLd={ld} shell page="home">
   <section class="wrap home-lead" id="content-start" tabindex="-1">
-    <div>
-      <p class="home-who">{SITE.author}, {SITE.role}</p>
-      <h1>I help teams design, upgrade and run VMware Cloud Foundation.</h1>
-      {SITE.photo && <img class="home-photo" src={SITE.photo} alt={`Photo of ${SITE.author}`} width="72" height="72" />}
-    </div>
-    <div>
+    <p class="home-who">{SITE.author}, {SITE.role}</p>
+    <h1>I help teams design, upgrade and run VMware Cloud Foundation.</h1>
+    {SITE.photo && <img class="home-photo" src={SITE.photo} alt={`Photo of ${SITE.author}`} width="72" height="72" />}
+    <div class="home-sub">
       <p class="home-lede">Architecture reviews, 5.x to 9.x upgrades, day-2 operations and hard escalations, written down so your team can run VCF itself.</p>
       <div class="actions">
         <a class="btn primary" href="/vcf/">Read the VCF notes <Icon name="arrow-right" size={16} /></a>
@@ -63,25 +61,23 @@ const ld = [
 
   <SupportClock note={clock} />
 
-  <section class="wrap home-sec lx" aria-labelledby="lx-h">
-    <div class="lx-head">
+  <section class="wrap home-sec" aria-labelledby="lx-h">
+    <div class="home-head">
       <h2 class="home-h2" id="lx-h"><a href="/vcf/">{SITE.vcfName}</a></h2>
-      <p>{notes.length} notes in {CATEGORIES.length} areas. Each one links the sources behind it, and where 5.x and 9.x differ it says how.</p>
+      <a class="hub-all" href="/vcf/library/">Library {notes.length} <Icon name="arrow-right" size={14} /></a>
     </div>
+    <p class="home-intro">{notes.length} notes in {CATEGORIES.length} areas. Each one links the sources behind it, and where 5.x and 9.x differ it says how.</p>
     <nav aria-label="Library">
-      <ul class="lx-areas">
-        {perArea.map((c) => <li><a href={`/vcf/library/${c.id}/`}>{c.short}<span>{c.n}<span class="sr-only"> notes</span></span></a></li>)}
-      </ul>
-      <ul class="lx-more">
-        <li><a href="/vcf/library/">Library<span>{notes.length}</span></a></li>
-        <li><a href="/vcf/paths/">Reading paths<span>{paths.length}</span></a></li>
-        <li><a href="/vcf/tools/">Tools for VCF 9.x<span>{TOOLS.length}</span></a></li>
-        <li><a href="/vcf/resources/kb-index/">KB index<span>{KB_INDEX.length}</span></a></li>
+      <ul class="lx-index">
+        {perArea.map((c) => <li><a href={`/vcf/library/${c.id}/`}><span class="nm">{c.short}</span><span class="ct">{c.n}<span class="sr-only"> notes</span></span></a></li>)}
+        <li><a href="/vcf/paths/"><span class="nm">Reading paths</span><span class="ct">{paths.length}</span></a></li>
+        <li><a href="/vcf/tools/"><span class="nm">Tools for VCF 9.x</span><span class="ct">{TOOLS.length}</span></a></li>
+        <li><a href="/vcf/resources/kb-index/"><span class="nm">KB index</span><span class="ct">{KB_INDEX.length}</span></a></li>
       </ul>
     </nav>
   </section>
 
-  <div class="home-plate">
+  <div class="home-fleet">
     <div class="wrap"><FleetModel /></div>
   </div>
 
@@ -97,43 +93,43 @@ const ld = [
     </div>
   </section>
 
-  <section class="wrap home-sec">
-    <h2 class="home-h2">Selected work</h2>
-    <a class="ex-plate" href="/talks/">
-      <div>
+  <section class="home-work">
+    <div class="wrap">
+      <h2 class="home-h2">Selected work</h2>
+      <a class="ex-series" href="/talks/">
         <h3>A five-part VCF 9 workshop series</h3>
+        <ol class="ex-modules" role="list">{modules.map((m) => <li>{m}</li>)}</ol>
         <span class="ex-go">Delivered to engineers and to customers <Icon name="arrow-right" size={15} /></span>
+      </a>
+      <div class="ex-three">
+        <a class="ex-col" href="/vcf/resources/triage-cheat-sheet/">
+          <h3>VCF 9.x triage cheat sheet</h3>
+          <p>Eight checks in order, each with a command, what good looks like and what to do when it is not.</p>
+        </a>
+        <a class="ex-col" href="/vcf/tools/">
+          <h3>Tools for VCF 9.x</h3>
+          <p>The tools worth knowing, grouped by job, with support status and a link to each publisher.</p>
+          <dl class="ex-mini">{makers.map((m) => <div><dt>{m.label}</dt><dd class="num">{m.n}</dd></div>)}</dl>
+        </a>
+        <a class="ex-col" href="/projects/">
+          <h3>Open tools for VCF Operations</h3>
+          <p>{projects.length > 1 ? `${projects.length} scripts, agents and management packs` : 'Scripts, agents and management packs'} for VCF Operations 9.1.1 and later, least privilege by default. The first ones are in development.</p>
+          <ul class="ex-ticks">
+            <li>Read-only service accounts</li>
+            <li>A compatibility matrix for each tool</li>
+            <li>Open source</li>
+          </ul>
+        </a>
       </div>
-      <ol class="ex-modules" role="list">{modules.map((m) => <li>{m}</li>)}</ol>
-    </a>
-    <div class="ex-three">
-      <a class="ex-col" href="/vcf/resources/triage-cheat-sheet/">
-        <h3>VCF 9.x triage cheat sheet</h3>
-        <p>Eight checks in order, each with a command, what good looks like and what to do when it is not.</p>
-      </a>
-      <a class="ex-col" href="/vcf/tools/">
-        <h3>Tools for VCF 9.x</h3>
-        <p>The tools worth knowing, grouped by job, with support status and a link to each publisher.</p>
-        <dl class="ex-mini">{makers.map((m) => <div><dt>{m.label}</dt><dd class="num">{m.n}</dd></div>)}</dl>
-      </a>
-      <a class="ex-col" href="/projects/">
-        <h3>Open tools for VCF Operations</h3>
-        <p>{projects.length > 1 ? `${projects.length} scripts, agents and management packs` : 'Scripts, agents and management packs'} for VCF Operations 9.1.1 and later, least privilege by default. The first ones are in development.</p>
-        <ul class="ex-ticks">
-          <li><Icon name="check" size={15} />Read-only service accounts</li>
-          <li><Icon name="check" size={15} />A compatibility matrix for each tool</li>
-          <li><Icon name="check" size={15} />Open source</li>
-        </ul>
-      </a>
     </div>
   </section>
 
   <section class="wrap home-sec">
-    <div class="home-new-head">
+    <div class="home-head">
       <h2 class="home-h2">Latest writing</h2>
       <a class="hub-all" href="/blog/">All posts <Icon name="arrow-right" size={14} /></a>
     </div>
-    <ol class="hub-rows rows-new">
+    <ol class="hub-rows rows-new home-new">
       {latest.map((i) => (
         <li><a href={i.href}><time class="num" datetime={i.date.toISOString().slice(0, 10)}>{fmtDate(i.date)}</time><span class="t">{i.title}</span><span class="k">{i.kind}</span></a></li>
       ))}

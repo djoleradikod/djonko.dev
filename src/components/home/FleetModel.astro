@@ -1,28 +1,30 @@
 ---
-// The VCF 9 model at a glance: fleet, instances, domains. Same content as the diagram in the note
-// "The VCF 9 mental model". Real text in CSS blocks rather than an SVG, so it reflows on a phone and stays
-// at reading size. In each instance the workload domains stack beside the management domain, so a domain
-// with only a name is a short block rather than an empty box.
+// The VCF 9 model as stacked blocks: the fleet on top, instances beneath it, domains inside each instance. Same
+// content as the diagram in the note "The VCF 9 mental model". Real text in CSS blocks, not an SVG, so it reflows on
+// a phone and stays at reading size. Only the support clock is drawn; this figure is set in solid tone.
 ---
 <figure class="fleet">
   <figcaption>VCF 9 puts a fleet and instances above the domains you knew from 5.x. <a href="/vcf/library/architecture/vcf9-mental-model/">Read the note</a></figcaption>
-  <div class="fleet-draw">
-    <span class="fleet-l">Fleet</span>
-    <div class="fleet-top"><b>VCF Operations · VCF Automation</b><span>Console, licensing, identity and fleet lifecycle</span></div>
-    <div class="fleet-insts">
-      <div class="fleet-inst">
-        <span class="fleet-l">Instance 1</span>
-        <div class="fleet-doms">
-          <div class="fleet-dom m"><b>Management domain</b>SDDC Manager<br />vCenter · NSX<br />Services runtime</div>
-          <div class="fleet-dom"><b>Workload domain</b>vCenter · NSX</div>
-          <div class="fleet-dom"><b>Workload domain</b></div>
+  <div class="fm">
+    <div class="fm-fleet">
+      <span class="fm-l">Fleet</span>
+      <b>VCF Operations · VCF Automation</b>
+      <span class="fm-d">Console, licensing, identity and fleet lifecycle</span>
+    </div>
+    <div class="fm-insts">
+      <div class="fm-inst n3">
+        <span class="fm-name">Instance 1</span>
+        <div class="fm-doms">
+          <div class="fm-dom m"><b>Management domain</b>SDDC Manager<br />vCenter · NSX<br />Services runtime</div>
+          <div class="fm-dom"><b>Workload domain</b>vCenter · NSX</div>
+          <div class="fm-dom"><b>Workload domain</b>vCenter · NSX</div>
         </div>
       </div>
-      <div class="fleet-inst i2">
-        <span class="fleet-l">Instance 2</span>
-        <div class="fleet-doms">
-          <div class="fleet-dom m"><b>Management domain</b>SDDC Manager<br />vCenter · NSX<br />Services runtime</div>
-          <div class="fleet-dom"><b>Workload domains</b>One vCenter each,<br />NSX own or shared</div>
+      <div class="fm-inst n2">
+        <span class="fm-name">Instance 2</span>
+        <div class="fm-doms">
+          <div class="fm-dom m"><b>Management domain</b>SDDC Manager<br />vCenter · NSX<br />Services runtime</div>
+          <div class="fm-dom"><b>Workload domains</b>One vCenter each,<br />NSX own or shared</div>
         </div>
       </div>
     </div>
