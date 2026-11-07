@@ -1,74 +1,150 @@
 ---
 title: "The 9.1 License Server: what it is, what it needs, and what happens when it's down"
-description: "In 9.1 licenses no longer live inside VCF Operations. They live on a small, hardened License Server appliance that VCF Operations manages. It has no internet access and few dependencies. Get those right: DNS case, time and the right deployment path."
+description: "Run one License Server per fleet, deployed through vCenter, unless latency above 300 ms or an administrative split forces another. No backup is needed, but a lost server has a 90-day migration limit in Broadcom's blueprint. An outage stops reports and imports, and licenses still expire after the 180-day period."
 category: licensing
 order: 5
-versions: ["9.1"]
+versions: ["9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [440471, 443082, 441251, 441526, 445428, 442564, 424533, 444094, 441175]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [440471, 440685, 443082, 441251, 441526, 441747, 445428, 451990, 442564, 452095, 424533, 443240, 443251, 444094, 456295, 441175]
 sources:
-  - title: "License Server overview (9.1)"
+  - title: "License Server Overview (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview.html"
     by: "Broadcom TechDocs"
-  - title: "License Server networking (9.1)"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "License Server Networking (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-networking.html"
     by: "Broadcom TechDocs"
-  - title: "License Server downtime impact (9.1)"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "License Server Downtime Impact (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-downtime-impact.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Deploy a License Server Version 9.1.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manual-adding-vcf-components-post-deployment/deploy-a-license-server1.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Single License Server Model (VCF Fleet in a Single Site blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections(1)/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations Models"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Design Elements for VCF Disaster Recovery"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-disaster-recovery/design-elements-for-vcf-disaster-recovery.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VCF Operations 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-03
+  - title: "VMware Cloud Foundation 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-03
+  - title: "VMware Cloud Foundation 9.1 General FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "New AI and Kubernetes private cloud operations capabilities in VCF 9.1.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/09/03/new-ai-and-kubernetes-private-cloud-operations-capabilities-in-vmware-cloud-foundation-9-1-1/"
+    by: "Sehjung Hah, VMware"
+    kind: broadcom
+    date: 2026-09-03
   - title: "VCF 9.1: deploying the VCF License Server directly to an ESX host"
     url: "https://williamlam.com/2026/07/vcf-9-1-deploying-the-vcf-license-server-directly-to-an-esx-host.html"
     by: "William Lam"
+    kind: practitioner
+    date: 2026-07-24
 ---
 
 <InShort>
-The License Server is a small appliance (2 vCPU, 4 GB RAM, 8 GB disk) that stores the license file and answers vCenter's licensing requests. VCF Operations still **manages** licenses; the License Server **holds** them. It is deployed automatically with new 9.1 deployments and upgrades, has **no internet access**, and talks only to VCF Operations, vCenter and DNS over TCP 443. You need at least one per VCF Operations instance used for licensing. One can serve a whole fleet, but it can't be shared between fleets. If it goes down there is no immediate impact on workloads, but nothing licensing-related can change until it's back.
+Keep the default: one License Server per fleet, deployed through vCenter, on a vSphere HA cluster. Add a second only when latency to a vCenter exceeds 300 ms or you need an administrative split, because each server takes its own license allocation. Skip backups, but write a replacement procedure, since [Broadcom's blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections(1)/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html) gives 90 days to migrate licenses off a lost one. An outage leaves workloads running at first and stops assignments, usage reports and license imports.
 </InShort>
 
-<Compare rows={[
-  ["Where licenses live", "Not applicable (keys in each product)", "9.0: VCF Operations. 9.1: the License Server."],
-  ["Internet access", "Not applicable", "None. VCF Operations talks to the console."],
-  ["Scale", "Not applicable", "Up to 250,000 assets (vCenters, hosts and vSAN clusters)"],
-  ["Protection", "Not applicable", "vSphere HA. No manual backup: VCF Operations restores assignments to a replacement."],
-  ["Networking", "Not applicable", "TCP 443 to VCF Operations and vCenter, DNS, latency up to 300 ms. 9.1.1 adds IPv6 for new deployments."],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to call direct-to-host deployment a community, lab-only method, and said new assets run in evaluation during an outage. Broadcom's deployment page bars standalone hosts and the OVF Tool post comes from William Lam of Broadcom; evaluation is a mode you can choose for new assets. A row about doubled domain suffixes had no source and is gone.
+</Callout>
 
-## What a License Server outage does
+## One server or several
 
-- **No effect** on running workloads or day-to-day management, at first.
-- **No changes:** you can't assign licenses, generate usage reports (including the daily connected report) or import license files.
-- **New assets** (vCenters, hosts, vSAN clusters) run in evaluation.
-- **The clock keeps running.** Once 180 days pass without a refresh, licenses expire as usual.
+The appliance takes [2 vCPU, 4 GB of RAM and 8 GB of disk as a minimum and handles up to 250,000 assets](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview.html), counting each licensed vCenter, host and vSAN cluster as one. Scale won't decide how many you run. The appliance [takes on some license logic and storage from VCF Operations, and is deployed and lifecycled automatically when VCF Operations is installed or upgraded](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs). VCF Operations still manages licenses, while the server holds them and answers vCenter's licensing requests, and you need at least one per VCF Operations instance used for licensing. The [blueprint's Single License Server Model](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections(1)/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html) is the default and fits most deployments. It requires registering that server in the VCF Business Services console (VCF-LIC-REQD-LS-001).
 
-That makes it important but not urgent, which is exactly the kind of component that gets forgotten. Put it in monitoring and in the [shutdown and startup order](/vcf/library/day-2/shutdown-startup-order/).
+| Situation | What to do |
+|---|---|
+| One fleet, every vCenter within 300 ms | One server |
+| A vCenter beyond [the 300 ms limit](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview.html) | Deploy a server in that vCenter |
+| Multi-tenancy or geographic division that needs [administrative separation](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview.html) | An extra server is supported |
+| Both VCF and VVF entitlements | One server: [extra ones add nothing for this](https://williamlam.com/2026/07/vcf-9-1-deploying-the-vcf-license-server-directly-to-an-esx-host.html), William Lam of Broadcom says |
+| A second fleet | A second server, since you [can't share one between fleets](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview.html) ([one fleet or several](/vcf/library/architecture/one-fleet-or-several/)) |
 
-## The checklist when it misbehaves
+Each server needs [its own license allocation](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview.html), so a second one splits capacity you then have to track. A server's [only network peers are VCF Operations, vCenter and DNS, with no internet path](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-networking.html). Reaching Broadcom is VCF Operations' job.
+
+If you deploy one yourself, go through vCenter. It [can run on any vCenter instance, but not on a standalone ESX host](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manual-adding-vcf-components-post-deployment/deploy-a-license-server1.html). Broadcom's page and a Broadcom author's blog disagree here: Lam's [24 July post](https://williamlam.com/2026/07/vcf-9-1-deploying-the-vcf-license-server-directly-to-an-esx-host.html) shows OVF Tool injecting the properties for a direct-to-host install, and it doesn't address support. Read the deployment page as the rule for production, and ask Broadcom in writing if an edge site seems to need the other route.
+
+<Callout type="analysis" title="Where to place it">
+A License Server VM on hosts whose license has expired [can fail to power on with "License expired"](https://knowledge.broadcom.com/external/article/440685), and VCF Operations then shows it disconnected. So don't count on the server to rescue the hosts it sits on. Track those hosts' license dates separately and alert well ahead of them. Broadcom's recovery for that state brings in a temporary host on evaluation (<KB id={440685} />, <KB id={456295} />), and [recovering an expired estate](/vcf/library/licensing/expired-estate-recovery/) covers it.
+</Callout>
+
+## What an outage costs
+
+Workloads and management carry on at first. While it's down you [can't assign licenses, generate usage reports or import license files](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-downtime-impact.html). New vCenters, hosts and vSAN clusters can't be licensed, though you can add them in evaluation mode. In connected mode the daily automated reports fail, and imports are blocked too, so the update period can't be refreshed. Once the 180-day period passes without a refresh, licenses expire.
+
+The page doesn't say whether that period pauses during an outage. Plan as if it doesn't: your margin is the days left to the next due date, and in manual or disconnected mode that may be far fewer than 180. This is an inference from the page, and [the 180-day cycle](/vcf/library/licensing/180-day-cycle/) has the detail.
+
+Broadcom's two statements on uptime pull apart. TechDocs says the server [doesn't need to be always online](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-downtime-impact.html); <KB id={443240} /> says it should stay powered on at all times. Both hold if you read the first as how much an outage hurts and the second as how to run it. On that reading, short maintenance is fine and leaving it off isn't. Hosts in evaluation raise the stakes: if the 90-day evaluation ends before sync returns, they go to Disconnected and VMs can't power on (<KB id={443240} />).
+
+Protection is [vSphere HA on the cluster that hosts it](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-downtime-impact.html), and the blueprint names HA as the availability mechanism too. Alert on the vCenter message "One or more vCenter instances are not connected to a license server", as <KB id={443240} /> asks, and add the server to the [shutdown and startup order](/vcf/library/day-2/shutdown-startup-order/).
+
+## Losing or replacing one
+
+[Backup isn't required: deploy a new instance and migrate the licenses within 90 days](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections(1)/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html), the blueprint says. The [overview](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview.html) agrees on the method and gives no deadline, adding that VCF Operations restores assignment data to the new instance.
+
+<Callout type="analysis" title="Which deadline to write down">
+Neither page says what happens on day 91 or how the 90 days relate to the 180-day period. Put the earlier of the two dates in the runbook, and start [deploying the replacement](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manual-adding-vcf-components-post-deployment/deploy-a-license-server1.html) well before either.
+</Callout>
+
+Three traps sit on the way out. If licenses were on the outgoing server, follow Broadcom's removal procedure (<KB id={441175} />). And don't just delete the VM: a server removed from vCenter without cleanup leaves stale registrations in the VCF Business Services console, and the new server shows Disconnected until the old entry goes (<KB id={444094} />). Don't delete a registration to restart licensing either: <KB id={456295} /> describes that, with evaluations lapsing, ending in a locked cluster that couldn't take a replacement VM.
+
+For disaster recovery, write this procedure in yourself. The [design elements of Broadcom's VCF disaster recovery blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-disaster-recovery/design-elements-for-vcf-disaster-recovery.html) don't name the License Server (checked 7 Nov 2026). In the Continuous Availability model it sits [in the primary availability zone only](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-operations.html), so plan on this replacement if you lose that zone.
+
+## When it misbehaves
+
+Start with the [License Server Health dashboard in VCF Operations](https://knowledge.broadcom.com/external/article/424533), under Operate and Dashboards, and the VM's web console, whose [Service Status and Connectivity lines](https://knowledge.broadcom.com/external/article/443251) show appliance health. [Licensing dashboards and alerts](https://blogs.vmware.com/cloud-foundation/2026/09/03/new-ai-and-kubernetes-private-cloud-operations-capabilities-in-vmware-cloud-foundation-9-1-1/) came with 9.1.1. SSH, root login and interactive TTY are [disabled by design](https://knowledge.broadcom.com/external/article/443251), so don't improvise there: work from these views and the vSphere Client, then collect a support bundle and open a case. <KB id={424533} /> also gives two fixes: reset the appliance if CPU or memory stays above 90%, and grow the disk if a partition fills, because the appliance resizes it on boot.
+
+A console showing "Not configured" and "Disconnected", or assignments failing, has several documented causes, so work down the list.
 
 | Check | Why |
 |---|---|
-| Deployed **through vCenter**, not the ESX Host Client | Host Client deployment skips the vApp properties, leaving a console that says "Not configured" (<KB id={443082} />, <KB id={441251} />) |
-| Version 9.1.0.0200 or later if your networks use 172.16.0.0/12 or 172.17.0.0/16 | Earlier builds have an internal network conflict that shows as a black console (<KB id={441526} />) |
-| Forward and reverse DNS, **lowercase**, from vCenter and the License Server | One uppercase letter or a missing PTR breaks detection and assignment (<KB id={445428} />, <KB id={442564} />) |
-| The FQDN matches what the console has registered | Watch for a domain suffix appended twice |
-| Time within about 30 seconds | Drift causes "disconnected" status and failed assignment (<KB id={424533} />) |
-| TCP 443 between vCenter, the License Server and VCF Operations | ICMP is disabled on the appliance, so ping tests fail by design |
-| Proxy settings exclude internal traffic | A proxy that captures internal calls breaks License Server to VCF Operations |
+| Deployed through vCenter, not the ESX host client | Host-level deployment doesn't inject the vApp properties. Delete the appliance and redeploy (<KB id={443082} />, <KB id={441251} />) |
+| Hostname is an FQDN with the same suffix as the Domain Name field | [Best practice for the OVA](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manual-adding-vcf-components-post-deployment/deploy-a-license-server1.html). A wrong name fails assignment and means redeploying (<KB id={442564} />) |
+| The FQDN registered in the VCF Business Services console matches the real one | A mismatch fails assignment in disconnected mode. Unregister and register again (<KB id={452095} />) |
+| A and PTR records exist, in lowercase, on an authoritative DNS server, and resolve from vCenter and the License Server | Missing or mismatched records stop detection (<KB id={445428} />). One uppercase letter in the entered hostname fails assignment (<KB id={442564} />). A forwarder such as dnsmasq can block detection even when lookups resolve (<KB id={451990} />) |
+| Time agrees within 30 seconds | Drift causes Disconnected status and failed assignment. <KB id={424533} /> sets 30 seconds, its own alert text says one minute, and <KB id={443082} /> says 5 minutes. Work to 30 |
+| TCP 443 open between vCenter, VCF Operations and the License Server | <KB id={441747} /> and <KB id={442564} /> both name this path. Test the port: ICMP is disabled "in the current released version" and due to change (<KB id={442564} />), so a failed ping proves nothing |
+| No proxy on internal traffic | Internal management traffic [shouldn't go through one](https://knowledge.broadcom.com/external/article/441747), and a proxy that isn't needed breaks the connection (<KB id={441251} />). The deployment field is [only for a proxy required to reach VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manual-adding-vcf-components-post-deployment/deploy-a-license-server1.html), so otherwise leave it blank |
+| Version 9.1.0.0200 or later if you use 172.16.0.0/12 or a route to 172.17.0.0/16 | Earlier builds show a black console from a Docker bridge conflict. Deploy a new server at that version or later (<KB id={441526} />) |
+| Registration key pasted, not typed | It's case-sensitive (<KB id={443082} />) |
 
-The **License Server Health** view in VCF Operations is the first place to look. No public documentation describes shell access or log paths on the appliance, so don't improvise there: collect a support bundle and open a case.
+After an upgrade, first check that the server exists. Licensing through vCenter can't work until the server is deployed with VCF Management Services, and an out-of-order upgrade can leave vCenter reporting "One or more vCenter instances are not connected to a license server." (<KB id={440471} />). [Licensing through upgrades](/vcf/library/licensing/licensing-through-upgrades/) has the sequence.
 
-## Replacing or removing one
+## Moving to 9.1.1
 
-- **Replace:** deploy a new License Server, register it and transfer licenses. VCF Operations restores assignment data to it. Remove licenses from the old one first (<KB id={441175} />).
-- **Don't delete the VM on its own.** A License Server deleted from vCenter without decommissioning in the console leaves an orphaned registration (<KB id={444094} />).
+[Patch VCF Operations and its license servers before ESX hosts](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html) when going from 9.1.0.x to 9.1.1.0. Watch for one known issue: after the patch, VCF Operations [may overstate used capacity, warn of overuse and block assignment](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html). The Business Services console stays correct, and the workaround is restarting the VCF Operations cluster, where going offline can take about an hour. Allow for that window.
 
-<Callout type="field">
-On an upgrade, confirm the License Server was deployed, because an upgrade done out of order can leave it missing. "One or more vCenter instances are not connected to a license server" is the tell (<KB id={440471} />). See [licensing through upgrades](/vcf/library/licensing/licensing-through-upgrades/).
-</Callout>
+Decide on IPv6 before you patch, because the route depends on how the server got to 9.1.1. A [patched server can't turn IPv6 on, so you'd deploy a new 9.1.1 server and transfer licenses](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-networking.html). An OVA deployment offers IPv4-only, IPv6-only or dual-stack, while the VCF Installer deploys IPv4 and you add IPv6 in the vSphere Client.
 
-## Pitfalls
-
-- **Deploying it on a standalone host** with the Host Client. TechDocs doesn't support that path. A community ovftool method exists for edge cases, but treat it as lab-only.
-- **Putting it on a host that is itself unlicensed.** If evaluation expires, the License Server VM can fail to power on with "License expired".
-- **Forgetting it in DR planning.** Plan where it runs if the management domain is lost.
+This note isn't legal or purchasing advice. For entitlement terms, go to your Broadcom agreement and account team.
