@@ -121,10 +121,11 @@ export const TOOLS: Tool[] = [
   {
     name: 'VCF Installer', job: 'deploy', maker: 'broadcom', publisher: 'Broadcom', versions: ['9.0', '9.1'],
     what: 'The appliance that deploys a new VCF or VVF fleet in 9.x, replacing Cloud Builder. It also converges an existing vSphere environment into VCF. It can run its validations on its own, against an existing environment, without deploying anything.',
-    know: 'Running the prechecks alone needs only the appliance and a connected online or offline depot; checks that depend on binaries fail until they are downloaded. Since 9.1, binary downloads use an activation code instead of a download token.',
+    know: 'Running the prechecks alone needs only the appliance and a connected online or offline depot; checks that depend on binaries fail until they are downloaded. On 9.1, KB 443647 says download tokens are no longer used for depot authentication. The May cheat sheet from William Lam says tokens still work, except for ESX updates and patches through the Download Tool, which need a code.',
     get: { label: 'Deployment troubleshooting (9.1 docs)', url: 'https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html' },
     docs: [
       { label: 'Converge vSphere to VCF 9.0', url: 'https://blogs.vmware.com/cloud-foundation/2026/02/05/how-to-converge-a-vmware-vsphere-environment-to-vmware-cloud-foundation-9-0/' },
+      { label: 'Lam: VCF Download Tool cheat sheet', url: 'https://williamlam.com/2026/05/vcf-9-1-vcf-download-tool-vcfdt-cheatsheet.html' },
       { label: 'Using the installer as a pre-check tool', url: 'https://williamlam.com/2026/05/vcf-9-1-quick-tip-using-the-vcf-installer-as-a-standalone-pre-check-tool.html' },
     ],
     kbs: [443647, 401497],
@@ -151,14 +152,15 @@ export const TOOLS: Tool[] = [
   },
   {
     name: 'SoS utility', job: 'upgrade', maker: 'broadcom', publisher: 'Broadcom (built into SDDC Manager)', versions: ['5.x', '9.0', '9.1'],
-    what: 'The supportability tool on SDDC Manager. `sos --health-check` checks the components SDDC Manager manages, and on 5.x and 9.0.x it fails on active locks; other options collect log bundles for support. The 9.1 upgrade-readiness KB pairs it with VDT on each vCenter.',
+    what: 'The supportability tool on SDDC Manager. `sos --health-check` checks the components SDDC Manager manages, and on 5.x and 9.0.x it fails on active locks. On 9.1 it leaves out VCF management services, VCF Automation and VCF Operations, and `--domain-name` defaults to MANAGEMENT for SoS operations and takes ALL. Other options collect log bundles for support. The 9.1 upgrade-readiness KB pairs it with VDT on each vCenter.',
     know: 'Run as root on SDDC Manager from /opt/vmware/sddc-support/sos. Health checks are read-only; log collection writes bundles to disk, so check free space first.',
     get: { label: 'Health checks for 9.1 upgrade readiness', url: 'https://knowledge.broadcom.com/external/article/454898' },
+    docs: [{ label: 'What the 9.1 health check covers', url: 'https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html' }],
     kbs: [454898, 439473, 385749],
     checked: C,
   },
   {
-    name: 'Bundle Cleanup Utility', job: 'upgrade', maker: 'broadcom', publisher: 'Broadcom (built into SDDC Manager)', versions: ['5.x', '9.0'],
+    name: 'Bundle Cleanup Utility', job: 'upgrade', maker: 'broadcom', publisher: 'Broadcom (built into SDDC Manager)', versions: ['5.x', '9.0', '9.1'],
     what: 'A script on SDDC Manager, bundle_cleanup.py, that removes old install and upgrade bundles from the bundle partition, for prechecks that fail on disk space.',
     know: 'In 9.x, delete binaries from the UI first and use the script only when that fails. Snapshot SDDC Manager before running it. Deleted bundles must be downloaded again if needed, and their upgrade history is removed.',
     get: { label: 'How to use the Bundle Cleanup Utility', url: 'https://knowledge.broadcom.com/external/article/312173' },
@@ -225,9 +227,9 @@ export const TOOLS: Tool[] = [
     checked: C,
   },
   {
-    name: 'VMware.CloudFoundation.Reporting', job: 'operate', maker: 'opensource', publisher: 'VMware (GitHub)', versions: [],
+    name: 'VMware.CloudFoundation.Reporting', job: 'operate', maker: 'opensource', publisher: 'VMware (GitHub)', versions: ['5.x'],
     what: 'PowerShell cmdlets that report on the operational state of a VCF instance (health, alerts, configuration, versions) to the console or as HTML reports.',
-    know: 'The project page does not state which VCF versions it supports. It predates VCF 9, so test it in a lab before relying on it there.',
+    know: 'Its last release, v2.7.0 of 22 May 2025, sustains it for supported 5.x versions and gives no support or enhancements to future major releases. The notice does not name 9.x, so plan its replacement into the upgrade.',
     get: { label: 'GitHub', url: 'https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-reporting' },
     checked: C,
   },
@@ -261,9 +263,9 @@ export const TOOLS: Tool[] = [
   {
     name: 'Terraform provider for VCF', job: 'automate', maker: 'opensource', publisher: 'VMware (GitHub, Terraform Registry)', versions: ['5.x', '9.0', '9.1'],
     what: 'Terraform resources for VCF bring-up and SDDC Manager: domains, clusters, hosts, edge clusters and related configuration.',
-    know: 'Provider version matters: the README maps VCF 9.0 to provider 0.17 or later and VCF 9.1.1 to 0.19 or later, and 0.19 cannot do a 9.0 bring-up.',
+    know: 'Provider version matters: the provider docs map VCF 9.0 to provider 0.17 or later and VCF 9.1.1 to 0.19 or later. PR 445 says `vcf_instance` in v0.19.0 cannot do bring-up for VCF 9.0.0 and earlier.',
     get: { label: 'Terraform Registry', url: 'https://registry.terraform.io/providers/vmware/vcf/latest/docs' },
-    docs: [{ label: 'GitHub', url: 'https://github.com/vmware/terraform-provider-vcf' }],
+    docs: [{ label: 'GitHub', url: 'https://github.com/vmware/terraform-provider-vcf' }, { label: 'PR 445', url: 'https://github.com/vmware/terraform-provider-vcf/pull/445' }],
     checked: C,
   },
   {
@@ -283,10 +285,10 @@ export const TOOLS: Tool[] = [
     checked: C,
   },
   {
-    name: 'Automated VCF 9.0 lab deployment', job: 'lab', maker: 'community', publisher: 'William Lam', versions: ['9.0'],
-    what: 'A PowerShell script that deploys nested ESX hosts and a VCF 9.0 fleet, and optionally a workload domain, on an existing vSphere environment. Configuration is kept in a separate file.',
+    name: 'Automated VCF 9.x lab deployment', job: 'lab', maker: 'community', publisher: 'William Lam', versions: ['9.0', '9.1'],
+    what: 'PowerShell scripts that deploy nested ESX hosts and a VCF or VVF fleet, and optionally a workload domain, on an existing vSphere environment. Configuration is kept in a separate file. The main scripts have 9.1 samples, and the 9.0 fleet script and samples are in a 9.0 folder.',
     get: { label: 'GitHub', url: 'https://github.com/lamw/vcf-fleet-automated-lab-deployment' },
-    docs: [{ label: 'Write-up', url: 'https://williamlam.com/2025/09/automated-vmware-cloud-foundation-vcf-9-0-lab-deployment-script.html' }],
+    docs: [{ label: 'Write-up (9.0)', url: 'https://williamlam.com/2025/09/automated-vmware-cloud-foundation-vcf-9-0-lab-deployment-script.html' }],
     checked: C,
   },
   {
