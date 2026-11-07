@@ -36,10 +36,12 @@ The rule is that **whatever manages a component is upgraded before the component
 
 ## The 9.1 sequence, and the reason for each step
 
-The published sequence (<KB id={440630} />) reads as a list. Here is the reasoning behind each position:
+The sequence is a table in [Broadcom's upgrade guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) (updated 5 Nov 2026), listing components "in the order that you must upgrade each component". <KB id={440630} /> says the sequence is mandatory and sends you to that guide. The table doesn't give reasons, so these are this site's:
+
+On a 9.0 source one step can come first: a broker appliance on an NSX overlay segment outside the VCF management network has to be redeployed before VCF Operations, as [the Identity Broker note](/vcf/library/architecture/identity-broker/) explains.
 
 1. **VCF Operations first.** It holds the lifecycle UI and the licence file, and on a 9.0 source it receives the fleet appliance's inventory during its own upgrade. The 9.1 binaries do not even appear in VCF Operations 9.0 until it is upgraded (<KB id={440282} />).
-2. **vSphere Replication and Avi.** These are compatibility gates. Avi must already be supported by the SDDC Manager you are about to install.
+2. **vSphere Replication, Live Site Recovery, vSAN Data Protection and Avi.** These are compatibility gates. Avi must already be supported by the SDDC Manager you are about to install.
 3. **SDDC Manager.** This is the engine that will deploy the management services and later upgrade the core.
 4. **Management services, License Server and software depot (9.1).** Fleet lifecycle and SDDC lifecycle must exist before they can upgrade anything. Configure the depot before any further component upgrades.
 5. **Identity broker, then VCF Automation, then the rest of the management components** (Orchestrator, Operations for networks, log management). These are clients of the runtime and of SSO.

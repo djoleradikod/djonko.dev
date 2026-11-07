@@ -98,22 +98,22 @@ sources:
 ---
 
 <InShort>
-Choose connected unless network or policy rules it out. If no connection is allowed but a file may leave, choose disconnected and budget one usage and license exchange per VCF Operations instance at least every 180 days. If nothing may leave, Broadcom documents private license files, which need its approval and add key custody and a maximum version <AsOf date="2026-11-07" />. This isn't legal or purchasing advice: [Broadcom's guide](https://vcf.broadcom.com/vcf/clm/assets/VCF-9.1-Licensing-Private-License-Files.pdf) and your agreement decide.
+Choose connected unless network or policy rules it out. If no connection is allowed but a file may leave, choose disconnected and budget one usage and license exchange per VCF Operations instance at least every 180 days. If nothing may leave, Broadcom documents a private license file, which needs its approval and adds key custody and a maximum version <AsOf date="2026-11-07" />. This isn't legal or purchasing advice: [Broadcom's guide](https://vcf.broadcom.com/vcf/clm/assets/VCF-9.1-Licensing-Private-License-Files.pdf) and your agreement decide.
 </InShort>
 
 <Callout type="note" title="Corrected on 7 November 2026">
 This note used to present connected and disconnected as the only choices and sent dark sites to disconnected. Disconnected still needs files to leave the site. A site that can't allow that needs a private license file, with Broadcom's approval.
 </Callout>
 
-## Five questions, in this order
+## Three questions pick the mode, two more check it
 
-1. **May every VCF Operations node open TCP 443 to `vcf.broadcom.com` and `eapi.broadcom.com`, directly or through a proxy?** <KB id={431546} /> requires it from all cluster nodes. If yes, use connected, which Broadcom [recommends](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations.html) "for anyone who has an Internet connection". If the objection is about what gets sent, see below: disconnected sends the same data.
-2. **If not, may a file leave at least every 180 days?** If yes, use disconnected. Only a separate machine needs internet access.
-3. **If nothing may leave, do you hold Broadcom's approval?** With it, use a private license file. Without it, the documents here offer you no route. The guide describes the case it's for, environments where data egress is prohibited, and the [4 Nov FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) doesn't mention private license files. Neither gives approval criteria or a way to apply, so ask your account team, in writing, before the design is fixed.
-4. **If you're approved and a file may leave, why use a private file at all?** The guide says a registered instance gets the same non-expiring benefit from a new license file, with no key pairs and no maximum version. A private file only earns its overhead where egress is prohibited.
-5. **Are any hosts outside a vCenter inventory?** The guide has those take a private license file on a standalone license server, for approved customers, and says you can't license a vCenter without VCF Operations.
+1. **May every VCF Operations node open TCP 443 to `vcf.broadcom.com` and `eapi.broadcom.com`, directly or through a proxy?** All cluster nodes need that path (<KB id={431546} />). If yes, use connected, which Broadcom [recommends](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations.html) "for anyone who has an Internet connection". An objection to what gets sent is no reason to move to disconnected, since it sends the same data (see below).
+2. **If not, may a file leave at least every 180 days?** If yes, use disconnected, where only a separate machine needs internet access.
+3. **If nothing may leave, do you hold Broadcom's approval?** With it, use a private license file. Without it, the documents here offer you no route, and neither the guide nor the [4 Nov FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) gives approval criteria or a way to apply, so ask your account team, in writing, before the design is fixed. The guide describes the case the file is for, environments where data egress is prohibited. The FAQ doesn't mention private license files.
+4. **If you're approved and a file may leave, why use a private file at all?** A registered instance gets the same non-expiring benefit from a new license file, with no key pairs and no maximum version, the guide says. So a private file only earns its overhead where egress is prohibited.
+5. **Are any hosts outside a vCenter inventory?** If yes, those hosts take a private license file on a standalone license server, for approved customers, and a vCenter can't be licensed without VCF Operations, the guide says.
 
-Then count isolated sites. <KB id={404155} /> says each needs its own VCF Operations and that central licensing across disconnected sites isn't supported, so every cost below multiplies by site.
+Then count isolated sites. Each needs its own VCF Operations and central licensing across disconnected sites isn't supported (<KB id={404155} />), so every cost below multiplies by site.
 
 ## What each mode needs and what breaks
 
@@ -123,52 +123,54 @@ Then count isolated sites. <KB id={404155} /> says each needs its own VCF Operat
 | **What crosses** | Usage, daily | Out: registration, confirmation and usage files. In: verification and license files. | Out: public keys, from pairs you can generate outside the product. In: the license file. No registration or usage data. |
 | **Recurring work** | 9.1 automated: none. 9.0 and 9.1 manual: click Update Licenses within 180 days. | Usage file out, license file back, within 180 days, per instance | No enforced cycle. A new file for each maximum version, license or key change. Reporting "might be required" by agreement. |
 | **Maximum version** | None | None | You must set one |
-| **What breaks** | A firewall or proxy change stops the daily path. | A missed exchange. A registration file reused from another instance fails. On 9.1 the confirmation file is [valid for 3 hours](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations.html). | A lost key pair forces new pairs and imports. Per the guide, the wrong Licensed Environment type makes license assignment fail. |
+| **What breaks** | A firewall or proxy change stops the daily path. | A missed exchange. A registration file reused from another instance fails. On 9.1 the confirmation file is [valid for 3 hours](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations.html). | A lost key pair forces new pairs and imports. The wrong Licensed Environment type makes license assignment fail, per the guide. |
+
+While a 9.1 [license server](/vcf/library/licensing/license-server/) is down, in any mode, you can't assign licenses, generate usage reports or import license files, Broadcom's [overview](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview.html) says.
 
 [The 180-day note](/vcf/library/licensing/180-day-cycle/) has the 90-day window, what stops after a missed date, and who moves the date on each version. [Keys to license files](/vcf/library/licensing/keys-to-license-files/) covers the file model. For steps, use Broadcom's [connected](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations/register-vcf-operation-in.html) and [disconnected](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations/register-vcf-operations-in-disconnected-mode.html) pages; for failures, [licensing errors decoded](/vcf/library/licensing/licensing-errors-decoded/).
 
-While a 9.1 [license server](/vcf/library/licensing/license-server/) is down, in any mode, Broadcom's [overview](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview.html) says you can't assign licenses, generate usage reports or import license files.
-
 ## Disconnected sends the same data
 
-Broadcom [states](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/update-licenses.html) that usage files "are identical in connected and disconnected mode". Registration information is ["equivalent"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations.html) between the two modes, in different formats. On 9.1 the usage file adds vCenter GUIDs and versions, host counts by ESX version, and cluster and vSAN datastore counts. Broadcom says it holds no personal or customer data.
+Disconnected changes when data leaves and who can stop it, while the content stays the same. Broadcom says usage files ["are identical in connected and disconnected mode"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/update-licenses.html), and registration information is ["equivalent"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations.html) between the two modes, in different formats. On 9.1 the usage file adds vCenter GUIDs and versions, host counts by ESX version, and cluster and vSAN datastore counts. Broadcom says it holds no personal or customer data.
 
-So disconnected changes when data leaves and who can stop it, while the content stays the same. It also hands you the raw files: connected mode shows only a human-readable usage report, and registration file contents are viewable only in disconnected mode.
+Disconnected also hands you the raw files: connected mode shows only a human-readable usage report, and registration file contents are viewable only in disconnected mode.
 
 <Callout type="analysis" title="Put the file in front of the security reviewer">
-Decode a sample and have your reviewer rule on the fields. If host counts and vCenter GUIDs are acceptable, a proxy with a narrow egress rule may meet the policy with no recurring work. If they aren't, disconnected won't help, because the same fields leave by hand, and you're at question 3. The registration file also names the instance and its license servers. Broadcom keeps the FQDN only if it stays as the display name, and its [connected page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations/register-vcf-operation-in.html) gives an API setting to leave it out.
+Decode a sample and have your reviewer rule on the fields. If host counts and vCenter GUIDs are acceptable, a proxy with a narrow egress rule may meet the policy with no recurring work. If they aren't, disconnected won't help, because the same fields leave by hand, and you're at question 3. The registration file also names the instance and its license servers. Broadcom keeps the FQDN only if it stays as the display name, and an API setting leaves it out, according to its [connected page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations/register-vcf-operation-in.html).
 </Callout>
 
 ## Recurring work, in numbers
 
-A constructed example: five isolated sites, one VCF Operations and one license server at each, and an exchange every 150 days to leave 30 days' margin.
+This example is constructed: five isolated sites, one VCF Operations and one license server at each, and an exchange every 150 days to leave 30 days' margin.
 
 - **Disconnected:** 365 ÷ 150 ≈ 2.4 exchanges per site, so about 12 a year across five sites. Each has two crossings, so about 24 file transfers.
-- **Private license file:** no usage exchanges are enforced. The guide requires one key pair for VCF Operations and one per license server, so 10 pairs to keep. The console can save public keys; the mapping to servers stays yours. Each estate-wide license change or rise in the maximum needs five new files, carried in.
+- **Private license file:** no usage exchanges are enforced. The guide requires one key pair for VCF Operations and one per license server, so that's 10 pairs to keep. The console can save public keys; the mapping to servers stays yours. Each estate-wide license change or rise in the maximum needs five new files, carried in.
 
-Once an approved estate imports its new file, the guide says the product "will no longer enforce or warn to provide license usage". This is inference from that wording, but don't count on the product to flag subscription dates either: keep them in your own calendar ([conditions here](/vcf/library/licensing/180-day-cycle/#does-the-product-enforce-expiration)).
+In this example, disconnected costs about 24 file transfers a year. The private file swaps those for 10 key pairs to keep and five files per change. These counts don't override question 2: whether a file may leave still picks between them.
+
+Once an approved estate imports its new file, the product "will no longer enforce or warn to provide license usage", the guide says. Don't count on it to flag subscription dates either, so keep them in your own calendar. That's an inference from the wording ([conditions here](/vcf/library/licensing/180-day-cycle/#does-the-product-enforce-expiration)).
 
 ## Version limits
 
-- **Private license file:** the maximum version is "the highest version that can be used with the license", in both the 9.0 and 9.1 guides. Raise it and import the new file before upgrading. For 9.0 to 9.1 the guide orders this before the VCF Operations upgrade, using the same public key. A standalone host going from 9.0 to 9.1 loses its license with no evaluation period, and can't start workloads until the licensing steps finish.
+- **Private license file:** raise the maximum and import the new file before upgrading. The maximum is "the highest version that can be used with the license", in both the 9.0 and 9.1 guides. For 9.0 to 9.1 the guide orders the raise and import before the VCF Operations upgrade, using the same public key. A standalone host going from 9.0 to 9.1 loses its license with no evaluation period, and can't start workloads until the licensing steps finish.
 - **What the guide leaves open** (checked 7 Nov 2026): what the product does if you upgrade past the maximum, and whether 9.1.1 counts as 9.1. Make the maximum a pre-upgrade check, and ask support if your target is a maintenance release.
-- **Connected and disconnected:** no maximum, as the guide says registration "removes the need" to define one. Upgrading to 9.1 [keeps your mode](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/transfer-your-licenses-after-you-upgrade-vcf-operations.html). Connected registers the license server by itself. Disconnected must register it and import a newly generated file, so add a crossing to the upgrade plan.
+- **Connected and disconnected:** no maximum, since registration "removes the need" to define one, the guide says. Upgrading to 9.1 [keeps your mode](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/transfer-your-licenses-after-you-upgrade-vcf-operations.html), but the work differs. Connected registers the license server by itself. Disconnected must register it and import a newly generated file, so add a crossing to the upgrade plan.
 
 ## Automating the exchange
 
-William Lam's [18 May 2026 post](https://williamlam.com/2026/05/vcf-9-1-automating-new-license-entitlement-workflow-between-vcf-operations-vcf-business-service-console-bsc.html) scripts the disconnected flow, from registration to usage reporting, with the `Broadcom.Community.VCFLicensing` PowerShell module, on licensing APIs that Hah and Firth's [launch post](https://blogs.vmware.com/cloud-foundation/2026/05/18/vcf-9-1-licensing-programmatic-centralized-and-built-to-scale/) says are open to all 9.1 customers. His post doesn't cover private license files or state support terms, so review the module as you would any community code before it enters a restricted site.
+Decide first whether a restricted site can have a machine that reaches both VCF Operations and the console. William Lam's [18 May 2026 post](https://williamlam.com/2026/05/vcf-9-1-automating-new-license-entitlement-workflow-between-vcf-operations-vcf-business-service-console-bsc.html) doesn't discuss that, and his example needs one: it opens a connection to each in one session.
 
-His example opens a connection to VCF Operations and to the console in one session, so the machine running it reaches both. He doesn't discuss whether a restricted site can have such a machine, and that decision comes first.
+The post scripts the disconnected flow, from registration to usage reporting, with the `Broadcom.Community.VCFLicensing` PowerShell module, on licensing APIs open to all 9.1 customers, according to Hah and Firth's [launch post](https://blogs.vmware.com/cloud-foundation/2026/05/18/vcf-9-1-licensing-programmatic-centralized-and-built-to-scale/). Lam's post doesn't cover private license files or state support terms, so review the module as you would any community code before it enters a restricted site.
 
-<Callout type="analysis" title="Where does the automation run?">
+<Callout type="analysis" title="Where the automation runs">
 This is inference from that post. A host that reaches both sides is a gateway, and it holds a console OAuth client secret, so compare it with a proxied connected instance, which gives up only the review step. If policy forbids that host, you can at most script each side separately, and someone still carries files, inside the 3-hour confirmation limit at registration.
 </Callout>
 
 ## What would change the answer
 
 - **Policy loosens or tightens.** You can [switch modes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/switch-from-disconnected-to-connected-mode.html) at any time, though after more than 180 days disconnected the switch may fail and need a new activation code (<KB id={428209} />).
-- **An approved environment moves from unclassified to classified.** The guide says the disconnected license file "serves the same purpose as a private license file".
-- **A sovereignty requirement enters the design.** Dario Maisto of Forrester [wrote on 20 Oct 2025](https://www.forrester.com/blogs/vmware-explore-paris-2025-our-take-on-private-ai-and-private-cloud-sovereignty/) that VMware, asked at Explore Paris about running offline, said VCF "continues to operate until the license expires", after which applications run but management is lost. He judged the subscription model a poor fit for sovereignty-focused strategies. His post doesn't discuss private license files.
+- **An approved environment moves from unclassified to classified.** The disconnected license file "serves the same purpose as a private license file", the guide says. Rerun questions 2 and 3 against the new classification.
+- **A sovereignty requirement enters the design.** Dario Maisto of Forrester [wrote on 20 Oct 2025](https://www.forrester.com/blogs/vmware-explore-paris-2025-our-take-on-private-ai-and-private-cloud-sovereignty/) that VMware, asked at Explore Paris about running offline, said VCF "continues to operate until the license expires", after which applications run but management is lost. He judged the subscription model a poor fit for sovereignty-focused strategies. His post doesn't discuss private license files, so the callout below tests the objection on that route.
 
 <Callout type="analysis" title="Non-enforcement isn't the same as a right to keep running">
 Approval removes the product's enforcement. It doesn't remove the guide's sentence: "If your subscription expires and you do not renew it, you must stop using the product." So Maisto's objection survives the private route, and a sovereign design should treat renewal as a dependency on Broadcom in every mode. What that means for you is for your counsel.

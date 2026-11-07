@@ -101,7 +101,7 @@ Upgrades to 9.1.x are supported from **5.2.x** and **9.0.x**. Anything older goe
 
 ## Step 2: write the order down
 
-For a 5.2 source the order follows the published sequence (<KB id={390634} />, <KB id={440630} />):
+For a 5.2 source the order follows the published sequence (<KB id={390634} />, and for 9.1 the table in [Broadcom's upgrade guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html)):
 
 <Diagram viewBox="0 0 820 170" label="Upgrade order: management components first, then SDDC Manager, then per-domain NSX, vCenter and ESX, then finalize." caption="The order runs top-down: management components, then the instance, then each domain. Workload domains can follow later.">
   <rect class="box accent" x="10" y="20" width="180" height="70" rx="8" /><text class="t" x="24" y="46">Management</text><text class="s" x="24" y="66">Aria LCM patch (9.0),</text><text class="s" x="24" y="82">VCF Ops, then others</text>
