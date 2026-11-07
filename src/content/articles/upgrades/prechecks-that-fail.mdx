@@ -71,6 +71,11 @@ sources:
     by: "Marc Huppert"
     kind: practitioner
     date: 2026-06-06
+  - title: "Recommendations for VCF certificate management (9.1 blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
 ---
 
 <InShort>
@@ -97,7 +102,7 @@ Read together, the stated causes point to three habits that head off several row
 
 - **Leave VMs where VCF put them, or list every move.** Moves between datastores or folders sit behind <KB id={446929} />, <KB id={448384} /> and scenario 5 of <KB id={441285} />. The first needs Support to edit the SDDC Manager database, so a move discovered late can cost you the window.
 - **Power off the 9.0 fleet appliance and keep its DNS record.** Left on, it causes 401 errors in later prechecks (<KB id={449075} />). With the record deleted, the VCF Automation precheck can't confirm the address is unused and fails (<KB id={443874} />).
-- **Replace certificates through SDDC Manager.** A certificate changed directly on NSX Manager leaves SDDC Manager distrusting it (<KB id={442766} />).
+- **Replace certificates through VCF Operations, not directly on the component.** A certificate changed directly on NSX Manager leaves SDDC Manager distrusting it (<KB id={442766} />). That KB, from 3 Jun 2026, names SDDC Manager as the managed route, but the 5 Nov 2026 [blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html) says "Avoid using the SDDC Manager for certificate management", so follow the newer page.
 
 [The route chooser](/vcf/library/upgrades/upgrade-route-chooser/) sends you to 9.1.1, which may close some of these, but the articles won't always tell you: <KB id={450225} /> names 9.1.0 in its Environment line, while <KB id={444283} /> says only "VMware Cloud Foundation 9.x". Read each article's Environment line against your source and target before acting on it. Several fixes edit a database or a pod, so take the snapshot or backup the article asks for first.
 
@@ -107,7 +112,7 @@ Four Broadcom pages set the requirement, and they differ. Build one SAN list per
 
 | Component | SAN must hold | Source |
 |---|---|---|
-| VCF Operations | Each node's FQDN, IP address and shortname, from the KB, plus the load balancer or VIP FQDN, from the upgrade page. The page asks only for FQDNs, and the KB doesn't mention the VIP, so the list needs both | <KB id={453793} />, [TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/install-a-software-update.html), 5 Nov 2026 |
+| VCF Operations | Each node's FQDN and IP address, from the KB, plus the load balancer or VIP FQDN, from the upgrade page. The page asks only for FQDNs, and the KB doesn't mention the VIP, so the list needs both. On a CSR generated before 9.1, add each node's shortname as the KB asks. [On 9.1 a shortname fails the whole CSR](/vcf/library/day-2/certificates-in-9/#getting-sans-and-replacements-right) | <KB id={453793} />, [TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/install-a-software-update.html), 5 Nov 2026 |
 | VCF Operations for networks | FQDN as a DNS entry and IP as an IP Address entry. An IP listed as a DNS entry also fails | <KB id={440459} /> |
 | NSX Manager VIP | Every required FQDN and IP address | <KB id={440910} /> |
 

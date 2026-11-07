@@ -6,7 +6,8 @@ order: 2
 versions: ["5.x", "9.0", "9.1"]
 level: Overview
 pubDate: 2026-11-02
-kbs: [443680, 435599, 426872, 450375, 454943]
+updated: 2026-11-07
+kbs: [443680, 435599, 426872, 450375]
 sources:
   - title: "SDDC Manager design (VCF 9.0)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/design/design-library/vcf-operations-design/sddc-manager-design.html"
@@ -26,6 +27,11 @@ sources:
   - title: "Accounts in VMware Cloud Foundation (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html"
     by: "Broadcom TechDocs"
+  - title: "VCF Operations 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
 ---
 
 <InShort>
@@ -79,13 +85,13 @@ In 5.x, SDDC Manager was both the console and the engine. In 9.0 it keeps the en
 
 The VCF blog's Day-2 comparison is the best single list of where each task went. The short version:
 
-- **To VCF Operations:** workload domain deployment, backup configuration, DNS and NTP settings per instance, certificate authority configuration, certificate management (now with auto-renewal) and password management.
+- **To VCF Operations:** workload domain deployment, backup configuration, DNS and NTP settings per instance, certificate authority configuration, certificate management (now with auto-renewal) and [password management](/vcf/library/day-2/passwords-service-accounts/), where Update runs while Rotate stays in SDDC Manager.
 - **To vCenter:** network pools, host commissioning and decommissioning, cluster creation and expansion, and NSX edge cluster deployment. For workload domains these need VCF SSO and vCenter linking in place first.
 - **To fleet lifecycle:** everything Aria Suite Lifecycle did for the management components. That is a separate appliance in 9.0 and a service in 9.1. See <a href="/vcf/library/architecture/aria-lifecycle-to-services-runtime/">From Aria Suite Lifecycle to the services runtime</a>.
 
 ## The password and certificate overlap in 9.0
 
-9.0 is a transition release, and the split is not perfectly clean. In 9.0, automatic rotation for the management components is not complete (<KB id={426872} />). SDDC Manager password management stays the authoritative source for core component accounts (<KB id={435599} />). In 9.1, VCF Operations owns more of it. From 9.1.1 even SDDC Manager's own `vcf`, `root` and `admin@local` passwords can be managed from the VCF Operations UI or API, where 9.1 still required changing them in the OS (<KB id={454943} />).
+9.0 is a transition release, and the split is not perfectly clean. In 9.0, automatic rotation for the management components is not complete (<KB id={426872} />). SDDC Manager password management stays the authoritative source for core component accounts (<KB id={435599} />). In 9.1, VCF Operations owns more of it. From 9.1.1 even SDDC Manager's own `vcf`, `root` and `admin@local` passwords can be managed from the VCF Operations UI or API, where 9.1 still required changing `root` and `vcf` in the OS and `admin@local` through the SDDC Manager API ([accounts table](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html), [9.1.1.0 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html)).
 
 <Callout type="warn" title="Don't hand service accounts to a PAM tool">
 TechDocs is explicit: VCF service accounts must not be rotated or managed by an external privileged access management tool. Rotation has to go through VCF Operations or SDDC Manager, or the components fall out of sync with each other.

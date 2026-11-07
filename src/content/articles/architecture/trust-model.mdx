@@ -6,7 +6,7 @@ order: 9
 versions: ["5.x", "9.0", "9.1"]
 level: Deep dive
 pubDate: 2026-11-02
-updated: 2026-11-06
+updated: 2026-11-07
 kbs: [427937, 441515, 449907, 444734, 450375, 443511, 431963, 441506]
 sources:
   - title: "Automatic certificate renewal in VCF 9"
@@ -18,10 +18,30 @@ sources:
   - title: "VCF 5.2 administration: certificate management"
     url: "https://docs.vmware.com/en/VMware-Cloud-Foundation/5.2/vcf-admin/GUID-5DA368B0-68CF-44D1-846F-68E36A9136C7.html"
     by: "VMware"
+  - title: "Managing Certificates in VMware Cloud Foundation (9.1.x)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configure a Certificate Authority (9.1.x)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0/configure-a-certificate-authority_9-0.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Recommendations for VCF certificate management (9.1 blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Managing Certificates at Scale with VMware Cloud Foundation 9.1.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/10/14/managing-certificates-at-scale-with-vmware-cloud-foundation-9-1-1/"
+    by: "Andrew Firth and Sehjung Hah, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-10-14
 ---
 
 <InShort>
-VCF components trust each other in two ways. The first is **certificates**: the TLS identity each component presents, and the trust stores and thumbprints the others keep for it. The second is **service accounts**: system-generated credentials that one component uses to call another. In 5.x, SDDC Manager handled both for everything it managed. In 9.x the work is split. Fleet management, now part of VCF Operations, looks after the management components. vCenter's VMCA and SDDC Manager look after the infrastructure. 9.1 adds a services runtime with its own ingress certificate and trust bundle, and it enforces FQDN SANs strictly. When something "stops talking", check certificates and service accounts before anything else.
+VCF components trust each other in two ways. The first is **certificates**: the TLS identity each component presents, and the trust stores and thumbprints the others keep for it. The second is **service accounts**: system-generated credentials that one component uses to call another. In 5.x, SDDC Manager handled both for everything it managed. In 9.0 the work is split. Fleet management, now part of VCF Operations, looks after the management components, and vCenter's VMCA and SDDC Manager look after the infrastructure. In 9.1, [VCF Operations manages certificates for both](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0.html), and Broadcom's blueprint says to ["Avoid using the SDDC Manager for certificate management"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html). 9.1 also adds a services runtime with its own ingress certificate and trust bundle, and it enforces FQDN SANs strictly. When something "stops talking", check certificates and service accounts before anything else.
 </InShort>
 
 <Compare rows={[
@@ -32,7 +52,7 @@ VCF components trust each other in two ways. The first is **certificates**: the 
   ["SAN strictness", "Lenient in many places", "9.1 requires FQDN SANs. Missing SANs block upgrades and migration into fleet lifecycle."],
 ]} />
 
-## Who signs what in 9.x
+## Who signs what in 9.0
 
 <Diagram viewBox="0 0 820 250" label="Issuers and what they sign: Microsoft AD CS can sign management and infrastructure; the fleet management CA signs management components; VMCA signs vCenter-managed infrastructure and ESX; the SDDC Manager OpenSSL CA signs infrastructure only." caption="Issuers in VCF 9.0, as described in the VCF blog's certificate renewal post.">
   <rect class="box accent" x="20" y="20" width="230" height="50" rx="6" /><text class="t" x="34" y="50">Microsoft AD CS</text>
@@ -47,6 +67,8 @@ VCF components trust each other in two ways. The first is **certificates**: the 
   <path class="wire" d="M250 173 L558 180" marker-end="url(#arr)" />
   <path class="wire dash" d="M250 220 C 400 220, 420 195, 558 195" marker-end="url(#arr)" />
 </Diagram>
+
+On 9.1 the fleet management CA [is no longer a CA type](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0/configure-a-certificate-authority_9-0.html) and [OpenSSL runs on VCF Operations](https://blogs.vmware.com/cloud-foundation/2026/10/14/managing-certificates-at-scale-with-vmware-cloud-foundation-9-1-1/), so use [the CA table in the certificates note](/vcf/library/day-2/certificates-in-9/#ca-type-against-renewal-behaviour) for 9.1 and 9.1.1.
 
 If you use a VMware-issued CA, distribute its root to administrator workstations, or every browser session will start with a warning.
 

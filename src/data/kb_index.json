@@ -742,7 +742,7 @@
  },
  {
   "kb": 426872,
-  "topic": "9.0: certificate rotation not automated for some components",
+  "topic": "9.0: password rotation not automated for some components",
   "decks": [
    "Meet the fleet"
   ],

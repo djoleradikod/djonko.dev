@@ -87,7 +87,7 @@ kb,topic,decks,url
 425271,Certificate expiry fetch fails with Avi,How it all connects; Follow the signposts,https://knowledge.broadcom.com/external/article/425271
 426042,Cloud proxy offline every 4-8 hours: DNS,Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/426042
 426389,NSX extension already registered: MOB cleanup,How it all connects,https://knowledge.broadcom.com/external/article/426389
-426872,9.0: certificate rotation not automated for some components,Meet the fleet,https://knowledge.broadcom.com/external/article/426872
+426872,9.0: password rotation not automated for some components,Meet the fleet,https://knowledge.broadcom.com/external/article/426872
 426913,Unsupported local plugins; MOB cleanup,How it all connects,https://knowledge.broadcom.com/external/article/426913
 427228,VCF Operations plugin does not upgrade with Ops,How it all connects,https://knowledge.broadcom.com/external/article/427228
 427237,vCenter STS will not start (9.0.1),Follow the signposts,https://knowledge.broadcom.com/external/article/427237
