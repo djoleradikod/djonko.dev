@@ -1,13 +1,14 @@
 ---
 title: "Going from 9.0 to 9.1: deploying management services and planning the runtime"
-description: "The 9.0 to 9.1 upgrade has one step with no equivalent in any earlier VCF upgrade: building a Kubernetes-based services runtime under the management stack. Here is what it needs, what it does, and where it tends to stop."
+description: "The 9.0 to 9.1 upgrade adds one large step: building a Kubernetes-based services runtime under the management stack. Here is what it needs, what it does, and where public KBs show it stopping."
 category: upgrades
 order: 4
 versions: ["9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [440630, 450430, 441122, 440449, 448888, 446831, 443106, 441333, 446929, 452059, 452077, 443216]
+updated: 2026-11-07
+reviewed: 2026-11-07
+kbs: [450430, 440449, 448888, 446831, 443106, 441333, 446929, 452059, 452077, 443216]
 sources:
   - title: "Deploy VCF management services (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html"
@@ -27,64 +28,65 @@ sources:
 ---
 
 <InShort>
-Upgrading 9.0 to 9.1, or 5.2 straight to 9.1, follows this sequence: upgrade VCF Operations, upgrade SDDC Manager, then run **Deploy VCF Management Services and License Server**. That step builds the services runtime, a small Kubernetes cluster of VMs, on the management network. It installs fleet lifecycle, SDDC lifecycle, the software depot, Salt and telemetry on it, deploys the License Server appliance, and imports the existing management components into fleet lifecycle. It needs addresses, lowercase DNS records, certificates with proper SANs, a healthy cloud proxy, and firewall paths from the runtime's addresses. Once it completes there is no going back to the 9.0 fleet appliance.
+Upgrading 9.0 to 9.1 follows this sequence: upgrade VCF Operations, upgrade SDDC Manager, then run **Deploy VCF Management Services and License Server**. Broadcom's page requires both at 9.1.x for that step and gives licensing follow-up for 5.2.x as well, so a straight 5.2 upgrade reaches it too. The step builds the services runtime, a small Kubernetes cluster of VMs, on the management network unless you choose another. It installs fleet lifecycle, SDDC lifecycle, the software depot, Salt and telemetry on it, deploys the License Server appliance, and imports the existing management components into fleet lifecycle. It needs addresses, lowercase DNS records, a healthy cloud proxy, and firewall paths from the runtime's addresses. Once it completes, reseller WWT's walkthrough says there is "no supported path to reverse the upgrade", and Broadcom's page describes none (checked 7 Nov 2026).
 </InShort>
+
+<Callout type="note" title="Corrected on 7 November 2026">
+This note said the import fails right after midnight or another fixed time, and that the License Server address must avoid `172.17.0.0/16`. <KB id={452077} /> ties that failure to a VCF Operations upgrade overlapping the daily inventory sync, whenever that runs, and Broadcom's deploy page doesn't mention that range (checked 7 Nov 2026). It also asked for certificates with SANs and called the depot items INSTALL binaries, which neither that page nor <KB id={450430} /> says.
+</Callout>
 
 <Compare title="What this step replaces" rows={[
   ["Lifecycle of management components", "Aria Suite Lifecycle appliance", "Fleet lifecycle service on the runtime"],
   ["Binaries store", "SDDC Manager depot", "Software depot service (depot-service pod)"],
   ["Licensing", "Keys in SDDC Manager and vCenter", "License Server appliance, registered with VCF Operations"],
-  ["Rollback", "Snapshot and revert", "None after deployment. Back up first."],
 ]} v5Label="5.x" v9Label="9.1" />
 
 ## What to have ready
 
-**Addresses**
-- A runtime pool of 12 to 30 addresses on the management network, with a /27 recommended (<KB id={440630} />).
-- Separate addresses, outside the pool, for the fleet, instance and runtime FQDNs, the License Server and, if it is not already deployed, the identity broker.
-- An internal pod and service range that does not clash with anything routed. The default is `198.18.0.0/15`.
+**Addresses and size.** The runtime pool, the addresses outside it, the internal range, the network choice and the footprint of each size are in [VCF Management Services: choosing size, HA and network](/vcf/library/architecture/aria-lifecycle-to-services-runtime/).
 
-**Names.** Lowercase A and PTR records for every FQDN, resolving before you start.
+**Names.** Five lowercase FQDNs, each with A and PTR records and resolving before you start, as [ithinkvirtual's lab write-up](https://ithinkvirtual.com/posts/vcf-9-1-upgrade-part-2-sddc-manager-management-services/) lists them. Broadcom's page bars capitals on four of the five and requires each name to resolve to a unique, unused address outside the pool.
 
-**Binaries.** Nine depot items must be present: services runtime, fleet lifecycle, SDDC lifecycle, software depot, identity broker, Salt RaaS, Salt master, telemetry and License Server. All of them are **INSTALL** binaries, not upgrades (<KB id={450430} />).
+**Binaries.** Nine depot items must be present: services runtime, fleet lifecycle, SDDC lifecycle, software depot, identity broker, Salt RaaS, Salt master, telemetry and License Server (<KB id={450430} />).
 
-**Cloud proxy.** A unified cloud proxy in the first instance, with every VCF instance adapter pointed at it (<KB id={443106} />).
+**Cloud proxy.** A healthy unified cloud proxy, with the VCF instance adapters for every workload domain and vCenter in that instance pointed at it (<KB id={443106} />).
 
 **Credentials.** The VCF Operations FQDN and admin login, plus a password for the runtime admin account.
 
-**Licensing mode.** Connected mode transfers licences automatically. Disconnected mode needs a manual licence transfer after the step (<KB id={450430} />).
+**Licensing mode.** Connected mode transfers licences automatically. Disconnected mode needs manual registration with the VCF business services console after the step (<KB id={450430} />).
 
 ## What happens during the step
 
-<Diagram viewBox="0 0 820 150" label="SDDC Manager deploys a temporary bootstrap VM, which builds the services runtime; fleet lifecycle is installed and imports legacy components and VCF Operations; Salt and the License Server are installed." caption="The stages where the KBs below report failures, in order.">
+<Diagram viewBox="0 0 820 150" label="SDDC Manager deploys a temporary bootstrap VM, which builds the services runtime; fleet lifecycle is installed and imports legacy components and VCF Operations; Salt and the License Server are installed." caption="The stages as the KBs below and one lab write-up name them. The order is this site's reading.">
   <rect class="box v9" x="10" y="30" width="150" height="70" rx="8" /><text class="t" x="22" y="56">Bootstrap VM</text><text class="s" x="22" y="76">from SDDC Manager</text><text class="s" x="22" y="92">needs vCenter 443</text>
   <rect class="box v9" x="175" y="30" width="150" height="70" rx="8" /><text class="t" x="187" y="56">Build runtime</text><text class="s" x="187" y="76">control plane,</text><text class="s" x="187" y="92">workers</text>
   <rect class="box accent" x="340" y="30" width="150" height="70" rx="8" /><text class="t" x="352" y="56">Import legacy</text><text class="s" x="352" y="76">components and</text><text class="s" x="352" y="92">VCF Operations</text>
   <rect class="box" x="505" y="30" width="140" height="70" rx="8" /><text class="t" x="517" y="56">Install Salt</text><text class="s" x="517" y="76">RaaS and master</text>
   <rect class="box" x="660" y="30" width="150" height="70" rx="8" /><text class="t" x="672" y="56">Deploy mgmt</text><text class="s" x="672" y="76">components,</text><text class="s" x="672" y="92">License Server</text>
   <path class="wire" d="M160 65 L173 65" marker-end="url(#arr)" /><path class="wire" d="M325 65 L338 65" marker-end="url(#arr)" /><path class="wire" d="M490 65 L503 65" marker-end="url(#arr)" /><path class="wire" d="M645 65 L658 65" marker-end="url(#arr)" />
-  <text class="s" x="10" y="132">Community reports: about an hour for the bootstrap, about three hours end to end in a lab.</text>
+  <text class="s" x="10" y="132">ithinkvirtual's nested lab: nearly an hour for the bootstrap, about three hours end to end.</text>
 </Diagram>
 
-## Where it stops, and what it usually means
+## Where it stops, and what the KBs blame
 
-| Stage | Typical cause | KB |
+| Stage | Cause the KB gives | KB |
 |---|---|---|
-| Bootstrap | The bootstrap VM cannot reach vCenter on 443, or the NSX DFW exclusion step fails | <KB id={440449} />, <KB id={448888} /> |
+| Bootstrap | A firewall blocks the bootstrap VM from vCenter on 443 | <KB id={448888} /> |
+| Bootstrap, failing at the NSX firewall exclusion step | SDDC Manager cannot reach the bootstrap VM's health API on 5480 | <KB id={440449} /> |
 | Bootstrap after storage moves | A component was moved to another datastore, leaving a stale datastore ID behind | <KB id={446929} /> |
 | Component import (stalls around 46%) | A firewall blocks runtime pods from reaching VCF Operations on 443 | <KB id={446831} /> |
 | Register components with VCF Operations | The Operations for Logs API on 9543 hung | <KB id={452059} /> |
-| Import fails right after midnight, or another fixed time | A race with the 9.0 lifecycle daily inventory sync | <KB id={452077} /> |
-| Failed or duplicate components afterwards | A partial run left entries behind | <KB id={441333} /> |
+| Deploy VCF Management Components | The VCF Operations upgrade overlapped its daily inventory sync (03:00 UTC in the KB's example), which recorded 9.1 too early. The fix is reverting to snapshots and restarting after the sync | <KB id={452077} /> |
+| Retry blocked by failed or duplicate components | Duplicate imports or failed components need cleaning up first; the KB doesn't say what produces them | <KB id={441333} /> |
 
-Several of them share one pattern. The runtime is a new set of source addresses on the network, and it needs the same reachability to vCenter, VCF Operations and the depot that SDDC Manager had. Firewall rules written for SDDC Manager don't cover it (<KB id={443216} />).
+The firewall rows share one pattern, and this is inference from those KBs: the bootstrap VM and the runtime are new source addresses on the network. Afterwards the depot also moves onto runtime pool addresses, and Broadcom warns that "firewall rules may not be in place for this shift" (<KB id={443216} />).
 
 <Callout type="warn" title="Before you click Install">
-Take and verify backups of VCF Operations, SDDC Manager and the 9.0 fleet appliance. This is the last point at which the 9.0 management layout can be restored.
+Take and verify backups of VCF Operations, SDDC Manager and the 9.0 fleet appliance. Broadcom's deploy page describes no way back after the step (checked 7 Nov 2026), and the recovery <KB id={452077} /> gives for a failed run starts from pre-upgrade snapshots.
 </Callout>
 
 ## Pitfalls
 
 - **Testing reachability from SDDC Manager only.** Test from an address in the runtime pool, or from a pod once the runtime exists, as the KBs show.
-- **Treating the License Server as an afterthought.** It needs its own FQDN, IPv4 address and records. Its address must not fall in `172.17.0.0/16` on early 9.1.0 builds.
-- **Moving runtime VMs afterwards.** Don't Storage vMotion them, and don't change their folder or resource pool. Later upgrades depend on their recorded placement.
+- **Treating the License Server as an afterthought.** It needs its own FQDN, IPv4 address and records.
+- **Moving runtime VMs afterwards.** Don't Storage vMotion them, and don't change their folder or resource pool. Broadcom warns that later patching, deployment and scale-out can then fail.

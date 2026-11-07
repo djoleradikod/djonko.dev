@@ -1,86 +1,168 @@
 ---
-title: "From Aria Suite Lifecycle to Fleet Management to the services runtime"
-description: "The appliance that managed the management stack changed form twice in two releases. In 9.1 it is a set of services on a small Kubernetes cluster that you need to size, address and protect."
+title: "VCF Management Services: choosing size, HA and network on 9.1 and 9.1.1"
+description: "New 9.1.1 production fleet: start at Small HA, 42 vCPU and 78 GB, only 6 vCPU and 24 GB under Medium, because documented scaling only goes up. Simple is for labs. Upgraded estates keep 9.1.0 sizes until KB 455842, which only Day-0-only clusters can use. Also covers what moved from Aria Lifecycle."
 category: architecture
 order: 4
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-kbs: [417255, 440630, 440862, 440874, 452124, 443216, 441122, 454898]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [417255, 440630, 440862, 440874, 443216, 452124, 452952, 454898, 455806, 455842]
 sources:
-  - title: "Components in VCF and vSphere Foundation 9.1"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/vcf-management-appliances.html"
+  - title: "VCF 9.1.1 Planning and Preparation Workbook, v1.9.1.103"
+    url: "https://techdocs.broadcom.com/content/dam/broadcom/techdocs/us/en/assets/vmware-cis/vcf/vcf-9.1.1-planning-and-preparation-workbook.xlsx"
     by: "Broadcom TechDocs"
-  - title: "VCF management services models (9.1)"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-management-services-models.html"
+    kind: broadcom
+    date: 2026-10-12
+  - title: "VCF Fleet Sizing Models (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-fleet-sizing-models-9-x.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
   - title: "Deploy VCF management services (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html"
     by: "Broadcom TechDocs"
-  - title: "Let's talk about VCF management services"
-    url: "https://www.why-did-it.fail/blog/2026-05-lets-talk-about-vcf-mgmt-svc/"
-    by: "why-did-it.fail"
-  - title: "VCF 9.1 upgrade, part 2: SDDC Manager and management services"
-    url: "https://ithinkvirtual.com/posts/vcf-9-1-upgrade-part-2-sddc-manager-management-services/"
-    by: "ithinkvirtual"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF management services models (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-management-services-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Simple VCF Management Services Model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-management-services-availabilty-detailed-design/vcf-management-services-simple-deployment-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "High Availability VCF Management Services Model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-management-services-availabilty-detailed-design/vcf-management-services-high-availability-deployment-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Components in VCF and vSphere Foundation 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/vcf-management-appliances.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "10 exciting enhancements in VCF 9.1.1"
+    url: "https://williamlam.com/2026/09/10-exciting-enhancements-in-vmware-cloud-foundation-9-1-1.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-09-03
   - title: "VCF 9.1.1: adopting the reduced VCFMS footprint after an upgrade"
     url: "https://williamlam.com/2026/09/vcf-9-1-1-adopting-the-reduced-vcf-management-services-vcfms-footprint-after-an-upgrade.html"
     by: "William Lam"
+    kind: practitioner
+    date: 2026-09-03
+  - title: "VCF 9.1: enabling high availability for a small VCFMS deployment"
+    url: "https://williamlam.com/2026/06/vcf-9-1-enabling-high-availability-for-a-small-vcf-management-services-vcfms-deployment.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-06-22
+  - title: "VCF 9.1.1: new UI support for deploying VCFMS and VCFA on non-management networks"
+    url: "https://williamlam.com/2026/10/vcf-9-1-1-new-ui-support-for-deploying-vcf-management-services-vcfms-vcf-automation-vcfa-on-non-management-networks.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-10-19
+  - title: "Let's talk about VCF management services"
+    url: "https://www.why-did-it.fail/blog/2026-05-lets-talk-about-vcf-mgmt-svc/"
+    by: "why-did-it.fail"
+    kind: practitioner
+    date: 2026-06-10
 ---
 
 <InShort>
-5.x used Aria Suite Lifecycle, a separate appliance, to deploy and upgrade the Aria products. 9.0 renamed and repurposed it as the VCF Operations fleet management appliance. 9.1 removes the appliance. Its work is split into **fleet lifecycle** and **SDDC lifecycle** services, which run with the software depot, identity broker, Salt and log management on the **VCF services runtime**. That runtime is a VCF-managed Kubernetes cluster in every instance. It brings new IP, DNS, placement and backup requirements, and it gives operators a new troubleshooting surface.
+**Lab or proof of concept: Simple.** **New 9.1.1 production fleet: Small HA**, unless Configuration Maximums or your design review pushes you to Medium. Medium costs only 6 vCPU and 24 GB more, so let capacity limits decide that step. Start small because documented scaling only goes up. **Upgraded from 9.1.0:** you keep the old sizes until you run <KB id={455842} />, and only a Day-0-only cluster can. **Network:** take the VM management network unless you have a reason to separate it, because Identity Broker has to go with it. This site ran none of this; figures are Broadcom's or William Lam's, as marked.
 </InShort>
 
-<Compare rows={[
-  ["What manages the management stack", "Aria Suite Lifecycle appliance, optionally VCF-aware", "9.0: VCF Operations fleet management appliance. 9.1: fleet lifecycle and SDDC lifecycle services."],
-  ["Where it runs", "One VM", "9.0: one VM. 9.1: pods on the services runtime, which has control-plane and worker node VMs."],
-  ["What else shares it", "Nothing", "9.1: software depot, identity broker, Salt RaaS and master, telemetry, log management and real-time metrics"],
-  ["Credentials it holds", "The Aria locker", "9.0: a locker for management component passwords and certificates. 9.1: Kubernetes secrets for service accounts."],
-  ["Rollback", "Snapshot the appliance", "9.1: there is no rollback once the runtime is deployed. Back it up and protect it."],
-]} />
-
-## The 9.1 services, and where they run
-
-TechDocs maps the old products to the new services directly:
-
-| 5.x or 9.0 | 9.1 service | Runs in |
-|---|---|---|
-| Aria Suite Lifecycle or fleet management appliance | Fleet lifecycle | First instance |
-| (part of SDDC Manager) | SDDC lifecycle | Every instance |
-| SDDC Manager depot and fleet binaries | Software depot | First instance, optionally others |
-| Workspace ONE Access or the 9.0 identity broker appliance | Identity broker (instance mode) | First instance, optionally others |
-| Aria Automation Config | Salt RaaS and Salt master | RaaS in the first instance, a master in every instance |
-| Aria Operations for Logs or VCF Operations for logs | Log management | First instance (deployed Day-N) |
-| (new) | Real-time metrics and telemetry | Every instance |
-
-Management services are mandatory for VCF and optional for vSphere Foundation (<KB id={440630} />).
-
-## Sizing and addressing
-
-- **Models.** Simple has one control-plane node and a few workers, and suits labs and proofs of concept. Losing its single control-plane node means a redeploy and a restore. HA has three control-plane nodes. In 9.1.1 you can convert Simple to HA, and a reduced footprint is available after upgrade.
-- **IP pool.** The minimum is 12 addresses and the maximum 30, with a /27 recommended, all on the management network in 9.1.0. You can add up to 18 more addresses later. The pool exists so that upgrades can build new node VMs before retiring the old ones (<KB id={440630} />).
-- **Internal CIDR.** The default pod and service range is `198.18.0.0/15`. If that range is routed anywhere in your network, choose one of the alternatives at deployment time.
-- **FQDNs.** You need separate fleet, instance and runtime FQDNs, plus the identity broker and License Server. Each needs A and PTR records, and the addresses must sit outside the runtime pool.
-- **Firewalls.** Pods can run on any node, so firewall rules must allow the whole runtime pool as a source. This matters for depot downloads: they leave from runtime node addresses, not from SDDC Manager (<KB id={443216} />).
-
-## How it gets deployed
-
-On a new build, the VCF Installer deploys the runtime. On an upgrade from 5.2 or 9.0, you first upgrade VCF Operations and SDDC Manager. Then you run *Deploy VCF Management Services and License Server*, during which SDDC Manager boots a temporary bootstrap VM that builds the cluster (<KB id={441122} />). Community write-ups report about an hour for the bootstrap and about three hours end to end in a lab.
-
-## Living with it
-
-- **Don't move it.** Do not Storage vMotion the node VMs, and do not move them to another folder or resource pool. The runtime records its vSphere placement and uses it to replace nodes. Changing it breaks upgrades with `VCFMS-HEALTH-002` (<KB id={452124} />).
-- **Watch it in VCF Operations.** The management services dashboard shows node, gateway, component, volume and backup health. Its thresholds and checks are documented in <KB id={417255} />.
-- **Shut it down properly.** Use the documented shutdown script, which handles dependency order (<KB id={440874} />). After an unclean power event, power on the control plane first, wait, then power on the workers (<KB id={440862} />).
-- **Check it before every upgrade.** The pre-upgrade readiness KB pairs a runtime health check with the SoS health check and vCenter checks (<KB id={454898} />).
-
-<Callout type="field">
-Four names refer to the same thing: VCF services runtime, VCF management services, VCFMS and VMSP. KBs, logs and blogs use all of them. Error codes use `VCFMS-…`, and the namespace is `vmsp-platform`.
+<Callout type="note" title="Corrected on 7 November 2026">
+This note said a reduced footprint was available after upgrade, and that the runtime pool had to sit on the management network in 9.1.0. The reduction applies only to Day-0-only clusters, the 9.1.0 API already accepted a VLAN-backed network, and 9.1.1 adds the choice to the UI.
 </Callout>
 
-## Pitfalls
+## The decision
 
-- **Treating the runtime as a black box.** It is a Kubernetes cluster with VCF-specific namespaces. A small read-only kubectl toolkit pays for itself. See <a href="/vcf/library/troubleshooting/services-runtime-kubectl/">The 9.1 services runtime: a read-only kubectl toolkit</a>.
-- **Under-sizing the pool.** A pool sized at the minimum leaves nothing for node replacement or Day-N services. Log management and real-time metrics can add workers on their own.
-- **Assuming you can roll back.** You cannot. Take backups of every component before the step, and configure the runtime's own backup afterwards.
+| Your situation | Choose | What decides it |
+|---|---|---|
+| Lab or proof of concept | Simple Small | Broadcom recommends it for labs and proofs of concept. Losing the one control plane node means a redeploy and a restore. |
+| New production fleet on 9.1.1 | Small HA | <KB id={452952} /> calls it "optimized for production environments" that need HA from 9.1.1.0. Three control plane nodes for 14 vCPU and 20 GB over Simple. |
+| Production beyond Small's limits, or a design tied to Broadcom's design library | Medium, then Large | The installer points to Configuration Maximums for limits. The HA design page lists only Medium and Large. |
+| Staying on 9.1.0 and needing HA | Medium | <KB id={452952} /> warns that forcing HA onto Small on 9.1 leaves an "unsupported, broken, and unrecoverable state". Lam's June script is, in his words, not officially supported. |
+
+<Callout type="analysis" title="What would change this answer">
+Lam documents each option and leaves the choice open. This site's reasoning for Small HA: Broadcom's [Simple](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-management-services-availabilty-detailed-design/vcf-management-services-simple-deployment-model.html) and [HA](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-management-services-availabilty-detailed-design/vcf-management-services-high-availability-deployment-model.html) design pages describe scaling out and up and never down (checked 7 Nov 2026). If your change process makes a later scale-up expensive, 6 vCPU and 24 GB is cheap insurance, so take Medium on day one.
+</Callout>
+
+## The figures
+
+First instance, Day-0 only, vCPU / GB per node. <AsOf date="2026-11-07" />
+
+| Size | Control plane | Workers | vCPU | GB | Disk GB |
+|---|---|---|---|---|---|
+| Simple Small | 1 × 4/10 | 2 × 12/24 | 28 | 58 | 3,000 |
+| Small HA | 3 × 4/10 | 3 × 10/16 | 42 | 78 | 3,100 |
+| Medium | 3 × 4/10 | 3 × 12/24 | 48 | 102 | 3,600 |
+| Large | 3 × 8/14 | 4 × 16/32 | 88 | 170 | 4,302 |
+| *Upgraded 9.1.0 Simple* | 1 × 4/10 | 3 × 12/24 | 40 | 82 | |
+| *Upgraded 9.1.0 Medium* | 3 × 4/10 | 3 × 24/48 | 84 | 174 | |
+| *Upgraded 9.1.0 Large* | 3 × 8/12 | 4 × 24/48 | 120 | 228 | |
+
+**Whose they are.** The first four rows' sizes and disk are from [Broadcom's workbook](https://techdocs.broadcom.com/content/dam/broadcom/techdocs/us/en/assets/vmware-cis/vcf/vcf-9.1.1-planning-and-preparation-workbook.xlsx) (v1.9.1.103, 12 Oct). Worker counts are the workbook's, except Large, which follows the [Fleet Sizing page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-fleet-sizing-models-9-x.html) (5 Nov). Italic rows are [Lam's 22 June node sizes](https://williamlam.com/2026/06/vcf-9-1-enabling-high-availability-for-a-small-vcf-management-services-vcfms-deployment.html). Totals are this site's sums. Lam's [3 Sep installer screenshots](https://williamlam.com/2026/09/10-exciting-enhancements-in-vmware-cloud-foundation-9-1-1.html) show the same 28/58 and 42/78, with disk of 2,900 and 3,201 GB, so plan on the higher number. For whole-fleet totals, see [Sizing a VCF 9.1 lab](/vcf/library/labs/sizing-a-vcf-9-lab/).
+
+**Where Broadcom's pages disagree.** The Simple design page still requires three workers, the HA design page has no Small option, and the Fleet Sizing page's "High Availability - Small" profile still pairs with a Medium runtime. The workbook, the installer and <KB id={452952} /> agree with each other, so go with those. They part on Large: the Fleet Sizing page shows 4 workers, as Lam's June list does, and the workbook 3, which would make it 72 vCPU and 138 GB. Plan on 4. On an additional instance, the Fleet Sizing page shows 2 workers at every size and the workbook 1 on Simple and 3 on HA.
+
+**Workers are a floor.** An autoscaler changes the count as components are added, which Broadcom calls standard operation (<KB id={455806} />). The workbook budgets Real-time Metrics at 16 vCPU and 20 GB on Small sizes and 31 vCPU and 41 GB on Medium, and Log Management at 8 vCPU and 16 GB per Small replica. By this site's working of its formula, adding Real-time Metrics takes Small HA to 5 workers (62 vCPU, 110 GB) and Medium to 5 (72 vCPU, 150 GB). Treat those as planning figures.
+
+## What 9.1.1 changed
+
+- **Footprint.** Lam's [3 Sep post](https://williamlam.com/2026/09/10-exciting-enhancements-in-vmware-cloud-foundation-9-1-1.html) explains that 9.1.0 sized for the largest optional Day-N service and 9.1.1 sizes for Day-0, removing one worker from Simple. The workbook shows it reaching further: a Medium worker halves from Lam's June 24/48 to 12/24.
+- **Small HA.** Lam's [22 June post](https://williamlam.com/2026/06/vcf-9-1-enabling-high-availability-for-a-small-vcf-management-services-vcfms-deployment.html) scripted it, unsupported, for 9.1. His 3 Sep post records the supported version: `small_ha` in the installer's `vspClusterSpec`, or later through Scale on VCF Services Runtime in VCF Operations. VCF Automation has no matching size and deploys as a singleton, he adds in the comments.
+- **UI placement.** Lam's [19 Oct post](https://williamlam.com/2026/10/vcf-9-1-1-new-ui-support-for-deploying-vcf-management-services-vcfms-vcf-automation-vcfa-on-non-management-networks.html) covers the network choice when deploying the runtime during an upgrade to 9.1.1, which used to need the API. The 9.1.0 installer already offered it, he notes.
+
+## After an upgrade: run the script or not
+
+New 9.1.1 deployments get the small sizes. Upgraded ones keep theirs until you run the script in <KB id={455842} />, which [Lam walks through](https://williamlam.com/2026/09/vcf-9-1-1-adopting-the-reduced-vcf-management-services-vcfms-footprint-after-an-upgrade.html) on Simple (3 Sep). The script stops without changes if Log Management or Real-time Metrics is installed or on a consumption cluster, and the KB excludes vSphere Foundation. It needs a maintenance window because the worker rollout can disrupt operations. The KB doesn't publish its target values or cover going back.
+
+Lam's example saves 12 vCPU and 24 GB. By the table above an upgraded Medium would save 36 vCPU and 72 GB, which is this site's inference: the KB says only that the script applies values matching the size.
+
+<Callout type="analysis" title="Run it when">
+Run it on a Day-0-only cluster if neither Day-N service is planned this year. Skip it on an upgraded Simple if one is: the autoscaler will add workers back and you'll have spent a maintenance window on 12 vCPU.
+</Callout>
+
+## Network placement and addressing
+
+**Where it goes.** Leave the deployment network blank and 9.1.1 uses the VM management network. Pick another only with a stated separation requirement, because [Broadcom requires](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html) management services and Identity Broker to share a network. If a 9.0.x broker sits off the management network, settle that first: the [route chooser](/vcf/library/upgrades/upgrade-route-chooser/) covers it. Without the 9.1.1 UI, the API's `xRegionNetwork` is the route.
+
+**Pool.** Minimum 12 addresses (/28), recommended 30 (/27), and <KB id={440630} /> allows 18 more afterwards. Take the /27. Small HA with Real-time Metrics is already 8 nodes, and [why-did-it.fail's 10 June write-up](https://www.why-did-it.fail/blog/2026-05-lets-talk-about-vcf-mgmt-svc/) notes that lifecycle operations create new VMs.
+
+**Internal range.** The default is `198.18.0.0/15`, and Broadcom lists two alternatives in the 240 and 250 ranges. It must not overlap your management, VM or pool networks. The 9.1.0 UI can't change it, the 9.1.1 UI can, and the API spec carries it as `internalClusterCidrIpv4`.
+
+**Names.** Five FQDNs: runtime, fleet, instance, Identity Broker, License Server. The first three must resolve to unused addresses outside the pool. Runtime, fleet, instance and broker names take no capitals, and `.local` isn't supported.
+
+**Firewalls.** The depot uses runtime pool addresses, so rules written for the installer may not cover it (<KB id={443216} />).
+
+## What you can't change later
+
+| Choice | Status | Source |
+|---|---|---|
+| Size or HA, downward | No documented path. Lam's June post says his unsupported method scaled back down in testing; his 9 July reply on it says "you can not scale back down". Trust the later word | Lam; Broadcom silent |
+| Addresses excluded from the pool | Can't later be used for VCF components | Broadcom |
+| Node VM folder, resource pool, datastore | Don't move them. A changed cluster, pool or network object fails the upgrade with `VCFMS-HEALTH-002` (<KB id={452124} />) | Broadcom |
+| Deployment network, internal range | No documented change after deployment. Treat as fixed | This site's inference from the same KB |
+| Return to the 9.0 appliance | Broadcom's deploy page describes no way back (checked 7 Nov 2026) | Broadcom silent |
+
+## What moved from Aria Lifecycle
+
+5.x ran Aria Suite Lifecycle as an appliance, and 9.0 renamed it VCF Operations fleet management. 9.1 splits it into two services on the runtime, a Kubernetes cluster that is mandatory for VCF and optional for vSphere Foundation (<KB id={440630} />). KBs and logs call it the services runtime, VCFMS or VMSP.
+
+| 5.2 | 9.0 | 9.1 service | Runs in |
+|---|---|---|---|
+| Aria Suite Lifecycle | Fleet management | Fleet lifecycle | First instance |
+| Aria Suite Lifecycle | Fleet management | SDDC lifecycle | Every instance |
+| Workspace ONE Access | Identity Broker | Identity broker | First instance, others Day-N |
+| Aria Operations for Logs | Operations for logs | Log management | First instance, Day-N |
+
+[Broadcom's table](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/vcf-management-appliances.html) gives no predecessor for the software depot (first instance), Salt RaaS (first instance), Salt master and telemetry (every instance), or real-time metrics (every instance, Day-N).
+
+The deployment step is in [Going from 9.0 to 9.1](/vcf/library/upgrades/90-to-91-management-services/). Day-2 references: health dashboard <KB id={417255} />, shutdown script <KB id={440874} />, power-on order after a graceful shutdown <KB id={440862} />, pre-upgrade checks <KB id={454898} />.
