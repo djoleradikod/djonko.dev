@@ -96,7 +96,7 @@ sources:
 ---
 
 <InShort>
-**Take distributed VLAN for a new design whose hosts can carry TEPs.** Choose centralized when you need BGP with the fabric, IPSec VPN on the transit gateway, or edges you already run. VLAN-backed without TEPs is the fallback for hosts that can't meet the TEP network and MTU requirement. It needs a greenfield Supervisor, and VKS 3.8 if you run VKS, and it gives up private subnets and SNAT. This is a reading of Broadcom's documents and William Lam's post, current on <AsOf date="2026-11-07" />.
+**Take distributed VLAN for a new design whose hosts can carry TEPs.** Choose centralized when you need BGP with the fabric, IPSec VPN on the transit gateway, or edges you already run. VLAN-backed without TEPs is the fallback for hosts that can't meet the TEP network and MTU requirement. It needs a greenfield Supervisor, and VKS 3.8 if you run VKS, and it gives up private subnets and SNAT. This is a reading of Broadcom's documents and William Lam's post, current <AsOf date="2026-11-07" />.
 </InShort>
 
 Lam's [15 September walk-through](https://williamlam.com/2026/09/vcf-9-1-1-simplified-vsphere-kubernetes-service-vks-using-vlan-backed-vpcs-without-nsx-tunnel-endpoints-teps.html) is the page to read for building VLAN-backed: the fleet JSON, the wizard order, the error strings. Lam works for Broadcom and shows a lab path. His table lists what each model has. It leaves out who should pick which, what greenfield-only costs and how fast each model spends routable addresses, and it predates VKS 3.8. Load balancer entitlement sits in [NSX in VCF 9](/vcf/library/architecture/nsx-in-9/).

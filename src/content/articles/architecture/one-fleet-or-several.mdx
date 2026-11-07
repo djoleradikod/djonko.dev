@@ -133,7 +133,7 @@ The diagram doesn't say whether its figures are round trip or one way, so design
 
 A group that needs its own sign-on to VCF Operations needs its own fleet. A group that needs its own sign-on to vCenter and NSX can stay in the fleet. The single-instance model limits a realm and an outage to one instance, but it doesn't separate the console, because VCF Operations and VCF Automation "can connect to only one of identity broker instances".
 
-Every SSO model Broadcom documents stops at the fleet. The fleet-wide model has a single broker per fleet, and the cross-instance model serves instances "in the same VCF fleet". So two fleets mean two realms and two brokers, each "managed separately" for tasks such as backup and restore, Broadcom says.
+Every SSO model Broadcom documents stops at the fleet. The fleet-wide model has a single broker per fleet, and the cross-instance model serves instances "in the same VCF fleet". So two fleets mean two realms and two brokers, on this site's reading. Broadcom says an additional broker in the cross-instance model is "managed separately" for tasks such as backup and restore, so expect at least that across fleets.
 
 <a href="/vcf/library/architecture/identity-broker/">Identity in VCF 9</a> covers modes and blast radius.
 

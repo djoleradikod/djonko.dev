@@ -8,7 +8,7 @@ level: Practitioner
 pubDate: 2026-11-02
 updated: 2026-11-07
 reviewed: 2026-11-07
-kbs: [450430, 440449, 448888, 446831, 443106, 441333, 446929, 452059, 452077, 443216]
+kbs: [450430, 440449, 448888, 446831, 443106, 441333, 446929, 452059, 452077, 443216, 441526]
 sources:
   - title: "Deploy VCF management services (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html"
@@ -32,7 +32,7 @@ Upgrading 9.0 to 9.1 follows this sequence: upgrade VCF Operations, upgrade SDDC
 </InShort>
 
 <Callout type="note" title="Corrected on 7 November 2026">
-This note said the import fails right after midnight or another fixed time, and that the License Server address must avoid `172.17.0.0/16`. <KB id={452077} /> ties that failure to a VCF Operations upgrade overlapping the daily inventory sync, whenever that runs, and Broadcom's deploy page doesn't mention that range (checked 7 Nov 2026). It also asked for certificates with SANs and called the depot items INSTALL binaries, which neither that page nor <KB id={450430} /> says.
+This note said the import fails right after midnight or another fixed time, and that the License Server address must avoid `172.17.0.0/16`. <KB id={452077} /> ties that failure to a VCF Operations upgrade overlapping the daily inventory sync, whenever that runs, and Broadcom's deploy page doesn't mention that range (checked 7 Nov 2026). The range does matter on License Server 9.1.0, where a gateway with a routable path to it leaves a black console, and 9.1.0.0200 fixes that (<KB id={441526} />). This note also asked for certificates with SANs and called the depot items INSTALL binaries, which neither that page nor <KB id={450430} /> says.
 </Callout>
 
 <Compare title="What this step replaces" rows={[
@@ -45,7 +45,7 @@ This note said the import fails right after midnight or another fixed time, and 
 
 **Addresses and size.** The runtime pool, the addresses outside it, the internal range, the network choice and the footprint of each size are in [VCF Management Services: choosing size, HA and network](/vcf/library/architecture/aria-lifecycle-to-services-runtime/).
 
-**Names.** Five lowercase FQDNs, each with A and PTR records and resolving before you start, as [ithinkvirtual's lab write-up](https://ithinkvirtual.com/posts/vcf-9-1-upgrade-part-2-sddc-manager-management-services/) lists them. Broadcom's page bars capitals on four of the five and requires each name to resolve to a unique, unused address outside the pool.
+**Names.** Five lowercase FQDNs, each with A and PTR records and resolving before you start, as [ithinkvirtual's lab write-up](https://ithinkvirtual.com/posts/vcf-9-1-upgrade-part-2-sddc-manager-management-services/) lists them. Broadcom's page bars capitals on four of the five and requires each name to resolve to a unique address outside the pool, and the runtime, fleet and instance names to unused ones.
 
 **Binaries.** Nine depot items must be present: services runtime, fleet lifecycle, SDDC lifecycle, software depot, identity broker, Salt RaaS, Salt master, telemetry and License Server (<KB id={450430} />).
 
