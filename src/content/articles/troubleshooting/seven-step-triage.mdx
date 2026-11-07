@@ -204,8 +204,8 @@ Rebuilding comes last. Allan Solomon Mejia's [forum reply of 12 July 2026](https
 | Attach | How |
 |---|---|
 | Core bundle | `sos --sddc-manager-logs --zip`, or `--collect-all-logs`, which skips WCP and system debug logs (<KB id={385749} />). The default domain is MANAGEMENT, so add `--domain-name` for a workload domain failure. |
-| Management services (9.1) | Add `--vcf-mgmt-svcs-logs`, or use the fleet lifecycle bundle. If fleet lifecycle is down, use the standalone script (<KB id={444466} />). |
-| Initial deployment | The Installer's Support Bundle menu, or `--vcf-installer-logs --vcf-mgmt-svcs-logs --zip` (<KB id={402476} />). [SoS collects only from the latest deployment](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html). |
+| Management services (9.1) | Add `--vcf-mgmt-svcs-logs`, or collect the bundle in the UI. If management services are too unhealthy for that, use the standalone script (<KB id={444466} />). |
+| Initial deployment | Support-bundle in the Installer's top-right menu, or `--vcf-installer-logs --vcf-mgmt-svcs-logs --zip` (<KB id={402476} />). [SoS collects only from the latest deployment](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html). |
 | VCF Operations | Administration > Control Panel > Support Bundles, with the Operate tab selected from 9.1 (<KB id={443789} />). `--operations-logs` leaves out Cloud Proxy logs on 9.1 (<KB id={385749} />). [Log Assist](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) sends bundles to Broadcom from the console (FAQ, 4 Nov 2026). |
 | UI problems | A browser HAR file (<KB id={320424} />). It can hold tokens and passwords, so strip those first. |
 | Always | Task and reference IDs, time of failure, and what you tried since |

@@ -1,60 +1,126 @@
 ---
 title: "Decisions with evidence: writing a recommendation a customer can approve"
-description: "Technical leadership is mostly decisions: which design, which order, which risk to accept. A short decision record with context, options, a recommendation and its evidence makes those decisions faster, easier to approve, and easier to revisit later."
+description: "Write one page per decision and recommend one option, with a link behind it. Broadcom's design IDs, justifications and implications give you evidence to cite for VCF 9. A table sets out six decisions to record first: what Broadcom documents, and a starting position for each."
 category: leadership
 order: 8
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Overview
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: []
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [443106]
 sources:
   - title: "Documenting architecture decisions"
     url: "https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions"
-    by: "Michael Nygard"
+    by: "Michael Nygard, Cognitect"
+    kind: practitioner
+    date: 2011-11-15
+  - title: "KB 443106: VCF Instance Cloud Proxy Registration validation failed during VCF 9.1 upgrade"
+    url: "https://knowledge.broadcom.com/external/article/443106"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "Upgrading to VMware Cloud Foundation 9.1.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware Cloud Foundation 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware Cloud Foundation 9.1 General FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "Registering VCF Operations and a License Server with the VCF Business Services Console"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Licensing Overview"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Report License Usage and Update Licenses in Disconnected Mode"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/update-licenses/update-licenses-in-disconnected-mode.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Fleet Deployment Models"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-operations-deployment-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VCF Fleet with Multiple Sites Across Multiple Regions"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-with-multiple-sites-across-multiple-regions-blueprint.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VCF Operations high availability model"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-ha-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VCF Fleet Level Single Sign On Model, VCF Fleet in a Single Site blueprint"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections%281%29/security-governance-and-compliance-layer-fleet-single-site/vcf-fleet-in-a-single-site-blueprint-vcf-fleet-level-single-sign-on-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "High Availability VCF Identity Broker, VCF Fleet in a Single Site blueprint"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections%281%29/security-governance-and-compliance-layer-fleet-single-site/vcf-fleet-in-a-single-site-high-availability-vcf-identity-broker.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "ESX Model, VCF Fleet with Multiple Sites in a Single Region plus Additional Region blueprint"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-with-multiple-sites-in-a-single-region-plus-additional-region-blueprint/shared-design-selection-between-management-and-workload-domain%282%29/virtual-infrastructure-layer%2812%29/esx-model%284%29.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
 ---
 
 <InShort>
-For each decision that matters, write one page: the **context** (what forces the decision), the **options** you seriously considered, your **recommendation**, the **evidence** behind it (a KB, a release note, a lab measurement), and the **consequences**, including what it makes harder. Keep it short enough to read in five minutes. Recommend one option. Record the decision once it's made, with the date and who made it, so nobody has to rediscover the reasoning in a year.
+Give each decision that matters one page: what forces it, the options you seriously weighed, the one you recommend, the evidence, and what it makes harder. Keep it short enough to read in five minutes. Date it and name who decided, so nobody has to rediscover the reasoning in a year. For VCF 9, Broadcom's design pages already carry numbered requirements and recommendations, so cite those IDs and carry their implications into the record.
 </InShort>
 
-<Compare v5Label="Opinion" v9Label="Evidence" title="How a recommendation lands" rows={[
-  ["\"We should use a collector group\"", "Sounds like preference", "\"9.1 requires the VCF instance adapter on a cloud proxy or group, or deployment fails validation (KB 443106)\""],
-  ["\"The upgrade will take a weekend\"", "A guess", "\"The lab rehearsal took 9 hours for the management domain\""],
-  ["\"Licensing is fine\"", "Reassurance", "\"Connected mode, last refresh yesterday, 179 days remaining\""],
-]} />
-
-The 9 hours and the 179 days in this table are illustrative examples, constructed to show the form. Use your own measurements.
-
-## A decision record
-
-```text
-Decision:      <short title>
-Status:        proposed | accepted | superseded by <link>
-Date / owner:  <date> / <who decides>
-
-Context:       <what forces this decision now; constraints>
-Options:       A) ...  B) ...  C) ...
-Recommendation: <one option>, because <reason>
-Evidence:      <KB, documentation, lab measurement, past incident>
-Consequences:  <what becomes easier, what becomes harder, what we must now do>
-```
-
-## Decisions a VCF 9 project has to make
-
-- Connected or disconnected licensing.
-- One VCF Operations for the fleet, or several.
-- Identity broker deployment model.
-- Collector group design.
-- Upgrade straight to 9.1, or through 9.0.
-- Which add-ons to keep, retire or replace.
-
-<Callout type="field">
-When a customer disagrees with a recommendation, record their decision with the same care as your own. The record isn't about being right. It's about everyone knowing why the platform looks the way it does.
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to offer "9.1 requires the VCF instance adapter on a cloud proxy or group, or deployment fails validation" as proof for a collector group. <KB id={443106} /> describes a failed validation during a 9.1 upgrade and accepts a healthy cloud proxy or a designated group in place of a local collector, so the case for a group rests on Broadcom's HA design. The note also listed "straight to 9.1, or through 9.0" with no source; the documented rules are now in the table below.
 </Callout>
 
-## Pitfalls
+## What turns an opinion into a recommendation
 
-- **Five options, no recommendation.** It hands the work back to the customer.
-- **Evidence that's only "best practice".** Cite the source, or say it's judgment.
-- **Records that are never updated** when the decision changes.
+| A weak line | How it reads | What the record says |
+|---|---|---|
+| "We should use a collector group" | Preference | Create a collector group for each VCF instance, as [VCF-OPS-RCMD-HA-002](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-ha-model.html) recommends. Separately, <KB id={443106} /> describes the 9.1 upgrade's cloud proxy validation failing with the adapter on a local collector. |
+| "The upgrade will take a weekend" | A guess | The lab rehearsal took 9 hours for the management domain. |
+| "Licensing is fine" | Reassurance | Connected mode, last usage report yesterday, so 179 days left of the [180-day reporting requirement](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview.html). |
+
+The 9 hours and the 179 days are constructed to show the form, so replace them with your own measurements. The first row shows the habit to copy: the KB alone would only justify moving off the local collector, and the group needs its own source.
+
+## The record
+
+```text
+Title:          <short noun phrase>
+Status:         proposed | accepted | deprecated | superseded by <link>
+Date / owner:   <date> / <who decides>
+
+Context:        <what forces this decision now; constraints>
+Options:        A) ...  B) ...  C) ...
+Recommendation: <one option>, because <reason>
+Evidence:       <design ID, KB, documentation, your own lab measurement, past incident>
+Consequences:   <what becomes easier, what becomes harder, what must now happen>
+```
+
+[Michael Nygard's 2011 post](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) is the basis and worth reading first. Title, Context, Status and Consequences are his, and Recommendation is his Decision before anyone has agreed to it. Options, Evidence and Date / owner are this site's additions for a customer approval, where the approver may not have been in the room and needs to see what was rejected. He allows one or two pages. When a decision is reversed, keep the old record and mark it superseded, as he says. When a customer overrules the recommendation, record their decision with the same care as your own: the next reader needs to know who chose what and why.
+
+Broadcom's design tables map well onto this record: [each requirement and recommendation has an ID, a Justification and an Implication](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-with-multiple-sites-in-a-single-region-plus-additional-region-blueprint/shared-design-selection-between-management-and-workload-domain%282%29/virtual-infrastructure-layer%2812%29/esx-model%284%29.html). Copy the Implication into Consequences. Where a design departs from a blueprint's selected model, say so in Evidence and give the reason, so the approver sees the departure as a choice. Five options with no recommendation hand the work back, and "best practice" with no source is judgment, which is fine if the record calls it that.
+
+## Six decisions to record first on a VCF 9 project
+
+This list isn't Broadcom's. It's this site's choice of decisions that can block an upgrade or are costly to reverse. The middle column is Broadcom's, and the last column is this site's analysis, offered as a starting position to test. Licensing rows aren't legal or purchasing advice.
+
+| Decision | What Broadcom documents | Starting position |
+|---|---|---|
+| Upgrade route | [From 5.2.x, sequential and skip-level upgrades to 9.1.x are both supported; anything earlier must reach 5.2.x first in all domains. A target must be released after your current version, so 5.2.4 can't go to 9.1.0 but can go to 9.1.1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html). [A 5.2.x or 9.0.x build released before 9.1.1 can upgrade directly to it](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html). [Perpetual licenses must switch to subscription before upgrading to VCF 9](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) (FAQ Q27, 4 Nov 2026). | From 5.2.x or 9.0.x, target 9.1.1 directly, and record any reason for stopping at 9.0. The [route chooser](/vcf/library/upgrades/upgrade-route-chooser/) works through each starting state. |
+| Licensing mode | [Connected is recommended for anyone with an internet connection](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations.html). [Disconnected needs a manual file exchange at least every 180 days; miss it and licenses are treated as expired, hosts disconnect from vCenter and workload operations can't start](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/update-licenses/update-licenses-in-disconnected-mode.html). | Connected, unless network or policy rules it out. A disconnected record names who runs the exchange. [Connected or disconnected](/vcf/library/licensing/connected-vs-disconnected/) covers sites where no file may leave. |
+| How many fleets | [A fleet has one or more VCF instances and an instance of VCF Operations](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) (FAQ Q53). [Several fleets can answer scale and add management overhead, and one fleet per region is a named scenario](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-operations-deployment-models.html). | One fleet, and so one VCF Operations. Region alone doesn't force a split, since Broadcom also has [a multi-region fleet blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-with-multiple-sites-across-multiple-regions-blueprint.html), so a record for several fleets should name the scale or separation reason. |
+| Identity broker model | [The single-site blueprint chooses one broker for the fleet, and rates that a large blast radius: an outage affects logins for the fleet](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections%281%29/security-governance-and-compliance-layer-fleet-single-site/vcf-fleet-in-a-single-site-blueprint-vcf-fleet-level-single-sign-on-model.html). [Moving from appliance to embedded means resetting the VCF SSO configuration and re-adding users](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections%281%29/security-governance-and-compliance-layer-fleet-single-site/vcf-fleet-in-a-single-site-high-availability-vcf-identity-broker.html). | Follow your blueprint's model and copy the blast radius into Consequences, where the approver has to accept it. Decide appliance or embedded early, given the reset. |
+| Collector groups | [A group for each VCF instance, an additional collector node, and anti-affinity between collectors (VCF-OPS-RCMD-HA-002 to 004)](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-ha-model.html). The [9.1 upgrade validation](https://knowledge.broadcom.com/external/article/443106) accepts the adapter on a healthy cloud proxy or designated group in place of a local collector. | Build the HA recommendations if the design uses the HA model. With the adapter on a healthy group, the same work also answers the upgrade validation. |
+| Add-ons | [On a 5.2.x upgrade, VMware Identity Manager and Aria Operations for Logs have no upgrade path. Keep Identity Manager, which is still an authentication source for VCF Automation 9.1.x, and install the new log management component as a Day-N operation](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html). [With several Aria Automation instances, only one can be fully integrated with VCF Operations](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) (FAQ Q45). | One record per add-on: keep, retire or replace, with the date it changes. Name the integrated Automation instance and who patches the others. |
