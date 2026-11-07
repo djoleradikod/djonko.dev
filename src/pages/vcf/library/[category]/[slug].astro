@@ -56,7 +56,6 @@ const ld = {
       <header class="note-head">
         <p class="note-crumbs"><a href="/vcf/">VCF notes</a> / <a href={`/vcf/library/${cat.id}/`} data-pagefind-filter="category">{cat.short}</a></p>
         <h1>{a.data.title}</h1>
-        <p class="note-lede">{a.data.description}</p>
         <div class="note-meta">
           <span data-pagefind-ignore><VersionBadges versions={a.data.versions} level={a.data.level} /></span>
           <span>{a.data.reviewed ? `Sources checked ${fmtShort(a.data.reviewed)}` : a.data.updated ? `Updated ${fmtShort(a.data.updated)}` : `Published ${fmtShort(a.data.pubDate)}`}</span>

@@ -113,63 +113,65 @@ sources:
 ---
 
 <InShort>
-**Target 9.1.1 from every state below.** Stepping to 9.0 ends general support on 17 Sep 2027, 24 days before vSphere 8 and VCF 5.2.x. 9.1.0 refuses upgrades from 5.2.4, 8.0 U3j and U3k. Find your row, then make the plan in the tool it names. <AsOf date="2026-11-06" />
+**Target 9.1.1 from every state below.** Stepping to 9.0 ends general support on 17 Sep 2027, 24 days before vSphere 8 and VCF 5.2.x. 9.1.0 refuses upgrades from 5.2.4, 8.0 U3j and U3k. Find your row, then make the plan in the tool it names <AsOf date="2026-11-06" />.
 </InShort>
 
-| You run | Target | Route | What blocks it | Support date you land on | Next |
+If you hold perpetual licences, you must switch to subscription before upgrading to VCF 9, per [FAQ Q27](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs). Ask Broadcom about your own contract.
+
+| You run | Target | Route | Blockers and limits | Support date you land on | Next |
 |---|---|---|---|---|---|
-| VCF 5.0 or 5.1 | 9.1.1, through 5.2.x | Two hops | Management domain and all workload domains must reach 5.2.x first | Unresolved until you move: 1 Jun or 11 Oct 2027, so plan to June. Then August 2028 | [Support clock](/vcf/library/upgrades/support-clock/). The Planner starts at 5.2, so use it after the first hop |
+| VCF 5.0 or 5.1 | 9.1.1, through 5.2.x | Two hops | Management domain and all workload domains must reach 5.2.x first | Unresolved, 1 Jun or 11 Oct 2027, so plan to June. August 2028 once on 9.1.x | [Support clock](/vcf/library/upgrades/support-clock/). The Planner starts at 5.2, so use it after the first hop |
 | VCF 5.2.0 to 5.2.3 | 9.1.1 | Skip-level, VCF Operations first | vIDM, Aria Operations for Logs and Aria Suite Lifecycle have no upgrade to 9.1 | August 2028 | Planner, VCF 5.2. [Planning note](/vcf/library/upgrades/planning-52-to-90/) |
-| VCF 5.2.4 | 9.1.1 only | As above | 9.1.0 is older than 5.2.4 | August 2028 | As above |
-| VCF 9.0.x | 9.1.1 | Upgrade, VCF Operations first | Lam's 3 Sep table closes 9.0.2 EP2 to 9.1.0. Identity Broker appliance off the management network: redeploy it first | August 2028. Staying: 17 Sep 2027 | Planner, VCF 9.0. [Management services note](/vcf/library/upgrades/90-to-91-management-services/) |
-| VCF 9.1.0.x | 9.1.1 | Patch, fleet lifecycle first | No Upgrade All until the 9.1.1 dependencies are met | August 2028, unchanged by this site's reading | [Upgrade order](/vcf/library/upgrades/upgrade-order-changed/) |
+| VCF 5.2.4 | 9.1.1 only | Skip-level, VCF Operations first | 9.1.0 is older than 5.2.4 | August 2028 | Planner, VCF 5.2. [Planning note](/vcf/library/upgrades/planning-52-to-90/) |
+| VCF 9.0.x | 9.1.1 | Upgrade, VCF Operations first | 9.0.2 EP2 is closed to 9.1.0, per Lam's 3 Sep table. Identity Broker appliance off the management network needs redeploying first | August 2028. Staying: 17 Sep 2027 | Planner, VCF 9.0. [Management services note](/vcf/library/upgrades/90-to-91-management-services/) |
+| VCF 9.1.0.x | 9.1.1 | Patch, fleet lifecycle first | No Upgrade All until the 9.1.1 dependencies are met | August 2028 | [Upgrade order](/vcf/library/upgrades/upgrade-order-changed/) |
 | vSphere 8.0 U3a to U3i, no fleet | VCF 9.1.1 | Converge | ELM, baselines, a vCenter already connected to an SDDC Manager. Aria Operations 8.18.7 goes only to 9.1.1 or later | August 2028 once all of it is on 9.1.x | [Converge or import](/vcf/library/upgrades/converge-import-vsphere/), then Planner |
-| vSphere 8.0 U3j or U3k | VCF 9.1.1 | Upgrade or converge | 9.1.0 allows import only. Converge from these builds is implied, not stated, so check the Matrix | As above | Matrix, then Planner |
+| vSphere 8.0 U3j or U3k | VCF 9.1.1 | Upgrade or converge | 9.1.0 allows import only. Converge from these builds is implied, not stated, so check the Matrix | August 2028 once all on 9.1.x | Matrix, then Planner |
 | vSphere 8, a fleet at 9.0 or later | Workload domain | Import | vCenter below 8.0 U3a, ESX below 8.0 U3, NSX below 4.2.1. No partial import | 11 Oct 2027 until the domain is upgraded | [Converge or import](/vcf/library/upgrades/converge-import-vsphere/) |
 | vSphere 8, no NSX or Aria Automation, no fleet wanted | vSphere or VVF 9.1.x | Component update, or VCF Installer for VVF | NSX or Aria Automation removes the component option. VVF 9.1 with management services can't later converge to VCF 9.1 | August 2028 | Planner's two VVF paths |
-| vSphere 8 below 8.0 U3a | Then as above | Patch first | Pick a build with a path to your target | 11 Oct 2027 until you move | Matrix |
+| vSphere 8 below 8.0 U3a | Your patched build's row | Patch first | A build with no path to your target | 11 Oct 2027 until you move | Matrix |
 
-The blockers and routes come from the [upgrade guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) and [paths page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/overview-of-deploy--converge--and-upgrade.html) (both updated 5 Nov 2026), the [converge configurations page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/converging-your-existing-vsphere-infrastructure-to-a-vcf-or-vvf-platform-/supported-and-not-supported-configurations.html), <KB id={440630} />, <KB id={448135} /> and <KB id={455088} />, with 9.0.2 EP2 from [Lam's 3 Sep post](https://williamlam.com/2026/09/10-exciting-enhancements-in-vmware-cloud-foundation-9-1-1.html). Broadcom's [13 Oct post](https://blogs.vmware.com/cloud-foundation/2026/10/13/customer-favorite-capabilities-accelerating-your-path-to-vcf-9-1-1/) gives the support dates. It's arguing for the upgrade, and the [support clock](/vcf/library/upgrades/support-clock/) checks its arithmetic. If you hold perpetual licences, [FAQ Q27](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) says you must switch to subscription before upgrading to VCF 9; ask Broadcom about your own contract.
+Support dates come from Broadcom's [13 Oct post](https://blogs.vmware.com/cloud-foundation/2026/10/13/customer-favorite-capabilities-accelerating-your-path-to-vcf-9-1-1/). It's arguing for the upgrade, and the [support clock](/vcf/library/upgrades/support-clock/) checks its arithmetic. Blockers and routes come from the [upgrade guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) and [paths page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/overview-of-deploy--converge--and-upgrade.html) (both updated 5 Nov 2026), the [converge configurations page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/converging-your-existing-vsphere-infrastructure-to-a-vcf-or-vvf-platform-/supported-and-not-supported-configurations.html), <KB id={440630} />, <KB id={448135} /> and <KB id={455088} />, with 9.0.2 EP2 from [Lam's 3 Sep post](https://williamlam.com/2026/09/10-exciting-enhancements-in-vmware-cloud-foundation-9-1-1.html).
 
 ## What the table doesn't show
 
-**The landing date belongs to each component.** The guide calls workload domain upgrades optional, to run any time after the management domain. <KB id={456708} /> still ends VCF 5.2.x, ESXi 8.x, vCenter 8.x and NSX 4.x on 11 Oct 2027.
+A workload domain left behind keeps its old support date. Its upgrade is optional, any time after the management domain, per the guide, but VCF 5.2.x, ESXi 8.x, vCenter 8.x and NSX 4.x still end on 11 Oct 2027 (<KB id={456708} />).
 
-<Callout type="analysis" title="Inference: count the date from what you leave behind">
-A management domain on 9.1.1 with one workload domain on 5.2 has an October 2027 date for that domain. An imported vSphere 8 domain has the same date until it moves. When you report a date, give the one for the last domain still to move.
+<Callout type="analysis" title="Inference: report the date of the last domain still to move">
+A management domain on 9.1.1 with one workload domain on 5.2 has an October 2027 date for that domain, and an imported vSphere 8 domain has the same date until it moves. So August 2028 only applies once the last domain is across.
 </Callout>
 
-**Patching the source can close the route.** Upgrades only go to a release newer than your build, and the guide allows a patch target "only if you can also upgrade to its parent maintenance release". The 13 Oct post warns that a future out-of-band patch could bring a "brand-new back-in-time restriction".
+Patching the source can close the route, because upgrades only go to a release newer than your build, and the guide allows a patch target "only if you can also upgrade to its parent maintenance release". A future out-of-band patch could also bring a "brand-new back-in-time restriction", Broadcom warns in its 13 Oct post.
 
-<Callout type="analysis" title="Inference: 9.1.1.0 sets the cutoff">
+<Callout type="analysis" title="Inference: 3 Sep 2026 is the cutoff">
 By those two rules, a source build released after 3 Sep 2026 has no path to 9.1.1, even though 9.1.1 patches dated 12 Oct exist. It would wait for a newer maintenance release. Before applying a vSphere 8, NSX 4 or 5.2 patch during the project, compare its release date with 3 Sep 2026 and check the pair in the Matrix.
 </Callout>
 
-**Multi-instance estates choose the fleet first.** [Lam's relocation table](https://williamlam.com/2026/07/vcf-9-1-vcf-instance-fleet-consolidation-relocation.html) (14 Jul, updated 1 Aug 2026) supports moving 5.x and 9.0.x instances into a 9.1 fleet before they upgrade, and marks moving an existing 9.1 instance as unsupported. So consolidation is a decision to make before each instance's upgrade. The upgrade guide, paths page and FAQ don't cover it, so this rests on his post, and he says later support is under evaluation.
+With several instances, decide on consolidation before each one upgrades: moving a 5.x or 9.0.x instance into a 9.1 fleet is supported before its upgrade, and moving an existing 9.1 instance is unsupported. That rests on [Lam's relocation table](https://williamlam.com/2026/07/vcf-9-1-vcf-instance-fleet-consolidation-relocation.html) (14 Jul, updated 1 Aug 2026) alone, since the upgrade guide, paths page and FAQ don't cover it. He says later support is under evaluation, so don't plan on it.
 
-**Waiting for the next release needs a reason.** Broadcom [plans it](https://blogs.vmware.com/cloud-foundation/2026/11/04/broadcom-vcf-portfolio-updates/) for "sometime in Q1FY27" without naming it, and that post gives no support dates for it. Plan to 9.1.1 now, and compare once it has a name and notes.
+Plan to 9.1.1 now, because Broadcom [plans the next release](https://blogs.vmware.com/cloud-foundation/2026/11/04/broadcom-vcf-portfolio-updates/) for "sometime in Q1FY27" without naming it, and that post gives no support dates for it. Compare once it has a name and notes.
 
 ## Where the sources differ
 
 | Question | What they say | Which wins, and why |
 |---|---|---|
-| Earliest VCF source | Lam's fourth diagram (23 May): "VCF 5.x". Guide: 5.2.x, earlier goes to 5.2.x first. KB 450972: 5.2.0 to 5.2.3 for 9.1.0. Planner: asks for 5.2, 9.0 or 9.1 | **Guide.** It states the rule. Lam's label names a family. |
-| Method from 5.2 or 9.0 | Lam's diagram: "VCF Installer". 9.1.1 notes: "first upgrading to VCF Operations 9.1.1". KB 440630: upgrade VCF Operations, then lifecycle workflows | **Notes and KB.** KB 440630 uses Installer workflows in its vSphere rows, and its 5.2 and 9.0 row doesn't. |
+| Aria Operations 8.18.7 | KB 455088: 9.1.1.0 or later only, and warns of cluster failure otherwise. Planner agrees. KB 450972 and Lam's tables omit it | **KB 455088,** which gives the rule and the cause. |
 | 5.2.4 to 9.1.x | KB 450972: unsupported, later patch promised, 9.1.1 never named. Guide: 5.2.4 to 9.1.1 supported | **Guide.** The KB's table covers 9.1.0 only. |
-| 8.0 U3k to 9.1.1 | Guide names U3j only. KB 448135: 9.1.1 "effectively resolves" U3j "and later". 13 Oct post and Lam (3 Sep) name U3k. Planner's vCenter graph lists it | **KB 448135 for upgrade.** For converge, the Planner's page logic offers a card at 9.1.1, which supports the [converge note's](/vcf/library/upgrades/converge-import-vsphere/) inference and isn't a support statement. |
-| vSphere 8 floor | FAQ Q57: 8.0 U1 for import. Lam's comment (4 Aug): "8.0 U2/3, depending on which flow". Lam's diagrams: 8.x. KB 450972 and Lam's July table: 8.0 U3. Import page: vCenter 8.0 U3a, ESX 8.0 U3 | **Import page.** It's the 9.1 workflow page, and Lam's July text also says U3a. |
+| 8.0 U3k to 9.1.1 | Guide names U3j only. KB 448135: 9.1.1 "effectively resolves" U3j "and later". 13 Oct post and Lam (3 Sep) name U3k. Planner's vCenter graph lists it | **KB 448135 for upgrade,** because "and later" takes in U3k. For converge, the Planner's page logic offers a card at 9.1.1. The [converge note](/vcf/library/upgrades/converge-import-vsphere/) infers from that, but a card isn't a support statement. |
 | 9.0.2 EP2 | Lam (3 Sep): closed to 9.1.0, open to 9.1.1, printed as "VCF 9.0.2 EP02 (9.1.0.0200)". 13 Oct post: 9.1.1 restores its forward path. Planner's graph: vCenter 9.0.2.0100 reaches 9.1.0.0300 as well as 9.1.1. KB 450972 and the guide don't list it | **Target 9.1.1,** where all agree. KB 314608 has no EP row to tie it to a build, so read your build in the Matrix. |
 | Identity Broker off the management network | Guide: redeploy the 9.0.x appliance before upgrading VCF Operations. KB 440630: "contact Support for assistance" | **Guide,** the 9.1 workflow page, which has the procedure. Ask Support if the redeploy doesn't fit. |
-| Aria Operations 8.18.7 | KB 455088: 9.1.1.0 or later only, and warns of cluster failure otherwise. Planner agrees. KB 450972 and Lam's tables omit it | **KB 455088.** It states the rule and the cause. |
-| 9.1.0 date | Guide: 11 May. KB 314608: 12 May | **12 May,** as the clock uses. No route changes. |
+| vSphere 8 floor | FAQ Q57: 8.0 U1 for import. Lam's comment (4 Aug): "8.0 U2/3, depending on which flow". Lam's diagrams: 8.x. KB 450972 and Lam's July table: 8.0 U3. Import page: vCenter 8.0 U3a, ESX 8.0 U3 | **Import page,** because it's the 9.1 workflow page and Lam's July text also says U3a. |
+| Earliest VCF source | Lam's fourth diagram (23 May): "VCF 5.x". Guide: 5.2.x, earlier goes to 5.2.x first. KB 450972: 5.2.0 to 5.2.3 for 9.1.0. Planner: asks for 5.2, 9.0 or 9.1 | **Guide,** which states the rule. Lam's label names a family. |
+| Method from 5.2 or 9.0 | Lam's diagram: "VCF Installer". 9.1.1 notes: "first upgrading to VCF Operations 9.1.1". KB 440630: upgrade VCF Operations, then lifecycle workflows | **Notes and KB.** KB 440630 uses Installer workflows in its vSphere rows, but its 5.2 and 9.0 row doesn't. |
+| 9.1.0 date | Guide: 11 May. KB 314608: 12 May | **12 May,** as in the support clock. No route changes. |
 
-<Callout type="analysis" title="This site's order of trust">
-For a build pair, start with the Matrix, because the guide, KB 448135 and the Planner all defer to it. This note hasn't been checked against that interactive tool, so run your own pair there. Next come the 9.1 TechDocs workflow pages, then KBs for a single mechanism, then the Planner and Lam. The FAQ comes last, since Q57 and Q61 disagree. This matches the [converge note](/vcf/library/upgrades/converge-import-vsphere/).
+<Callout type="analysis" title="Which source to trust first">
+Trust the Matrix first for a build pair, because the guide, KB 448135 and the Planner all defer to it. After it come the 9.1 TechDocs workflow pages, then KBs for a single mechanism, then the Planner and Lam. The FAQ comes last, since Q57 and Q61 disagree. The [converge note](/vcf/library/upgrades/converge-import-vsphere/) uses the same order. Nothing here has been checked against the Matrix, which is interactive, so run your own pair there.
 </Callout>
 
 ## Which tool, and when
 
-- **[Lam's path map](https://williamlam.com/2026/05/vcf-9-1-demystifying-supported-upgrade-paths-to-9-1.html) (23 May 2026).** Use it to show stakeholders what each end state adds. It works in version families and predates 9.1.1, so don't take a source build from it.
-- **[VCF Upgrade Planner](https://vmware.github.io/vcf-upgrade-planner/), described in [Lam's post of 22 Oct 2026](https://williamlam.com/2026/10/major-enhancements-to-vcf-9-1-upgrade-planner-tool.html).** Use it once the row above is settled, to get the ordered steps with your exact builds, including workload domain and instance paths, Express Patches, and Supervisor and VKS. It exports for change boards. The guide and the 9.1.1 notes both point to it. Its [repository](https://github.com/vmware/vcf-upgrade-planner) changed as late as 5 Nov. Its refresh script's own header says the compatibility check is done by linking to Broadcom's site, so treat a green result as a prompt to confirm.
-- **[Interoperability Matrix](https://interopmatrix.broadcom.com/Upgrade?productId=851).** Use it last, for every build pair in the plan. <KB id={448135} /> says to uncheck "Hide Patch Releases" when searching.
-- **<KB id={450972} />.** Use it only to explain why a 9.1.0 target failed. It doesn't list 9.1.1.
+- **[Lam's path map](https://williamlam.com/2026/05/vcf-9-1-demystifying-supported-upgrade-paths-to-9-1.html) (23 May 2026)** is for showing stakeholders what each end state adds. It works in version families and predates 9.1.1, so don't take a source build from it.
+- **[VCF Upgrade Planner](https://vmware.github.io/vcf-upgrade-planner/)** comes once your row above is settled. It gives the ordered steps with your exact builds, including workload domain and instance paths, Express Patches, and Supervisor and VKS, and it exports for change boards ([Lam's post of 22 Oct 2026](https://williamlam.com/2026/10/major-enhancements-to-vcf-9-1-upgrade-planner-tool.html)). The guide and the 9.1.1 notes both point to it. Its [repository](https://github.com/vmware/vcf-upgrade-planner) changed as late as 5 Nov, so put the date on any export you hand to a change board. Treat a green result as a prompt to confirm, because its refresh script's header says the compatibility check is done by linking to Broadcom's site.
+- **[Interoperability Matrix](https://interopmatrix.broadcom.com/Upgrade?productId=851)** is the last step, for every build pair in the plan. Uncheck "Hide Patch Releases" when searching (<KB id={448135} />).
+- **<KB id={450972} />** explains why a 9.1.0 target failed. It doesn't list 9.1.1, so don't use it to choose a target.
