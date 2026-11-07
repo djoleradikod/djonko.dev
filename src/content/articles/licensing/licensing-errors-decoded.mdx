@@ -9,7 +9,7 @@ pubDate: 2026-11-02
 updated: 2026-11-07
 reviewed: 2026-11-07
 reviewDue: 2027-02-15
-kbs: [438771, 448518, 439522, 453149, 428209, 432158, 435664, 409220, 447554, 441526, 440471, 447739, 440863, 424533, 452095, 442564, 440982, 445428, 441747, 454287, 423362, 455886, 440715, 453517, 456737, 429696, 448638]
+kbs: [438771, 448518, 439522, 453149, 428209, 432158, 435664, 409220, 444349, 447554, 441526, 440471, 447739, 440863, 424533, 452095, 442564, 440982, 445428, 441747, 454287, 423362, 455886, 440715, 453517, 456737, 429696, 448638]
 sources:
   - title: "Licensing overview (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview.html"
@@ -51,11 +51,11 @@ sources:
 ---
 
 <InShort>
-Sort the message by what it threatens. **Reporting** messages carry the clock: usage is due every 180 days, and 90 days after a license expires hosts disconnect and workloads can't start. **Registration** messages usually mean VCF Operations can't finish its exchange with the Business Services console, and the documented causes include a blocked path, a bad proxy or an expired activation code. **Assignment** messages, mostly on 9.1, usually mean vCenter and the License Server can't work together: check time, TCP 443, DNS, FQDN and the vCenter UUID. Wording shifts between builds, and 9.1.1 [changed licensing errors to carry more detail and remediation guidance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), so search on the stem of the string.
+Sort the message by what it threatens. **Reporting** messages carry the clock: usage is due every 180 days, and 90 days after a license expires hosts disconnect and workloads can't start. **Registration** messages usually mean VCF Operations can't finish its exchange with the Business Services console, and the documented causes include a blocked path, a bad proxy, an expired activation code or a wrong Site ID. **Assignment** messages, mostly on 9.1, usually mean vCenter and the License Server can't work together: check time, TCP 443, DNS, FQDN and the vCenter UUID. Wording shifts between builds, and 9.1.1 [changed licensing errors to carry more detail and remediation guidance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), so search on the stem of the string.
 </InShort>
 
 <Callout type="note" title="Corrected on 7 November 2026">
-This note listed a wrong Site ID as a registration cause, a certificate fault as an assignment cause and HTTP 526 as a License Server response. The Broadcom KBs opened for these messages document none of them, so they're gone. It also read the "not connected to a license server" banner as a License Server that was unreachable or off, where <KB id={440471} /> documents one that was never installed, and it credited NTP, port 443 and UUID checks to <KB id={452095} /> when they come from <KB id={424533} />.
+This note listed a certificate fault as an assignment cause and HTTP 526 as a License Server response. The Broadcom KBs opened for these messages document neither, so they're gone. A wrong Site ID stays, now cited and limited to the 9.0.1 messages its KB names. It also read the "not connected to a license server" banner as a License Server that was unreachable or off, where <KB id={440471} /> documents one that was never installed, and it credited NTP, port 443 and UUID checks to <KB id={452095} /> when they come from <KB id={424533} />.
 </Callout>
 
 ## How urgent is it?
@@ -98,6 +98,7 @@ Before opening a log, find the reporting mode, the last successful refresh and, 
 | "Switching the reporting mode failed. Check your internet connection." | Blocked endpoints: test `vcf.broadcom.com` and `eapi.broadcom.com` on 443 from every node (<KB id={428209} />). More than 180 days disconnected, or an expired code with `401` and `invalid_client` in the log, needs a new activation code (<KB id={428209} />, <KB id={432158} />). On 9.0.x, a missing or wrong proxy credential fails the switch too (<KB id={435664} />). |
 | "This activation code is not valid" | On 9.0.x the code can be right and the proxy wrong, with `407 authenticationrequired` in the log. Fix or remove the proxy in Global Settings, then re-enter the code (<KB id={435664} />). |
 | "Server returned status code: 0" | Proxy or firewall blocking the required URLs; the KB links the list (<KB id={409220} />). |
+| "The managed vCenter systems are not licensed by the licenses added to this VCF Operations instance." or "License file cannot be updated." | 9.0.1, with Update Licenses failing silently and a false expiry warning. A wrong Site ID at registration, commonly because the configured primary tenant is inactive, gets the licensing request rejected. Check the Site ID against your entitlements, generate a new activation code in Connected mode and enter it (<KB id={444349} />). |
 | "Your license servers are still pending registration" | 9.1, with two unrelated causes. If a proxy or security device blocks live token validation, switch to disconnected (<KB id={447554} />) and read the mode section above. If the License Server console is black, its Docker bridge conflicts with 172.17.0.0/16: 9.1.0.0200 fixes it, and an existing 9.1.0 deployment must be replaced (<KB id={441526} />). |
 
 ### Assignment and the License Server (9.1)

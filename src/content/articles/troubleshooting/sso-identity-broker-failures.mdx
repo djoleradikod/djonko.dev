@@ -1,53 +1,140 @@
 ---
 title: "VCF SSO and identity broker failures: redirects, clocks, secrets and a full database volume"
-description: "When VCF single sign-on fails, the message can be generic while the cause is specific: the URL used to reach VCF Operations, clock drift, a rotated OAuth secret, an unreachable domain controller, or the broker's database volume filling up."
+description: "Sort a VCF SSO failure by how far it reaches. VCF Operations alone points at the URL, clock or a stale registration; vCenter alone at its OAuth2 secret; intermittent errors at a broker node's path to the domain controller; a broker outage at its Postgres volume or certificate. Local accounts survive a broker failure."
 category: troubleshooting
 order: 9
-versions: ["9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [413976, 439953, 409353, 442137, 427108, 417098, 427554, 443943, 452420, 456305, 456430]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [413976, 439953, 409353, 442137, 414489, 447583, 427108, 393161, 452420, 456430, 427554, 417098, 456305, 456908, 443943]
 sources:
-  - title: "Deployment models for VCF single sign-on (9.0)"
+  - title: "Deployment Modes of the VCF Identity Broker (9.0)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/what-is/deployment-models-for-sso.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Embedded Identity Broker Model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-instance-models/embedded-vidb.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Instance Identity Broker Model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-instance-models/external-vidb.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Single Sign-On Detailed Design (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Identity and Access Management, fleet management blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/identity-and-access-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Considerations and Prerequisites for VCF Single Sign-On (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/points-to-consider-while-setting-up-vmware-cloud-foundation-sso.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Delete a VCF Single Sign-On Configuration (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/managing-vmware-cloud-foundation-operations-sso/reset-vmware-cloud-foundation-sso.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations known issues (9.1.0 release notes)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/known-issues/vcfoperations-91-known-issues.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1 Frequently Asked Questions"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
 ---
 
 <InShort>
-VCF SSO is the identity broker federating to your identity provider, with VCF Operations, vCenter, NSX and VCF Automation as OAuth clients. Failures fall into five groups. **Redirect URL**: VCF Operations reached by a short name, IP or alias that isn't registered (<KB id={413976} />). **Time**: "JWT token is expired" when clocks drift (<KB id={409353} />). **Client secrets**: stale or rotated OAuth client registrations (<KB id={442137} />, <KB id={427108} />). **Directory reachability**: one broker node can't reach the domain controllers (<KB id={427554} />). **The broker itself**: its Postgres volume fills, or an internal certificate expires (<KB id={417098} />, <KB id={456305} />).
+Start with how far the failure reaches, because that separates a settings change from a support case. VCF Operations failing while vCenter and NSX still take the same account points at the URL, the clock or a stale client registration. vCenter failing alone points at its OAuth2 client secret, and the fix differs between management and workload domains. Intermittent errors point at a broker node that can't reach a domain controller. A broker that is down points at its Postgres volume or certificate. Broadcom's design page says local accounts keep working through broker failures, so sign in with one first.
 </InShort>
 
-<Compare rows={[
-  ["Identity source", "vCenter SSO (vsphere.local), optional Workspace ONE Access for Aria", "VCF identity broker, embedded in vCenter or as an appliance. 9.1 can run it on the services runtime."],
-  ["Scope", "Per vCenter, plus Aria", "Per fleet or per instance, across VCF Operations, vCenter, NSX and VCF Automation"],
-  ["Typical failure", "Identity source unreachable", "Redirect URL, OAuth client secrets, time, broker database"],
-]} />
-
-## By symptom
-
-| Message | Cause and fix |
-|---|---|
-| "Invalid redirect URL ... specified in authorize request" | VCF Operations reached by a VIP, alias, short name or IP. Set the **System Access URL** to the full https FQDN and always use it. After a re-IP, trigger an inventory sync (<KB id={413976} />, <KB id={439953} />). |
-| "Failed to log in with VCF SSO service. JWT token is expired." | VCF Operations clock differs from vCenter. Use the same NTP source everywhere (<KB id={409353} />). |
-| "Failed to log in with VCF SSO service" and HTTP 400 on group import | A stale OAuth client after an upgrade. Record role mappings, disable and re-enable SSO for the appliance, re-import groups (<KB id={442137} />). |
-| "Invalid access policy", "Unable to verify client secret" | vCenter's OAuth client secret mismatch. Snapshot, then rotate it per the KB (<KB id={427108} />). |
-| Intermittent errors with "LDAP server is not reachable" | One broker node can't reach the DC on 389 or 636. Open the ports from every node (<KB id={427554} />). |
-| "no healthy upstream" on the broker after a reboot | Postgres write-ahead log filled the volume. Check `patronictl list` and reinitialise replicas from the leader as the KB describes (<KB id={417098} />). |
-
-## 9.1 specifics
-
-- **"Service identity broker is not available"** after upgrade: an expired runtime service account password broke the 9.0 broker import. Support re-registers it (<KB id={443943} />).
-- **HTTP 400 on vCenter SSO, VCF Automation SSO "Not Configured"**: a consistency check rotated a secret while a component was offline. Unjoin and rejoin (<KB id={452420} />).
-- **"Internal certificate renewal is overdue"** alerts in 9.1.1: the broker's Postgres certificate. The KB deletes one secret to regenerate it (<KB id={456305} />).
-- **NSX SSO "Access Denied"** in 9.1.1: unjoin and rejoin NSX (<KB id={456430} />).
-
-<Callout type="field">
-Keep one emergency local login per component, tested quarterly, in the vault. An SSO failure becomes dangerous when nobody can log in to fix the thing that broke SSO.
+<Callout type="note" title="Corrected on 7 November 2026">
+This note blamed short names and IPs for redirect errors, told readers to set the System Access URL to the FQDN, and said to unjoin and rejoin VCF Automation after a secret mismatch. <KB id={413976} /> covers aliases and load balancer VIPs and wants the full URL users actually use, and <KB id={452420} /> has VCF Automation delete its leftover integration, which loses user access. The note also sent vCenter secret rotation to <KB id={427108} /> when the steps are in <KB id={414489} />, and said 9.1 "can" run the broker on the services runtime when 9.1 deploys an instance broker on VCF management services automatically.
 </Callout>
 
-## Pitfalls
+## Where the broker runs sets the blast radius
 
-- **Bookmarking VCF Operations by IP.** It works until SSO is enabled.
-- **Disabling SSO without recording role mappings.** Re-enabling it is easy. Rebuilding permissions is not.
-- **Testing directory access from one node.** All broker nodes need it.
+The broker federates to your identity provider, and VCF Operations, vCenter, NSX and VCF Automation are its OAuth clients.
+
+| Mode | Where it runs | What that means in a failure |
+|---|---|---|
+| [Embedded](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-instance-models/embedded-vidb.html) | A service in the management domain vCenter | vCenter maintenance also stops authentication. Restored with vCenter. Broadcom's design page says it is intended for labs and proofs of concept |
+| [9.0 appliance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/what-is/deployment-models-for-sso.html) | Stand-alone three-node cluster, deployed through fleet management | Each node needs its own path to the directory (<KB id={427554} />) |
+| [9.1 instance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-instance-models/external-vidb.html) | A service on VCF management services, multi-node on separate hosts | vCenter work doesn't touch authentication. Restored with the management services backup. Recommended for production |
+
+The instance broker has its own internal load balancer, and Broadcom says an additional one is "not required or recommended". That is a separate question from the redirect error below, which concerns a load balancer or alias in front of VCF Operations. If a production estate is still on embedded, vCenter maintenance windows also affect sign-on, so weigh that against [the mode decision](/vcf/library/architecture/identity-broker/).
+
+## VCF Operations login fails
+
+| Message | Applies to | Cause | Fix |
+|---|---|---|---|
+| "Invalid redirect URL ... specified in authorize request", reached through an alias or load balancer VIP | 9.x | The broker only accepts registered redirect URIs, and the System Access URL doesn't match the alias or VIP in use | Sign in as local admin on the primary node's FQDN and enter the full `https://` URL users will use, alias included (<KB id={413976} />) |
+| The same error, no load balancer, cluster recently re-IP'd | 9.0.x | The redirect list is out of sync with the cluster | Trigger Inventory Sync on the operations component, then log out and retry (<KB id={439953} />) |
+| "JWT token is expired", while vCenter and NSX accept the same account | 9.0 | The appliance clock differs from vCenter | Point the appliance at vCenter's NTP server, with ntpd running and timesyncd off (<KB id={409353} />) |
+| "Failed to log in with VCF SSO service." with HTTP 400 on group import, other components fine | 9.0.x, after an upgrade such as 9.0.2.0 | The VCF Operations registration in the broker is stale | Record role and scope assignments, turn VCF SSO off and on for the appliance, re-import groups, reassign roles (<KB id={442137} />) |
+| "No user permissions" at login, or "Internal server" error assigning roles | 9.1.0 | The infrastructure management adapter couldn't fetch role details | [Recovers within an hour](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/known-issues/vcfoperations-91-known-issues.html) at the next RoleSync, or run `service collector restart` |
+
+The 9.0 scope on the middle three rows matters on 9.1. These three KBs don't confirm those steps for 9.1 (checked 7 Nov 2026), so on a 9.1 appliance treat them as a lead and ask Support before editing `/etc/ntp.conf` or toggling SSO. Recording assignments first is not optional in <KB id={442137} />: turning SSO off removes the users imported through it.
+
+## vCenter, NSX or VCF Automation fails
+
+| Message | Applies to | Cause | Fix |
+|---|---|---|---|
+| "HTTP Status 400 - Bad Request" or "[400] Unable to authenticate" on vCenter, other components fine | 9.x | vCenter's OAuth2 client credentials are invalid or expired | Workload domain: unjoin and rejoin in VCF Operations (<KB id={447583} />). Management domain with embedded broker: the manual methods in <KB id={414489} />, which says the issue is resolved in vCenter 9.0.2 yet still lists 9.1 as affected |
+| "Invalid access policy", with "Unable to verify client secret" in the broker log | VCF Operations 9.0.x, vCenter 9.x | vCenter's OAuth2 client secret doesn't match | Snapshot, rotate using Method 2 of <KB id={414489} /> as <KB id={427108} /> directs, then clean up with <KB id={393161} /> if the error persists or the broker is down |
+| HTTP 400 on vCenter, and VCF Automation shows "Not Configured" | 9.1 with broker 9.1.0.0100 | The periodic SSO check ran while a component was down for upgrade, so the secret reset reached the broker and missed the component | vCenter: remove from SSO and join again. VCF Automation: delete the leftover integration, wait 5 to 10 minutes, confirm, reassign roles (<KB id={452420} />) |
+| NSX: "Access denied. Check client credentials.", while VCF Operations and vCenter work | 9.1.1 | NSX lost its link to the broker after post-upgrade initialisation | Confirm components on the "Not eligible" instance to force a sync, then unjoin and join both NSX components (<KB id={456430} />) |
+| Orchestrator SSO stops after a broker certificate replacement | 9.1.1 | The new certificate came from a different CA | [Reconfigure orchestrator authentication](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) |
+
+Some of these fixes carry a cost to plan for. <KB id={452420} /> warns that deleting the VCF Automation OIDC configuration loses user access and old privileges. We'd expect that to be minor during first setup and a change-window event on an estate in use, so capture role assignments before starting.
+
+<KB id={427108} />'s snapshot step has an Enhanced Linked Mode branch that powers down every vCenter in the SSO domain. Broadcom's 9.1 [considerations page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/points-to-consider-while-setting-up-vmware-cloud-foundation-sso.html) says VCF SSO "is not compatible with Enhanced Linked Mode", so the two don't sit together. Confirm the vCenter's real state before taking that outage: a standalone vCenter only needs a snapshot without memory.
+
+Method 2 of <KB id={414489} /> also removes a scheduled secret-expiry task from the trust management configuration, so read it through rather than running it as a quick rotation. In 9.1 the fleet workflow [covers vCenter and NSX Local Managers](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs), and SSO on NSX Global Managers is enabled manually, so treat a Global Manager as its own task.
+
+## Logins flicker, or the broker is down
+
+| Message | Applies to | Cause | Fix |
+|---|---|---|---|
+| Intermittent "VCF Identity Broker encountered an issue during authentication", directory sync "LDAP server is not reachable" | 9.x | At least one broker node can't reach the domain controller on TCP 389 or 636 | Open both ports from every node (<KB id={427554} />) |
+| The same authentication error, then "no healthy upstream" after rebooting the nodes | 9.x | `pg_wal` files filled the Postgres partition to 100% | Find the node with `df -h`, read `patronictl list`, then reinitialise both replicas from the leader using the KB's commands (<KB id={417098} />) |
+| "VCF Management Services internal certificate renewal is overdue" and two sibling alerts, returning an hour after clearing | 9.1.1 | The Postgres certificate the broker uses is overdue for renewal | Delete the one secret the KB names so it regenerates, then clear the alerts. A fix is planned, with no release named <AsOf date="2026-11-07" /> (<KB id={456305} />) |
+| Broker stopped, `vidb-service` pods in CrashLoopBackOff, "Start of VCF services runtime component" fails | 9.1.0.x | The internal Postgres SSL certificate expired | Regenerate the secret, delete the failing pods, retry Start Service (<KB id={456908} />) |
+| "Service identity broker is not available. Please try again in 5 minutes" after upgrading 9.0.x to 9.1.0 | 9.1.0 | The VMSP service account's SSH password expired, so the 9.0 broker import never finished | Open a Support ticket: clean-up and re-registration go through Broadcom (<KB id={443943} />) |
+
+The intermittent row is the one that a single connectivity test hides, because a healthy node passes while the broken one fails a share of logins. Test from each node. Broadcom's [identity and access blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/identity-and-access-management.html) adds a direction that outbound rules miss: with SCIM provisioning, inbound traffic from the provider to the broker should be allowed so real-time provisioning events arrive.
+
+## Upgrade failures to plan for
+
+SAML estates have a future login failure to get ahead of. [Broadcom recommends](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) re-importing the broker's service provider metadata into Okta, Entra ID, PingFederate or ADFS after upgrading to 9.1.1.0. Login works without it for now because a SHA-1 OAEP fallback remains, but the fallback goes in a future release and the re-import then becomes mandatory. Do it in the 9.1.1 change, while no one is locked out.
+
+A mixed estate can also produce a failure that an upgrade clears. With FIPS on, [SSO to VCF Operations for logs 9.0 fails](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/known-issues/vcfoperations-91-known-issues.html) once the broker reaches 9.1, and upgrading logs to 9.1 restores it. Use a local account until then.
+
+## When SSO itself is what's broken
+
+Broadcom's 9.1 [SSO design page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models.html) says that across its broker failure scenarios "local accounts and VCF SSO emergency access client (for API access) remain functional". The first redirect fix starts from a local admin login too, and on 9.1 the SDDC Manager UI [accepts only local admin accounts](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/points-to-consider-while-setting-up-vmware-cloud-foundation-sso.html) once VCF SSO is configured.
+
+Keep deleting SSO for last. [The delete action](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/managing-vmware-cloud-foundation-operations-sso/reset-vmware-cloud-foundation-sso.html) removes the provider configuration, provisioned users and groups and component configuration, and it "cannot be reverted". <KB id={393161} /> purges stale configuration when the broker is down, but its calls use the `X-vRealizeOps-API-use-unsupported` header, so open a case before running them.
+
+<Callout type="analysis" title="What to keep ready">
+Hold one local login per component and the emergency API client credentials in the vault, and test them on a schedule; quarterly is a reasonable default. Export role and scope assignments before any SSO change, because the fixes in <KB id={442137} /> and <KB id={452420} /> both lose them. Broadcom's design page says these accounts survive a broker outage but sets no test interval, so the schedule is this site's advice.
+</Callout>

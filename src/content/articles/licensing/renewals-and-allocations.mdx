@@ -1,62 +1,171 @@
 ---
 title: "Renewals, capacity changes, Site IDs and splitting allocations"
-description: "The commercial side of 9.x licensing has a few technical consequences: renewals that don't move the date, allocations that can't be shared, Site ID changes that need a new activation code, and VCF Operations instances that can't be thrown away."
+description: "Renew, then update licenses. If a new serial number leaves the end date unmoved, use Change Capacity and update again. Check the Site ID on the order, because a new one can move the serial and turn licenses Inactive. Split the default license when several VCF Operations instances or License Servers need their own."
 category: licensing
 order: 8
-versions: ["9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [449122, 421124, 437242, 429748, 444349, 436542, 446056, 441175]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [449122, 421124, 437242, 429748, 444349, 436542, 446056, 441175, 444094]
 sources:
+  - title: "Updating Licenses and Viewing the License Usage File (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/update-licenses.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Update Licenses in Connected Mode (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/update-licenses/updatelicenses.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
   - title: "Update licenses (9.0)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/update-licenses.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Move a Contract or a Serial Number Between Site IDs (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/move-a-contract-or-a-serial-number-between-site-ids.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Move a Contract or a Serial Number Between Site IDs (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/move-a-contract-or-a-serial-number-between-site-ids.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Split Default Licenses (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/manage-licenses-in-the-vcf-business-services-console/split-licenses.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Change License Capacity (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/manage-licenses-in-the-vcf-business-services-console/edit-license-capacity.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Remove a License from a License Server and the Respective VCF Operations Instance (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/manage-licenses-in-the-vcf-business-services-console/remove-a-license-from-vcf-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Add a License to VCF Operations and License Server (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/add-a-license-to-vcf-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Delete a License Server (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/remove-a-license-server.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "License Server Overview (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Licensing Overview (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Licensing Model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Registering VCF Operations and a License Server with the VCF Business Services Console (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Single License Server Model (VCF Fleet in a Single Site blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections(1)/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware Cloud Foundation 9.1 General FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
   - title: "Simplify license management across a VCF Operations fleet and standalone deployment for monitoring"
     url: "https://williamlam.com/2026/03/simplify-license-management-across-vcf-operations-fleet-standalone-deployment-for-monitoring.html"
     by: "William Lam"
+    kind: practitioner
+    date: 2026-03-05
   - title: "Automating license entitlement workflows between VCF Operations and the console"
     url: "https://williamlam.com/2025/12/automating-license-entitlement-workflows-between-vcf-operations-vcf-business-service-console-bsc.html"
     by: "William Lam"
+    kind: practitioner
+    date: 2025-12-18
 ---
 
 <InShort>
-New or expanded entitlements appear in the console first. Add them to the VCF Operations instance (or License Server) there, then **Update Licenses** or import a new license file. There's no need to reassign (<KB id={421124} />). A renewal that creates a **new serial number** may not move the end date until you use **Change Capacity** in the console (<KB id={449122} />). One allocation can't serve two instances, so **split** the default license (<KB id={437242} />). A change of **Site ID** means unregistering and registering again with a new activation code (<KB id={429748} />).
+Renew first, then update licenses. If the renewal created a new serial number and the end date stays put, raise the license with **Change Capacity** in the console and update again (<KB id={449122} />). Check the Site ID on the order before signing, because [a new Site ID added during ordering can move the serial](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/move-a-contract-or-a-serial-number-between-site-ids.html). That turns existing licenses Inactive and makes updates fail until each VCF Operations instance is registered again. Where several instances or 9.1 License Servers draw on one default license, split it so each has its own. This note isn't legal or purchasing advice, so take entitlement questions to your Broadcom agreement and account team.
 </InShort>
 
-<Compare rows={[
-  ["Adding capacity", "Add new keys to each product", "Add to the instance in the console, then update or import"],
-  ["Renewal", "New keys, re-entered", "Update licenses. With a new serial number, use Change Capacity first."],
-  ["Several environments", "Separate keys per environment", "Split the default license so each instance has its own allocation"],
-  ["Who to call", "Licensing portal support", "Contract mapping problems go to Global Customer Assistance, not technical support"],
-]} />
-
-## Common changes
-
-**Renewing.**
-1. Renew through the account team or distributor.
-2. Update licenses (connected) or run the usage and license file cycle (disconnected).
-3. If the date doesn't move and the renewal has a new serial number, go to the console's licenses view, choose **Change Capacity**, add the amount, and update again.
-
-**Splitting for several instances.** Use the console's menu on the default license to split it, then assign each part to one VCF Operations instance or License Server. The allocated cores cap that environment.
-
-**Changing Site ID.** Unregister from the old Site ID, register against the new one with a new activation code, then update. Plan for restricted management if there is a gap in coverage.
-
-**Wrong Site ID at registration.** False expiry warnings and "managed vCenter systems are not licensed by the licenses added" are the symptoms. Generate a new activation code for the right Site ID (<KB id={444349} />).
-
-## Replacing or retiring a VCF Operations instance
-
-- **It is not disposable.** Once it has licensed an environment, it remains the licensing authority, and removing it leaves the estate heading for restricted management (<KB id={446056} />).
-- **Replacing one in a dark site** has a documented procedure: remove the adapters, power off and remove the old appliance, deploy and register the new one, reassign, then recreate integrations (<KB id={436542} />).
-- **9.1 License Servers** can't move between fleets. Deploy a new one and transfer (<KB id={441175} />).
-- **A monitoring-only VCF Operations** can see entitlements through a vCenter licensed by the fleet instance, without being registered itself.
-
-<Callout type="field">
-Keep a one-page licensing register per customer: Site ID, console owner, VCF Operations instances and their allocations, mode, last refresh date, renewal date. On a licensing ticket, read that page before any log.
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to say 9.1 License Servers can't move between fleets, citing a KB that doesn't cover fleets; the documented rule is that [one can't be shared between fleets](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview.html). It also gave one Site ID procedure where Broadcom documents separate routes, implied a monitoring-only instance needn't be licensed, and carried two claims with no source: that allocated cores cap an environment, and that a misrouted case keeps a clock running.
 </Callout>
 
-## Pitfalls
+## What each change takes
 
-- **Raising a technical case for a contract problem.** It gets redirected and the clock keeps running.
-- **Uploading usage expecting it to extend past the subscription.** It won't.
-- **Two instances, one allocation.** It doesn't work, however it's configured.
+| Change | What to do | Source |
+|---|---|---|
+| Capacity or renewal on a license the instance already holds | Update licenses. You [don't need to reassign them to assets](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/update-licenses.html) | <KB id={421124} /> (9.0.x), 9.1 TechDocs |
+| A license not yet on an instance | In the console's [Add to VCF Operations wizard](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/add-a-license-to-vcf-operations.html), pick the instance and, on 9.1, the License Server. Then update or import | 9.1 TechDocs |
+| Renewal under a new serial number, date unmoved | Change Capacity on the license, then update again | <KB id={449122} /> (9.x) |
+| Several instances or fleets | Split the default license, one part per instance and, on 9.1, per License Server | <KB id={437242} /> (9.0, 9.1), 9.1 TechDocs |
+| Serial moved to a new Site ID | Ask support for the move, then re-register each instance | [TechDocs, 9.0 and 9.1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/move-a-contract-or-a-serial-number-between-site-ids.html) |
+| New purchase under a different Site ID, connected, 9.0.x | Disconnect, register with a code from the new account, update | <KB id={429748} /> (9.0.x) |
+| Wrong contract dates or mapping | Open a request with Global Customer Assistance, since technical support engineers can't change contract dates or mappings | <KB id={449122} /> |
+
+Connected mode with automated updates takes care of the update step. In that mode 9.1 [updates licenses every 24 hours and after each change](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/update-licenses/updatelicenses.html), and **Update Licenses** still pulls the file at once. Manual mode must update at least every 180 days. Broadcom's [single-site blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections(1)/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html) keeps disconnected mode for environments where policy blocks internet access, with uploads every 180 days. Those sites can [script the exchange through APIs](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs), and [William Lam's December 2025 post](https://williamlam.com/2025/12/automating-license-entitlement-workflows-between-vcf-operations-vcf-business-service-console-bsc.html) automates the workflows between VCF Operations and the console. [The 180-day cycle](/vcf/library/licensing/180-day-cycle/) tells a reporting deadline from a subscription end date.
+
+## When a renewal doesn't move the date
+
+Uploading usage won't move it without a renewal: a usage file "will not extend the end date" (<KB id={449122} />). So renew through the account team or distributor first, then update (connected) or run the usage and license file cycle (disconnected), and only then look at the serial number.
+
+A renewal that arrives as a new contract or subscription, with a new serial number, may leave the old date in place. The fix is to open the license in the console, choose **Change Capacity**, increase it by the newly purchased amount, and update in VCF Operations again (<KB id={449122} />). The KB covers 9.x without limiting this to one license type, while the 9.1 procedure [documents Change Capacity for split licenses only](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/manage-licenses-in-the-vcf-business-services-console/edit-license-capacity.html), drawing the extra capacity from the default license.
+
+<Callout type="analysis" title="Reading the two together">
+The default license [pools all active subscriptions for the same product and Site ID](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview.html), so a new serial should reach it unaided while a split license stays at its allocated figure until raised. That would explain the KB's step, but it's an inference and Broadcom doesn't state it. If you run only the default license and the date still won't move after an update, neither page gives you a next step, so take it to Global Customer Assistance with both serial numbers.
+</Callout>
+
+Check capacity while old and new subscriptions overlap. [Cores drop on the end date of each subscription](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html), and the license expires when the last one ends. A license that ends up over-used [can't be assigned to more vCenter instances and accepts new hosts only in evaluation mode](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/manage-licenses-in-the-vcf-business-services-console/edit-license-capacity.html) until you add capacity.
+
+## Site ID changes
+
+Which procedure applies depends on what happened to the contract. A license showing Inactive on an unexpired subscription [may mean the serial has moved](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/move-a-contract-or-a-serial-number-between-site-ids.html). Assignments then read as over-assigned, updates fail, and "after 180 days, your license expires", with hosts disconnected from vCenter. The page doesn't say when those 180 days start, so to be safe, count from the day the licenses go Inactive.
+
+To move a serial on purpose, ask support. Afterwards, with administrator rights on the new Site ID, the [9.1 sequence](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/move-a-contract-or-a-serial-number-between-site-ids.html) for each instance is:
+
+1. Submit a usage report and download a new license file.
+2. Split the default license in the new site, with the old capacity and a distinct name.
+3. Deactivate the instance in the console, selecting the option that you no longer have access to it.
+4. In VCF Operations, choose **Restart Registration**, which leaves existing licenses alone.
+5. Register with the new Site ID, selecting the new license.
+6. Assign the licenses to vCenter instances, then update.
+
+The [9.0 page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/move-a-contract-or-a-serial-number-between-site-ids.html) follows the same order. Neither page mentions an activation code, but [connected registration in 9.1 uses one](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations.html), generated for that specific registration.
+
+A replacement bought under a different Site ID after the old license lapses is a separate case, documented for connected 9.0.x. Unregister or disconnect, register with an activation code from the new account, then click **Update Licenses**. Book a maintenance window around the expiry and plan for restricted management: VMs keep running, but creating VMs or vMotion may be restricted during the gap (<KB id={429748} />).
+
+Registering against the wrong Site ID produces a false picture on 9.0.1. Update Licenses fails silently, the license reads as expired while vCenter shows it active, and you may see "The managed vCenter systems are not licensed by the licenses added to this VCF Operations instance." The fix is a new connected-mode activation code for the right Site ID (<KB id={444349} />).
+
+## Splitting and moving capacity
+
+Plan one split per instance and, on 9.1, per License Server. [A license can't sit on more than one License Server at a time](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/add-a-license-to-vcf-operations.html), each server [needs its own unique allocation and can't be shared between fleets](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview.html), and "one license allocation cannot be used in two different VCF Operations instances" (<KB id={437242} />). A second fleet therefore means a second license.
+
+The split happens in the console, either from the ⋮ menu during registration (<KB id={437242} />) or later through [Licenses, Version 9+, Manage Licenses (Split/Merge)](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/manage-licenses-in-the-vcf-business-services-console/split-licenses.html). Capacity comes out of the default license and can't exceed what it has available. If the default license is already on an instance, update that instance after the split. A host added to a vCenter whose license has no capacity left [stays in evaluation mode for up to 90 days](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html), so size the splits with growth in mind.
+
+Moving a license takes [more than a click](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/manage-licenses-in-the-vcf-business-services-console/remove-a-license-from-vcf-operations.html). It must first come off every vCenter instance, a disconnected instance must report usage, and after **Remove License from License Server** you update VCF Operations. Only then can you add it to another instance and server.
+
+## Replacing or retiring what holds the licenses
+
+VCF Operations can't simply be retired. On 9.1.0 the appliance and its license services "cannot be decommissioned after the initial licensing process", and removing it eventually puts the environment in restricted management (<KB id={446056} />). The replacement procedure in <KB id={436542} /> is narrower than it looks: it covers rebuilding a 9.0.x appliance at a dark site, where the instance isn't registered with the console and vCenter holds VVF licenses to overwrite with VCF. It removes the adapters, retires the old appliance, deploys and registers the new one, assigns licenses, then recreates the adapters. Because the 9.1 License Server [takes over some license logic and storage from VCF Operations](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs), don't assume those steps carry over, and ask Broadcom before removing a 9.1 appliance.
+
+Empty a License Server before deleting it. Move its licenses to another server on the same instance, or [the assets they license become unlicensed](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/remove-a-license-server.html). Delete it in the console first and in VCF Operations second, because deleting only the VM leaves stale registrations that stop the replacement connecting (<KB id={444094} />). The single-site blueprint [keeps no backup of the server: if it's lost, deploy a new instance and migrate the licenses within 90 days](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections(1)/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html). A server deployed with the wrong IP address also gets replaced, after removing any licenses from it (<KB id={441175} />). [The License Server note](/vcf/library/licensing/license-server/) has the detail.
+
+A monitoring-only VCF Operations still needs licensing. [William Lam's March 2026 lab walkthrough](https://williamlam.com/2026/03/simplify-license-management-across-vcf-operations-fleet-standalone-deployment-for-monitoring.html) on 9.0 shows a standalone instance taking its entitlement from a vCenter that the fleet instance licenses. He notes the shortcut fails if the standalone instance has other vSphere integrations needing entitlements, and both instances must then retrieve theirs from the console. He answers in the comments that 9.1 works too and needs a License Server. Treat this as a lab pattern and confirm with Broadcom before designing around it.
+
+<Callout type="analysis" title="Keep a register">
+Every procedure above asks which Site ID, instance or serial is involved, and a moved serial is hard to spot without a baseline. Keep a one-page record per customer: Site IDs, console owner, VCF Operations instances, their License Servers and split licenses, serial numbers, mode, last update date and renewal date. On a licensing ticket, read it before any log. Check it against the order whenever a renewal adds a Site ID.
+</Callout>

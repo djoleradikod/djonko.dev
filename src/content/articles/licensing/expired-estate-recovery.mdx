@@ -112,7 +112,7 @@ This is the sequence in <KB id={428053} /> (9.0), which labels it a suggested wo
 
 1. **Build a fresh standalone ESX host** on independent hardware or isolated management storage. Set the correct date before installing (<KB id={457074} />), and don't use Auto Deploy, because [stateless hosts have no evaluation period](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html).
 2. **Deploy new appliances on it.** On 9.0 that's a VCF Operations VM from an OVF template through the Host Client. On 9.1 it's VCF Operations and the License Server. Verify NTP and that A and PTR records match exactly between the new appliance and the target vCenter.
-3. **Register the expired vCenter** in VCF Operations and confirm it shows Connected under Manage > Licensing > vCenter Systems.
+3. **Register the expired vCenter** in VCF Operations and confirm it shows Connected in the vCenter Systems table: under License Management > Licenses on 9.0, and Manage > Licensing > Licenses & Registration on the Version 9+ tab on 9.1.
 4. **Apply the VCF Solution License** in VCF Operations. That pushes the entitlement to vCenter and its connected hosts.
 5. **Confirm** under vSphere Client > Administration > Licensing > Assets that vCenter and the hosts show the license, and that hosts reconnect. On 9.1, also confirm the License Server VM sits on a datastore in the Management Workload Domain and is connected.
 

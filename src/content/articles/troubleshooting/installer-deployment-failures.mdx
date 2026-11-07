@@ -1,80 +1,169 @@
 ---
-title: "VCF Installer and bring-up failures: validation errors by cause, with the fix and the KB"
-description: "The VCF Installer's validation flags input problems: DNS case, missing records, host storage, HCL data, uplinks, a spec field, or a proxy the vCenter installer ignores. A catalogue grouped by cause, with the fix and the KB."
+title: "VCF Installer and bring-up failures: what fails at each stage, the cause, the fix and the KB"
+description: "Broadcom's KBs report VCF Installer failures after validation too: NTP from the Operations nodes, the vCenter installer's direct call to eapi.broadcom.com, ESX images and uplinks. Causes, fixes and scope by stage, for 9.0 to 9.1.1."
 category: troubleshooting
 order: 4
-versions: ["9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [403626, 404501, 405770, 408233, 427591, 416490, 401658, 431474, 447366, 415550, 439010, 447589]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [401658, 403626, 404501, 405013, 405770, 408233, 409486, 412606, 415550, 416490, 427591, 431474, 435717, 438528, 439010, 439240, 444111, 447366, 447589]
 sources:
   - title: "VCF Installer 9.1 known issues"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/known-issues/vcf-installer-91-known-issues.html"
     by: "Broadcom TechDocs"
-  - title: "VCF 9 deployment planning and operations"
-    url: "https://vcf-planning.hollebollevsan.nl/"
-    by: "Community guide"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Installer 9.1 resolved issues"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/resolved-issues/vcf-installer-91-resolved-issues.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Installer / SDDC Manager 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/sddc-manager-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Start a New VCF Fleet or a New VCF Instance Deployment by Using the VCF Installer Deployment Wizard"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/deploy-a-new-vcf-fleet-or-a-new-vcf-instance.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Deploy VCF Installer"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/preparing-your-environment/deploy-the-vmware-cloud-foundation-installer-appliance.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Preparing to Deploy a VCF or vSphere Foundation Platform"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/preparing-your-environment.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Components FQDNs and IP addresses"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/planning-and-preparation/vcf-components-fqdns-and-ip-addresses.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Public URLs Required for Online Functionalities"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/planning-and-preparation/public-urls-required-for-vmware-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Troubleshooting Blueprint: Troubleshooting Scenarios"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-scenarios.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Fleet in a Single Site Blueprint: Minimum Requirements"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/minimal-requirements-for-fleet-single-site.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1 Frequently Asked Questions"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
 ---
 
 <InShort>
-The VCF Installer replaced Cloud Builder. It validates more, so look at the input first. This note groups the failures into six causes: **names** (uppercase FQDNs, missing A or PTR records), **hosts** (storage, stale vSAN partitions, beta builds, incompatible VIBs), **hardware compatibility** (HCL data older than 90 days), **network shape** (uplinks configured differently), **the spec** (a missing field), and **outbound paths** (the vCenter installer bypasses the depot proxy in 9.1). Fix the input, then **Retry**. For a broken spec, cancel, edit the JSON and deploy from it.
+Deploy with [VCF Installer 9.1.1 or later](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/deploy-a-new-vcf-fleet-or-a-new-vcf-instance.html), the floor in Broadcom's current deployment procedure <AsOf date="2026-11-07" />. Spend preparation time on the failures Broadcom reports after validation: lowercase component names, NTP from the Operations nodes, a direct path to `eapi.broadcom.com` behind a proxy, GA ESX images and matching management networks. When something fails, fix the input and retry. One documented NTP case leaves only a redeploy from scratch.
 </InShort>
 
-<Compare rows={[
-  ["Tool", "Cloud Builder appliance", "VCF Installer appliance, which becomes SDDC Manager"],
-  ["Spec", "Deployment parameter workbook or JSON", "UI wizard or JSON spec, with POST /v1/sddcs/validations first"],
-  ["Scope", "Management domain", "Management domain plus fleet components, VCF Operations and, in 9.1, the services runtime"],
-  ["Retry", "Retry in the UI", "Retry in the UI, or Cancel Progress, edit JSON, then deploy from JSON"],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to say uppercase breaks the SDDC Manager FQDN and, in 9.1, more names, all under a 9.0 KB; Broadcom lists the SDDC Manager case as resolved in 9.1 and the other names as a 9.1 known issue. It also said "Deploy vCenter Appliance" hangs, offered an offline depot as an alternative to the direct `eapi.broadcom.com` path and said the Installer becomes SDDC Manager, when the task fails at step 12 of 13, the KB doesn't mention offline depots and the switch to SDDC Manager mode applies to an appliance placed on a management-domain host.
+</Callout>
 
-## Names
+## Which release you're on
 
-- **Uppercase in any FQDN.** SDDC Manager services fail to start, and in 9.1 uppercase also breaks fleet, runtime, identity broker and VCF Automation names (<KB id={403626} />).
-- **No DNS record for the installer itself** shows as a 502 on login (<KB id={404501} />).
-- **The SDDC Manager FQDN mapped to 127.0.0.1** in `/etc/hosts` fails certificate installation. Manual SSH fixes can then lock the `vcf` user (<KB id={439010} />).
+The Installer's 9.1.1 release fixes two things worth having before the first host is touched. A space in the DNS server list no longer leaves SDDC Manager stuck on "VMware Cloud Foundation is initializing" (<KB id={444111} />), and [hosts with NICs under 10 Gbit used only for management](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/sddc-manager-9-1-1-0-release-notes.html) are no longer blocked. The 9.1.1 release notes also ask you to use the latest available binaries.
 
-## Hosts
+Those 9.1.1 notes don't mention FQDN case, the proxy or HCL data, and <KB id={447366} /> is scoped to 9.1.0.x. So plan as if both the uppercase issue and the proxy bypass still apply on 9.1.1. That's an inference, and the `curl` test in the checklist shows only that the direct path is open, which covers you either way.
 
-- **"ESX Host Configuration Validation Failed"** with `Cannot open volume`: host storage, so fix it and reboot (<KB id={405770} />).
-- **vSAN disk availability fails**: stale vSAN partitions or ineligible disks. Check with `vdq -qH`. Partition removal is destructive, so be sure of the disk (<KB id={408233} />).
-- **Host seeding failed**: a pre-release ESX build on the first host (<KB id={401658} />) or VIBs that don't match the image (<KB id={431474} />).
+The Scope column below is each source's own label. Treat a 9.0 entry as a lead on 9.1, because most of those KBs don't say either way.
 
-## Hardware compatibility
+Placement is a decision too. An appliance [deployed on a management-domain host](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/preparing-your-environment/deploy-the-vmware-cloud-foundation-installer-appliance.html) can deploy only one platform, then switches to SDDC Manager mode and keeps the Installer's FQDN, which can't be changed after deployment. If more than one platform is coming, place it outside the management infrastructure. Either way, type that name in lowercase.
 
-**"ESX Host is not HCL compatible"**: uncertified hardware, an HCL database older than 90 days, or NVMe behind tri-mode controllers (<KB id={427591} />). Update the HCL data before the deployment window, not during it.
+## Failures during deployment
 
-## Network shape
+These cost the most, because the Installer has already started building. Check them first.
 
-**"No route to host" at network migration**: management and VM management networks configured differently, so the vDS uplink assignment fails (<KB id={415550} />). Keep the two identical.
+| What you see | Cause | Fix | Scope |
+|---|---|---|---|
+| "Failed to deploy VCF Operations node" at the Fleet Lifecycle install step | Operations nodes can't reach NTP | `ntpdate -q` from each node, open UDP 123, rerun the task. If the wizard then won't accept the corrected NTP list on a new deployment, the only workaround is a redeploy from scratch (<KB id={439240} />) | 9.1 |
+| "Deploy vCenter Appliance" fails at step 12 of 13; `vcsa-cli-installer.log` ends at "Running vSAN Cluster Health Checks" | The vCenter CLI installer ignores the depot proxy and calls `eapi.broadcom.com` directly for HCL data | Allow direct 443 from the Installer's IP, test, retry the task (<KB id={447366} />) | 9.1.0.x |
+| Deployment fails with uppercase in the fleet, instance, identity broker, services runtime or VCF Automation FQDNs | Uppercase in those names, a [known issue](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/known-issues/vcf-installer-91-known-issues.html) | Start the deployment with lowercase FQDNs | 9.1 |
+| "SDDC Manager services did not start" | Uppercase in the SDDC Manager FQDN | Lowercase the DNS record, retry (<KB id={403626} />). This case is [listed as resolved in 9.1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/resolved-issues/vcf-installer-91-resolved-issues.html) | 9.0 |
+| vCenter installation failed, "no stored copy available for inactive VIB" | Pre-release ESX build on the first host | Reinstall the GA build (<KB id={401658} />) | 9.0 |
+| "Host seeding failed"; vCenter rolls back and is deleted | VIBs conflict with the image profile | Check hardware compatibility and drivers, update the VIB (<KB id={431474} />) | 9.x |
+| "No route to host"; the management vCenter loses network when moved to the vDS | MANAGEMENT and VM_MANAGEMENT networks configured differently, so uplink assignment fails | Configure the vmnics on the vDS by hand, retry (<KB id={415550} />) | 9.0 and 9.1, a known limitation |
+| "Failed to install VMCA Certificate on SDDC Manager 127.0.0.1" | SDDC Manager FQDN mapped to loopback in `/etc/hosts` | From the web console, map it to the real IP and restart services. If later tasks fail with `Auth fail`, the `vcf` user may be locked or its password changed: `faillock --reset --user vcf` from the VM console (<KB id={439010} />) | 9.x, reported on 9.0.0.0 |
 
-## The spec
+The management network row is the one to design out: give both networks the same configuration, since the KB names the difference as the cause and calls it a known limitation.
 
-**A VCF Automation IP pool error** in 9.0: the pool needs two entries for standard and four for high availability (<KB id={416490} />). Download the JSON, cancel progress, fix it, then **Deploy using JSON spec**.
+## Failures at validation
 
-## Outbound paths
+Validation errors are cheap, since you can [go back in the wizard, change the input and re-run](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/deploy-a-new-vcf-fleet-or-a-new-vcf-instance.html). The hardware rows are the exception.
 
-- **"Deploy vCenter Appliance" hangs** at the HCL time check in 9.1. The vCenter CLI installer ignores the installer's proxy and calls `eapi.broadcom.com` directly. Allow that path (<KB id={447366} />).
-- **Stuck at "Initializing binary database"** with an offline depot: stale manifest or metadata, often from a caching web server (<KB id={447589} />).
+| What you see | Cause | Fix | Scope |
+|---|---|---|---|
+| "ESX Host is not HCL compatible" | Hardware isn't certified for VCF 9 in the Broadcom Compatibility Guide | Use supported hardware (<KB id={427591} />) | 9.x |
+| "No vSAN ESA certified disks found", with an HCL download error in `lcm-debug.log` | vSAN HCL file over 90 days old and no depot to refresh it | Reach a depot, or load `all.json` by hand, then Re-run Validations (<KB id={412606} />) | 9.x |
+| "No vSAN ESA certified disks found", with hosts behind tri-mode controllers | ESA NVMe must connect directly to PCIe | Change the hardware with the vendor, then redeploy the Installer (<KB id={409486} />) | 9.0 |
+| NFS datastore check fails on a host with one pNIC | [Unsupported configuration](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/known-issues/vcf-installer-91-known-issues.html), as is NFS with a single-uplink vDS | Use two or more pNICs | 9.1 |
+| "Reverse lookup of IP address … does not match" | PTR differs from the spec; comparisons are case-sensitive | Repair the PTR, retype the name if needed, re-run (<KB id={435717} />) | 9.x |
+| "Reverse lookup of IP Address [127.0.0.1] returned [localhost]" | Installer resolves its own FQDN to loopback, or a space follows a comma in the DNS list | Re-enter the list without spaces, fix local resolution, retry (<KB id={405013} />) | 9.x |
+| "not currently synchronizing time with NTP Server null" | First sync exceeds the pre-check timeout because `iburst` is absent | Add `iburst` in `/etc/ntp.conf` on the Installer, restart ntpd, retry (<KB id={438528} />) | No release listed; reported on a multi-site fleet |
+| "ESX Host Configuration Validation Failed", `Cannot open volume` | Expected datastores can't be opened | Fix the storage and retry; a host reboot is one troubleshooting step (<KB id={405770} />) | 9.0 |
+| `VSAN_DISK_AVAILABILITY_VALIDATION.error` | Stale vSAN partition, boot disk marked eligible, or a disk flagged ineligible | Check with `vdq -qH`. Partition removal can't be undone, so confirm the disk and back up the host first (<KB id={408233} />) | 9.0, hybrid vSAN |
+| "VCF Automation IP Pool should have exactly two entries…", or a reference-token error at VMFS FC | `ipPool` missing from `vcfAutomationSpec` | Download the JSON, cancel the deployment, add two addresses (four for high availability), deploy from the JSON (<KB id={416490} />) | 9.0 |
+
+Two of Broadcom's KBs can collide on `/etc/hosts`. <KB id={405013} /> ends with a sample line that keeps the FQDN on 127.0.0.1 on the Installer, while <KB id={439010} /> says that mapping on SDDC Manager breaks certificate installation. An appliance placed on a management-domain host becomes SDDC Manager, so the first fix could set up the second failure. That's an inference from the two KBs, and Broadcom doesn't connect them. If you apply the line, record it and check the file again before that certificate step.
+
+## Failures before the wizard starts
+
+| What you see | Cause | Fix | Scope |
+|---|---|---|---|
+| After login, "Http failure response … /v1/system/settings/deport: 502 OK" | No DNS record for the Installer appliance | Create it, check forward and reverse lookups, restart the appliance (<KB id={404501} />) | 9.0 |
+| Stuck at "Initializing binary database" with "Depot connection active" | Outdated, cached or incomplete `vcfManifest.json` on the offline depot | Refresh the three metadata files, re-enter the depot URL, turn off web server and proxy caching for the depot (<KB id={447589} />) | 9.1 |
 
 ## Before you press Deploy
 
+Broadcom's own starting points are the [prerequisites page in the Installer and the checklist in the Planning and Preparation Workbook](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/preparing-your-environment.html). For the record list, use the DNS entries in the [single-site blueprint's minimum requirements](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/minimal-requirements-for-fleet-single-site.html). This list adds what the KBs above show going wrong.
+
 ```text
-[ ] Every FQDN lowercase, with A and PTR, resolving from the installer
-[ ] NTP reachable and answering quickly from the installer
-[ ] Hosts on a GA build, matching the image, storage visible, vSAN disks clean
-[ ] HCL data fresh (less than 90 days)
-[ ] Management and VM management networks configured identically
-[ ] Direct HTTPS from the installer to eapi.broadcom.com (9.1), or offline depot ready
-[ ] JSON spec saved and validated
+[ ] Installer 9.1.1 or later, latest binaries
+[ ] Every FQDN lowercase, with A and PTR, resolving from the Installer,
+    matching the spec exactly
+[ ] DNS server list entered with no space after the comma
+[ ] NTP reachable on UDP 123 from the Operations node network as well as the Installer
+[ ] Hosts on a GA build, VIBs matching the image, datastores opening, vSAN disks clean
+[ ] Hardware on the Compatibility Guide; ESA NVMe direct to PCIe
+[ ] vSAN HCL data under 90 days old
+[ ] MANAGEMENT and VM_MANAGEMENT networks configured the same
+[ ] Proxy-only firewall: direct 443 from the Installer IP to eapi.broadcom.com,
+    tested with curl -v https://eapi.broadcom.com with no proxy variables set
+[ ] Offline depot: metadata current, caching off
+[ ] Passwords meet the rules, or the Installer generates them
+[ ] JSON spec downloaded, passwords stored separately
 ```
 
-<Callout type="field">
-Run the validation a day before the deployment window and keep the output. It turns deployment day into a formality, and the saved JSON becomes the as-built record.
+The FQDN and PTR line comes from [Broadcom's naming requirements](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/planning-and-preparation/vcf-components-fqdns-and-ip-addresses.html), which ask for forward and reverse records but don't mention lowercase, so take that rule from the known issue. [Broadcom's list of public URLs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/planning-and-preparation/public-urls-required-for-vmware-cloud-foundation.html) names `eapi.broadcom.com` for vSAN HCL data from the Installer, SDDC Manager and vCenter, without saying which ones honour a proxy, so the firewall request should name the host and the source IP.
+
+[Passwords for the appliance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/preparing-your-environment/deploy-the-vmware-cloud-foundation-installer-appliance.html) need at least 15 characters with upper case, lower case, a digit and one of `@ ! # $ % ? ^`, and can't contain a dictionary word or the user name. For deployed components, let the [Installer generate them](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/deploy-a-new-vcf-fleet-or-a-new-vcf-instance.html), available from 9.1, and retrieve them after the deployment begins. The same page says the downloaded JSON leaves passwords out, so store them separately from the spec.
+
+<Callout type="analysis" title="Validate well before the window">
+Run validation days ahead, because a hardware or HCL finding can need a vendor. A clean run doesn't clear the first table, since those failures appear after validation, so test NTP and the `eapi.broadcom.com` path separately. Fix the input and avoid hand edits on the appliance where you can: <KB id={439010} /> describes a manual certificate repair followed by a locked or changed `vcf` account.
 </Callout>
 
-## Pitfalls
+## Retry or redeploy
 
-- **Fixing by hand on the appliance** instead of fixing the input. The retry repeats the same validation.
-- **Redeploying from scratch** when Retry would resume.
-- **Typing passwords with characters the spec rejects.** Check the password rules before generating them.
+Retry is the [documented route](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/deploy-a-new-vcf-fleet-or-a-new-vcf-instance.html): review the failed tasks, address the issue and retry, so don't rebuild first. A retry that failed because a vSAN datastore was left behind is [listed as resolved in 9.1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/resolved-issues/vcf-installer-91-resolved-issues.html). Two kinds of row in these tables point to starting again: the NTP wizard case in <KB id={439240} /> and the hardware rows, where hosts change.
+
+Convergence is a separate workflow, but one [9.1 known issue](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/known-issues/vcf-installer-91-known-issues.html) belongs on any Installer runbook: converging a vCenter that SDDC Manager already manages destroys the first instance's fleet components, with a warning that doesn't stop the run and no workaround beyond redeploying or restoring from backup.
+
+## Where else to look
+
+Runbooks from the 5.x era need rewriting, because the [Installer fully replaces Cloud Builder](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) and its spreadsheet, with guided steps and JSON templates instead (FAQ, 4 Nov 2026). Broadcom's [Troubleshooting Blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-scenarios.html) covers performance, connectivity, intermittent and crash scenarios on a running platform, so for bring-up the KBs above and the [known issues](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/known-issues/vcf-installer-91-known-issues.html) are the place to go. For outbound and time design beyond deployment, see [DNS, NTP and proxy](/vcf/library/day-2/dns-ntp-proxy/).

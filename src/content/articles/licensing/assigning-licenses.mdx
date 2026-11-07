@@ -1,67 +1,186 @@
 ---
 title: "Assigning licenses: vCenter first, add-ons second, overrides in 9.1"
-description: "In 9.0 you license vCenter and everything connected to it inherits. 9.1 adds overrides on hosts and vSAN clusters and lets one vCenter mix license types. The prerequisites are short and specific, so check them first when assignment fails."
+description: "Give each vCenter one primary license in VCF Operations, then any vSAN add-on. From 9.1, override licenses put other license types on ESX hosts or vSAN clusters, within compatibility rules, and still depend on the vCenter's primary. Prerequisites differ between 9.0 and 9.1, and failures map to documented fixes."
 category: licensing
 order: 6
-versions: ["9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [452095, 442564, 424533, 453517, 443714, 445504, 453510, 402049]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [442448, 456737, 424533, 391099, 440982, 442564, 452095, 453517, 440715, 445537, 443714, 453510, 445504, 402049, 411654]
 sources:
+  - title: "Assign a Primary License to a vCenter Instance (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/assign-a-licenses-to-a-vcenter-instance.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
   - title: "Assign a primary license to a vCenter instance (9.0)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/assign-a-licenses-to-a-vcenter-instance.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "What is an Override License (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/what-is-an-override-license.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Assign an Override License to an ESX Host in VCF Operations (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/what-is-an-override-license/assign-an-override-license-to-an-asset-in-vcf-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Assign an Add-on License to a vCenter Instance (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/assign-an-addon-license-to-an-asset.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Add-on Licenses Included in Your VCF or vSphere Foundation Subscription (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/add-on-licenses-in-vcf-9-0.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Licensing Model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Mixed-Version Environments (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/pre-version-9-licenses-and-support.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Replace a License for a vCenter Instance (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/remove-a-licenses-from-a-vcenter-instance.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Transfer Licenses After a VCF Operations Upgrade from Version 9.0.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/transfer-your-licenses-after-you-upgrade-vcf-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Reclaim Used Capacity (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/reclaim-used-capacity.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Updating Licenses and Viewing the License Usage File (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/update-licenses.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "What's New: VCF Operations (VCF 9.1.0 release notes)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VMware Cloud Foundation 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Edge: Single Node with Argo CD Design Blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/edge.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware Cloud Foundation 9.1 general FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
   - title: "VCF 9.1 licensing: programmatic, centralized and built to scale"
     url: "https://blogs.vmware.com/cloud-foundation/2026/05/18/vcf-9-1-licensing-programmatic-centralized-and-built-to-scale/"
-    by: "VMware Cloud Foundation blog"
+    by: "Sehjung Hah and Andrew Firth, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-05-18
+  - title: "New AI and Kubernetes private cloud operations capabilities in VCF 9.1.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/09/03/new-ai-and-kubernetes-private-cloud-operations-capabilities-in-vmware-cloud-foundation-9-1-1/"
+    by: "Sehjung Hah, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-09-03
 ---
 
 <InShort>
-Assign a **primary license** (VCF or VVF) to each vCenter from VCF Operations. ESX hosts, NSX, VCF Automation and the rest inherit it. Then assign **add-ons**: extra vSAN capacity or Private AI Foundation. In 9.1 you can also assign an **override** directly to a host or vSAN cluster, and one vCenter can carry several primary license types, for example VCF and VCF Edge, even from different Site IDs. Before any of that works, the vCenter must be integrated for license management and its adapter account must be in `LicenseService.Administrators`.
+Assign one primary license (VCF or VVF) to each vCenter in VCF Operations, and [connected ESX hosts, NSX, VCF Automation and other components are licensed automatically](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/assign-a-licenses-to-a-vcenter-instance.html). Assign any vSAN TiB add-on straight after, because a vSAN cluster without one [goes unlicensed and stops taking snapshots, which breaks backups and migrations](https://knowledge.broadcom.com/external/article/442448/vsan-addon-license-missing-vm-backups-an.html). From 9.1, an [override license](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/what-is-an-override-license.html) puts a different license on one ESX host or vSAN cluster. Those hosts still depend on the vCenter's primary, because they disconnect when it expires. This note isn't legal or purchasing advice, so check your terms with Broadcom.
 </InShort>
 
-<Compare rows={[
-  ["Assign to", "Each component: vCenter, hosts, vSAN, NSX", "vCenter. 9.1 adds host and vSAN cluster overrides."],
-  ["Mixed licenses per vCenter", "Not applicable", "9.0: one primary. 9.1: several types and Site IDs."],
-  ["Where", "vSphere Client or SDDC Manager", "VCF Operations: Licenses > Version 9+ (9.0) or Manage > Licensing (9.1)"],
-  ["After a refresh", "Re-enter keys on renewal", "No reassignment needed after an update"],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+This note said a 9.1 vCenter can carry several primary license types. TechDocs allows one, with other license types going on hosts and clusters as overrides. It also compared assignment with 5.x without a source, so that comparison is gone.
+</Callout>
 
-## Prerequisites
+## One primary on the vCenter, other types by override
 
-1. VCF Operations is registered and the licenses are added to it (or to its License Server in 9.1).
-2. The vCenter or its VCF instance is integrated for **license management** in VCF Operations.
-3. The adapter's account is in the vCenter SSO group **`LicenseService.Administrators`**.
-4. You have the **Manage Licenses** permission in VCF Operations.
-5. Allow up to four collection cycles for a newly integrated vCenter to appear.
+Broadcom's own material conflicts here. Sehjung Hah and Andrew Firth's [May blog post](https://blogs.vmware.com/cloud-foundation/2026/05/18/vcf-9-1-licensing-programmatic-centralized-and-built-to-scale/) says 9.1 supports "multiple primary licenses and even licenses from multiple Site IDs within a single vCenter instance", with a retailer running VCF in its data centers and VCF Edge in its stores. The 9.1 TechDocs procedure, updated 5 November, says ["You can assign only one primary license to a vCenter instance."](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/assign-a-licenses-to-a-vcenter-instance.html) The 9.1 release notes describe the mixed case as [a VCF license on the vCenter and VCF Edge licenses on some of its hosts](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html).
 
-## Doing it
+<Callout type="analysis" title="How to read the conflict">
+The retailer example works as one primary plus host overrides, so design to the TechDocs reading. Site IDs are less settled. TechDocs documents an [override and vCenter license from different license servers](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/what-is-an-override-license.html) under the same VCF Operations instance and doesn't mention Site IDs on that page, so get Broadcom's confirmation before a design depends on one vCenter spanning Site IDs.
+</Callout>
 
-1. Open the Version 9+ licenses view, then **vCenter Systems**.
-2. Select the vCenters and choose **Assign Primary License**.
-3. For add-ons, choose **Assign an Add-on License** (vSAN TiB, Private AI Foundation).
-4. In 9.1, optionally assign an override on a specific host or vSAN cluster.
+Compatibility is [checked at assignment, and a failed check blocks it](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/what-is-an-override-license.html):
 
-An assignment fails if the license has less capacity left than the vCenter needs. Licenses with **Assignable = No** sink to the bottom of the list. The banner's **View Details** explains why.
+| On the vCenter | As an override | Allowed? |
+|---|---|---|
+| VCF | VVF | No |
+| VVF | VCF | Yes |
+| VCF | VCF Edge | Yes, they count as equivalent |
+| vSAN | vSAN Edge | No, they aren't compatible |
+
+A vCenter mixing VCF and VVF hosts therefore has to carry VVF as its primary, with VCF as the overrides. That's an inference from the rules, and the pages linked here don't state it. The rules also block the later move: with a VVF override in place, you can't assign VCF to the vCenter. [Replacing a primary](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/remove-a-licenses-from-a-vcenter-instance.html) offers to swap all host overrides for the new license or keep them, and keeping them triggers the same check.
+
+Broadcom's own example of mixing licenses is the edge. [VCF Edge has a minimum of 8 cores per CPU](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html) against [16 for VCF](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/add-on-licenses-in-vcf-9-0.html), and overridden hosts [drop out of the vCenter's core count](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/assign-a-licenses-to-a-vcenter-instance.html), so low-core sites should stop inflating the data center primary. That last step is an inference, so run the core count for your own hosts. Broadcom's [single-node Edge blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/edge.html) accepts either license, so the choice is yours to price.
+
+Four limits should shape that choice:
+
+- [When a vCenter license expires, its hosts disconnect even with overrides](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/assign-a-licenses-to-a-vcenter-instance.html), and [existing workloads aren't stopped but none can start](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html).
+- [Overrides need ESX 9.0 or later](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/what-is-an-override-license.html). An 8.x host under a 9.1 vCenter [keeps a pre-version 9 key and also uses version 9+ capacity](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/pre-version-9-licenses-and-support.html), so size the primary for those hosts.
+- Broadcom says [a vSAN TiB license can go directly on a cluster](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/add-on-licenses-in-vcf-9-0.html), but the [published procedure covers ESX hosts only](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/what-is-an-override-license/assign-an-override-license-to-an-asset-in-vcf-operations.html) <AsOf date="2026-11-07" />. Try the cluster route on a non-production vCenter before a design relies on it.
+- An override alongside 8.x hosts can make vCenter 9.1 [count 8.x usage wrongly](https://knowledge.broadcom.com/external/article/456737) and raise "License inventory is not compliant. Licenses are overused." The alarm doesn't affect licensing, and Broadcom says a future release will fix it <AsOf date="2026-11-07" />.
+
+## What has to be true first
+
+The checks changed between releases, so use the right column:
+
+| | 9.0 | 9.1 and 9.1.1 |
+|---|---|---|
+| Where | [License Management > Licenses](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/assign-a-licenses-to-a-vcenter-instance.html), Version 9+ tab | [Manage > Licensing > Licenses & Registration](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/assign-a-licenses-to-a-vcenter-instance.html), Version 9+ tab |
+| Licenses are added to | VCF Operations | VCF Operations or its [license server](/vcf/library/licensing/license-server/) |
+| VCF Operations permission | Manage Licenses | Licensing > Manage, included in the Administrator role |
+| vSphere Client | `LicenseService.Administrators` SSO group and Global Licenses | The same, plus a Certificate Management create and delete privilege |
+| Wait after integrating | Up to 4 collection cycles | Up to 20 minutes |
+| Overrides | None documented | ESX hosts and vSAN clusters |
+
+Both releases need VCF Operations registered with the VCF Business Services console, and the vCenter integrated for license management. A vCenter in a VCF domain is integrated through its VCF instance. The account behind the vCenter adapter [must also be in `LicenseService.Administrators`](https://knowledge.broadcom.com/external/article/424533), and a service account without Global.Licenses [produces its own assignment error](https://knowledge.broadcom.com/external/article/391099). A vCenter added for monitoring only never appears under **vCenter Systems**.
+
+To assign, open **vCenter Systems** on the Version 9+ tab, select the vCenters and choose **Assign Primary License**, then **Assign an Add-on License** for vSAN TiB or Private AI Foundation.
+
+Capacity decides the rest. An assignment [fails if the vCenter needs more than the license has free](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/assign-a-licenses-to-a-vcenter-instance.html): Broadcom's example is a 1,000-core license that can't cover four vCenters needing 1,500. Unassignable licenses sink to the bottom of the list with Assignable set to No. A host that doesn't fit joins in evaluation for 90 days and, if still unlicensed at the end, disconnects while its VMs stay intact. Add capacity or an override inside that window, because [an override is no longer an option once the evaluation has expired](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/what-is-an-override-license.html).
+
+Add-ons need a primary first and have their own traps. On 9.0.x, a vSAN license is [tested against raw physical TiB, so a shortfall of 1 TiB can disable Assign](https://knowledge.broadcom.com/external/article/411654/error-vsan-addon-license-assignment-fail.html) even when logical use is lower. Private AI Foundation goes [on the management domain to activate its guided deployment](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/assign-an-addon-license-to-an-asset.html), though only GPU-enabled workload domains use its capacity. Advanced services such as Avi, vDefend and VMware Live Recovery [are licensed separately](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs), so assigning the primary doesn't cover them.
+
+Assignment is mostly one-time: [updating licenses after a renewal or capacity change needs no reassignment](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/update-licenses.html). The exception to timing is an upgrade from 9.0: [hold off assigning until the license transfer completes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/transfer-your-licenses-after-you-upgrade-vcf-operations.html), because until then duplicate licenses can show and assignments might fail. Environments still on VCF 5.x [keep their license keys](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs), and [licensing through upgrades](/vcf/library/licensing/licensing-through-upgrades/) covers the crossing. Moving from 9.1.0.x to 9.1.1.0, [patch VCF Operations and its license servers before ESX hosts](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html), and watch the new [licensing health dashboards and alerts](https://blogs.vmware.com/cloud-foundation/2026/09/03/new-ai-and-kubernetes-private-cloud-operations-capabilities-in-vmware-cloud-foundation-9-1-1/).
 
 ## When assignment fails
 
-- **Name resolution, case, FQDN or time** between vCenter and the License Server: check these first (<KB id={452095} />, <KB id={442564} />).
-- **An uppercase instance UUID** left over from an old upgrade can block License Server authentication. Check `instanceUuid` in `/etc/vmware-vpx/instance.cfg` (<KB id={424533} />).
-- **"No licenses are assignable"** or a licence that "could not be fully removed": toggle License Management off and on for the integration, waiting about 15 minutes each time (<KB id={453517} />).
-- **"Assets have been removed but still use license capacity"**: use **Reclaim Used Capacity** (<KB id={443714} />).
-- **Hosts stay in evaluation** and logs mention thumbprint mode: certificate mode can block the license push (<KB id={453510} />).
-- **A vCenter alarm "License assignment failed for this host"** after a reboot is a known false positive (<KB id={445504} />).
+Start at the banner's **View Details**, then [hover over the Status column's information icon](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/assign-a-licenses-to-a-vcenter-instance.html). The [licensing errors note](/vcf/library/licensing/licensing-errors-decoded/) has the full message list; these are the ones tied to assignment.
 
-Logs: `/storage/log/vcops/log/` on VCF Operations (`vcf-licensing-plugin.log`, `collector.log`, the ManagementAdapter logs) and `/var/log/vmware/cis-license/license.log` on vCenter.
+| What you see | Cause and fix |
+|---|---|
+| "Licenses could not be assigned" on 9.1 | Work through <KB id={424533} />: license server VM power, time drift over 30 seconds, TCP 443 between vCenter, VCF Operations and the license server, forward and reverse DNS, a doubled domain suffix. |
+| The same message with a `403` and an uppercase UUID in `license.log` | A vCenter upgraded from 5.x can keep an uppercase `instanceUuid` in `/etc/vmware-vpx/instance.cfg` (<KB id={424533} />). [Fixed in vCenter 9.1.0.0200](https://knowledge.broadcom.com/external/article/440982). The workaround on earlier builds changes the vCenter GUID, which affects VMware Live Recovery, so upgrade if you can. |
+| Connection timeout, DNS lookups fine | License server deployed with a wrong domain or FQDN. Redeploy with a full, all-lowercase FQDN (<KB id={442564} />). |
+| Disconnected mode, `503`, "unable to resolve the license server host name" | The FQDN registered in the console differs from the one configured. Check A and PTR records, unregister and re-register (<KB id={452095} />). |
+| "No licenses are assignable" or "could not be fully removed", in online mode | Stale integration state on 9.x. Turn License Management off, wait about 15 minutes, turn it on, wait about 15, assign (<KB id={453517} />). |
+| "Could not be fully removed" in disconnected mode | The toggle doesn't apply here. Exchange the usage and license files, then reassign (<KB id={440715} />). |
+| vCenter missing after an upgrade or add-on assignment | Stale integration metadata on 9.0.x and 9.1. Toggle the management option off for about 15 minutes, on for about 10, then reassign (<KB id={445537} />). |
+| "One or more assets have been removed but still use license capacity for this license server." | Documented after a 9.0 vCenter was rolled back to 8.0 and upgraded to 9.1. Use Reclaim Used Capacity, then reactivate management (<KB id={443714} />). [Reclaim](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/reclaim-used-capacity.html) works only on assets gone from inventory. |
+| Hosts report an expired evaluation while vCenter and VCF Operations show them licensed | `vpxd.certmgmt.mode` is set to thumbprint, which can stop vCenter assigning the license. Return to VMCA mode and reconnect the hosts (<KB id={453510} />). |
+| vCenter alarm "License assignment failed for this host" after a reboot, on 9.1 | A known false positive. Once the host is Connected, confirm its license and reset the alarm (<KB id={445504} />). |
+| Expiry banner on 9.0 after disabling vSAN | A stale vSAN asset with no fix yet <AsOf date="2026-11-07" />. It's safe to ignore, or assign a vSAN add-on to clear it (<KB id={402049} />). |
 
-<Callout type="field">
-Capture a "license map" when you first assign: which vCenter carries which primary license and add-ons, and which hosts have overrides. Overrides are useful and easy to forget. A year later, someone will wonder why one cluster reports differently.
+For logs, VCF Operations keeps `collector.log`, `vcf-licensing-plugin-<uid>.log` and `adapters/ManagementAdapter/ManagementAdapter_##.log` under `/storage/log/vcops/log/`. vCenter's side is `/var/log/vmware/cis-license/license.log` (<KB id={440982} />, <KB id={443714} />).
+
+<Callout type="analysis" title="Keep a license map">
+Write down each vCenter's primary and add-ons and every host or cluster override when you assign them. Overridden hosts leave the vCenter's core count, and replacing a primary asks what to do with them, so that list is what makes the capacity figures and the replacement decision readable later.
 </Callout>
-
-## Pitfalls
-
-- **Skipping the SSO group.** Check it before you assign.
-- **Assigning during a 9.0 to 9.1 license transfer.** Wait until the transfer completes.
-- **A stale vSAN asset after disabling vSAN** in 9.0 can keep an expiry banner alive (<KB id={402049} />).
