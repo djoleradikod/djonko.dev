@@ -9,6 +9,11 @@ const extra = [...cites.keys()].filter((n) => !KB_INDEX.some((k) => k.kb === n))
 const rows = [...KB_INDEX, ...extra];
 const decks = [...new Set(KB_INDEX.flatMap((k) => k.decks))];
 const cited = rows.filter((k) => cites.has(k.kb)).length;
+// The words before the colon name a note, and the column has no room for the rest.
+const shortTitle = (t: string) => {
+  const head = t.split(':')[0];
+  return head.length >= 12 ? head : t;
+};
 const themeOf: Record<string, string> = {
   'Meet the fleet': 'Architecture', 'Upgrading to VCF 9.1, the right way round': 'Upgrades',
   'How it all connects': 'Integrations', 'Mind the licensing clock': 'Licensing', 'Follow the signposts': 'Troubleshooting',
@@ -39,7 +44,7 @@ const themeOf: Record<string, string> = {
               <td><a href={k.url} target="_blank" rel="noopener">{k.kb}</a></td>
               <td>{k.topic || <span class="muted">Not summarised yet. See the note that cites it.</span>}</td>
               <td class="small muted">{th.join(', ')}</td>
-              <td class="small">{notes.length > 0 ? <ul class="cites">{notes.map((a) => <li><a href={urlOf(a)}>{a.data.title}</a></li>)}</ul> : <span class="muted">None yet</span>}</td>
+              <td class="small">{notes.length > 0 ? <ul class="cites">{notes.map((a) => <li><a href={urlOf(a)}>{shortTitle(a.data.title)}</a></li>)}</ul> : <span class="muted">None yet</span>}</td>
             </tr>
           );
         })}
