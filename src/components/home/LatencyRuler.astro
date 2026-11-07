@@ -5,6 +5,7 @@
 // fleets are heavy bars, as 9.x is on the clock. The others are thin bars, as the older releases are.
 // Bars and poles are borders, so forced colours and print keep them. All the words are real text; only the marks are hidden.
 import type { allArticles } from '../../lib/articles';
+import { fmtDate } from '../../lib/posts';
 import { noteTable } from './excerpts';
 
 interface Props { note: Awaited<ReturnType<typeof allArticles>>[number]; }
@@ -12,20 +13,26 @@ const { note } = Astro.props;
 
 const SCALE_END = 400; // ms. Room past the last bound for what lies beyond it; a drawing choice, not a figure from the note.
 const table = noteTable(note, ['Path', 'Upper bound (9.1)'], 6);
+if (table.rows.length !== 6) throw new Error(`The latency ruler draws six bounds, and the table in ${note.id} now has ${table.rows.length}.`);
 const bound = (path: RegExp) => {
   const row = table.rows.find((r) => path.test(r[0]));
   const ms = row && /^≤(\d+) ms$/.exec(row[1].trim());
-  if (!row || !ms || +ms[1] >= SCALE_END) throw new Error(`The latency ruler needs a row matching ${path} with a bound under ${SCALE_END} ms in ${note.id}.`);
-  // The consequence up to its first comma: the rest of the cell is the note's aside.
-  return { path: row[0], ms: +ms[1], then: row[2].split(',')[0].trim(), at: `${(+ms[1] / SCALE_END) * 100}%` };
+  if (!row || !ms || +ms[1] >= SCALE_END || !row[2]) throw new Error(`The latency ruler needs a row matching ${path} with a bound under ${SCALE_END} ms and a consequence in ${note.id}.`);
+  return { path: row[0], ms: +ms[1], then: row[2], at: `${(+ms[1] / SCALE_END) * 100}%` };
 };
 const instance = bound(/^SDDC Manager to vCenter/);
 const fleet = bound(/^VCF Operations and VCF Automation to/);
 const minor = [bound(/^Collector to/), bound(/^NSX Manager to/), bound(/^Identity broker to/), bound(/^License server to/)].sort((a, b) => a.ms - b.ms);
+if (instance.ms >= fleet.ms || instance.then !== 'Second instance' || fleet.then !== 'Second fleet') {
+  throw new Error(`The latency ruler's two large bounds stand for a second instance and a second fleet, in that order, and the table in ${note.id} no longer says so.`);
+}
 const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 
 const diagram = note.data.sources.find((s) => s.title.includes('fleet latency diagrams'));
-if (!diagram) throw new Error(`The latency ruler links the post that carries the 9.1 diagram, which ${note.id} no longer cites.`);
+if (!diagram?.date) throw new Error(`The latency ruler links and dates the post that carries the 9.1 diagram, which ${note.id} no longer cites with a date.`);
+// The caption's caveats are the note's, in shorter words. The build fails if the note stops saying them.
+const caveats = ['Ver 2.0, labelled for VCF 9.1', "doesn't say whether its figures are round trip or one way", "this site's reading of those bounds", `A second fleet beyond ${fleet.ms} ms is an inference`];
+for (const caveat of caveats) if (!note.body?.includes(caveat)) throw new Error(`The latency ruler's caption repeats "${caveat}" from ${note.id}, which no longer says it.`);
 
 // Ticks every 5 ms, a longer one every 10 and the longest every 50. Phones drop the 5s.
 const every = (step: number, skip = 0) => {
@@ -38,13 +45,13 @@ const labels = every(50).filter((ms) => ms < SCALE_END && ms !== instance.ms && 
 const a = (instance.ms / SCALE_END) * 100;
 const b = (fleet.ms / SCALE_END) * 100;
 ---
-<figure class="rl" aria-labelledby="rl-cap" style={`--a:${a}%;--b:${b}%`}>
+<figure class="rl" aria-labelledby="rl-title" style={`--a:${a}%;--b:${b}%`}>
   <div class="rl-plot">
     <div class="rl-in">
       <div class="rl-flags">
-        <p class="rl-title">Latency: upper bounds for VCF 9.1</p>
-        <p class="rl-flag rl-f1"><span class="rl-num">{instance.ms}<small> ms</small></span><span class="rl-then">Beyond this: {lower(instance.then)}</span></p>
-        <p class="rl-flag rl-f2"><span class="rl-num">{fleet.ms}<small> ms</small></span><span class="rl-then">Beyond this: {lower(fleet.then)}</span></p>
+        <p class="rl-title" id="rl-title">Latency: upper bounds for VCF 9.1</p>
+        <p class="rl-flag rl-f1"><span class="rl-num">{instance.ms}<small> ms</small></span><span class="rl-then">Beyond {instance.ms} ms: {lower(instance.then)}</span></p>
+        <p class="rl-flag rl-f2"><span class="rl-num">{fleet.ms}<small> ms</small></span><span class="rl-then">Beyond {fleet.ms} ms: {lower(fleet.then)}</span></p>
       </div>
       <div class="rl-axis" aria-hidden="true">
         <span class="rl-ticks">{labels.map((ms) => <span style={`left:${(ms / SCALE_END) * 100}%`}>{ms}</span>)}</span>
@@ -70,9 +77,9 @@ const b = (fleet.ms / SCALE_END) * 100;
     {minor.map((m) => (
       <li style={`--at:${m.at}`}>
         <p class="rl-mname"><span class="rl-v">≤{m.ms} ms</span> <span set:html={m.path}></span></p>
-        <p class="rl-mline"><i aria-hidden="true"></i><span set:html={m.then}></span></p>
+        <p class="rl-mline"><i aria-hidden="true"></i><span set:html={`Beyond ${m.ms} ms: ${lower(m.then)}`}></span></p>
       </li>
     ))}
   </ul>
-  <figcaption class="rl-cap" id="rl-cap">Upper bounds drawn to scale from the <a href={diagram.url} rel="noopener">fleet latency diagram, Ver 2.0, labelled for VCF 9.1</a> ({diagram.by}, 12 May 2026). The diagram doesn't say whether its figures are round trip or one way, so design to round trip. A second fleet beyond {fleet.ms} ms is an inference: the diagram draws the VCF Operations and VCF Automation paths at ≤{fleet.ms} ms, and this note takes that as the limit.</figcaption>
+  <figcaption class="rl-cap">Upper bounds drawn to scale from the <a href={diagram.url} rel="noopener">fleet latency diagram, Ver 2.0, labelled for VCF 9.1</a> ({diagram.by}, {fmtDate(diagram.date)}). The diagram doesn't say whether its figures are round trip or one way, so design to round trip. What lies beyond each bound is this site's reading. A second fleet beyond {fleet.ms} ms is an inference: the diagram draws the VCF Operations and VCF Automation paths at ≤{fleet.ms} ms, and this note takes that as the limit.</figcaption>
 </figure>
