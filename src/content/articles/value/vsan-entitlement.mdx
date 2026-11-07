@@ -1,85 +1,155 @@
 ---
 title: "The vSAN entitlement: 1 TiB per core, counted raw and pooled"
-description: "Each VCF core brings 1 TiB of vSAN capacity, each VVF core 0.25 TiB. The count is raw capacity claimed by vSAN, pooled across clusters. Protection overhead, data reduction and drive sizes decide whether you buy add-on TiB."
+description: "Each VCF core brings 1 TiB of vSAN and each VVF core 0.25 TiB, counted on raw device capacity and pooled per Site ID in 9.1. The 9.1 Effective Capacity view shows about half of raw before data reduction, so budget on raw, estimate data reduction conservatively and test drive sizes before buying add-on TiB."
 category: value
 order: 3
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Deep dive
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [313548]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [313548, 440956, 411654, 400416]
 sources:
-  - title: "Counting cores for VMware Cloud Foundation and vSphere Foundation (vSAN TiB rules)"
+  - title: "Add-on Licenses Included in Your VCF or vSphere Foundation Subscription (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/add-on-licenses-in-vcf-9-0.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Licensing Overview (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Single-Rack vSAN ESA Storage Model (9.1 design blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-with-minimal-footprint-blueprint/management-domain-design-selections/virtual-infrastructure-layer/vsan-single-rack-hci-esa-storage-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "vSAN Space Efficiency Technologies (VCF 9.1)"
+    url: "https://www.vmware.com/docs/vmw-vsan-space-efficiency"
+    by: "Pete Koehler, VMware"
+    kind: broadcom
+    date: 2026-05-11
+  - title: "Simplifying Storage with the New Effective Capacity View in VMware vSAN for VCF 9.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/11/effective-capacity-view-in-vsan-for-vcf-9-1/"
+    by: "Pete Koehler, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-05-11
+  - title: "Auto-RAID in VMware vSAN for VCF 9.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/08/auto-raid-in-vsan-for-vcf-9-1/"
+    by: "Pete Koehler, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-05-08
+  - title: "VMware Cloud Foundation 9.1 general FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "vSAN 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vsan-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-03
+  - title: "Determining the Required Subscription Capacity for VCF and vSphere Foundation (KB 313548)"
     url: "https://knowledge.broadcom.com/external/article/313548/counting-cores-for-vmware-cloud-foundati.html"
     by: "Broadcom KB"
+    kind: broadcom
+  - title: "vSAN license application failure after VCF or VVF renewal or upgrade (KB 440956)"
+    url: "https://knowledge.broadcom.com/external/article/440956/vsan-license-application-failure-after-v.html"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "Error: vSAN add-on license assignment fails due to TiB capacity mismatch in VCF Operations 9.x (KB 411654)"
+    url: "https://knowledge.broadcom.com/external/article/411654/error-vsan-addon-license-assignment-fail.html"
+    by: "Broadcom KB"
+    kind: broadcom
   - title: "Licensing in VMware Cloud Foundation 9.0 (auto-pooling)"
     url: "https://blogs.vmware.com/cloud-foundation/2025/06/24/licensing-in-vmware-cloud-foundation-9-0/"
     by: "VMware Cloud Foundation blog"
-  - title: "VMware software solution product guide (raw capacity, cache excluded, TB to TiB)"
-    url: "https://lenovopress.lenovo.com/lp1265-vmware-software-solution-product-guide"
-    by: "Lenovo Press"
-  - title: "vSAN ESA space efficiency (VCF 9.1)"
-    url: "https://www.vmware.com/docs/vmw-vsan-space-efficiency"
-    by: "VMware"
+    kind: broadcom
+    date: 2025-06-24
   - title: "Global deduplication in vSAN ESA for VCF 9.0"
     url: "https://blogs.vmware.com/cloud-foundation/2025/06/19/global-deduplication-in-vsan-esa-for-vmware-cloud-foundation-9-0/"
     by: "VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-06-19
+  - title: "VMware software solution product guide (raw capacity, cache excluded, TB to TiB; covers VCF 5 and VVF 8)"
+    url: "https://lenovopress.lenovo.com/lp1265-vmware-software-solution-product-guide"
+    by: "Paula Contreras, Lenovo Press"
+    kind: vendor
+    date: 2025-04-08
 ---
 
 <InShort>
-VCF includes **1 TiB of vSAN per licensed core** and VVF includes **0.25 TiB per core**, rounded up to a whole TiB (<KB id={313548} />). The figure is compared with the **raw** capacity that vSAN claims on every host, not the usable datastore size shown in the vSphere Client. OSA cache devices are not counted. Entitlement from every core pools into one figure that can be spent on any cluster. You buy add-on TiB only when raw claimed capacity across the estate exceeds that pool, so every TiB you avoid installing is a TiB you might avoid licensing.
+**Add-on TiB is needed only when raw device capacity across the vSAN clusters in a pool exceeds it.** [Each VCF core brings 1 TiB and each VVF core 0.25 TiB](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/add-on-licenses-in-vcf-9-0.html) <AsOf date="2026-11-07" />, usage is measured on raw capacity, and the capacity is shared between clusters. Protection overhead and data reduction never enter the count, so they change the bill only through the drives they make you install. The 9.1 Effective Capacity view [shows about half of raw](https://www.vmware.com/docs/vmw-vsan-space-efficiency) before data reduction, so the licence figure can't be read from it. Size the first purchase on a ratio measured on similar data, or on 1:1.
 </InShort>
 
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to scope the 9.x pool to one VCF Operations instance, apply whole-TiB rounding to VCF as well as VVF, and credit the OSA cache exclusion to KB 313548. The 9.1 pool is defined per Site ID, the KB rounds only VVF, and the cache rule comes from a Lenovo guide. The example also lacked Broadcom's 9.1 capacity estimate, which now sits beside the 30% margin.
+</Callout>
+
 <Compare rows={[
-  ["Entitlement", "1 TiB per VCF core, 0.25 TiB per VVF core (VVF from vSphere 8.0 U2b)", "The same rates"],
-  ["Where it is tracked", "Licence keys per vSAN cluster", "One licence file. Capacity pools across vCenters in the same VCF Operations instance."],
-  ["Raw reduction tools", "OSA deduplication and compression per disk group. ESA compression.", "ESA compression, plus global deduplication (9.0 limited availability, 9.1 generally available)"],
+  ["Entitlement", "1 TiB per VCF core, 0.25 TiB per VVF core, VVF rounded up to the next TiB (KB 313548). VVF from vSphere 8.0 U2b (Lenovo).", "The same rates"],
+  ["Scope of the pool", "vSAN 8.x keys assigned to clusters. Standalone TiB keys and core-based entitlement don't combine without a key merge (KB 440956).", "Default license per Site ID, assignable to one or several vCenters. From 9.1 a TiB license can also go directly on a cluster."],
+  ["Capacity screen", "Broadcom's descriptions conflict: available datastore capacity (KB 313548) or raw (space-efficiency paper)", "9.1: Effective Capacity view with Auto-RAID, legacy view without it."],
+  ["Reduction tools", "OSA deduplication and compression. ESA compression set by storage policy.", "ESA global deduplication: limited release in 9.0 P01, generally available in 9.1 on 3 to 64 hosts, not on stretched or 2-node clusters. In 9.1 compression is on by default."],
 ]} />
 
-## What counts and what does not
+## What the licence counts
 
-The KB defines the measure as the total raw physical storage, in TiB, contributed by every host in every vSAN cluster. Three consequences follow.
+Broadcom [bases usage on the raw storage of the vSAN clusters](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/add-on-licenses-in-vcf-9-0.html): add up physical device capacity across every ESX host in each cluster. Usage is recalculated when a host joins or leaves or the cluster's TiB changes, so adding a storage host is a licensing event. A half-empty 15.36 TB device counts in full, which makes drive size a licensing choice. Drives are sold in TB and licensed in TiB, and [one TB is about 0.909 TiB](https://lenovopress.lenovo.com/lp1265-vmware-software-solution-product-guide), so a 7.68 TB device contributes about 6.98 TiB.
 
-**Protection overhead is licensed.** A VM with 1 TiB of data on a RAID-1 policy consumes 2 TiB of raw capacity, but the licence counts the raw devices, not the consumption. What matters is how much raw capacity you install to hold the data at the protection level you need.
+Protection acts on the count indirectly, through the devices it makes you install. Auto-RAID in 9.1 [sets overhead at 1.5x on standard clusters, 3x on stretched and 2x on 2-node](https://blogs.vmware.com/cloud-foundation/2026/05/08/auto-raid-in-vsan-for-vcf-9-1/), according to Pete Koehler's May post, before compression and deduplication.
 
-**Drive size matters.** You license what vSAN claims, so a host with a half-empty 15.36 TB device counts all of it. Choosing drive sizes and counts to land close to the design requirement avoids paying for capacity nobody will use.
+Get the raw figure from a tool rather than a capacity screen. [KB 313548](https://knowledge.broadcom.com/external/article/313548/counting-cores-for-vmware-cloud-foundati.html) says the product UI has no raw view, calls manual calculation from the UI inaccurate and supplies a PowerCLI counting tool, but its version list stops at 8.0 and VCF 5.1, and on vSAN 8.0 U3 it fails, so use the updated script in <KB id={400416} />. On 9.x, use the [Total Raw Physical Storage that VCF Operations reports](https://knowledge.broadcom.com/external/article/411654/error-vsan-addon-license-assignment-fail.html), the value that KB 411654 tells you to verify before comparing it with the license. In 9.1 the gap between screen and licence is wide: Koehler's example has [10 hosts with 394 TB raw showing 203 TB effective](https://www.vmware.com/docs/vmw-vsan-space-efficiency).
 
-**Units are TiB.** Drive vendors sell in TB (10<sup>12</sup> bytes). One TB is about 0.909 TiB, so a 7.68 TB device contributes about 6.98 TiB.
+OSA estates have one more check. [Lenovo's guide excludes OSA cache devices from raw capacity](https://lenovopress.lenovo.com/lp1265-vmware-software-solution-product-guide), but it covers VCF 5 and VVF 8 and dates from April 2025, and Broadcom's 9.1 page speaks only of physical device capacity. Run the count on an OSA cluster before relying on the exclusion under 9.x.
 
-## Pooling across clusters
+The [vSAN 9.1.1.0 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vsan-9-1-1-0-release-notes.html) (3 Sep 2026) list no licensing or capacity change, so this note applies these rules to 9.1.1 too.
 
-The 9.0 licence file combines all subscriptions of the same product into one pool, and the KB states that vSAN entitlement can be spread across clusters in a different ratio from the cores. A compute-heavy cluster with little or no vSAN storage still contributes 1 TiB per core to the pool. That surplus can cover a storage-heavy cluster elsewhere in the estate. Look at the entitlement across the whole estate before you buy add-on capacity for one cluster.
+## How the pool behaves
+
+A [500-core VCF subscription produces a separate 500 TiB vSAN license, and a 200 TiB add-on takes it to 700](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview.html). That default license pools all active subscriptions for the product under one Site ID. A second Site ID therefore has its own pool, which is an inference from that definition, so check where surplus sits before counting on it. Add-on capacity is still a separate purchase, listed among the Advanced Services in the [4 Nov 2026 FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs).
+
+Surplus can cover other clusters inside the pool. Capacity is [shared between clusters on the TiB license, and VVF capacity pools with VCF and add-on capacity](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/add-on-licenses-in-vcf-9-0.html). Cores in a compute cluster with no vSAN still bring their TiB, so count the whole estate before buying add-on capacity for one storage-heavy cluster. To place capacity deliberately, see [assigning licenses](/vcf/library/licensing/assigning-licenses/).
+
+vSAN 8.x estates can't assume this. <KB id={440956} /> describes renewed keys that fail with "The license capacity is insufficient" on a second or third cluster, because standalone TiB keys and core-based entitlement can't be combined. Its fix is a non-technical support case and a merged key, so raise that before buying more capacity. [Lenovo's 2025 guide](https://lenovopress.lenovo.com/lp1265-vmware-software-solution-product-guide) also limits VVF capacity to VVF core licenses, so on those versions don't plan to cover a VVF cluster's shortfall from VCF surplus. The 9.1 page lets VVF and VCF capacity pool.
 
 ## Worked example: does this cluster need add-on TiB?
 
-This example is constructed. A six-host VCF 9.1 cluster has two 16-core CPUs per host, so 192 licensed cores and **192 TiB** of entitlement. It must hold **120 TiB** of VM data after thin provisioning.
+This example is constructed, so replace each number with your own. A six-host VCF 9.1 vSAN ESA cluster has two 16-core CPUs per host, so 192 licensed cores and **192 TiB** of entitlement. It must hold **120 TiB** of VM data after thin provisioning. [Auto-RAID uses RAID-6 4+2 at 1.5x on six or more hosts](https://www.vmware.com/docs/vmw-vsan-space-efficiency).
 
-The assumptions:
+| Data reduction | Raw, 30% free | VCF add-on | VVF add-on | Raw, Broadcom estimate | VCF add-on |
+|---|---|---|---|---|---|
+| None (1.0:1) | 257.1 TiB | 66 TiB | 210 TiB | 240 TiB | 48 TiB |
+| 1.5:1 | 171.4 TiB | none | 124 TiB | 160 TiB | none |
+| 2.0:1 | 128.6 TiB | none | 81 TiB | 120 TiB | none |
 
-- vSAN ESA on six hosts uses RAID-6 (4+2) under 9.1 Auto-RAID, which stores 1.5 TiB raw for each TiB of data.
-- About 30% of raw capacity stays free for rebuilds, growth and policy changes. This is a planning assumption, not a Broadcom figure. Use the vSAN sizer for your own design.
-- Data reduction (compression plus deduplication) is shown at three values, because Broadcom does not publish typical ratios and advises conservative estimates.
+The 30% columns use 120 ÷ reduction × 1.5 ÷ 0.7, with add-on as raw minus 192 TiB (VCF) or 48 TiB (VVF, 0.25 × 192), rounded up. The 30% is this site's planning margin for rebuilds, growth and policy changes, not a Broadcom figure. The estimate column uses [Broadcom's single-site table](https://www.vmware.com/docs/vmw-vsan-space-efficiency), where 1.5:1 gives roughly 0.75x of raw and 2:1 gives roughly 1x. That table starts at 1.5:1, so the 1:1 row is this site's extension of the same scale to 0.5x.
 
-| Data reduction | Raw needed | VCF add-on | VVF add-on |
-|---|---|---|---|
-| None (1.0:1) | 257.1 TiB | 66 TiB | 210 TiB |
-| 1.5:1 | 171.4 TiB | none | 124 TiB |
-| 2.0:1 | 128.6 TiB | none | 81 TiB |
+<Callout type="analysis" title="Which margin to use">
+Broadcom's pages disagree on reserves. The [9.1 single-rack ESA blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-with-minimal-footprint-blueprint/management-domain-design-selections/virtual-infrastructure-layer/vsan-single-rack-hci-esa-storage-model.html), updated 5 Nov 2026, says to enable Reserved Capacity because it avoids "a generic 30% capacity overhead", with Host Rebuild Reserve at 25% on four nodes and 8% on twelve. The [space-efficiency paper](https://www.vmware.com/docs/vmw-vsan-space-efficiency) says those reserves are no longer relevant or available in the Effective Capacity view, and [Koehler's post](https://blogs.vmware.com/cloud-foundation/2026/05/11/effective-capacity-view-in-vsan-for-vcf-9-1/) says you can safely use all the free capacity it advertises.
 
-Raw needed is 120 ÷ reduction × 1.5 ÷ 0.7. At 1.5:1 that is 80 × 1.5 ÷ 0.7 = 171.4 TiB. VCF add-on is raw needed minus 192 TiB, rounded up. VVF add-on is raw needed minus 48 TiB (0.25 × 192).
-
-Now apply drive sizes. At 1.5:1 each host needs 171.4 ÷ 6 = 28.6 TiB. Four 7.68 TB drives give 27.9 TiB per host, which is short. Five give 34.9 TiB per host, or 209.5 TiB in total, which is 17.5 TiB over the entitlement. Nine 3.84 TB drives give 31.4 TiB per host and 188.6 TiB in total, which fits under 192 TiB with room to spare. The same design can need add-on capacity or not, depending on the drive size chosen.
-
-<Callout title="Reading the example">
-Reduction ratios are the biggest uncertainty here. Size the first purchase on 1.0:1 or a ratio you have measured on the same kind of data, and treat any higher ratio as headroom you earn later. On an existing ESA cluster, the vSAN capacity view reports the overall data reduction ratio.
+The two fit if the paper governs Auto-RAID clusters and the blueprint's reserves govern clusters on the legacy view. That's an inference, and Broadcom doesn't state it. New clusters [get Auto-RAID by default, while upgraded ones keep their policies](https://blogs.vmware.com/cloud-foundation/2026/05/08/auto-raid-in-vsan-for-vcf-9-1/) until switched. So use the estimate column for a new Auto-RAID cluster and treat this site's 30% as a deliberate buffer of about 7% more raw, which a purchase that can't easily be topped up may justify. Run the [vSAN Sizer](https://vcf.broadcom.com/tools/vsansizer/home) that the blueprint names on the final design.
 </Callout>
+
+Drive size then decides whether you pay. At 1.5:1 with 30% free, each host needs 171.4 ÷ 6 = 28.6 TiB:
+
+- Four 7.68 TB drives give 27.9 TiB per host, which is short.
+- Five give 34.9 TiB per host and 209.5 TiB in total, 17.5 TiB over the entitlement.
+- Nine 3.84 TB drives give 31.4 TiB per host and 188.6 TiB in total, 3.4 TiB under it.
+
+On Broadcom's estimate, four 7.68 TB drives would pass, since 167.6 TiB raw × 0.75 holds about 125.7 TiB. Nine 3.84 TB drives pass on both margins and need no add-on, so on this site's reading they are the safer option at 1.5:1. The blueprint allows [up to 24 drives per node, from 1.6 TB](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-with-minimal-footprint-blueprint/management-domain-design-selections/virtual-infrastructure-layer/vsan-single-rack-hci-esa-storage-model.html). Device count also sets the component limit, which [the space-efficiency note](/vcf/library/value/vsan-esa-space-efficiency/) works through for this same cluster.
+
+The ratio moves the answer more than either margin does. With no measured ratio this cluster needs 48 to 66 TiB of add-on. Broadcom [recommends a conservative estimate of compression on real data](https://www.vmware.com/docs/vmw-vsan-space-efficiency), and [deduplication results depend on how alike the data is](https://blogs.vmware.com/cloud-foundation/2025/06/19/global-deduplication-in-vsan-esa-for-vmware-cloud-foundation-9-0/). The paper's table runs to 8:1, but that is capacity arithmetic rather than a forecast. Treat any ratio you haven't measured as headroom. On a running ESA cluster, take the overall data reduction ratio from the capacity view, which the paper recommends over the separate compression and deduplication figures because those shift as deduplication runs.
+
+A stretched version of this cluster is a different purchase. It has 3x overhead and no global deduplication, and the paper's stretched table gives roughly 0.38x of raw at 1.5:1. That means about 316 TiB raw and about 124 TiB of add-on, even if compression alone reaches 1.5:1.
 
 ## VVF is a different calculation
 
-At 0.25 TiB per core, VVF entitlement may not cover an all-flash HCI cluster. In the example, VVF needs between 81 and 210 TiB of add-on capacity for the same hardware. When comparing VCF and VVF quotes, include add-on vSAN capacity at the expected raw figure. A lower per-core price can be outweighed by the TiB you have to add.
+The same 192 cores bring 48 TiB on VVF, so this cluster needs 81 to 210 TiB of add-on with 30% free, or 72 to 192 TiB on Broadcom's estimate. When comparing VCF and VVF quotes, include add-on vSAN at the expected raw figure, because that line can outweigh a lower per-core price. These figures support a comparison and aren't legal or purchasing advice. Your order and the [licensing pages](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/add-on-licenses-in-vcf-9-0.html) decide what you are entitled to.
 
 ## Pitfalls
 
-- **Using the datastore capacity figure.** The vSphere Client shows usable capacity. The licence counts raw. The KB recommends the counting script, not a manual reading from the UI.
-- **Assuming deduplication lowers the licence directly.** It lowers the raw capacity you need to install. The licence follows the installed raw capacity, so the saving arrives at purchase time, not after you enable a feature on hardware already bought.
-- **Forgetting pooled surplus.** An add-on purchase for one cluster may be unnecessary if another cluster has unused entitlement.
+- **Expecting deduplication to lower the count on hardware you already own.** VCF 9.x [validates vSAN add-on licenses against raw storage rather than logical data usage](https://knowledge.broadcom.com/external/article/411654/error-vsan-addon-license-assignment-fail.html), so enabling a feature changes nothing until the next purchase installs fewer drives.
+- **Leaving no slack in a hand-built license file on 9.0.x.** A rounding gap of 1 TiB between reported raw and the entitlement [can grey out Assign](https://knowledge.broadcom.com/external/article/411654/error-vsan-addon-license-assignment-fail.html), and the fix runs through your Broadcom account team and a new license file, so check the reported raw figure before importing.

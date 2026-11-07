@@ -4,7 +4,7 @@
 # Step 5 of the triage method ("check the basics") as a script. For every FQDN in a list it checks:
 #   - forward lookup (name -> IPv4)
 #   - reverse lookup (IPv4 -> name), and that it matches the forward name
-#   - that the name is lowercase (mixed-case records cause certificate and SSO mismatches)
+#   - that the name is lowercase (uppercase fails a 9.1.0 deployment, and Broadcom's later pages disagree, so stay lowercase)
 #   - optionally, that TCP 443 answers from this machine
 # It changes nothing. Run it from the machine the failing workflow runs on (for example SDDC Manager
 # or a VCF Operations node), because that is the view of DNS that matters.

@@ -261,7 +261,7 @@ export const TOOLS: Tool[] = [
   {
     name: 'Terraform provider for VCF', job: 'automate', maker: 'opensource', publisher: 'VMware (GitHub, Terraform Registry)', versions: ['5.x', '9.0', '9.1'],
     what: 'Terraform resources for VCF bring-up and SDDC Manager: domains, clusters, hosts, edge clusters and related configuration.',
-    know: 'Provider version matters: the README maps VCF 9.0 to provider 0.17 or later and VCF 9.1.1 to 0.19 or later.',
+    know: 'Provider version matters: the README maps VCF 9.0 to provider 0.17 or later and VCF 9.1.1 to 0.19 or later, and 0.19 cannot do a 9.0 bring-up.',
     get: { label: 'Terraform Registry', url: 'https://registry.terraform.io/providers/vmware/vcf/latest/docs' },
     docs: [{ label: 'GitHub', url: 'https://github.com/vmware/terraform-provider-vcf' }],
     checked: C,

@@ -1,61 +1,208 @@
 ---
 title: "Explaining VCF 9 to people who don't run it: five changes in plain language"
-description: "Managers, architects outside infrastructure, security teams and finance each need a different slice of what VCF 9 changes. Five plain-language statements, with what to lead with for each audience and the question to expect next."
+description: "Ask each audience for the decision only they can make: a licensing owner, connected or disconnected, a /27 and DNS names, a window. Licensing leads, because on 9.1 a license left unrefreshed for 180 days expires and, 90 days later, hosts disconnect and workloads can't start."
 category: leadership
 order: 4
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Overview
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: []
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [431546, 449122]
 sources:
+  - title: "Licensing Overview (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Update Licenses in Connected Mode (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/update-licenses/updatelicenses.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "High-Level Licensing Workflow (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/v9-licensing-overview.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Single License Server Model, VCF Fleet in a Single Site blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections(1)/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1 Licensing: programmatic, centralized and built to scale"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/18/vcf-9-1-licensing-programmatic-centralized-and-built-to-scale/"
+    by: "Sehjung Hah and Andrew Firth, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-05-18
   - title: "Licensing in VMware Cloud Foundation 9.0"
     url: "https://blogs.vmware.com/cloud-foundation/2025/06/24/licensing-in-vmware-cloud-foundation-9-0/"
     by: "VMware Cloud Foundation blog"
-  - title: "10 VCF 9 enhancements simplifying your Day-2 operations"
+    kind: broadcom
+    date: 2025-06-24
+  - title: "VCF 9.1 Frequently Asked Questions"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "License Update Fails in VCF Operations Business Console After 180-Day Usage Period (KB 449122)"
+    url: "https://knowledge.broadcom.com/external/article/449122/license-update-fails-in-vcf-operations-b.html"
+    by: "Broadcom Knowledge Base"
+    kind: broadcom
+  - title: "Network requirements to register a VCF Operations Instance in Connected Mode (KB 431546)"
+    url: "https://knowledge.broadcom.com/external/article/431546/network-requirements-to-register-a-vcf-o.html"
+    by: "Broadcom Knowledge Base"
+    kind: broadcom
+  - title: "Public URLs Required for Online Functionalities (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/planning-and-preparation/public-urls-required-for-vmware-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrade Sequence to 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/upgrade-sequence-to-91.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrading to VMware Cloud Foundation 9.1.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware Cloud Foundation 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Deploy VCF Management Services and License Server as Part of VCF Upgrade to 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Taxonomy (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/overview-of-vmware-cloud-foundation-9/workload-domains-in-vmware-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Management Services Models (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-management-services-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configure an External SFTP Server for VCF Management Services and VCF Automation Backups (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/configure-sftp-backup-target-in-vmware-cloud-foundation-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Setting up VCF Single Sign-On (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/setting-up-sso.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Identity Providers and Protocols Supported for VCF Single Sign-On (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/protocols-suported-for--sso.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Single Sign-On Models (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/auth-design-vcf.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Identity and Access Management, Fleet Management blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/identity-and-access-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Fleet Management (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Lifecycle Management (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "10 VCF 9.0 Enhancements: Simplifying Your Day 2 Operations"
     url: "https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/"
-    by: "VMware Cloud Foundation blog"
+    by: "Brandon Hahn, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-09-18
 ---
 
 <InShort>
-1. **One console for the whole estate.** VCF Operations becomes where the platform is run, as well as watched.
-2. **The platform has more of its own moving parts.** In 9.1 the management tools run on a small internal Kubernetes cluster, which needs addresses, backups and monitoring.
-3. **Licensing is a file with a deadline.** Usage is reported at least every 180 days, and someone must own that.
-4. **One login across the tools.** VCF single sign-on connects them to the corporate identity provider.
-5. **Upgrades follow a strict order** and need more preparation than before, but they run as planned phases.
-
-Each statement has a follow-up question, so have the answer ready.
+Explain VCF 9 by asking each audience for the decision only they can make: a licensing owner and a budget from managers, connected or disconnected from security, a /27 and DNS names from the network team, a window from application owners. Lead with licensing, because it is the change with a hard deadline. On 9.1 a license left unrefreshed for 180 days expires, and 90 days later hosts disconnect from vCenter and workloads can't start, though running ones aren't proactively stopped.
 </InShort>
 
-<Compare v5Label="What they hear" v9Label="What to say" title="Translating" rows={[
-  ["\"Fleet management\"", "Jargon", "One place to patch, certify and license everything"],
-  ["\"Services runtime\"", "Kubernetes, alarm", "The management tools' own small cluster. It needs IPs and backups like any other system."],
-  ["\"License file\"", "Another portal", "A calendar item: every 180 days, or automatically if the network allows"],
-  ["\"VCF SSO\"", "Security review", "Fewer separate admin logins, tied to the corporate identity provider"],
-]} />
-
-## By audience
-
-| Audience | They care about | Lead with | Expect next |
-|---|---|---|---|
-| Managers | Cost, risk, people | Upgrade phases, training, licensing owner | "How long, and what's the risk?" |
-| Security | Identity, exposure | VCF SSO, outbound traffic in 9.1, certificate management | "Which addresses talk to the internet?" |
-| Network team | Addresses, firewalls | New components and their IP and DNS needs | "Which flows, from which subnets?" |
-| Finance and procurement | Licences, renewals | The license file and the 180-day cycle | "Who has access to the licensing portal?" |
-| Application owners | Outages | Running workloads are untouched by management changes | "When is our window?" |
-
-## How to hold the conversation
-
-- **Start from their concern**, not from the architecture.
-- **Use one diagram**, the fleet picture, and point to the part that matters to them.
-- **Name the decision you need** from them: an owner, a window, a firewall approval.
-
-<Callout type="field">
-Write one paragraph per audience and reuse it. A short, consistent explanation repeated across meetings builds trust faster than a new deep dive every time.
+<Callout type="note" title="Corrected on 7 November 2026">
+This note told application owners that running workloads are untouched by management changes. Broadcom's upgrade and licensing pages don't promise that (checked 7 Nov 2026), so the line is gone. It also gave one licensing rule for all versions, called VCF Operations the console for the whole estate, and implied one login everywhere. Licensing differs by version and mode, and single sign-on excludes SDDC Manager and ESX.
 </Callout>
 
-## Pitfalls
+## Five terms, in plain language
 
-- **Leading with Kubernetes** to an audience that has never run it. It sounds like risk.
-- **Over-promising simplicity.** Fewer consoles doesn't mean less preparation.
-- **Leaving licensing as "the vendor's thing".** It has a technical owner and a deadline.
+| They hear | Say this |
+|---|---|
+| "License file" | A license that has to be refreshed at least every 180 days. On 9.1 connected mode does it daily by default; disconnected mode needs a person or a script. |
+| "Upgrade sequence" | A fixed order for the management tools. Workload domains can follow later on their own schedule. |
+| "Services runtime" | A small cluster of VMs that hosts many of the management tools. It needs its own addresses and a backup target. |
+| "VCF SSO" | One sign-in source, tied to the corporate identity provider, for nearly every tool, with SDDC Manager and ESX outside it. |
+| "Fleet management" | VCF Operations, where identity, certificates, passwords and lifecycle are run. |
+
+## Who to ask for what
+
+| Audience | Decision you need | Question to expect | Answer to have ready |
+|---|---|---|---|
+| Managers | A licensing owner; budget for training and the highly available runtime | "How long, and what's the risk?" | Your own plan, built with Broadcom's [Upgrade Planning Tool](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html). |
+| Security | Connected or disconnected; which identity provider | "Which addresses talk to the internet?" | For connected-mode licensing, `vcf.broadcom.com` and `eapi.broadcom.com` on 443, from all VCF Operations nodes (<KB id={431546} />). Other online functions add [more hosts](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/planning-and-preparation/public-urls-required-for-vmware-cloud-foundation.html). |
+| Network team | A /27 for the runtime; DNS names | "Which flows, from which subnets?" | The [public URL list](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/planning-and-preparation/public-urls-required-for-vmware-cloud-foundation.html) gives source, destination and port for outbound traffic. |
+| Finance and procurement | Who renews; who holds portal access | "Who has access to the licensing portal?" | Whoever you appoint. 9.1 adds a [read-only role](https://blogs.vmware.com/cloud-foundation/2026/05/18/vcf-9-1-licensing-programmatic-centralized-and-built-to-scale/) for compliance and reporting. |
+| Application owners | A window per workload domain | "When is our window?" | Separate from the management upgrade, because [workload domains can be upgraded later](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) as a Day-N procedure. |
+
+## Licensing
+
+The deadline works the same way in each 9.x setup below: [usage reports are required at least once every 180 days](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview.html). What changes is who does the work.
+
+| Setup | Who moves the date |
+|---|---|
+| 9.0, connected | A person, with [one button inside the 180 days](https://blogs.vmware.com/cloud-foundation/2025/06/24/licensing-in-vmware-cloud-foundation-9-0/) |
+| 9.1, connected | Nobody by default: [usage goes up daily and automated mode updates licenses every 24 hours](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/update-licenses/updatelicenses.html). Manual mode still exists. |
+| Disconnected | A person or a script. [Licensing APIs reach all customers in 9.1](https://blogs.vmware.com/cloud-foundation/2026/05/18/vcf-9-1-licensing-programmatic-centralized-and-built-to-scale/), Broadcom's launch post says. |
+
+Broadcom's [single-site fleet blueprint recommends connected mode](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections(1)/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html) (VCF-OPS-RECD-LIC-001), at the cost of an outbound connection from VCF Operations, directly or through a proxy. It keeps disconnected mode for policies that forbid internet access from management components. So security's answer sets the licensing workload, and it should come first. The [mode choice](/vcf/library/licensing/connected-vs-disconnected/) has its own note. Broadcom's FAQ says the usage file [carries no Personal Data or Customer Data](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs), which is the next thing security will ask.
+
+The consequence is what makes managers listen. After expiry there are [90 days to update; after that ESX hosts disconnect from vCenter and workloads can't start, though existing ones aren't proactively stopped](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview.html) <AsOf date="2026-11-07" />. An updated license file recovers the environment, unless the subscription itself has ended. The [180-day note](/vcf/library/licensing/180-day-cycle/) has the dates.
+
+Finance needs one more distinction, because a refresh doesn't buy time on the contract. If the subscription ends first, that date stands and [a usage file won't extend it](https://knowledge.broadcom.com/external/article/449122/license-update-fails-in-vcf-operations-b.html) (<KB id={449122} />). [Avi Load Balancer, vDefend Firewall and VMware Live Recovery are licensed separately](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs). A 5.x estate [keeps its license keys](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) until it moves. The FAQ also has components going to evaluation mode during the upgrade and needing re-licensing afterwards, in an answer worded for 9.0. This is a technical summary, not legal or purchasing advice, so take contract questions to Broadcom or your distributor.
+
+[Broadcom's licensing workflow](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/v9-licensing-overview.html) names no role, so the owner is yours to appoint. Appoint one on 9.1 too, because automated updates hold only while the connection does. That's an inference from the 180-day rule; Broadcom doesn't state it.
+
+## Upgrades
+
+Managers need three facts. 9.1 [requires a strict component sequence, and a wrong sequence results in errors](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/upgrade-sequence-to-91.html). The mandatory part is [the fleet-level components and the management domain](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html), starting with the instance that hosts VCF Operations. And 9.1.1 adds its own rules: [patch fleet lifecycle before anything else, and don't press Upgrade All until the patching dependencies are met](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html). The [upgrade order note](/vcf/library/upgrades/upgrade-order-changed/) walks through the table.
+
+Broadcom's guide doesn't number phases for this path, so "phases" is your planning word and should stay labelled as yours. Don't promise application owners zero impact either. Give each workload domain its own window from its own plan.
+
+Security has a stake here as well. Once VCF Operations reaches 9.1, [certificates and passwords for VCF Automation, Identity Broker, logs and networks can't be managed from it](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) until those components are upgraded too. Keep that gap short and tell them it exists.
+
+## The services runtime
+
+From 9.1 many of the management tools run on [a Kubernetes cluster of node VMs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/overview-of-vmware-cloud-foundation-9/workload-domains-in-vmware-cloud-foundation.html), including fleet lifecycle, identity broker, log management and the software depot. Say "small cluster of VMs" and add the word Kubernetes when asked, because these audiences have to supply addresses and a backup target and won't operate the cluster.
+
+The [Simple model is scoped to testing and proofs of concept](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-management-services-models.html), and losing its one control plane node means redeploying and restoring from backup. Broadcom's page stops short of a production rule. Budget for High Availability anyway, with its three control plane nodes and the extra resources they need.
+
+The network team's ask is concrete. The [upgrade step that deploys the runtime](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html) needs at least 12 addresses (/28), with 30 (/27) recommended for growth. It also takes three FQDNs, plus one each for identity broker and license server if those aren't already there, all resolving outside the runtime's range. Check the runtime's default internal /15 against your network, since the block must change if the subnet is already in use. An [SFTP backup target is a prerequisite for patching or upgrading management services](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/configure-sftp-backup-target-in-vmware-cloud-foundation-operations.html), and restores need its encryption passphrase, so settle who stores that before the first window.
+
+## Single sign-on
+
+[One authentication source, configured from VCF Operations, covers all VCF components except SDDC Manager and ESX](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/setting-up-sso.html). Broadcom's FAQ says admins [log in once and get access according to their permissions](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs). Say "fewer logins", because those two exceptions keep "one login" from being true.
+
+Security owes you the provider, and [each identity broker instance takes only one](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/protocols-suported-for--sso.html). The [blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/identity-and-access-management.html) also expects connectivity between broker and provider, plus inbound access from the provider if SCIM is used. A firewall reviewer who only expects outbound traffic will want to hear that early. Expect the question of what a broker outage takes down: [one broker for the fleet has the lowest resource footprint and a large blast radius](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/auth-design-vcf.html). The [identity broker note](/vcf/library/architecture/identity-broker/) covers how many to run.
+
+## VCF Operations
+
+Claim what Broadcom lists. VCF Operations manages [identity and access, certificates, passwords, tags, configuration profiles and fleet availability](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management.html), and you [set a target version and it orchestrates the upgrade or patch](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html). Brandon Hahn's [September 2025 post](https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/) is the quickest list for anyone coming from 5.2, showing workload domains, certificates and backups moving out of SDDC Manager in 9.0.
+
+<Callout type="analysis" title="What not to promise">
+Fewer consoles doesn't mean less preparation. The same release that centralises the tools asks for at least a /28 (a /27 recommended), up to five DNS names and an SFTP target, and you still have to appoint a licensing owner. Say so in the first meeting. Start from the audience's concern, use one diagram, the fleet picture, and point to the part that matters to them. Write one paragraph per audience and reuse it, so each audience hears the same account every time.
+</Callout>

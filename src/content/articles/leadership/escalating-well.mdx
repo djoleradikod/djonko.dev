@@ -1,61 +1,180 @@
 ---
 title: "Escalating well: writing a support case an engineer can act on"
-description: "A support case is a handover to an engineer who has never seen your environment. Give them one clear problem statement, exact identifiers, the right bundle, and an honest list of what was already tried."
+description: "A support case goes to an engineer with no context. Give one problem statement, exact IDs, UTC times and build numbers, the bundle for the layer that failed, and what you tried. Claim Severity 1 only when production is down or critical data is at risk, with no immediate workaround and a contact reachable 24x7."
 category: leadership
 order: 3
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [385749, 402476, 140731]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [385749, 402476, 140731, 385549, 429027, 140745, 144456, 443789, 444466, 320424]
 sources:
-  - title: "Uploading diagnostic information to Broadcom support"
+  - title: "Best Practices for Creating Support Requests on the Broadcom Support Portal (KB 429027)"
+    url: "https://knowledge.broadcom.com/external/article/429027"
+    by: "Broadcom KB"
+    kind: broadcom
+    date: 2026-09-08
+  - title: "Changing the severity of your Broadcom support case (KB 140745)"
+    url: "https://knowledge.broadcom.com/external/article/140745"
+    by: "Broadcom KB"
+    kind: broadcom
+    date: 2026-02-16
+  - title: "Broadcom case management frequently asked questions (KB 144456)"
+    url: "https://knowledge.broadcom.com/external/article/144456"
+    by: "Broadcom KB"
+    kind: broadcom
+    date: 2025-09-26
+  - title: "Broadcom support policies notification 6933"
+    url: "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/release-announcements/CA-Support-Policies/6933"
+    by: "Broadcom Support"
+    kind: broadcom
+    date: 2026-10-26
+  - title: "Uploading VCF log bundles and files using Wolken, SHD, Web Browser Interface and FTP client (KB 385549)"
+    url: "https://knowledge.broadcom.com/external/article/385549"
+    by: "Broadcom KB"
+    kind: broadcom
+    date: 2026-09-02
+  - title: "Uploading files to cases on the Broadcom Support Portal (KB 140731)"
     url: "https://knowledge.broadcom.com/external/article/140731"
     by: "Broadcom KB"
+    kind: broadcom
+    date: 2025-11-04
+  - title: "Collecting SDDC Manager and VMSP logs (KB 385749)"
+    url: "https://knowledge.broadcom.com/external/article/385749"
+    by: "Broadcom KB"
+    kind: broadcom
+    date: 2026-08-03
+  - title: "Collecting VCF Installer logs and VMSP logs (KB 402476)"
+    url: "https://knowledge.broadcom.com/external/article/402476"
+    by: "Broadcom KB"
+    kind: broadcom
+    date: 2026-05-14
+  - title: "Generate VCF Operations Support Bundle in VCF 9 (KB 443789)"
+    url: "https://knowledge.broadcom.com/external/article/443789"
+    by: "Broadcom KB"
+    kind: broadcom
+    date: 2026-10-27
+  - title: "Generating a VCF Management Services Support Bundle Using VCF Services Runtime API when Fleet lifecycle is unavailable (KB 444466)"
+    url: "https://knowledge.broadcom.com/external/article/444466"
+    by: "Broadcom KB"
+    kind: broadcom
+    date: 2026-09-08
+  - title: "How to collect a HTTP Archive (HAR) log file for troubleshooting VCF, Cloud Director or VCF Business Service Console (KB 320424)"
+    url: "https://knowledge.broadcom.com/external/article/320424"
+    by: "Broadcom KB"
+    kind: broadcom
+    date: 2026-01-27
+  - title: "Create a VCF Operations Support Bundle (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/-configuring-administration-settings/create-a-support-bundle.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Attach Logs and Diagnostic Findings to Support Tickets with Log Assist (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/using-vcf-operations-diagnostics/use-log-assist-to-accelerate-your-support-cases/attach-logs-and-diagnostic-findings-to-support-tickets-with-log-assist.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Troubleshooting VMware Cloud Foundation or vSphere Foundation Deployments (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Troubleshooting Blueprint: Troubleshooting Concepts"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware Cloud Foundation 9.1 General FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "Diagnostics Log Assist for Broadcom Cases"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/06/24/diagnostics-log-assist-for-broadcom-cases/"
+    by: "James Walker, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-06-24
 ---
 
 <InShort>
-Write the case for a reader who has five minutes and no context. Lead with **one sentence**: what fails, where, since when, and the impact. Then the **identifiers**: task or reference IDs, exact error text, time with time zone, versions. Then the **evidence**: the right bundle for the layer that failed, uploaded as the KB describes (<KB id={140731} />). Then **what you tried**, including what made it worse. Set severity by business impact, not frustration, and name one contact who can make changes.
+Write the case for an engineer who has five minutes and no context. Lead with **one sentence**: what fails, where, since when, and the impact. Then the **identifiers**: task or reference IDs, the exact error, UTC time, build numbers. Attach **the bundle for the layer that failed** through Log Assist (9.1) or [the routes in KB 385549](https://knowledge.broadcom.com/external/article/385549). Then **what you tried**, including what made it worse. Claim Severity 1 only when [production is down or critical data is at risk with no immediate workaround](https://knowledge.broadcom.com/external/article/140745), and only with [a contact reachable 24x7](https://knowledge.broadcom.com/external/article/429027).
 </InShort>
+
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to cite KB 140731 under a title it doesn't have, as the guide to uploading diagnostic bundles, and it credited KB 402476 with a "fleet lifecycle bundle" and the SDDC Manager use of `--vcf-mgmt-svcs-logs`. KB 140731 covers portal file uploads and KB 402476 covers Installer and VMSP logs, so the routes below now cite KB 385549 and KB 385749. The HAR and VCF Operations rows had no source and now do.
+</Callout>
 
 <Compare v5Label="Thin case" v9Label="Complete case" title="Same problem, two cases" rows={[
   ["Summary", "Upgrade failed, please help", "9.0 to 9.1: SDDC lifecycle step vmsp_upgrade fails with InvalidLogin since 14:05 UTC. Management domain upgrade blocked."],
-  ["Identifiers", "Screenshot of the UI", "Task ID, reference ID, exact message, versions"],
-  ["Evidence", "Everything, or nothing", "sos with the management services option, plus the fleet lifecycle bundle"],
+  ["Identifiers", "A screenshot and nothing else", "Task ID, reference ID, copied error text, screenshot of the fault, build numbers"],
+  ["Evidence", "Everything, or nothing", "sos --sddc-manager-logs --vcf-mgmt-svcs-logs --zip, uploaded to the case"],
   ["History", "Missing", "Rotated SDDC Manager service account yesterday. Restarted commonsvcs, no change."],
 ]} />
+
+This example is constructed, so replace each detail with your own.
 
 ## A template
 
 ```text
 Summary:    <what fails> in <component/domain> since <time UTC>. Impact: <who/what is blocked>.
-Versions:   VCF <x>, SDDC Manager <x>, VCF Operations <x>, vCenter <x>, NSX <x>
+Scope:      <one VM, one host, a cluster or the whole SDDC>
+Versions:   VCF BOM <x>, vCenter build <x>, ESX build <x>, SDDC Manager <x>, VCF Operations <x>, NSX <x>
 IDs:        Task <id>, reference <id>, failed step <name>
 Error:      <exact text, copied, not retyped>
-Evidence:   <bundle names and upload reference>
+Evidence:   <bundle names and how each was uploaded>
 Tried:      <step> -> <result>; <step> -> <result>
 Changes:    <anything changed in the last 7 days>
 Contact:    <name, hours, can approve changes: yes/no>
 ```
 
+The scope, UTC time, preceding changes and build numbers are [what Broadcom asks for](https://knowledge.broadcom.com/external/article/429027), along with the full error string and UI screenshots. The same KB lists searching for known issues and checking the Interoperability Matrix before opening, and either can end the problem without a case. For a significant incident, the [Troubleshooting Blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html) recommends a Workbench investigation narrowed to the exact period, which can supply the time window and any changes that stand out for those fields.
+
+## Setting severity
+
+Broadcom [can re-categorize a case that doesn't match its definitions](https://knowledge.broadcom.com/external/article/140745), so overstating severity gains little. Severity 1 needs no immediate workaround, plus a production or mission-critical system down or with a substantial loss of service, or mission-critical data at significant risk of loss or corruption. Severity 2 is a major function severely impaired while operations continue in a restricted way. On that wording, a blocked upgrade with production still running reads as Severity 2, though that's this site's reading and the engineer may classify it differently.
+
+| Severity | Initial call objective (<KB id={140745} />) |
+|---|---|
+| 1 Critical | 30 minutes |
+| 2 High | 2 business hours |
+| 3 Medium | 4 business hours |
+| 4 Low | 8 business hours |
+
+Severity 1 costs you a contact available 24x7. Raising a case to P1 also takes a Business Impact entry confirming production is down, and answering No to that question lowers the case to P2. KB 429027 words Severity 1 more narrowly, as "total loss of service", while KB 140745 says "substantial loss". KB 140745 is the one that names the [Software and Maintenance Policy Handbook](https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/release-announcements/CA-Support-Policies/6933) as the official policy, so check the Handbook if a classification is disputed.
+
 ## Choosing the bundle
 
-| Failure layer | Bundle |
+| What failed | What to collect |
 |---|---|
 | SDDC Manager workflow | `sos --sddc-manager-logs --zip` (<KB id={385749} />) |
-| Hosts, vCenter or NSX involved | `sos --collect-all-logs` with the domain |
-| 9.1 runtime, fleet or depot | Add `--vcf-mgmt-svcs-logs`, or the fleet lifecycle bundle (<KB id={402476} />) |
-| VCF Operations | Its Control Panel bundle |
-| UI only | A browser HAR file plus the VCF Operations bundle |
+| 9.1 VCF management services | `sos --sddc-manager-logs --vcf-mgmt-svcs-logs --zip` (<KB id={385749} />) |
+| Same, with fleet lifecycle UI or API unavailable | The script in <KB id={444466} />. Its lookback defaults to 2 days, so extend it for an older fault |
+| Hosts, vCenter or NSX under SDDC Manager | `sos --collect-all-logs --zip --domain-name <name>`, with `ALL` for every domain. [The default is MANAGEMENT](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html), so a workload domain fault needs the name. WCP and system debug logs are excluded, so add `--wcp-logs` for a WCP problem |
+| vSphere or NSX on their own | vSphere Client: Actions > Logs > Export System Logs. NSX Manager: System > Support Bundle (<KB id={429027} />) |
+| VCF Operations | [Operate > Administration > Control Panel > Support Bundles > ADD](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/-configuring-administration-settings/create-a-support-bundle.html) on 9.1 (<KB id={443789} />). Light holds 24 hours of logs, so use Full for an older fault, and select every node involved because only selected nodes are included |
+| Deployment, on the VCF Installer | 9.1: Support-bundle in the Installer's top-right menu, or `sos --vcf-installer-logs --vcf-mgmt-svcs-logs --zip` (<KB id={402476} />) |
+| UI only | A browser HAR file (<KB id={320424} />), plus the bundle for the product behind that UI. Remove tokens and passwords first, because the KB warns a HAR can hold them |
 
-See [health checks and SoS](/vcf/library/day-2/health-checks-sos/) for details.
+Run `sos` from `/opt/vmware/sddc-support/`. KB 429027 gives the VCF command as `sos --all-logs`, a flag missing from [the KB 385749 list](https://knowledge.broadcom.com/external/article/385749) and the 9.1 TechDocs page <AsOf date="2026-11-07" />, so use `--collect-all-logs`. KB 385749 lists `--vcf-mgmt-svcs-logs` for 9.1. KB 320424 only describes pairing a HAR with Cloud Director cell logs, so the pairing in the last row is advice from this site. For the remaining components, see [health checks and SoS](/vcf/library/day-2/health-checks-sos/).
+
+## Getting the bundle to Broadcom
+
+Create the case first, because every route below needs it. On 9.1, with VCF Operations up, [Log Assist sends bundles from the console](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) to [the case ID you enter](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/using-vcf-operations-diagnostics/use-log-assist-to-accelerate-your-support-cases/attach-logs-and-diagnostic-findings-to-support-tickets-with-log-assist.html). It needs [Connected reporting mode and an activated cloud proxy](https://blogs.vmware.com/cloud-foundation/2026/06/24/diagnostics-log-assist-for-broadcom-cases/), James Walker explains (24 June 2026), so finish that setup before an incident. [Selection stops at ESX host level](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/using-vcf-operations-diagnostics/use-log-assist-to-accelerate-your-support-cases/attach-logs-and-diagnostic-findings-to-support-tickets-with-log-assist.html), so it can't target one VM.
+
+For a bundle already on disk, <KB id={385549} /> calls the case portal the preferred route ([steps in KB 140731](https://knowledge.broadcom.com/external/article/140731), using the `files_from_customer` folder). It also lists browser upload, an FTP client and Skyline Health Diagnostics Log Assist, which is a different tool with the same name. That KB doesn't mention Log Assist in VCF Operations, so putting it first is this site's preference: one console collects and sends.
+
+Broadcom's KBs disagree on size. <KB id={144456} /> (September 2025) says case attachments have no size limit, and <KB id={429027} /> (September 2026) says to use SFTP above 5 GB. Follow the newer one, since KB 385549 also says an FTP client recovers better from interruptions and timeouts.
 
 <Callout type="field">
 Before sending, read the case as if you were the support engineer. If you would have to ask a question to start work, answer it in the case now.
 </Callout>
 
-## Habits that help
+## Once the case is open
 
-- **One problem per case.** Two problems in one case get half an answer each.
-- **Update the case** when anything changes, even "no change after restart".
-- **Close the loop**: record the fix and the KB in your own knowledge base when it's solved.
+Keep one problem per case, so its severity and evidence match one failure. Add every change to the case, even "no change after restart", because [each update notifies the assigned engineer](https://knowledge.broadcom.com/external/article/144456).
+
+If criticality changes, change the severity in the portal or through the engineer. If the worry is whether service levels are being met, use the Raise Concern button, which alerts Support Management. [Broadcom says](https://knowledge.broadcom.com/external/article/144456) that button isn't meant for Severity 1 escalation.
+
+Up to three registered email addresses can be added as alternates, which covers a shift change. [A closed case can't be reopened](https://knowledge.broadcom.com/external/article/144456), so open a new one and quote the old number. Record the fix and the KB in your own knowledge base when it's solved.

@@ -1,23 +1,64 @@
 ---
 title: "Teaching a complex stack: how the VCF 9 talk series was built"
-description: "VCF 9 changed enough that experienced engineers needed to relearn where things live. The talk series behind this site follows the life of a support ticket, shows instead of tells, and keeps references out of the way. Here is the method, so it can be reused for any platform change."
+description: "Order VCF 9 training by the life of a ticket and open each topic on what changed from the version the room runs: 5.2 and 9.0 teams need different comparisons. Show the mechanism before explaining it, keep KB numbers in an index, and date any slide that gives an upgrade sequence."
 category: leadership
 order: 1
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Overview
 pubDate: 2026-11-02
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
 kbs: []
 sources:
-  - title: "Diátaxis: a systematic approach to technical documentation"
+  - title: "Diátaxis: a systematic approach to technical documentation authoring"
     url: "https://diataxis.fr/"
     by: "Daniele Procida"
+    kind: reference
+  - title: "Diátaxis: Reference"
+    url: "https://diataxis.fr/reference/"
+    by: "Daniele Procida"
+    kind: reference
+  - title: "Diátaxis: Colophon"
+    url: "https://diataxis.fr/colophon/"
+    by: "Daniele Procida"
+    kind: reference
+  - title: "SDDC Manager Workflows in VMware Cloud Foundation 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/sddc-manager-workflows.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrading to VMware Cloud Foundation 9.1.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Lifecycle Management (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware Cloud Foundation 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware Cloud Foundation 9.1 general FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
 ---
 
 <InShort>
-Four decisions shaped the series. **Follow the ticket**: the modules run in the order an engineer meets a problem, from "what is this estate" to "how do I escalate it", rather than product by product. **Show, then tell**: each idea starts with a diagram or a real error string, then the explanation. **Anchor on what changed**: every topic opens with the 5.x way and the 9.x way side by side. **Keep references out of the slide**: KB numbers sit in a compact index, so the slide carries the idea and the index carries the lookup. The same four decisions work for any platform change a team has to absorb.
+Build VCF 9 training around the life of a ticket, and open each topic on what changed from the version the room actually runs. A 5.2 team and a 9.0 team need different comparisons, so settle the baseline before writing a slide. Two smaller calls follow: show a diagram or a real error string before explaining it, and keep KB numbers in an index. The method comes from the [five-part series](/talks/), and it carries over to any platform change a team has to absorb.
 </InShort>
 
-<Compare v5Label="Common approach" v9Label="This series" title="Two ways to teach a new release" rows={[
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to treat 5.x as the only baseline, and 9.0 teams now need their own because 9.1 replaced the fleet management appliance. It also said every claim in the series had been checked against a public source, which a reader has no way to confirm, so that line is now advice.
+</Callout>
+
+<Compare v5Label="Feature tour" v9Label="This series" title="Two ways to teach a new release" rows={[
   ["Order", "Product by product", "The life of a ticket: orient, plan, operate, diagnose, escalate"],
   ["Opening", "Feature list", "What changed from the version you know"],
   ["Evidence", "Screenshots of UI", "Diagrams, real error strings, log paths"],
@@ -25,37 +66,46 @@ Four decisions shaped the series. **Follow the ticket**: the modules run in the 
   ["Ending", "Q&A", "A cheat sheet people keep"],
 ]} />
 
-## 1. Follow the ticket
+## Settle the baseline first
 
-Engineers don't meet a platform as a product catalogue. They meet it as a problem with a timeline: something is reported, they orient themselves, find the owning component, read the right log, fix or escalate. Ordering the material that way means every module answers "when would I need this?" before it is asked. It also makes the series useful for people who join halfway through: they know where they are in the story.
+A comparison only helps if its left column is what the room knows, and VCF 9 has moved twice for some teams. The facts each room needs differ like this <AsOf date="2026-11-07" />:
 
-## 2. Show, then tell
+| Room runs | Open each topic on | What the comparison has to carry |
+|---|---|---|
+| 5.2.x | 5.x against 9.1 | The [SDDC Manager UI is being deprecated](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) and its [workflows now sit in VCF Operations and the vSphere Client](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/sddc-manager-workflows.html). The [VCF Installer replaces Cloud Builder and its spreadsheet](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs). |
+| 9.0.x | 9.0 against 9.1 | [Fleet lifecycle and SDDC lifecycle components replace the VCF Operations fleet management appliance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html), and the upgrade [decommissions and powers off the appliance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html). |
+| Nothing yet (new build at 9.1.1) | No comparison: start from the fleet diagram | [VCF Installer 9.1.1 deploys a new fleet directly at 9.1.1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html). The FAQ calls a [fleet one or more VCF instances with an instance of VCF Operations and of VCF Automation](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs), though [the deployment page lets you skip Automation](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/deploy-a-new-vcf-fleet-or-a-new-vcf-instance.html). |
 
-Each concept starts with something concrete: the fleet diagram, the exact message a customer will paste, the path of a log file. The explanation follows. A diagram that shows the mechanism, such as which service calls which and from which address, is remembered long after the bullet points.
+<Callout type="analysis" title="When the room is mixed">
+Broadcom allows a [sequential or skip-level upgrade from 5.2.x to 9.1.x](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html), so some 5.2 teams can reach 9.1 without ever operating 9.0, and they have no use for a 9.0 column. Run two editions of the opening if the audience splits. If it can't be split, teach 5.x against 9.1 and give the 9.0 engineers the appliance change as a single aside, since it's the smaller story.
+</Callout>
 
-## 3. Anchor on what changed
+## Follow the ticket
 
-The audience already knows 5.x. Starting every topic with a two-column comparison respects that, and it puts the learning effort exactly where it's needed. It is also the format used throughout this site.
+Engineers meet a platform as a problem with a timeline: something is reported, they orient themselves, find the owning component, read the right log, then fix or escalate. Ordering the material that way answers "when would I need this?" before anyone asks it. Someone who joins halfway through still knows where they are in the story.
 
-## 4. Keep references out of the way
+The order also shows what 9.1 offers at the end of that path. [Log Assist sends support bundles to Broadcom from the VCF Operations console](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs), which means the escalation step can be taught in a console the first module already covered.
 
-KB numbers are necessary and distracting. On slides they sit in a compact, expandable index; on this site, in the KB drawer at the end of each note. People can look up the details later, and in the session they follow the idea.
+Leave feature tours to [Broadcom's training and certification programs](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) and spend the session on the ticket path.
+
+## Show, then tell
+
+Start each concept with something concrete: the fleet diagram, the exact message a customer will paste into a ticket, the path of a log file. The explanation comes second. A diagram of the mechanism, such as which service calls which and from which address, gives an engineer something to reason from when a failure doesn't match any slide.
+
+## Keep references out of the way
+
+KB numbers are necessary and they pull attention from the idea. [Daniele Procida's](https://diataxis.fr/colophon/) [Diátaxis](https://diataxis.fr/) treats reference and explanation as separate forms of documentation, for a reason that applies to slides: ["One hardly reads reference material; one consults it."](https://diataxis.fr/reference/) Treat a live session as explanation, and the numbers go in a compact index at the end, where people can look them up afterwards.
+
+## Date anything with a sequence in it
+
+Upgrade order goes stale faster than concepts do. The [9.1.1 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html), last updated 5 Nov 2026, say "DO NOT use the Upgrade All button in VCF Operations UI" until the 9.1.1 patching dependencies between components are met, and they carry a 12 Oct notice of new component patches. They also start any upgrade from 5.2.x or 9.0.x to 9.1.1 with VCF Operations 9.1.1. Put the date on any slide that gives a sequence, link the release notes from it, and check them again before each delivery.
 
 ## Building and testing it
 
-- **Plan first.** Outline every module, agree the order, then build.
-- **Vet the sources.** Every claim was checked against a public KB, TechDocs page or a reputable blog, and labelled where only a title was seen.
-- **Dry run with a skeptic.** One run-through with an experienced colleague who will say "that's not quite right" saves a room full of corrections.
-- **Two editions.** An internal edition can name internal tools. A customer edition keeps only what is public.
+Outline every module and agree the order before building any of them. Check each claim against a public KB, TechDocs page or reputable blog, and mark anything where only a title was seen.
 
-<Callout type="field">
-End every module with one thing people can use on Monday: a command, a checklist, a decision table. If a module has no such thing, it's background, and it might be better as a reading link.
-</Callout>
+One run-through with an experienced colleague who will say "that's not quite right" is cheaper than corrections in front of a full room. Keep the customer edition to what is public, and let the engineer edition name internal tools, both built from one source so they don't drift apart.
 
-## What to avoid
+End every module with one thing people can use on Monday: a command, a checklist or a decision table. A module without one is background, and it may work better as a reading link. Keep the humour light, skip jokes that will age, and let the content carry the session.
 
-- **Feature tours.** They're the vendor's job.
-- **Humour that ages.** Keep it light, but the content should carry the session.
-- **Unchecked claims.** One wrong slide undermines the other forty.
-
-See [Talks](/talks/) for the module summaries.
+The module summaries are on [Talks](/talks/).

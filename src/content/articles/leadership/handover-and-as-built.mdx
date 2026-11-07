@@ -1,56 +1,199 @@
 ---
 title: "Leaving it documented: the as-built and handover pack for a VCF 9 platform"
-description: "A project isn't finished when the platform works. It's finished when someone else can run it. A compact as-built and handover pack for VCF 9 covers names and addresses, decisions, credentials ownership, recurring tasks and the first runbooks."
+description: "Keep the pack on storage that survives the platform: manual instance recovery requires the as-built record. A 9.1 pack also covers the License Server, services runtime and the 180-day licensing duty. The Broadcom pages checked name no owner for licensing or the identity provider, so the pack must."
 category: leadership
 order: 10
-versions: ["5.x", "9.0", "9.1"]
+versions: ["9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: []
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [417255, 454434]
 sources:
+  - title: "VCF Instance Backup and Restore (9.1 protection blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-instance-recovery.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Instance Backup and Restore (9.1 procedures)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/-vmware-cloud-foundation-instance-recovery.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Component Backup and Restore (9.1 blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-backup-and-restore.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Design Blueprints for VMware Cloud Foundation (9.1 index)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VCF Fleet Management Blueprint"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Identity and Access Management (fleet management blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/identity-and-access-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Recommendations for VCF Certificate Management"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Recommendations for VCF Account and Password Management"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/vcf-password-management/recommendations-for-vcf-password-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF management services models"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-management-services-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations Detailed Design"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Upgrading to VMware Cloud Foundation 9.1.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9 licensing overview"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/v9-licensing-overview.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Updating licenses and viewing the license usage file"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/update-licenses/updatelicenses.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "License server downtime impact"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-downtime-impact.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1 Frequently Asked Questions"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "VCF Management Services: Health and Diagnostics"
+    url: "https://knowledge.broadcom.com/external/article/417255"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "Management Packs built with MP Builder don't collect after upgrading VCF Operations to 9.1.1"
+    url: "https://knowledge.broadcom.com/external/article/454434"
+    by: "Broadcom KB"
+    kind: broadcom
   - title: "Documenting architecture decisions"
     url: "https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions"
     by: "Michael Nygard"
+    kind: practitioner
+    date: 2011-11-15
   - title: "Diátaxis: a systematic approach to technical documentation"
     url: "https://diataxis.fr/"
     by: "Daniele Procida"
+    kind: reference
 ---
 
 <InShort>
-The handover pack answers five questions for the operations team. **What is there?** An as-built: instances, domains, components, versions, names, addresses and owners. **Why is it like that?** The decision records. **Who holds the keys?** Credential and certificate ownership, the licensing portal owner, and break-glass access. **What has to happen regularly?** A calendar: backups checked, licensing deadlines, certificate renewals, health reports. **What do we do when...?** The first runbooks: power events, health checks, collecting a bundle, escalating.
+Keep the pack on storage that survives the platform, because [manual recovery of a VCF Instance requires the as-built record](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/-vmware-cloud-foundation-instance-recovery.html). The [9.1 blueprint index](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for.html) lists no handover blueprint (checked 7 Nov 2026), so the structure here is this site's, built from Broadcom's recovery, certificate and password guidance. Call the handover finished when the receiving team can open the pack with the platform down, a named person holds every duty in the calendar, and they have run one runbook without help.
 </InShort>
 
-<Compare rows={[
-  ["New items in the as-built", "SDDC Manager, vCenters, NSX, hosts", "Also VCF Operations, collectors and proxies, License Server, services runtime pool, identity broker, VCF Automation"],
-  ["New recurring tasks", "Backups, certificate renewals", "Also the licensing cycle, runtime volume checks, management pack updates"],
-  ["New owners", "Platform team", "Also a licensing portal owner and an identity owner"],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to compare 5.x and 9.x with unsourced lists. "Services runtime pool" isn't the name on Broadcom's 9.1 management services page, which says VCF services runtime. Licensing and identity owners were stated as platform requirements when they are this site's advice, and management pack updates were listed as a recurring task when the documented issue comes with the 9.1.1 upgrade. The as-built section also omitted Broadcom's own record list and its instruction to keep that record on secondary storage.
+</Callout>
 
 ## The pack
 
 | Section | Contents |
 |---|---|
-| As-built | One table per instance: component, FQDN, IP, version, role, owner |
-| Decisions | The decision records, with status |
-| Access | Who owns which credentials and certificates, where they're stored, break-glass procedure |
-| Calendar | Recurring tasks with frequency and owner |
-| Runbooks | Shutdown and startup, weekly health check, support bundle, escalation |
+| As-built | One table per instance: Broadcom's recovery list, plus FQDN, IP, version, role and owner for each component |
+| Decisions | Records for topology, identity, certificates and configuration, plus any departure from the blueprints |
+| Access | Who holds which role and owns which credentials and certificates, where credentials live, how break-glass retrieval works. No passwords in the pack |
+| Calendar | Each duty with its interval and a named person |
+| Runbooks | [Shutdown and startup](/vcf/library/day-2/shutdown-startup-order/), weekly health check, support bundle ([Log Assist sends it from the VCF Operations console](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs)), License Server replacement, escalation |
 | Contacts | Support contracts, account team, internal escalation path |
 | Open items | Known issues, accepted risks, planned changes |
 
-## Handing it over
+[Fleet architects make the topology, identity, certificate and configuration calls](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint.html), so those are the records the operations team will need when someone asks why. Michael Nygard's [2011 format](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) still fits: title, context, decision, status, consequences, with a reversed decision kept and marked superseded. Daniele Procida's [Diátaxis](https://diataxis.fr/) sorts documentation into tutorials, how-to guides, reference and explanation. Applied here, runbooks are how-to, the as-built is reference and decision records are explanation. Keep them apart so that refreshing the as-built after an upgrade doesn't mean rewriting a runbook.
 
-1. **Walk through it** with the receiving team, on the live platform.
-2. **Let them run one runbook** while you watch, and fix what confused them.
-3. **Agree an end date** for support from the project team.
+## What the as-built must record
 
-<Callout type="field">
-Generate the as-built tables from the platform where you can (API queries for names, versions and addresses) rather than typing them. A generated table can be refreshed at the next upgrade. A typed one is out of date the day after handover.
+The record is [mandatory for the manual recovery process, and still advised for automated recovery](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/-vmware-cloud-foundation-instance-recovery.html), which restores much of it from the SDDC Manager backup. That sets the minimum:
+
+- Topology: physical, distributed switch and NSX networking, workload domains, clusters and the hosts in each.
+- Host and VM networking: vmnic-to-switch port mappings, VM vNIC to port group mappings, VMkernel and VM addresses, and DNS, NTP, AD and similar services.
+- Each vCenter: FQDN, IP settings, version and build, deployment and storage sizes, SSO domain name.
+- The easy ones to forget: custom VIBs on hosts, the root SSH authorized keys file, and custom scripts used by alarm actions or cron jobs.
+
+Save it on [secure secondary storage](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-instance-recovery.html), since a record that lives on the failed platform can't help recover it. A project folder the operations team can't open fails for the same reason.
+
+The same blueprint names the [Planning & Preparation workbook as a good source](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-instance-recovery.html). Start there, but the workbook holds what was planned. Query the platform's APIs for names, versions and addresses wherever you can, so the tables show what is running and can be regenerated at the next upgrade.
+
+## What to add on 9.1
+
+| Component | What to record | Why |
+|---|---|---|
+| License Server | Address and the replacement runbook | [Introduced in 9.1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html). Recovery means [deploying a new one and reconfiguring licensing](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-backup-and-restore.html) |
+| VCF services runtime | Which management services run at fleet level and which on each instance | [Fleet lifecycle, Salt RaaS and log management sit at fleet level; SDDC lifecycle, telemetry, Salt master, identity broker, real-time metrics and software depot on each instance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-management-services-models.html) |
+| Identity broker | The path to the external identity provider, and inbound SCIM if used | [The blueprint lists the provider and the network path as prerequisites](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/identity-and-access-management.html) |
+| VCF Operations and cloud proxies | Nodes, proxy placement, backup method | [Mandatory for each fleet, with a proxy in each instance's management domain](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design.html). [Image-based backup of all nodes at the same time](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-backup-and-restore.html) |
+| VCF Automation | Backup target and method | [File-based, like management services and NSX Manager](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-backup-and-restore.html) |
+| Custom management packs | Every pack built with Management Pack Builder | They stop collecting after the upgrade to 9.1.1 until rebuilt in the updated builder (<KB id={454434} />) |
+
+## Who owns what
+
+The [fleet management blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint.html) gives three personas: architects decide the models, platform engineers maintain SSO, certificates, passwords and configuration management, and cloud operations engineers run daily operations and compliance checks. Use those as the first draft of the owner column.
+
+<Callout type="analysis" title="Two owners the personas miss">
+Broadcom's [licensing overview](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/v9-licensing-overview.html) and [identity blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/identity-and-access-management.html) describe tasks and assign no team, so the pack has to. Name who holds access to the VCF Business Services console (vcf.broadcom.com), where license files and activation codes come from, and to [My Entitlements on the support portal](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs). Name a contact for the external identity provider as well. If another team runs it, agree how they warn the platform team of changes, since the broker depends on that connection.
 </Callout>
 
-## Pitfalls
+For credentials, the [password recommendations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/vcf-password-management/recommendations-for-vcf-password-management.html) make an enterprise vault the source of truth when credentials are used through API or manual processes, and they call for alerts on retrieval from SDDC Manager, since direct retrieval of break-glass credentials is commonly considered a compliance risk. So the Access section says where the vault is and who may retrieve from it.
 
-- **Documents in a project folder** the operations team can't access.
-- **No licensing owner** named. It becomes urgent at the worst time.
-- **Handover by email.** Walk through it together.
+Before the project team leaves, check the runbooks against one aim of the blueprint: [day-2 work run through API or workflow automation via VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint.html), partly to reduce "dependency on individual operator accounts". Any script still tied to a departing engineer's account should move to something the receiving team holds.
+
+## The calendar
+
+| Duty | Interval | Basis |
+|---|---|---|
+| License update | [At least every 180 days](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/update-licenses/updatelicenses.html). Automated mode updates every 24 hours; manual mode needs a person | Broadcom |
+| Confirm "Last Usage Report Generated" in Registration Details | Weekly, with the health check | [The field](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/update-licenses/updatelicenses.html) is Broadcom's, the interval this site's advice |
+| Certificate expiry | Continuous, once alerts reach the receiving team | [Built-in alerts need the notification plugin](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html) |
+| Password expiry and rotation | Your own password standard; SDDC Manager auto-rotation for inter-component accounts that only it can manage [offers 30, 60 or 90 days](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/vcf-password-management/recommendations-for-vcf-password-management.html) | Broadcom for the auto-rotation intervals |
+| Backups run, and manual ones before a change | Set your own: the blueprint says [regularly, with no interval, and before an upgrade or certificate update](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-backup-and-restore.html) | Broadcom for the triggers |
+| Services runtime disk and volumes | Weekly, this site's advice | Dashboard grades up to 80% good, 80 to 90 warning, 90 to 95 severe, above 95 critical; volumes resize through Lifecycle (<KB id={417255} />, which names no release) |
+
+Licensing carries the sharpest deadline. Licenses that miss the window are [treated as expired and hosts disconnect from vCenter](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/update-licenses/updatelicenses.html), and a [License Server outage blocks daily reports and imports](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-downtime-impact.html), so that outage belongs in the escalation runbook even on a connected platform. This is an operational view and isn't legal or purchasing advice; the [licensing overview](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/v9-licensing-overview.html) is the primary source.
+
+## Warnings for the receiving team
+
+Put these under Open items.
+
+- [Don't move management services VMs to another resource pool or folder](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) in vCenter. The 9.1.1.0 release notes warn that the runtime configuration goes out of sync, later deployment and scale-out fail, and reconciling placement takes Broadcom Support.
+- [Run certificate rotations one at a time](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), because the 9.1.1.0 release notes report instability from concurrent operations <AsOf date="2026-11-07" />.
+- [Manage certificates only through VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html) once it manages them. Working from vCenter leaves orphaned CSRs and a conflict over the source of truth.
+- [Don't change inter-component account passwords directly on a component](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/vcf-password-management/recommendations-for-vcf-password-management.html). That can break the integration and cause an outage.
+- Keep vCenter root expiry on the calendar by hand. VCF Operations 9.1.1.0 [can show "No Expiry" for an expired root account](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) with vCenter 9.1 or earlier, and no workaround is listed <AsOf date="2026-11-07" />.
+
+## Handing it over
+
+1. Walk through it with the receiving team on the live platform, and have them open the pack from its secondary storage while you do.
+2. Let them run one runbook while you watch, and fix whatever confused them.
+3. Check that every calendar row has a person who has confirmed they hold the access it needs.
+4. Agree an end date for support from the project team.
+
+[Runbooks that get used](/vcf/library/leadership/runbooks-that-get-used/) covers how to write the runbooks. [Backups](/vcf/library/day-2/backups/) and [the 180-day cycle](/vcf/library/licensing/180-day-cycle/) carry the detail behind those calendar rows.

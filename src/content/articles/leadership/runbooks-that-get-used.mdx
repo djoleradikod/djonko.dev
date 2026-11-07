@@ -1,34 +1,127 @@
 ---
 title: "Runbooks that get used: short, ordered, verifiable, and owned"
-description: "A runbook tells someone what to do at 2 a.m. and links to the explanation elsewhere. Give it a trigger, numbered steps with a check after each, a stop rule, and an owner who updates it after every use."
+description: "A runbook gets used when it covers one task: a trigger, numbered steps with a check after each, a stop rule and an owner, with explanation linked out. Review every VCF runbook before the upgrade to 9.1: tasks moved consoles, the shutdown order changed and the License Server start page has no check."
 category: leadership
 order: 7
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: []
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [440874, 440862, 443240]
 sources:
   - title: "Diátaxis: how-to guides"
     url: "https://diataxis.fr/how-to-guides/"
     by: "Daniele Procida"
+    kind: reference
+  - title: "Diátaxis: explanation"
+    url: "https://diataxis.fr/explanation/"
+    by: "Daniele Procida"
+    kind: reference
+  - title: "10 VCF 9 enhancements simplifying your Day-2 operations (Brandon Hahn)"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/"
+    by: "VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-09-18
+  - title: "VCF 9.1 general FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "VCF 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Accounts in VCF, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Managing passwords for VCF components, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Recommendations for VCF account and password management, 9.1 Fleet Management blueprint"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/vcf-password-management/recommendations-for-vcf-password-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Recommendations for VCF configuration management, 9.1 Fleet Management blueprint"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/vsphere-configuration-management/recommendations-for-vsphere-configuration-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Troubleshooting concepts, 9.1 Troubleshooting blueprint"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Shut down the management domain, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Shut down the management domain, VCF 9.0"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Shut down VCF management services, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain/shut-down-vcf-managament-services.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Start VCF management services, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain/start-vcf-management-services.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Start the license server, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain/start-the-license-server.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "License server downtime impact, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-downtime-impact.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Simple license server model, VCF 9.1 Fleet in a Single Site blueprint"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections%281%29/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
 ---
 
 <InShort>
-A runbook is a **how-to**, not an explanation. It starts with **when to use it** and what you need before starting. Each step is one action with a **check** that proves it worked. It says **when to stop** and who to call. It links to background rather than containing it. And it has an **owner** and a **last-used date**. VCF 9 moved a lot of UI paths, so every 5.x runbook needs a review against the new consoles before the upgrade, not after.
+Keep a runbook to one task: when to use it, what you need, numbered actions with a check after each, when to stop and who to call, links to the explanation, and an owner with a last-used date. Review every runbook against the target release before upgrading to VCF 9.1, because [tasks moved out of SDDC Manager in VCF 9](https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/) and the [management domain shutdown order](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain.html) changed. Write the power-event runbooks first. Then add the two drift procedures Broadcom's Fleet Management blueprint recommends.
 </InShort>
 
-<Compare v5Label="Description" v9Label="Runbook" title="Two different documents" rows={[
-  ["Purpose", "Explain how the system works", "Get a specific task done safely"],
-  ["Shape", "Paragraphs, diagrams", "Numbered steps, each with a check"],
-  ["Reader", "Someone learning", "Someone under time pressure"],
-  ["Lifetime", "Updated with the design", "Updated after every use"],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to say system-managed service accounts change who you log in as. Those accounts are [for inter-component communication](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html), while people use local and application accounts. It also listed the License Server under VCF 9 generally, and the [FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) (4 Nov 2026) dates that appliance to 9.1.
+</Callout>
 
-## A template
+## The two runbooks Broadcom's blueprint recommends
+
+The 9.1 Fleet Management blueprint recommends a standard operating procedure for two kinds of drift. [Configuration drift](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/vsphere-configuration-management/recommendations-for-vsphere-configuration-management.html) needs one that decides whether a deviation is an approved exception or an unauthorized change. [Password policy drift](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/vcf-password-management/recommendations-for-vcf-password-management.html) needs "a clear playbook" for finding the change and returning to a known good state. Make the first check in each whether the deviation has an approval on record, which is this site's suggestion. An estate following that blueprint should write both straight after the power-event runbooks below.
+
+## What goes in a runbook
+
+Daniele Procida's [Diátaxis how-to definition](https://diataxis.fr/how-to-guides/) sets the shape: a sequence of actions for a competent user that gets something done "correctly and safely", with explanation linked instead of included. The check, stop rule, owner and last-used date below are additions from this site, and they aren't part of Diátaxis. Each one answers a question an operator has mid-task: did that work, should I carry on, who can I call, can I trust this page.
+
+| | Description | Runbook |
+|---|---|---|
+| Purpose | [Deepen understanding of a topic](https://diataxis.fr/explanation/) | [Get a specific task done, correctly and safely](https://diataxis.fr/how-to-guides/) |
+| Reader | [Someone away from the product](https://diataxis.fr/explanation/) | [A competent operator in the middle of the work](https://diataxis.fr/how-to-guides/) |
+| Shape | Paragraphs, diagrams | Numbered steps, each with a check |
+| Lifetime | Updated with the design | Updated after every use |
 
 ```text
-Title:     <verb> <object>  (e.g. "Remediate a disconnected ESX root account")
+Title:     <verb> <object>  (e.g. "Remediate an ESX root password")
+Release:   <VCF version these steps were written for>
 Use when:  <symptom or trigger>
 Do not use when: <cases that need something else>
 Needs:     <access, credentials, tools, approvals>
@@ -44,18 +137,34 @@ Background: <links to the explanation, KBs>
 Owner: <name/role>   Last used: <date>   Last reviewed: <date>
 ```
 
-## Reviewing runbooks for VCF 9
+The release line, also this site's addition, is there for changes like this one: SDDC Manager's `vcf` and `root` passwords are [changed by hand through the OS on 9.1 and through VCF Operations on 9.1.1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html), so a correct step can go wrong after a patch.
 
-- **Paths**: anything that says "SDDC Manager UI" may now be VCF Operations or vCenter. See [where did that button go](/vcf/library/day-2/where-did-that-button-go/).
-- **Credentials**: system-managed service accounts change who you log in as.
-- **New components**: the License Server and the services runtime need their own runbooks, at least for power events and health checks.
+For the stop rule, name the tools as well as the person. Broadcom's [Troubleshooting blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html) recommends Workbench for "all incidents of significance", and a session can be shared so a colleague can take over. [Log Assist](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) sends support bundles to Broadcom from the VCF Operations console.
 
-<Callout type="field">
-After every use, the person who ran the runbook fixes one thing in it, even a typo. The people who use a runbook see what has gone stale, so have them maintain it instead of a separate documentation effort.
+## Lines to change before upgrading
+
+Do this review before the upgrade starts, because lines go false at different upgrade steps. The [9.1 runbook diff](/vcf/library/day-2/runbook-diff-91/) has the line-by-line edits in upgrade order.
+
+| What the runbook says | What the platform does on 9.1 | What to write |
+|---|---|---|
+| Open the SDDC Manager UI | [Network pools, hosts, clusters and edge clusters moved to vCenter; workload domains, backup, DNS and NTP, certificates and passwords moved to VCF Operations](https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/) in VCF 9 (Hahn, 18 Sep 2025) | The console on every step, from the [5.2 to 9.x map](/vcf/library/day-2/where-did-that-button-go/) |
+| Sign in with a service account | Service accounts are [system-managed, and must not be rotated, changed or managed by external PAM tools](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html) | A local or application account. Remove any step that touches a service account by hand |
+| Update the password in SDDC Manager | [VCF Operations is the preferred method](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords.html) | The VCF Operations path, and for each account the method the [accounts table](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html) gives. Any local account the table doesn't list, such as one your team created, gets its own step |
+| Shut down in the 9.0 order | [The 9.1 table](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain.html) has 11 rows and puts the License server at 4 and VCF management services at 5. [The 9.0 table](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain.html) has 12 rows, and lists logs, Identity Broker and fleet management separately | The 9.1 order, as a new runbook kept beside the 9.0 one until the last instance moves |
+| Patch with Upgrade All | ["DO NOT use the Upgrade All button"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html) for 9.1.1 before meeting its dependencies: the fleet lifecycle component first, and VCF Operations and its license servers before ESX 9.1.0.x hosts | That order as numbered steps, with the button named in the stop rule |
+
+## Power events on 9.1
+
+Start here because a shutdown removes the tools a runbook would otherwise lean on. SDDC Manager is [row 10 of 11](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain.html), and the hosts are row 11. Broadcom says to get the management hosts' and vCenter credentials and save them before starting. Read that as a line in Needs, in a vault you can still reach with the management domain down. The vault detail is an inference from the order, and Broadcom doesn't state it. If you run several instances, [shut down the one running VCF Operations last](/vcf/library/day-2/shutdown-startup-order/).
+
+**VCF management services (the services runtime).** The [shutdown procedure](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain/shut-down-vcf-managament-services.html) runs a script from <KB id={440874} /> on SDDC Manager, dry run first, then has you shut down each listed VM from vCenter. The KB also offers a mode that powers off the VMs through vSphere, so choose one and write only that one. The Needs line should carry a control plane node IP and the `vmware-system-user` password. The KB warns that the shutdown stops all management components, so put notifying dependent systems and users ahead of step 1. [Record the control node names](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain/start-vcf-management-services.html) during shutdown too, because they have to come back first.
+
+The [startup page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain/start-vcf-management-services.html) is close to a finished runbook already, and it shows the standard to copy. Power on the control nodes, then the workers, which take about 20 minutes. The check has three parts: every worker is running with no new ones being deployed, the VCF Operations UI loads, and each service shows running under Build, Lifecycle, VCF Management Components. If any part fails, the page sends you to <KB id={440862} />. That KB lists 9.1.0.x as its environment, so this site's advice on 9.1.1 is to use it with Broadcom Support involved instead of as a procedure to run alone. The KB also recommends contacting Support when the UI stays unavailable.
+
+**License Server.** The [start page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain/start-the-license-server.html) ends at Power On, with no way to confirm the result (checked 7 Nov 2026), so write a check of your own. One candidate is the vCenter banner <KB id={443240} /> describes, "One or more vCenter instances are not connected to a license server": it should be absent. That pairing is a suggestion from this site, so try it outside production first.
+
+A separate runbook has to cover losing the appliance. The Single Site blueprint's simple license server model says [backup is not required](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections%281%29/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html): deploy a new instance and move licenses to it within 90 days. Set its urgency from the [downtime impact](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview/license-server-downtime-impact.html). Running workloads and management operations aren't immediately affected, but you can't assign licenses, generate usage reports or import license files. Skip a deployment runbook, since the [FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) says the appliance is deployed and life cycled automatically. Keep a checkpoint in the upgrade runbook that it's deployed and registered, because [other Broadcom pages make it a separate step](/vcf/library/licensing/licensing-through-upgrades/). [The License Server note](/vcf/library/licensing/license-server/) covers the design choices. None of this is licensing or purchasing advice, so confirm terms in the primary source.
+
+<Callout type="analysis" title="Keeping a runbook alive">
+Ask whoever ran the runbook to fix one thing in it afterwards, even a typo, and to update the last-used date. They are the ones who just saw what has gone stale, and a date that never moves tells the next reader not to trust the page. Describe paths in words, because a screenshot needs retaking whenever the console changes. Replace "restart services if needed" with which service, when, and how to tell it worked. Give every runbook a stop rule, since nothing else on the page tells an operator to stop.
 </Callout>
-
-## Pitfalls
-
-- **Screenshots as steps.** They age with every release. Describe the path in words.
-- **"Restart services if needed."** Say which, when, and how to tell.
-- **No stop rule.** People keep going because the document doesn't say not to.

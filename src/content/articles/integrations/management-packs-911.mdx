@@ -1,63 +1,132 @@
 ---
 title: "Management packs in 9.1 and 9.1.1: what must be upgraded, what was removed"
-description: "VCF Operations 9.1.1 updated dependencies for security fixes, and sixteen management packs stop collecting until they are upgraded. 9.1 also removed content packs inside VCF Operations, the standalone MP Builder and direct vCenter authentication. A checklist for platform owners."
+description: "On VCF Operations 9.1.1, configured adapter instances of 17 listed management packs, and packs built with MP Builder, stop collecting until the packs are upgraded, so do it straight after the product. 9.1 also ended logs content packs and direct vCenter authentication in VCF Operations, and the standalone MP Builder."
 category: integrations
 order: 7
-versions: ["9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
 kbs: [454432, 454434, 437447]
 sources:
-  - title: "Management packs not collecting data after upgrade to 9.1.1"
+  - title: "Management Packs not collecting data after upgrading to VCF Operations 9.1.1"
     url: "https://knowledge.broadcom.com/external/article/454432/management-packs-not-collecting-data-aft.html"
     by: "Broadcom KB"
+    kind: broadcom
+    date: 2026-10-27
+  - title: "Management Packs built with MP Builder don't collect after upgrading VCF Operations to 9.1.1 (KB 454434)"
+    url: "https://knowledge.broadcom.com/external/article/454434"
+    by: "Broadcom KB"
+    kind: broadcom
+    date: 2026-09-21
+  - title: "HCX Management Pack default dashboards, views and reports are not showing data (KB 437447)"
+    url: "https://knowledge.broadcom.com/external/article/437447"
+    by: "Broadcom KB"
+    kind: broadcom
+    date: 2026-04-29
+  - title: "List of Management Packs (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/extending-monitoring-capabilities/installing-and-configuring-management-packs-in-vcf-operations-from-vmware-marketplace/copy-of-about-vrealize-operations-management-packs/list-of-integrations(1).html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
   - title: "VCF 9.1 product support notes"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
   - title: "VCF Operations 9.1.1 release notes"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations: what's new in 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "The Solutions Catalog Tab"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/connect-to-data-sources/integrations-in-vmware-aria-operations/adding-and-managing-content-from-vmware-marketplace.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Adding a Management Pack"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/connect-to-data-sources/integrations-in-vmware-aria-operations/the-repository-tab/add-solutions-wizard.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Converting Content Packs to Management Packs"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/log-analysis/converting-content-packs-to-management-packs.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrade to Log Management 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-vcf-operations-for-logs.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations Management Pack for Protection and Recovery Server 9.1 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/protection-and-recovery/9-1/release-notes/vmware-cloud-foundation-operations-management-pack-for-protection-and-recovery-server-91-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-10-20
+  - title: "VMware Cloud Foundation 9.1 general FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
 ---
 
 <InShort>
-Before upgrading VCF Operations to **9.1.1**, list your installed management packs. Sixteen of them, including the database packs, ServiceNow, SNMP and network devices, Kubernetes, HCX, Protection and Recovery, Live Recovery and both Avi packs, **stop collecting until upgraded to 9.1.1** (<KB id={454432} />). The upgrade precheck flags them. Packs built with MP Builder must be re-saved and re-installed from the in-product builder (<KB id={454434} />). And from 9.1: no Logs content packs inside VCF Operations, no standalone MP Builder appliance, and no direct vCenter authentication for VCF Operations.
+Put the pack upgrades in the same change window as VCF Operations **9.1.1**, straight after the product. A configured adapter instance of any of **17 listed management packs** stops collecting after the product reaches 9.1.1, and stays stopped until its pack is on 9.1.1 (<KB id={454432} />). Custom packs built with MP Builder break the same way and are upgraded from the in-product builder (<KB id={454434} />). Coming from 9.0 adds three removals to plan for: logs content packs and direct vCenter authentication in VCF Operations, and the standalone MP Builder appliance.
 </InShort>
 
-<Compare rows={[
-  ["Install location", "Integrations > Repository, PAK files", "The same, from the Solutions Catalog"],
-  ["Upgrade coupling", "Packs mostly independent of product patches", "9.1.1 requires 16 packs to be upgraded with it"],
-  ["Logs content", "Content packs in Aria Operations for Logs", "9.1: no content packs in VCF Operations. Third-party content must be converted to management packs."],
-  ["Custom packs", "Standalone MP Builder appliance", "In-product builder only"],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to say sixteen packs, leaving out NSX Advanced Load Balancer, and it applied the break to every listed pack; <KB id={454432} /> names 17 and requires no action where no adapter instance is installed or configured. It also offered a sequence that avoids gaps and told readers to re-save custom packs: the documented order leaves a gap (see below), and the builder fix is a design edit followed by an upgrade.
+</Callout>
 
 ## Packs that must move to 9.1.1
 
-| Group | Packs |
-|---|---|
-| Databases | Microsoft SQL Server, MongoDB, MySQL, PostgreSQL, Oracle |
-| Platforms and tools | ServiceNow, Network Devices, SNMP, Orchestrator, Kubernetes, Aggregator |
-| VMware products | VCF Operations HCX, Protection and Recovery, VMware Live Recovery cloud |
-| Load balancing | Avi LB Observability, Avi LB Operations |
+The cause is security work: [VCF 9.1.1 updated open-source and third-party dependencies](https://knowledge.broadcom.com/external/article/454432/management-packs-not-collecting-data-aft.html) to fix known vulnerabilities, and these packs need new versions to run on them.
 
-## A sequence that avoids gaps
+Broadcom's two lists differ <AsOf date="2026-11-07" />. The KB names 17 packs, while the ["Mandatory Management Pack Upgrades in 9.1.1" section of TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/extending-monitoring-capabilities/installing-and-configuring-management-packs-in-vcf-operations-from-vmware-marketplace/copy-of-about-vrealize-operations-management-packs/list-of-integrations(1).html) names 12, all of them also in the KB. Work from the KB. A wrongly skipped pack loses collection, and a needless upgrade costs one more wizard run.
 
-1. **Inventory**: export the list from Integrations > Repository, with versions.
-2. **Download** the 9.1.1 versions from the Solutions Catalog before the window.
-3. **Upgrade VCF Operations**, then the packs straight away in the same window.
-4. **Rebuild custom packs** made with MP Builder in the in-product builder, then re-install.
-5. **Check** each account returns to Collecting and Data receiving.
+| Group | Packs | On the TechDocs list too? |
+|---|---|---|
+| Databases | Microsoft SQL Server, MongoDB, MySQL, PostgreSQL, Oracle Database | Yes |
+| Platforms and tools | ServiceNow, Network Devices, SNMP, Orchestrator, Kubernetes, Aggregator | Yes |
+| HCX | VCF Operations HCX | Yes |
+| Recovery | Protection and Recovery (former SRM), VMware Live Recovery cloud | No, KB only |
+| Load balancing | Avi Load Balancer Observability, Avi Load Balancer Operations, NSX Advanced Load Balancer | No, KB only |
 
-## HCX on 9.0
+The SRM pack only appears if someone added it, because [it has to be downloaded and installed](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs), unlike the native vSphere Replication capabilities. Its [9.1 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/protection-and-recovery/9-1/release-notes/vmware-cloud-foundation-operations-management-pack-for-protection-and-recovery-server-91-release-notes.html) add a dependency: it no longer publishes custom replication VM objects, so configure the embedded vCenter pack first.
 
-No HCX management pack supported VCF Operations 9.0.x, and pack 5.4.0 is incompatible with it (<KB id={437447} />). On 9.1.1, use the VCF Operations HCX pack listed above.
+Absence from both lists doesn't make a pack healthy. The Horizon pack [lost General Support on 28 March 2025](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs), and Broadcom sends its users to Omnissa, so keep an inventory that gives every installed pack an owner and a support status.
 
-<Callout type="field">
-Treat management packs as part of the platform bill of materials, with an owner per pack. Without a list of what is installed, a change like the one in 9.1.1 leaves you no way to tell which dashboards have gone quiet.
+## The change window
+
+1. Read the precheck. On 9.1 to 9.1.1, [the Management Pack compatibility check detects correctly but its Message and Resolution fields show raw keys and JSON](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) in the fleet management UI, so download the APUAT support bundle HTML report from the same run. Compare it with the packs and versions in Operate > Administration > Integrations > Repository. Note the MP Builder packs there by hand, since <KB id={454434} /> doesn't say the precheck flags them.
+2. Fetch the 9.1.1 versions before the window. <KB id={454432} /> sends readers to the Solutions Catalog in its steps and calls the source the VMware Marketplace in its introduction, so search by pack name in either. [Browsing the catalog from the product needs outbound internet, otherwise you upload packs manually](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/connect-to-data-sources/integrations-in-vmware-aria-operations/adding-and-managing-content-from-vmware-marketplace.html). The same page says an upgrade to 9.1 from an earlier version removes packs that were downloaded but not installed, so keep the files off the appliance.
+3. [Clone customised alerts, symptoms, recommendations and views](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/connect-to-data-sources/integrations-in-vmware-aria-operations/the-repository-tab/add-solutions-wizard.html) before installing a PAK or upgrading the product. The wizard also offers Reset Default Content during an upgrade without defining it on that page, so leave it clear unless the clones exist. The wizard needs the cluster online and all nodes accessible.
+4. Upgrade VCF Operations, then each listed pack you have installed immediately, from Repository with Add/Upgrade.
+5. Rebuild custom packs: open each design from Build > Developer Center > Management Pack Builder, make a minor edit such as the description, then run the upgrade at the design's step 7, Install (<KB id={454434} />). The [9.1.1 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) list this as a known issue and give recreating the pack as the workaround.
+6. Confirm each adapter instance shows Data Receiving and that metrics and properties are populating. <KB id={454434} /> gives custom packs ten minutes.
+
+<Callout type="analysis" title="Expect a collection gap">
+Both KBs put the pack upgrade after the product upgrade, and collection breaks at the product upgrade. So each configured instance has a gap that lasts until its pack is installed, and neither KB gives a figure for it. That's an inference from those two statements. Expect metrics, properties and alerts to go stale during it, so tell whoever relies on those alerts, and upgrade the packs behind your most important alerts first.
 </Callout>
 
-## Pitfalls
+## What 9.1 removed
 
-- **Upgrading VCF Operations alone** and finding empty dashboards the next morning.
-- **Forgetting partner packs** that aren't on the list but have their own compatibility notes.
-- **Keeping the standalone MP Builder** in the estate. It is no longer maintained.
+| Removed | What it means | What to do |
+|---|---|---|
+| [Logs content packs in VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) | Third-party packs must become management packs. [Custom dashboards, queries and alerts don't transfer automatically](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-vcf-operations-for-logs.html) and take the same route through a content pack. | [The converter](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/log-analysis/converting-content-packs-to-management-packs.html) needs Java 17 or higher and "Allow Unsigned PAK Installation", and its output is content-only, with no metrics. It starts from an export out of the logs product, so export before retiring it. |
+| [Standalone MP Builder appliance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) | No longer supported or actively maintained. | Move to the in-product builder, there since 9.0. [9.1 adds Prometheus as a source](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html), which may replace some custom SDK integrations. |
+| [Direct vCenter authentication](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) for VCF Operations | vCenter instances leave the login screen, and API authentication with vCenter credentials stops working. | The notes name no replacement, so find scripts that log in this way and test a new login outside production before upgrading. |
+
+## HCX
+
+Don't look for an HCX pack on 9.0.x. <KB id={437447} />, from April 2026, says none is available for those releases, that 5.4.0 is incompatible and leaves its default dashboards, views and reports empty, and that 5.4.0 is deprecated from 9.1.0. VCF Operations 9.1 brings [a new pack](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html) that also handles local-user password rotation, certificate rotation and log bundle collection. It's incompatible with the legacy vRealize Operations HCX pack, and it's on both 9.1.1 lists above.
+
+A green collection status doesn't prove this integration is right. [When the adapter is misconfigured](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), the password policy page loses the VCF management components row and applying a policy fails with a null pointer exception. The integration account must exist in vCenter and belong to the Migration Appliance Administrators and Migration Users groups. If it doesn't, remove the integration and reconfigure it.

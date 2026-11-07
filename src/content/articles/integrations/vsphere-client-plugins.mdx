@@ -1,61 +1,121 @@
 ---
 title: "vSphere Client plugins in VCF 9: thumbprints, stale extensions and clean re-registration"
-description: "Remote plugins for VCF Operations, SDDC Manager, NSX, vSAN and Live Recovery are vCenter extensions verified by thumbprint. Certificate changes and decommissioned appliances can break them, and the fix to try first is to re-register from the owning product."
+description: "A remote vSphere Client plugin is a vCenter extension, so its owner decides the fix. Live product: repair trust and re-push from it. Dead product: redeploy it, or unregister the extension in the MOB, which is off by default on VCF 9.0, unless a recent heartbeat shows it's in use."
 category: integrations
 order: 5
-versions: ["5.x", "9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [411268, 427228, 433208, 419087, 432196, 312247, 426913, 395813, 417767]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [313839, 411268, 427228, 440761, 433208, 419087, 432196, 312247, 417767, 395813, 445047, 426389, 406976, 434625, 404182, 344648, 401669, 426913]
 sources:
+  - title: "VMware Cloud Foundation 9.0 product support notes: vSphere (Removal of local plug-ins)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsphere.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Configuring a vCenter Account in VCF Operations (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/connect-to-data-sources/vsphere/configuring-a-vcenter-server-cloud-account-in-vrealize-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Recommendations for VCF certificate management (9.1 design blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware vCenter 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcenter-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
   - title: "vSphere Client local plugins are deprecated"
     url: "https://knowledge.broadcom.com/external/article/313839/vsphere-client-local-plugins-are-depreca.html"
     by: "Broadcom KB"
+    kind: broadcom
   - title: "vSphere Client SDK changes in the upcoming major release"
     url: "https://blogs.vmware.com/code/2022/07/15/vsphere-client-sdk-changes-in-the-upcoming-major-release-of-vsphere/"
-    by: "VMware {code} blog"
+    by: "Todor Raykov, VMware {code} blog"
+    kind: broadcom
+    date: 2022-07-15
 ---
 
 <InShort>
-A remote plugin is a vCenter **extension**: a key, a download URL and a **thumbprint**. The vSphere Client downloads the package and checks the thumbprint before deploying it. So a plugin breaks when the URL is unreachable, the certificate changed, or the product that registered it is gone. Local plugins are no longer supported in 9.x. The VCF Operations plugin **does not upgrade** with VCF Operations or vCenter; it updates only when the VCF Operations certificate is renewed (<KB id={427228} />). The fix is usually to re-register from the owning product, after removing stale extensions with the MOB if needed.
+A remote plugin is a vCenter extension with a key, a download URL and a thumbprint. The client [checks the thumbprint before downloading](https://knowledge.broadcom.com/external/article/432196), so a plugin fails when the URL is unreachable, the certificate changed or the registering product is gone. Let the owner decide the fix. If the product is alive, repair trust and re-push from it. If it's gone, redeploy it or unregister the extension in the MOB. Delete a cached package only when a KB for your symptom names the folder.
 </InShort>
 
-<Compare rows={[
-  ["Plugin model", "Remote plugins, with local plugins deprecated", "Remote plugins only"],
-  ["Who registers", "Each product", "Each product. VCF Operations registers its plugin when plugin management is enabled on the account."],
-  ["Status view", "Administration > Solutions > Client Plugins", "The same"],
-]} />
-
-## Failures and fixes
-
-| Message | Cause and fix |
-|---|---|
-| "Error downloading plug-in. Make sure that the URL is reachable and the registered thumbprint is correct." | No 443 path between vCenter and the plugin source, or a deprecated plugin. Fix reachability or remove it (<KB id={411268} />). |
-| VCF Operations plugin shows "no healthy upstream" | VCF Operations was deleted without unregistering. Redeploy and re-add the vCenter with plugin management to overwrite the registration (<KB id={433208} />). |
-| SDDC Manager plugin fails after an out-of-band vCenter certificate change | Trust and thumbprint. Sync trust or redeploy the plugin from SDDC Manager (<KB id={419087} />). |
-| vSAN plugins "DOWNLOAD_FAILED ... No issuer certificate" | A stale thumbprint in vCenter's extension table. Fix as the KB describes, with a snapshot (<KB id={432196} />). |
-| "Plugin configuration with Reverse Proxy failed" | The vSphere Client service account role lacks Global.Proxy (<KB id={312247} />). |
-| Live Recovery plugin undeploys after about 30 minutes | A stale cached package from an older version (<KB id={417767} />). |
-| Plugin stuck at an old version | A cached package. Clear the client cache folder and restart the UI service (<KB id={395813} />). |
-
-## Clean re-registration
-
-1. **Snapshot vCenter.** For linked vCenters, offline snapshots of all nodes.
-2. Open `https://<vcenter>/mob`, then **content > ExtensionManager**. Use **FindExtension** to confirm the key.
-3. **UnregisterExtension** for the stale key (<KB id={426913} />).
-4. Remove the cached package under `/etc/vmware/vsphere-ui/cm-service-packages/`.
-5. `service-control --restart vsphere-ui`.
-6. **Re-register from the owning product**: the VCF Operations account's Manage Integrations, the NSX compute manager edit, or SDDC Manager's UI service.
-
-Logs: `/var/log/vmware/vsphere-ui/logs/vsphere_client_virgo.log` (search for DOWNLOAD_FAILED and DEPLOYMENT_FAILED) and the reverse proxy log.
-
-<Callout type="field">
-Add "re-check Client Plugins" to every certificate replacement runbook. A certificate change can break plugins, because they are verified by thumbprint, and the check is quick.
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to say two NSX plugins on one vCenter are expected with Federation, a claim the NSX and SDDC Manager plugin KBs here (406976, 426389, 434625, 404182) don't mention (checked 7 November 2026), so it's gone. It also cited the Emulex local-plugin KB for a remote-plugin cleanup that used a different cache path, described KB 395813 as a plugin stuck at an old version when its symptom is a blank Lifecycle Manager pane, and told readers to redeploy the SDDC Manager plugin where the KB removes it and restarts a service.
 </Callout>
 
-## Pitfalls
+## Repair from the owner first
 
-- **Expecting the VCF Operations plugin to update** after an upgrade.
-- **Unregistering a live extension** that another product still needs. Confirm the key first.
-- **Two NSX plugins** on one vCenter are expected with Federation. Don't remove one as a duplicate.
+Unregistering comes last, because re-registering from the owner is what puts the plugin back and an extension with a recent heartbeat is [still in use](https://knowledge.broadcom.com/external/article/344648). Plugin status is under Administration > Solutions > Client Plugins.
+
+| Owner | Route that re-pushes the plugin | What to check first |
+|---|---|---|
+| VCF Operations | [Edit the vCenter account, then Manage Integrations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/connect-to-data-sources/vsphere/configuring-a-vcenter-server-cloud-account-in-vrealize-operations.html). VCF Operations registers its plugin when plugin management is enabled on the account. | Without the required privileges the account is added for monitoring only. Replacing another instance's integration means assigning a new licence to that vCenter. A pre-9.0 vCenter gets plugin management only. |
+| SDDC Manager | Remove "SDDC Manager Remote Plugin" under Client Plugins, then run `systemctl restart sddc-manager-ui-app`, or run the KB's `vcRootCaSync` script if the trust store is what's stale (<KB id={419087} />). | Back up SDDC Manager and vCenter first. The KB names no versions. |
+| NSX | System > Compute Managers, add or re-register the vCenter (<KB id={426389} />). | Deleting the compute manager normally unregisters the extension, but not once the NSX Manager has gone (<KB id={434625} />). |
+| vCenter's own vSAN plugins | No product to push from. Correct the stored thumbprint in VCDB (<KB id={432196} />). | Snapshot first, because this edits the database directly. |
+
+## The VCF Operations plugin version
+
+An older VCF Operations plugin on its own isn't a fault. The plugin [stayed at 9.0.0.0 after VCF Operations and vCenter both went to 9.0.1.0, by design](https://knowledge.broadcom.com/external/article/427228), and that KB says it updates only when the VCF Operations SSL certificate is renewed.
+
+A second KB gives a different trigger. When a vCenter upgrade precheck warns that VCF Operations "is not at desired version" because the plugin failed or its version doesn't match, [Administration > Integrations > Accounts, Manage Integration and the integration toggle](https://knowledge.broadcom.com/external/article/440761) push the updated plugin to the management vCenter. That KB lists the plugin under Client Plugins as "VMware Aria Operations", so look for that name.
+
+<Callout type="analysis" title="Reading the two KBs together">
+Leave a lagging plugin alone until the precheck warns or its status shows failed, then use the toggle before considering a certificate renewal, since renewing changes far more than the plugin. Neither KB addresses the other, so treat that order as this site's reading and open a support case if the toggle doesn't move the version.
+</Callout>
+
+## Match the symptom
+
+Download and deploy failures log to `/var/log/vmware/vsphere-ui/logs/vsphere_client_virgo.log`, as DOWNLOAD_FAILED or DEPLOYMENT_FAILED lines, and <KB id={312247} /> adds `/var/log/vmware/rhttpproxy/rhttpproxy-##.log` for proxy privileges. Of the KBs here, only <KB id={440761} /> names 9.1 explicitly, and the [vCenter](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcenter-9-1-1-0-release-notes.html) and [VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) 9.1.1 notes list no client plugin change <AsOf date="2026-11-07" />. So check the scope column before applying a fix to a 9.1 system, and snapshot.
+
+| Symptom | Cause | Fix | KB scope |
+|---|---|---|---|
+| "Error downloading plug-in. Make sure that the URL is reachable and the registered thumbprint is correct." | No two-way 443 path between vCenter and the source appliance, or a plugin no longer supported on this vCenter. | Restore reachability, or REMOVE a deprecated plugin under Client Plugins (<KB id={411268} />). | vCenter 7.0, 8.0, 9.0 |
+| The same error on `com.vmware.vsan.client`, "No issuer certificate" in Tasks, blank vSAN tabs, while a manual `wget` of the package works | VCDB thumbprint doesn't match the Machine SSL certificate. | Stop vpxd, update `server_thumbprint` in `vpx_ext_server` for the vSAN client and health extensions, restart all services (<KB id={432196} />). The KB's fix step drops `-sha256` from the `openssl` command its Cause section uses, and its next step expects a SHA-256 value, so use the SHA-256 form. | After a major vCenter upgrade, 7.x to 8.x as its example |
+| The same error on SDDC Manager Remote Plugin, root certificate missing from the SDDC Manager trust stores | vCenter certificate renewed outside SDDC Manager. | The SDDC Manager route above (<KB id={419087} />). | None listed |
+| "no healthy upstream" in the VCF Operations UI in the vSphere Client | VCF Operations VMs deleted without unregistering. | If the VCF Installer can't be used, deploy a new instance from the OVA, add the vCenter adapter and choose license/plugin management and monitoring, which overwrites the stale registration (<KB id={433208} />). | VCF and VVF 9.0 |
+| "Plug-in configuration with Reverse Proxy failed" (spelled "Plugin" in the log), task fails at 0% | The vSphere Client Service Account role lacks Global.Proxy. | Add the privilege, restart `rhttpproxy` and `vsphere-ui`, on every linked node (<KB id={312247} />). | vCenter 8.0 |
+| Live Recovery plugin undeploys after about 30 minutes, `certificate_unknown` in the log | An untrusted Live Recovery certificate chain, an older plugin folder beside the current one, or both. | Delete the older `com.vmware.vrUi-*` folder and restart `vsphere-ui` (<KB id={417767} />). Those steps don't touch the chain, so check its trust too. | SRM 8.x, Live Recovery 9.0.4 or newer |
+| Blank Lifecycle Manager pane and Updates tab | Registered VUM plugin newer than the cached copy, and the upgrade skipped the download. | `rm -r /etc/vmware/vsphere-ui/cm-service-packages`, restart `vsphere-ui`, and the package downloads again (<KB id={395813} />). | vCenter 8.0.x |
+| Upgrade precheck: compatibility of `com.vmware.vrUi-####` "cannot be validated", package not listed in Client Plugins | Old package left on disk after SRM or vSphere Replication changed. | Confirm a newer plugin is active or the product is retired, then delete only that folder (<KB id={445047} />). | vCenter 7.x, 8.x with VR or VLSR 9.0.x |
+| "already registered with other NSX manager" | Stale extension from a decommissioned NSX. | Unregister `com.vmware.nsx.management.nsxt` and its `.vcp` key, then re-add (<KB id={426389} />). | None listed |
+| NSX entry missing from the vSphere Client menu | A stale extension, or the entry is hidden on purpose, as the KB says it is in every VCF environment. | Run FindExtension on the NSX key before changing anything, because a hidden page needs no repair (<KB id={406976} />). | None listed; links NSX 4.2 docs |
+| "Detected an existing SDDC Manager extension on this vCenter Server" | A failed brownfield import left SDDC and NSX plugins behind. | Unregister the five keys the KB lists, and no others (<KB id={404182} />). | VCF 9.x |
+
+## Removing a stale extension
+
+<Steps>
+
+1. **Snapshot vCenter.** For linked vCenters, take offline snapshots of every node. The local-plugin KB warns that skipping this [can corrupt the replication database on a revert](https://knowledge.broadcom.com/external/article/426913).
+2. **Turn the MOB on if needed.** It's [off by default in VCF 9.0, to meet STIG requirements](https://knowledge.broadcom.com/external/article/401669), so set `enableDebugBrowse` to true in `vpxd.cfg` and restart vpxd. The KB's environment is vCenter 9.x and it gives no 9.1 default, so try the URL first.
+3. **Check it's dead.** Open `https://<vcenter>/mob/`, then content > ExtensionManager. A recent [Last heartbeat time means the extension is in use](https://knowledge.broadcom.com/external/article/344648), so stop there. Run [FindExtension](https://knowledge.broadcom.com/external/article/406976) to confirm the exact key. Before VCF 9.0, the multi-NSX feature let more than one NSX register against a vCenter, as the [NSX compute manager note](/vcf/library/integrations/nsx-compute-manager/) explains, so confirm which one has gone.
+4. **Run UnregisterExtension** with that key. A `void` result is success. In linked mode, [run it on the vCenter that installed the plugin, then restart services on the linked vCenters](https://knowledge.broadcom.com/external/article/344648).
+5. **Remove a cached package only if your KB says to.** Remote plugin folders sit under `/etc/vmware/vsphere-ui/cm-service-packages/com.vmware.cis.vsphereclient.plugin/`, and <KB id={417767} /> and <KB id={445047} /> delete one named folder there.
+6. **Restart the client** with `service-control --restart vsphere-ui`.
+7. **Re-register from the owner**, using the first table.
+
+</Steps>
+
+Step 2 reverses a hardening default, so setting the flag back afterwards is sensible if your baseline follows that STIG. That's an inference from the KB's stated reason, and the KB doesn't ask for it.
+
+## Local plugins and 9.1.1 extension logins
+
+[vCenter 9.0 discontinues support for local plug-ins](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsphere.html), so any solution that still ships one needs a remote replacement from its vendor before the upgrade. The [2022 announcement by Todor Raykov](https://blogs.vmware.com/code/2022/07/15/vsphere-client-sdk-changes-in-the-upcoming-major-release-of-vsphere/) and <KB id={313839} /> set out that path without version numbers. <KB id={426913} /> is stricter than the support notes, describing local plugins as already unsupported and blocked on 8.x. Its cleanup, for a failed Emulex plugin whose Remove button doesn't work, uses `vc-packages/vsphere-client-serenity/` rather than the remote plugin path above.
+
+The 9.1.1 change to plan for concerns extension logins. Under resolved issues, the 9.1.1.0 notes say [`LoginExtensionBySubjectName` fails after upgrading to vCenter 9.1.1.0](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcenter-9-1-1-0-release-notes.html) with an InvalidLogin SOAP fault and "certificate not pinned in VCDB" in `vpxd.log`, and the entry says the fix effectively removes that deprecated API. They say extensions using `LoginExtensionByCertificate` or SSO are not affected. The notes assign no action, so ask the vendor of each third-party extension which login it uses before moving to 9.1.1.
+
+<Callout type="analysis" title="Certificate changes are the trigger to plan for">
+The 9.1 blueprint says to ["perform certificate management for all supported components exclusively through VCF Operations"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html), and not to use vCenter for ESX host or vCenter certificates once VCF Operations manages them. Follow it, because the SDDC Manager row above shows what follows when a certificate is renewed outside the manager that tracks it. That page doesn't mention thumbprints, though, and doesn't say VCF Operations refreshes them, so check Client Plugins after every replacement and keep that check in the runbook.
+</Callout>

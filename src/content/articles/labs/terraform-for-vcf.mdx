@@ -1,76 +1,221 @@
 ---
 title: "Terraform for VCF: the vcf provider and where it fits with vSphere and NSX"
-description: "The vmware/vcf Terraform provider talks to the VCF Installer or Cloud Builder and to SDDC Manager, and supports VCF 9.0 and 9.1.1 from specific provider versions. Paired with the vSphere and NSX providers, it covers the platform from bring-up to workload networking."
+description: "Pin vmware/vcf to your release: v0.19.0 or later for VCF 9.1.1, v0.18.2 to below v0.19.0 for a 9.0 bring-up, v0.13.0 to below v0.17.0 for 5.2.1. Keep bring-up and day 2 in separate configurations. The provider lists no 9.1.0 row, and vcf_edge_cluster calls SDDC Manager operations deprecated in 9.1."
 category: labs
 order: 8
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
 kbs: []
 sources:
   - title: "terraform-provider-vcf"
     url: "https://www.github.com/vmware/terraform-provider-vcf"
     by: "VMware on GitHub"
-  - title: "vmware/vcf provider on the Terraform Registry"
-    url: "https://registry.terraform.io/providers/vmware/vcf/"
+    kind: broadcom
+    date: 2026-10-07
+  - title: "Provider documentation: supported platforms and arguments"
+    url: "https://github.com/vmware/terraform-provider-vcf/blob/main/docs/index.md"
+    by: "VMware on GitHub"
+    kind: broadcom
+  - title: "terraform-provider-vcf changelog"
+    url: "https://github.com/vmware/terraform-provider-vcf/blob/main/CHANGELOG.md"
+    by: "VMware on GitHub"
+    kind: broadcom
+    date: 2026-10-07
+  - title: "SDDC Manager API 9.1 changelog"
+    url: "https://developer.broadcom.com/xapis/sddc-manager-api/9.1/changelog/"
+    by: "Broadcom Developer"
+    kind: broadcom
+  - title: "Product Support Notes, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Changelog for VCF 9.1.1.0"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcf-sdks--apis--and-clis-9-1-1/vcf-changelog.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware Cloud Foundation 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-03
+  - title: "VCF 9.1 Frequently Asked Questions"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "SDDC Manager Workflows in VMware Cloud Foundation 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/sddc-manager-workflows.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Create a New Workload Domain"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/deploy-a-vi-workload-domain-using-the-sddc-manager-ui.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Add an SDDC Cluster to a VCF Domain"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/expand-a-workload-domain/add-a-cluster-to-a-workload-domain-using-the-sddc-manager-ui.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configure Centralized Network Connectivity with Edge Clusters"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/managing-network-connectivity-in-vcenter/managing-centralized-network-connectivity-with-edge-clusters.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Terraform Configuration in VCF Automation"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/organization-management/administering-all-apps-organizations-in-vcfa-automation/terraform-configuration-in-vcf-automation-for-all-apps.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Fleet in a Single Site"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "terraform-provider-vsphere README"
+    url: "https://github.com/vmware/terraform-provider-vsphere"
+    by: "VMware on GitHub"
+    kind: broadcom
+  - title: "terraform-provider-nsxt README"
+    url: "https://github.com/vmware/terraform-provider-nsxt"
+    by: "VMware on GitHub"
+    kind: broadcom
+  - title: "vmware/vcf on the Terraform Registry API"
+    url: "https://registry.terraform.io/v1/providers/vmware/vcf"
     by: "HashiCorp Terraform Registry"
+    kind: reference
+    date: 2026-10-07
+  - title: "vmware/vsphere on the Terraform Registry API"
+    url: "https://registry.terraform.io/v1/providers/vmware/vsphere"
+    by: "HashiCorp Terraform Registry"
+    kind: reference
+    date: 2026-11-04
+  - title: "vmware/nsxt on the Terraform Registry API"
+    url: "https://registry.terraform.io/v1/providers/vmware/nsxt"
+    by: "HashiCorp Terraform Registry"
+    kind: reference
+    date: 2026-09-11
+  - title: "vmware/vcfa on the Terraform Registry API"
+    url: "https://registry.terraform.io/v1/providers/vmware/vcfa"
+    by: "HashiCorp Terraform Registry"
+    kind: reference
+    date: 2026-09-26
+  - title: "Version constraints"
+    url: "https://developer.hashicorp.com/terraform/language/expressions/version-constraints"
+    by: "HashiCorp"
+    kind: reference
+  - title: "Manage sensitive data in state"
+    url: "https://developer.hashicorp.com/terraform/language/state/sensitive-data"
+    by: "HashiCorp"
+    kind: reference
 ---
 
 <InShort>
-The **vmware/vcf** provider manages VCF through Cloud Builder or the installer, and SDDC Manager: bring-up, domains, clusters, hosts and network pools are the typical resources. Provider versions follow VCF versions: **v0.17.0 or later for VCF 9.0**, and **v0.19.0 or later for 9.1.1**. Earlier 5.x versions need older provider ranges. Use it for the platform layer, the **vSphere** provider for compute configuration, and the **NSX** provider for networking inside the domains. VCF on VxRail is not supported by the vcf provider.
+Use **vmware/vcf** for the platform layer, **vmware/vsphere** for compute configuration and **vmware/nsxt** for networking inside the domains. Pin vcf to your VCF release: [v0.19.0 or later for 9.1.1, v0.17.0 or later for 9.0, and v0.13.0 to below v0.17.0 for 5.2.1](https://github.com/vmware/terraform-provider-vcf/blob/main/docs/index.md). That table gives 9.0 no ceiling, but [v0.19.0's `vcf_instance` can't do bring-up for 9.0.0 and earlier](https://github.com/vmware/terraform-provider-vcf/pull/445), so pin `~> 0.18.2` for a 9.0 bring-up. One provider block reaches either the VCF Installer for bring-up or SDDC Manager for day 2, so keep those in separate configurations. Two things need a decision on 9.1: the support table has no 9.1.0 row, and `vcf_edge_cluster` calls SDDC Manager operations that 9.1 deprecates. [VCF on Dell VxRail isn't supported](https://www.github.com/vmware/terraform-provider-vcf) by this provider, so the platform layer here doesn't apply to a VxRail estate.
 </InShort>
 
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to show `>= 0.19.0` as a pin, call `terraform plan` output an excellent change description, and offer Cloud Builder as a target without a version limit. That constraint has no ceiling, plan output printed passwords before v0.18.2, and the Cloud Builder arguments are gone from v0.17.0 onward. It also said only that some UI flows moved to vCenter; in 9.1 the SDDC Manager UI is deprecated, new domains start in VCF Operations, and clusters can be added from the vSphere Client.
+</Callout>
+
 <Compare rows={[
-  ["Bring-up target", "Cloud Builder", "VCF Installer"],
-  ["Provider version", "v0.9.0 or later for 5.0 and 5.1. v0.13.0 to below v0.17.0 for 5.2.1.", "v0.17.0 or later for 9.0. v0.19.0 or later for 9.1.1."],
-  ["Domain and cluster changes", "SDDC Manager API", "SDDC Manager API underneath. Some UI flows moved to vCenter, but the API remains."],
+  ["Bring-up target", "Cloud Builder, using provider versions below v0.17.0", "VCF Installer"],
+  ["Provider version", "v0.9.0 or later for 5.0 and 5.1. v0.12.0 or later for 5.2.0. v0.13.0 to below v0.17.0 for 5.2.1.", "v0.17.0 or later for 9.0, below v0.19.0 for bring-up. v0.19.0 or later for 9.1.1. No row for 9.1.0."],
+  ["Domain and cluster changes", "SDDC Manager API", "The provider still uses the SDDC Manager API. On 9.1, new domains start in VCF Operations, and clusters can be added from the vSphere Client."],
 ]} />
 
-## Provider versions
+## Choose the provider version before the platform version
 
 | VCF | Provider |
 |---|---|
 | 9.1.1 | v0.19.0 or later |
-| 9.0.0 | v0.17.0 or later |
+| 9.0.0 | v0.17.0 or later, with no ceiling stated |
 | 5.2.1 | v0.13.0 to below v0.17.0 |
 | 5.2.0 | v0.12.0 or later |
 | 5.0 and 5.1 | v0.9.0 or later |
 
-Pin the provider version in every configuration, and upgrade it deliberately along with the platform.
+The provider can trail the platform, so check it before scheduling an upgrade. [VCF 9.1.1 shipped on 3 September 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html) and [v0.19.0, the first version listed for it, on 7 October](https://github.com/vmware/terraform-provider-vcf/blob/main/CHANGELOG.md), a gap of 34 days.
 
-## A starting layout
+The 9.0 row needs a ceiling for bring-up. [The pull request behind v0.19.0](https://github.com/vmware/terraform-provider-vcf/pull/445) marks itself breaking and says `vcf_instance` "will not be able to do bringup for VCF 9.0.0 and earlier", so use `~> 0.18.2` there, which also carries the password fix below. This site hasn't confirmed how v0.19.0's other resources behave on 9.0, so test day 2 before moving a 9.0 estate to it.
+
+If you run 9.1.0, the table gives you no version to pin. The omission looks deliberate, because the [NSX provider lists 9.1.0 and 9.1.1 separately](https://github.com/vmware/terraform-provider-nsxt) and [the v0.19.0 change to `vcf_instance`](https://github.com/vmware/terraform-provider-vcf/pull/445) adapts it to a schema introduced in 9.1. That reading is an inference, and Broadcom doesn't state it. Move to 9.1.1 before adopting the provider, or ask support which version applies to 9.1.0.
+
+A 5.2.1 to 9.x upgrade has no provider version in common, because the 5.2.1 range stops where the 9.0 range starts. Treat the jump to v0.17.0 or later as part of the upgrade plan. The [v0.17.0 changelog entry](https://github.com/vmware/terraform-provider-vcf/blob/main/CHANGELOG.md) reads only "Refactor provider to work with VCF 9.0" and has no breaking-changes heading, yet the `cloud_builder_*` arguments in the [v0.16.0 documentation](https://github.com/vmware/terraform-provider-vcf/blob/v0.16.0/docs/index.md) are absent from [v0.17.0](https://github.com/vmware/terraform-provider-vcf/blob/v0.17.0/docs/index.md). The 5.0, 5.1 and 5.2.0 rows have no ceiling, but anyone using Cloud Builder on those releases should stay below v0.17.0 for that reason. The [README](https://www.github.com/vmware/terraform-provider-vcf) still says the provider talks to Cloud Builder and doesn't mention the installer, so go by the documentation and the version you pin.
+
+## Where each provider fits
+
+| Layer | Provider | Covers | Version statement |
+|---|---|---|---|
+| Platform | `vmware/vcf` | [Bring-up, domains, clusters, hosts, network pools, edge clusters, credentials and certificates](https://github.com/vmware/terraform-provider-vcf/tree/main/docs/resources) | The table above |
+| Compute | `vmware/vsphere` | vSphere objects | [Follows the Broadcom Product Lifecycle, with no version table](https://github.com/vmware/terraform-provider-vsphere) |
+| Network | `vmware/nsxt` | NSX objects | [NSX 9.0.0, 9.1.0 and 9.1.1](https://github.com/vmware/terraform-provider-nsxt) |
+| Tenant | `vmware/vcfa`, plus the Kubernetes and Aria Automation providers | [Namespaces and content libraries; projects, VPCs and subnets; blueprints and catalogs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/organization-management/administering-all-apps-organizations-in-vcfa-automation/terraform-configuration-in-vcf-automation-for-all-apps.html) | Check each provider |
+
+The source addresses are on the registry for [vsphere](https://registry.terraform.io/v1/providers/vmware/vsphere), [nsxt](https://registry.terraform.io/v1/providers/vmware/nsxt) and [vcfa](https://registry.terraform.io/v1/providers/vmware/vcfa). Their latest versions, in that order, are 2.17.2, 3.12.1 and 1.2.3 <AsOf date="2026-11-07" />.
+
+Before a 9.1 upgrade, search your NSX configurations for what that release removes. [The NSX Manager and Policy APIs lost 26 operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html), including all lifecycle operations for VPC subnet bridge profiles, mirror sessions, and create and update for policy labels in organization and project scopes.
+
+<Callout type="analysis" title="Separate state per layer">
+Keep one configuration and one state for each row, with the platform row split in two as the next section shows, so a mistake in one layer can't plan a change in another. This layering is this site's recommendation. The [single-site fleet blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint.html) doesn't mention Terraform, so it neither supports nor contradicts this.
+</Callout>
+
+## Keep bring-up and day 2 apart
+
+The two sets of provider arguments [conflict with each other in the provider schema](https://github.com/vmware/terraform-provider-vcf/blob/main/internal/provider/provider.go), so a single provider block can't hold both. This skeleton shows the two configurations; take resource arguments from the documentation at the release tag you pin.
 
 ```hcl
 terraform {
   required_providers {
-    vcf     = { source = "vmware/vcf",     version = ">= 0.19.0" }
-    vsphere = { source = "vmware/vsphere" }
-    nsxt    = { source = "vmware/nsxt" }
+    vcf = { source = "vmware/vcf", version = "~> 0.19.0" } # 9.1.1. A 9.0 bring-up needs ~> 0.18.2.
   }
 }
 
-# Platform layer: SDDC Manager (credentials from variables or a vault, never in code)
+# Credentials come from variables or a vault, never from code.
+
+# Configuration 1, bring-up: vcf_instance only
 provider "vcf" {
-  sddc_manager_host     = var.sddc_manager_fqdn
-  sddc_manager_username = var.sddc_manager_user
-  sddc_manager_password = var.sddc_manager_password
+  installer_host     = var.installer_host
+  installer_username = var.installer_username
+  installer_password = var.installer_password
 }
+
+# Configuration 2, a separate directory and state: day 2
+# provider "vcf" {
+#   sddc_manager_host     = var.sddc_manager_host
+#   sddc_manager_username = var.sddc_manager_username
+#   sddc_manager_password = var.sddc_manager_password
+# }
 ```
 
-Resource arguments change between provider versions, so take examples from the registry documentation for the version you pin.
+`vcf_instance` is a one-way resource. It runs [through the installer, has no importer, and its delete function does nothing](https://github.com/vmware/terraform-provider-vcf/blob/main/internal/provider/resource_instance.go), so `terraform destroy` won't remove a built instance and Terraform can't adopt one built by hand. Its create timeout is 15 hours, which your runner has to survive. Broadcom documents [the VCF Installer as the full replacement for Cloud Builder and as the tool that creates a new fleet or instance](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs).
 
-## How to use it in practice
+## Avoid new dependencies on `vcf_edge_cluster`
 
-- **Labs first.** Reproduce a lab build in code before touching a customer environment.
-- **Separate state per layer**: platform (vcf), compute (vsphere), network (nsxt). A mistake in one doesn't plan a change in another.
-- **Plan reviews as change records.** `terraform plan` output is an excellent change description.
+[VCF 9.1 deprecates 21 SDDC Manager operations](https://developer.broadcom.com/xapis/sddc-manager-api/9.1/changelog/). Eight are edge cluster operations, and the rest cover enabling domain overlay, system DNS and NTP, and upgrade prechecks. Broadcom's advice is to [plan migrations off these endpoints before a later release removes them](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html), and it gives no date. No SDDC Manager operation was deleted in 9.1, and [9.1.1 deprecates no further SDDC Manager operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcf-sdks--apis--and-clis-9-1-1/vcf-changelog.html).
 
-<Callout type="field">
-Import existing objects before managing them. In brownfield VCF, the fastest way to cause an outage with Terraform is to let it believe a domain or segment doesn't exist.
+<Callout type="analysis" title="What to do with edge clusters">
+The [`vcf_edge_cluster` source](https://github.com/vmware/terraform-provider-vcf/blob/main/internal/provider/resource_edge_cluster.go) calls the deprecated create, list, get, update and validation operations, and the API changelog names no replacement. Existing edge cluster code can stay on 9.1.1 because the operations still exist, but check each release's API changelog before upgrading. For new edge clusters, this site would use the [documented vSphere Client workflow](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/managing-network-connectivity-in-vcenter/managing-centralized-network-connectivity-with-edge-clusters.html) until Broadcom or the provider publishes an API path. Broadcom doesn't state this link between the provider and the deprecation. It comes from comparing the two.
 </Callout>
 
-## Pitfalls
+## Pin tightly and treat plans as secrets
 
-- **Unpinned providers** that upgrade under you.
-- **Secrets in state.** Protect the state backend like a password vault.
-- **Mixing UI and Terraform changes** on the same objects without a rule about which wins.
+Use `~>` in every root configuration, for all three providers. [HashiCorp recommends it for root modules](https://developer.hashicorp.com/terraform/language/expressions/version-constraints), because it allows only the right-most version component to move: `~> 0.19.0` accepts 0.19.1 and refuses 0.20.0. `>=` sets no ceiling, and [v0.10.0 and v0.14.0 both carried breaking changes](https://github.com/vmware/terraform-provider-vcf/blob/main/CHANGELOG.md) in a minor release.
+
+Run v0.18.2 or later before keeping plan output as a change record, including on 9.0, where the table's floor of v0.17.0 would allow an older version. [Earlier versions printed SDDC Manager, NSX Manager, NSX edge node, BGP peer and credential data passwords in cleartext](https://github.com/vmware/terraform-provider-vcf/blob/main/CHANGELOG.md) in `terraform plan` and `terraform show` output. The 5.2.1 range stops below v0.17.0, so it can't reach that fix: on 5.2.1, treat plan output as a secret and keep it out of change records.
+
+That fix only covers displayed output. [Terraform still stores sensitive values in state and plan files](https://developer.hashicorp.com/terraform/language/state/sensitive-data), so anyone who can read those files can read the passwords. Keep state remote, encrypted at rest and access-controlled with audit logs, and attach the rendered plan text to a change record, never the saved plan file.
+
+## Bringing an existing environment under Terraform
+
+Reproduce a lab build in code before touching a customer environment. Then import before you write. [`vcf_domain`](https://github.com/vmware/terraform-provider-vcf/blob/main/internal/provider/resource_domain.go), [`vcf_cluster`](https://github.com/vmware/terraform-provider-vcf/blob/main/internal/provider/resource_cluster.go), [`vcf_host`](https://github.com/vmware/terraform-provider-vcf/blob/main/internal/provider/resource_host.go) and [`vcf_network_pool`](https://github.com/vmware/terraform-provider-vcf/blob/main/internal/provider/resource_network_pool.go) all have importers, so there's no need to describe a live domain as new. Read the first plan after an import and don't apply until it proposes no changes you can't explain.
+
+Then decide who owns each object, because console work is now spread across more places. [In VCF 9.1 the SDDC Manager UI is deprecated, and its workflows are in VCF Operations and the vSphere Client](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/sddc-manager-workflows.html). [New workload domains start in VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/deploy-a-vi-workload-domain-using-the-sddc-manager-ui.html) and [clusters can be added from the vSphere Client](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/expand-a-workload-domain/add-a-cluster-to-a-workload-domain-using-the-sddc-manager-ui.html). Anything created there stays outside state until someone imports it, so write that rule into the change process.
+
+The provider is open source and takes issues on GitHub. For formal help, [Broadcom asks you to open a support case](https://www.github.com/vmware/terraform-provider-vcf) with VMware ESXi as the product and VCF Terraform as the component, quoting the provider version.

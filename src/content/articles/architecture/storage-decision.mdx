@@ -167,7 +167,7 @@ At 300 TiB, HCI wins on licences. At 600 TiB with compute hosts limited to 8 dri
 Assumptions, invented except where a source is named:
 
 - One workload domain, 12 compute hosts at 2 x 24 cores: 576 cores. It holds 300 TiB, with no data reduction or growth, and nothing else draws on the pool.
-- RAID-6 at 1.5x and 30% free, as in [The vSAN entitlement](/vcf/library/value/vsan-entitlement/). Raw needed: 300 x 1.5 / 0.7 = 642.9 TiB. A 7.68 TB drive is 6.98 TiB.
+- RAID-6 at 1.5x and this site's 30% free margin, as in [The vSAN entitlement](/vcf/library/value/vsan-entitlement/). Raw needed: 300 x 1.5 / 0.7 = 642.9 TiB. A 7.68 TB drive is 6.98 TiB.
 - Storage hosts run 2 x 16 cores and carry VCF. Confirm that with Broadcom: <KB id={313548} /> doesn't name storage clusters, though the 2024 Signal65 model licensed them this way.
 - Prices come from Signal65's October 2026 list-price model: add-on at $17.50 per TiB per month, $1,050 over five years, and VCF at $2,000 per core over five years ($4,096,000 / 2,048 cores). Replace them with your quotes.
 
