@@ -1,35 +1,114 @@
 ---
 title: "Why Lifecycle pages in VCF Operations 9.1 fail differently: UI plugins and the service registry"
-description: "The Lifecycle pages in VCF Operations 9.1 aren't native views. They are UI plugins served by SDDC Manager and the fleet lifecycle services and proxied through VCF Operations. When they fail, look at reachability, certificates and the registry before VCF Operations itself."
+description: "Lifecycle pages in VCF Operations 9.1 are proxied from other services, so one generic error hides several faults. Match the exact error to TCP 443 from SDDC Manager, a duplicate trusted certificate, the expired-certificate bug fixed in 9.1.1, a missing registry entry or a leftover VM's IP conflict."
 category: integrations
 order: 4
-versions: ["9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Deep dive
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [435258, 448522, 444151, 448618, 454179, 441205, 449937, 443327]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [435258, 448522, 444151, 448618, 454179, 441205, 449937, 443327, 441858]
 sources:
-  - title: "Service is not available at this time when accessing an SDDC Manager instance"
+  - title: "Error \"Service is not available at this time\" when accessing SDDC Manager instance in VCF Operations UI 9.x"
     url: "https://knowledge.broadcom.com/external/article/435258/error-service-is-not-available-at-this-t.html"
     by: "Broadcom KB"
-  - title: "Upgrade tab missing in the VCF Management UI"
+    kind: broadcom
+    date: 2026-10-28
+  - title: "Upgrade tab missing in VCF Management UI after upgrading to VCF 9.1"
     url: "https://knowledge.broadcom.com/external/article/444151/upgrade-tab-missing-in-vcf-management-ui.html"
     by: "Broadcom KB"
+    kind: broadcom
+    date: 2026-06-25
+  - title: "Lifecycle Management in VMware Cloud Foundation"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/lifecycle-management-in-vmware-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "What's New in VCF Operations 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1 known issues"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/known-issues/vcfoperations-91-known-issues.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware Cloud Foundation 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Deploy VCF Management Services and License Server as Part of VCF Upgrade to 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Management Domain Macro-Segmentation (Management Domain Security blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vdefend-lateral-security/vcf-management-domain-security/vdefend-security-design-for-the-management-domain-for-vmware-cloud-foundation/vdefend-management-domain-macro-segmentation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Simple VCF Operations Model (minimal-footprint blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-with-minimal-footprint-blueprint/management-domain-design-selections/operations-layer/simple-vcf-operations-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1 Frequently Asked Questions"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
 ---
 
 <InShort>
-Build > Lifecycle in VCF Operations is assembled from **plugins**: the SDDC Manager plugin for VCF Instances, and the fleet lifecycle plugin for VCF Management. VCF Operations proxies them, so a failure appears as "Service or view is not available" with the real error in **`web-vcf.log`** on VCF Operations. The usual causes: TCP 443 blocked between SDDC Manager or the runtime and every VCF Operations node (<KB id={435258} />), a duplicate trusted certificate after the 9.1 upgrade (<KB id={448522} />), an expired internal certificate in 9.1.0 (<KB id={448618} />), or no fleet lifecycle entry in the **service registry** (<KB id={444151} />).
+A failed page under Build > Lifecycle says little about its cause, because VCF Operations serves those pages by proxying other services. The exact error text decides the next step: `Connect timed out` in `web-vcf.log` points to TCP 443 from SDDC Manager (<KB id={435258} />), a failed manifest download to a duplicate trusted certificate (<KB id={448522} />), `TLS_error` to an expired certificate that 9.1.1 fixes (<KB id={448618} />), and a registry with no `VCF_FLEET_LCM` entry to a support ticket (<KB id={444151} />). None of the fixes in this note is a VCF Operations restart.
 </InShort>
 
-<Compare rows={[
-  ["Lifecycle UI", "SDDC Manager UI", "9.0: Fleet Management > Lifecycle. 9.1: Build > Lifecycle, served as plugins."],
-  ["Where errors appear", "SDDC Manager logs", "web-vcf.log on VCF Operations, then the serving component"],
-  ["Registry", "Not applicable", "https://ops-fqdn/casa/services lists the registered services"],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to say 443 must be open between SDDC Manager or the runtime and every VCF Operations node because every node fetches plugins. <KB id={435258} /> documents SDDC Manager to every node, plus SDDC Manager to the runtime IP pool. It also tied `TLS_error` to 9.1.0 without giving the 9.1.1 fix, blamed "Powered Off" on any component with a stale hostname when <KB id={449937} /> covers only the VCF Operations component and a DNS record, and called editing the registry file "support-only", a rule <KB id={444151} /> doesn't state.
+</Callout>
 
-## How a Lifecycle page loads
+## Match the error to the fix
 
-<Diagram viewBox="0 0 760 200" label="Lifecycle plugins in VCF Operations 9.1" caption="The browser talks to VCF Operations. VCF Operations fetches each plugin from the service that owns it. Any broken hop shows the same generic message.">
+Try a private window first: a stale browser cache after the 9.1 upgrade causes endless spinners on these pages (<KB id={441205} />), and it is the cheapest thing to rule out. Then use the text on screen, and read `/storage/log/vcops/log/web-vcf.log` on VCF Operations for the timeout row. On 9.0 the same pages sit under Fleet Management > Lifecycle, and the 443 row applies there too.
+
+| What you see | What it points to | What to do |
+|---|---|---|
+| Spinning or looping Upgrades tab, missing SDDC Manager details, after the 9.1 upgrade | Stale browser cache, resolved in VCF Operations 9.1.0.200 (<KB id={441205} />) | Private window, or clear cache and cookies |
+| "Service or view is not available at this time", with `Connect timed out` on a `plug/sddc-` path | SDDC Manager can't reach the VCF Operations nodes or the runtime IP pool on 443 (<KB id={435258} />) | From SDDC Manager, test 443 and the TLS handshake against each node. Allow 443 to all nodes and to the runtime IP pool |
+| "Failed to download the manifest from" naming a 9.0.2 manifest, and a "Duplicate key" adapter warning | Stale thumbprint in Trusted Certificates after the 9.1 upgrade (<KB id={448522} />) | Snapshot the primary node, then delete the duplicate under Administration > Control Plane > Trusted Certificates |
+| `TLS_error`, `CERTIFICATE_VERIFY_FAILED`, "Unable to retrieve fleet lifecycle component details" | Management services still serving an expired certificate after rotation (<KB id={448618} />) | Patch to 9.1.1. The KB's restart script is the stopgap |
+| 503 or "Service or view is not available", plus "Identity Broker is not reachable", after patching to 9.1.0.x | Can be an IP conflict between the control plane VM and a leftover VM, visible in `vpxd.log` (<KB id={454179} />) | Confirm which VM holds the address, agree its removal with its owners, make the control plane IP unique, then reboot the control plane VM |
+| Banner "Some components are blocked from being upgraded to 9.1" (9.1.0.0300 or newer) | Failed import into fleet lifecycle: bad credentials, certificate, vCenter host or IP (<KB id={441858} />) | Follow the KB's options |
+| Management components absent from inventory after 9.0 to 9.1, no error or banner | [Proxy with SSL termination configured in VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/known-issues/vcfoperations-91-known-issues.html), a 9.1.0 known issue | Option 2 of <KB id={441858} />, which the known issue names. The KB itself never mentions proxies, and that option reads as a manual import of missing components |
+| Nothing under VCF Management, no Upgrade tab, no `VCF_FLEET_LCM` in the registry | No cause published (<KB id={444151} />) | Support ticket quoting the KB |
+| Trust errors on 9.1.1 soon after replacing a management component's certificate | [Inventory sync republished the old certificate](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), a 9.1.1 known issue | Apply the release note's workaround, which changes the sync schedule temporarily |
+
+## The empty VCF Management view
+
+Check the registry at `https://<ops-fqdn>/casa/services`, or in `/storage/db/casa/services.json` on the appliance, for an entry of type `VCF_FLEET_LCM` (<KB id={444151} />). The KB reports that entry missing alongside the empty view and names no cause, so read it as a symptom that goes with the fault. Rule out the SSL-terminating proxy first, because [Broadcom requires that proxy configuration removed before VCF management services are deployed](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html) and it has its own workaround. Then open the ticket. The KB publishes no procedure for changing the file, so leave it alone.
+
+That KB dates from June 2026, before 9.1.1, and the [VCF Operations 9.1.1 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) have no entry for it <AsOf date="2026-11-07" />. Treat the fault as open on 9.1.1 until Broadcom says otherwise, and keep the support route.
+
+## Expired certificates: patch, because the workaround runs out
+
+Four services keep serving an expired certificate after automated rotation until they are restarted: `vcf-sddc-lcm`, `vcf-fleet-lcm`, the runtime's support bundle generator and `salt-raas`. `restart_vsp_services.sh`, run as root on SDDC Manager, clears it, but Broadcom calls it temporary and gives it up to 60 days before the failure returns (<KB id={448618} />). Run it to restore the page today, and book the patch in the same change.
+
+[Patching to 9.1.1 starts with fleet lifecycle, before any other component, and VCF Operations must not be patched alongside anything else](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html). The release notes also warn against Upgrade All until the patching dependencies are met. Broadcom's [4 Nov 2026 FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) (Q77) makes upgrading fleet management alone a supported move, but don't rely on that here: the KB says "fixed in VCF 9.1.1" without naming a component, and the affected services include SDDC lifecycle. This site's advice is to plan both lifecycle components together. The [VCF Operations 9.1.1 notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) give one more reason, though they don't make that recommendation: scaling the runtime from Small to Small (High Availability) fails while fleet lifecycle is on 9.1.1 and SDDC Lifecycle on 9.1.0.
+
+## How a page loads, and what the firewall has to allow
+
+Broadcom's log excerpt shows the SDDC side of the mechanism. `web-vcf.log` records VCF Operations' proxy failing on `vcf-operations/plug/sddc-<plugin-id>/plugin/ops-plugin/index.html` (<KB id={435258} />), and <KB id={448522} /> names a `/plugin/manifests-` path on the VCF Operations FQDN. On 9.1, [fleet lifecycle, SDDC lifecycle and the software depot orchestrate lifecycle work, and the first two replace the fleet management appliance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/lifecycle-management-in-vmware-cloud-foundation.html), while [the service registry moved into VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html). TechDocs doesn't describe this as a plugin design, and the fleet-side plugin below is an inference from those log paths and the shared error text.
+
+<Diagram viewBox="0 0 760 200" label="Lifecycle plugins in VCF Operations 9.1" caption="The browser talks to VCF Operations, which proxies each view from the service behind it. Any broken hop shows the same generic message. The SDDC path comes from a Broadcom log excerpt; the fleet path is drawn by inference.">
   <rect class="box plain" x="10" y="70" width="130" height="60" rx="8"/>
   <text class="t" x="75" y="105" text-anchor="middle">Browser</text>
   <rect class="box accent" x="200" y="60" width="200" height="80" rx="8"/>
@@ -44,26 +123,23 @@ Build > Lifecycle in VCF Operations is assembled from **plugins**: the SDDC Mana
   <line class="wire accent" x1="140" y1="100" x2="198" y2="100" marker-end="url(#arra)"/>
   <line class="wire" x1="400" y1="85" x2="478" y2="55" marker-end="url(#arr)"/>
   <line class="wire" x1="400" y1="115" x2="478" y2="148" marker-end="url(#arr)"/>
-  <text class="lbl" x="405" y="190">TCP 443 to every VCF Operations node</text>
+  <text class="lbl" x="405" y="190">SDDC Manager: 443 to every node and the runtime pool</text>
 </Diagram>
 
-## Diagnosis
+SDDC Manager needs direct 443 to all VCF Operations nodes, and the same symptom appears when 443 is blocked between SDDC Manager and the IP pool of the VCF Service Runtime (<KB id={435258} />). The [runtime block is at least 12 addresses (/28), with 30 (/27) recommended, and the spare addresses are reserved for later management services components](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html), so write the rule against the whole block. Keep that block clear of other appliances as well: <KB id={454179} /> has you make the control plane IP unique after a conflict with a leftover VM took these pages down.
 
-1. **Browser first.** Try a private window. A stale cache after the 9.1 upgrade causes endless spinners (<KB id={441205} />).
-2. **Read `web-vcf.log`** on VCF Operations (`/storage/log/vcops/log/`). "Connect timed out" on a `plug/sddc-...` path means reachability (<KB id={435258} />). A failed manifest download points at trusted certificates (<KB id={448522} />).
-3. **Check the registry.** `https://<ops-fqdn>/casa/services` should list an entry of type `VCF_FLEET_LCM`. If it doesn't, there are no Lifecycle components and no Upgrade tab. That is a support case (<KB id={444151} />).
-4. **Check the serving side.** "TLS_error ... CERTIFICATE_VERIFY_FAILED" in 9.1.0 is an internal certificate that didn't reload after rotation (<KB id={448618} />). "Identity Broker is not reachable" can be an IP conflict with a stale VM (<KB id={454179} />).
-
-## Fleet Management says "Get started" when it's deployed
-
-The page needs four things at once: management services running, Salt RaaS and Salt master running, the VCF adapter **Collecting**, and the management vCenter on 9.1.0 or later (<KB id={443327} />). A component that shows "Powered Off" with no actions after the upgrade is a stale hostname in the lifecycle database (<KB id={449937} />).
-
-<Callout type="field">
-For any Lifecycle UI ticket, ask for a HAR file from the browser and `web-vcf.log` at the same time. Together they show which plugin failed and why.
+<Callout type="analysis" title="Segmentation can break this path">
+The [Management Domain Security blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vdefend-lateral-security/vcf-management-domain-security/vdefend-security-design-for-the-management-domain-for-vmware-cloud-foundation/vdefend-management-domain-macro-segmentation.html) puts VCF Operations in its fleet-access group and SDDC Manager in its instance-access group, with management services split across both. The same page says fleet components and SDDC Manager sit by default on the DFW User Excluded Groups list. So distributed firewall rules shouldn't cause this failure on a default build, and a timeout there points to another firewall on the path. Taking those components off the list is what changes the answer. The page lists no port rules, so before enforcing, add the 443 rules above, check the full list in the [VMware Ports and Protocols tool](https://ports.broadcom.com/home) that <KB id={435258} /> points to, and repeat the test from SDDC Manager. This reading is inference from the blueprint and <KB id={435258} />; Broadcom doesn't connect them.
 </Callout>
 
-## Pitfalls
+## Fleet Management shows "Get started" on a deployed fleet
 
-- **Restarting VCF Operations** for a plugin that is failing on the other side.
-- **Opening firewalls to one VCF Operations node.** Plugins are fetched by every node.
-- **Editing the registry file by hand.** It is a support-only change.
+Manage > Fleet Management shows its intro screen until four things are true: VCF Management Services running, Salt RaaS and Salt master running, the VCF adapter healthy, and the management vCenter on 9.1.0 or later. The KB's checks also look for "Yes" under "Fully Licensed" for vCenter and "Collecting" on the VCF integration, so run them before suspecting the UI (<KB id={443327} />). That KB is scoped to VCF Operations 9.1.0. The [minimal-footprint blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-with-minimal-footprint-blueprint/management-domain-design-selections/operations-layer/simple-vcf-operations-model.html) (VCF-OPS-REQD-COM-001 and 002) requires fleet management in VCF management services and states that their availability configuration translates directly to fleet management, so in that design the availability you choose for management services is also fleet management's.
+
+## VCF Operations shows "Powered Off" while healthy
+
+If the VCF Operations component on Build > Lifecycle > VCF Management > Components shows "Powered Off" with no Actions menu, and its admin interface says the appliance is healthy, suspect DNS. A second record resolving to the VCF Operations IP during the 9.1 upgrade can save the wrong hostname in the SDDC Lifecycle database. Deleting that record doesn't help: the status stays "Powered Off". Open a support case with VCF Operations support bundles and SDDC Lifecycle logs (<KB id={449937} />).
+
+## What to capture for a ticket
+
+<KB id={441205} /> asks for logs and a HAR file if the problem persists on builds newer than 9.1.0.200. Capturing the HAR alongside `web-vcf.log` is sensible for any Lifecycle page failure, since the browser's request and the proxy's error then describe the same attempt.

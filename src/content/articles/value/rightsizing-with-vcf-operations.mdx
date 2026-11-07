@@ -1,62 +1,177 @@
 ---
 title: "Right-sizing VMs with VCF Operations: how the recommendation is made and how to act on it"
-description: "VCF Operations projects each VM's CPU and memory demand and flags oversized and undersized VMs. Knowing how the projection works, what the caps are and which workloads it misreads is what turns the report into hosts you do not need to buy."
+description: "Review right-sizing for performance and cost. Under the default demand model, cutting vCPUs reclaims 0 MHz and memory counts only where consumed exceeds the new size. Allocation model figures differ. TechDocs' default horizon is 150 days, moves are capped at half or double, and 9.1 asks for a restart on every resize."
 category: value
 order: 7
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: []
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [335048, 321931]
 sources:
+  - title: "How Does VCF Operations Calculate and Forecast Capacity (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/capacity-optimization-concepts/how-does-vmware-aria-operations-calculate-and-forecast-capacity.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Using Rightsize to Adjust Resource Allocation (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-rightsize-to-adjust-resource-allocation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
   - title: "VMware Cloud Foundation helps you optimally size VMs"
     url: "https://blogs.vmware.com/cloud-foundation/2025/08/12/vmware-cloud-foundation-helps-you-optimally-size-vms-and-keep-your-infrastructure-and-workloads-running-smoothly/"
-    by: "VMware Cloud Foundation blog"
-  - title: "Aria Operations metrics for vSphere world objects (reclaim and rightsize metrics)"
-    url: "https://docs.vmware.com/en/VMware-Aria-Operations/8.18/Using-Operations/GUID-ACF48F67-B877-45DB-910C-4BFADC86F794.html"
-    by: "VMware"
-  - title: "Performance best practices for vSphere 9.0 (vCPU and memory sizing)"
-    url: "https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
-    by: "VMware"
+    by: "Kelcey Lemon, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-08-12
+  - title: "Allocation and Demand Model in Workload Optimization (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/capacity-optimization-concepts/allocation-and-demand-model-in-workload-optimization.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Capacity Details, policy workspace (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/configuring-policies/using-the-monitoring-policy-workspace/policy-workspace/policy-workspace-capacity-details.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VM Rightsizing Dashboard (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/predefined-dashboards-in-vrealize-operations-manager/performance-dashboards/vm-rightsizing-dashboard.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Automation Central (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/configuring-automation-using-jobs/automation-central.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "What's new in VCF Operations 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Performance Best Practices for VMware vSphere 9.1"
+    url: "https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-06-24
+  - title: "VCF 9.1 Frequently Asked Questions"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "Design Blueprints for VCF 9.1 (index)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "How Does VCF Operations Calculate and Forecast Capacity (VCF 9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/cost-and-capacity-management/optimizing-capacity-and-improving-performance/capacity-optimization-concepts/how-does-vmware-aria-operations-calculate-and-forecast-capacity.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Using Rightsize to Adjust Resource Allocation (Aria Operations 8.18)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/aria/aria-operations/8-18/vmware-aria-operations-configuration-guide-8-18/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-rightsize-to-adjust-resource-allocation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-05-20
+  - title: "How Does VMware Aria Operations Calculate and Forecast Capacity (8.18)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/aria/aria-operations/8-18/vmware-aria-operations-configuration-guide-8-18/optimizing-capacity-and-improving-performance/capacity-optimization-concepts/how-does-vmware-aria-operations-calculate-and-forecast-capacity.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-05-20
 ---
 
 <InShort>
-VCF Operations marks a VM as **oversized** or **undersized** when its projected CPU or memory demand is well away from what it has been given. The recommendation comes from a demand projection that weights recent history more heavily and treats sustained and periodic peaks differently from momentary ones. A single recommendation never removes more than half of a resource or adds more than double. The feature existed in Aria Operations for VCF 5.x. What changes in 9.x is that VCF Operations is mandatory, so every VCF 9 estate already has the data. Right-sizing saves licence cost only when the reclaimed allocation lets you avoid or remove hosts.
+Run right-sizing as a performance and cost review, and count only memory as capacity unless the cluster uses the allocation model. Under the default demand model, [removing vCPUs from an oversized VM reclaims 0 MHz, and memory counts only where consumed memory sits above the new size](https://blogs.vmware.com/cloud-foundation/2025/08/12/vmware-cloud-foundation-helps-you-optimally-size-vms-and-keep-your-infrastructure-and-workloads-running-smoothly/). A single recommendation [moves a VM down by at most half or up by at most double](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/capacity-optimization-concepts/how-does-vmware-aria-operations-calculate-and-forecast-capacity.html), so the work recurs. [The 9.1 Rightsize page says workloads must restart to accommodate resizing](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-rightsize-to-adjust-resource-allocation.html), so each round needs a change window.
 </InShort>
 
-<Compare rows={[
-  ["Tool", "Aria Operations, if deployed", "VCF Operations, always deployed"],
-  ["Where", "Optimize > Rightsize", "Capacity > Optimize > Rightsize, plus scheduled actions in Automation Central"],
-  ["Inputs", "CPU demand, memory utilisation", "The same, with the same projection engine"],
+<Callout type="note" title="Corrected on 7 November 2026">
+This note gave the default recommendation window as 60 days, from a 2025 blog post. TechDocs for 9.1 gives a 120-day default warning threshold and a 150-day window. It also said cutting memory frees capacity under both models, but under the demand model memory counts only where consumed memory exceeds the new size.
+</Callout>
+
+## What a smaller VM frees
+
+[Reclaimable capacity and cost impact depend on the capacity model of the parent cluster, not on the VM](https://blogs.vmware.com/cloud-foundation/2025/08/12/vmware-cloud-foundation-helps-you-optimally-size-vms-and-keep-your-infrastructure-and-workloads-running-smoothly/). [Only the demand model runs by default, and the allocation model is switched on in the active policy](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/capacity-optimization-concepts/allocation-and-demand-model-in-workload-optimization.html). Kelcey Lemon's August 2025 post sets out the difference, and the table below follows it.
+
+| | Demand model (default) | Allocation model (optional) |
+|---|---|---|
+| Judges a cluster by | What usage would have been without contention | Configured resources against overcommit ratios, such as 8:1 vCPU:core |
+| Cutting vCPUs on an oversized VM | Reclaims 0 MHz, however many are removed, because the VM wasn't using them | Counts in cost impact as the recommended change |
+| Cutting memory on an oversized VM | Reclaims consumed memory minus recommended size, and nothing if consumed is lower | Counts in cost impact as the recommended change |
+| Potential savings | Reported when allocation is off | Replaces the demand figure once allocation is on |
+
+This example is constructed, so replace each number with your own. A VM has 32 GB configured, 20 GB consumed and a 24 GB recommended size. The recommendation removes 8 GB, and the allocation model's cost figure counts all 8. The demand model reclaims nothing, because consumed memory is already under 24 GB.
+
+Settle which model the capacity plan uses before the first review. If hosts are bought against overcommit ratios, for example when application owners request VM sizes from a catalogue, turn allocation on, since that is where vCPU cuts show up. If the plan is demand-based, report memory only and present vCPU cuts as performance work.
+
+<Callout type="analysis" title="From reclaimed capacity to a smaller bill">
+Neither figure is a licence saving by itself. VCF is [licensed on cores](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs), so a smaller VM changes the bill only when the reclaimed capacity removes a host or avoids buying one, and [core floors and order minimums](/vcf/library/value/core-counting-and-cpu-choice/) can absorb some of that. This is reasoning from public licensing material, and it isn't legal or purchasing advice. Check the terms in your own agreement.
+</Callout>
+
+Read dollar figures from a patched system. Before 9.1.1, [the Cluster CPU Base Rate used total cores instead of usable cores](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) on clusters with the allocation cost model and the usable-capacity-after-HA-and-buffer model, which made VM cost metrics low. The same notes fix a $0 Potential Savings widget for reclaimable hosts on vCenter instances integrated through the VCF Management Pack.
+
+The performance case is real but modest, and it should be pitched that way. The 9.1 guide says surplus vCPUs [might cause "slightly increased resource usage", potentially affecting performance on very heavily loaded systems](https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices). A cut that brings a VM inside one physical NUMA node is also worth naming, because [wide VMs might see higher average memory access latency](https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices), though the guide calls the advantage of fitting a node slight and limits it to some environments. Broadcom's own dashboard offers [CPU Ready and CPU Run Queue as the evidence to check](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/predefined-dashboards-in-vrealize-operations-manager/performance-dashboards/vm-rightsizing-dashboard.html), so bring those to the VM owner.
+
+## What sets the number
+
+Recommended Size is [the maximum projected utilization from now to 30 days beyond the time-remaining warning threshold](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/capacity-optimization-concepts/how-does-vmware-aria-operations-calculate-and-forecast-capacity.html). Lemon's post and TechDocs disagree on the defaults, so read your own policy before explaining a recommendation to anyone.
+
+| | Lemon's post, August 2025 | 9.1 TechDocs, updated 5 Nov 2026 |
+|---|---|---|
+| Default warning threshold | 30 days | 120 days |
+| Default Recommended Size horizon | 60 days | 150 days |
+| Projection refresh | Every 5-minute collection cycle | Collected every 5 minutes, processed every 24 hours, recalculated at once on a policy or total-capacity change |
+| Risk settings | Conservative, Aggressive, Peak Focused | [Slider from Aggressive to Conservative](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/configuring-policies/using-the-monitoring-policy-workspace/policy-workspace/policy-workspace-capacity-details.html), with all peak values under Conservative |
+| Restart on resize | None with hot-add enabled | Workloads must restart |
+
+The versioned page is the one to trust: the 120-day figure also appears in the [9.0](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/cost-and-capacity-management/optimizing-capacity-and-improving-performance/capacity-optimization-concepts/how-does-vmware-aria-operations-calculate-and-forecast-capacity.html) and [Aria Operations 8.18](https://techdocs.broadcom.com/us/en/vmware-cis/aria/aria-operations/8-18/vmware-aria-operations-configuration-guide-8-18/optimizing-capacity-and-improving-performance/capacity-optimization-concepts/how-does-vmware-aria-operations-calculate-and-forecast-capacity.html) pages, so the gap doesn't look like a change that came with a release. A longer horizon includes more projected growth, so a growing VM should get a larger recommendation at 150 days than at 60. That's an inference from the definition. Set the threshold to suit how often you resize, as Lemon advises. Since [some policy settings affect all object types](https://blogs.vmware.com/cloud-foundation/2025/08/12/vmware-cloud-foundation-helps-you-optimally-size-vms-and-keep-your-infrastructure-and-workloads-running-smoothly/), give VMs their own policy.
+
+Risk level picks the part of the projection used. [Conservative takes the upper bound and Aggressive the mean of the upper and lower bounds](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/capacity-optimization-concepts/how-does-vmware-aria-operations-calculate-and-forecast-capacity.html), and the [policy page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/configuring-policies/using-the-monitoring-policy-workspace/policy-workspace/policy-workspace-capacity-details.html) assigns Conservative to production and Aggressive to non-critical workloads. The 9.1 release notes say the [configuration for conservative workloads was simplified](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html) and the capacity algorithms updated, so a runbook that names Peak Focused needs checking against the 9.1 screen.
+
+The inputs are [CPU demand, which excludes contention such as ready, co-stop and hyper-threading, and memory utilization from inside the guest, which accounts for swapping and paging](https://blogs.vmware.com/cloud-foundation/2025/08/12/vmware-cloud-foundation-helps-you-optimally-size-vms-and-keep-your-infrastructure-and-workloads-running-smoothly/). [Without guest metrics from VMware Tools, the configured memory value is used instead](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/predefined-dashboards-in-vrealize-operations-manager/performance-dashboards/vm-rightsizing-dashboard.html). That suggests such a VM can't look oversized on memory, which is an inference, so fix Tools before trusting a clean result.
+
+History decides how far to believe a recommendation. Lemon says to [review 6 months or more](https://blogs.vmware.com/cloud-foundation/2025/08/12/vmware-cloud-foundation-helps-you-optimally-size-vms-and-keep-your-infrastructure-and-workloads-running-smoothly/), and the [recommendation view shows one to 12 months](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-rightsize-to-adjust-resource-allocation.html). [Recent data weighs most, momentary peaks don't affect the projection, sustained peaks fade unless they recur, and periodic peaks don't decay](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/capacity-optimization-concepts/how-does-vmware-aria-operations-calculate-and-forecast-capacity.html). The weighting is exponential decay, and the projection extends a year ahead. A month of data misses quarter-end and year-end peaks, and six months can miss a once-a-year event, so a VM sized for one belongs on the exclusion list until the engine has seen it.
+
+The caps turn this into a recurring job. Broadcom's example is [an 8-vCPU VM that never passes 10%, which is recommended 4 rather than 1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/capacity-optimization-concepts/how-does-vmware-aria-operations-calculate-and-forecast-capacity.html). A 32-vCPU VM that needs 1 takes five passes: 16, 8, 4, 2, 1.
+
+<Compare title="The mechanics predate VCF 9" v5Label="Aria Operations 8.18" v9Label="VCF Operations 9.1" rows={[
+  ["Where", "<a href='https://techdocs.broadcom.com/us/en/vmware-cis/aria/aria-operations/8-18/vmware-aria-operations-configuration-guide-8-18/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-rightsize-to-adjust-resource-allocation.html'>Rightsize under Capacity in the left pane</a>", "<a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-rightsize-to-adjust-resource-allocation.html'>Manage, Capacity, Optimize, then the Rightsize tab</a>"],
+  ["Default horizon", "<a href='https://techdocs.broadcom.com/us/en/vmware-cis/aria/aria-operations/8-18/vmware-aria-operations-configuration-guide-8-18/optimizing-capacity-and-improving-performance/capacity-optimization-concepts/how-does-vmware-aria-operations-calculate-and-forecast-capacity.html'>120-day threshold, 150 days out</a>", "<a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/capacity-optimization-concepts/how-does-vmware-aria-operations-calculate-and-forecast-capacity.html'>120-day threshold, 150 days out</a>"],
+  ["Caps", "50% down, 100% up", "50% down, 100% up"],
+  ["Presence", "Not covered here", "<a href='https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs'>A required component with each VCF fleet</a>"],
 ]} />
 
-## How the recommendation is made
+## Plan a restart for every action
 
-The engine works from two metrics. **CPU demand** is what the VM would use without contention, so ready time and co-stop do not inflate it. **Memory utilisation** includes guest swapping and paging, so a VM that is short of memory shows it. History is weighted with exponential decay, and the projection extends a year ahead. Broadcom recommends at least six months of history before acting.
+The 9.1 Rightsize page makes you [acknowledge a restart for oversized and undersized actions alike](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-rightsize-to-adjust-resource-allocation.html), and the action needs [Operational Actions activated in the vCenter cloud adapter](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-rightsize-to-adjust-resource-allocation.html). Plan on it for reductions: <KB id={335048} /> lists both CPU and memory hot-remove as unsupported. Its stated environment is ESXi 7.0, so treat that as the working assumption on 9.x unless your version's documentation says otherwise.
 
-The recommended size is the peak projected demand over a window that defaults to 60 days: the 30-day "time remaining" warning plus 30 days. The policy's risk level sets which part of the projection is used. Conservative uses the upper bound. Aggressive uses the midpoint between the upper and lower bounds.
+Lemon's post offers [resizing with no reboot when hot-add is enabled](https://blogs.vmware.com/cloud-foundation/2025/08/12/vmware-cloud-foundation-helps-you-optimally-size-vms-and-keep-your-infrastructure-and-workloads-running-smoothly/), which applies to growth only. Don't enable hot-add to get it. The 9.1 performance guide says [activating CPU Hot Add deactivates vNUMA, and to activate it only if you expect to use it](https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices). <KB id={321931} /> limits the vNUMA loss to hardware version 19 or earlier, a limit the guide doesn't state, and recommends disabling CPU Hot Add in production templates unless online resizing is a strictly validated requirement. Follow the KB's recommendation either way, and record the hardware version of any large VM that already has it on.
 
-Two caps apply. An oversized recommendation never cuts more than **50%**, and an undersized one never adds more than **100%**. A VM given 16 vCPUs that needs 4 will be recommended 8 the first time, and reach 4 only over two cycles. That is deliberate, and it is a good reason to schedule right-sizing as a recurring task rather than a one-off project.
+## What to keep out of the recommendations
 
-## Demand or allocation
+Exclude by tag rather than by hand. The Rightsize page offers [tag-based exclusion rules and a minimum number of days of data before a VM is included](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-rightsize-to-adjust-resource-allocation.html), and [9.1 adds VM age and history, plus automatic exclusion of Broadcom appliances](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html). Record the reason for each one.
 
-The default capacity model is **demand**: clusters are judged by what VMs use. Under it, reclaiming vCPUs from an oversized VM frees no CPU capacity, because the VM was not using it. The saving appears when the cluster is sized by **allocation**, which uses configured resources and overcommit ratios such as 8 vCPUs per core. You may plan growth by allocation even when Operations reports by demand, for example when application owners request VM sizes from a catalogue. Know which model your capacity plan uses, because it decides whether right-sizing frees hosts.
+Three groups belong there:
 
-Memory is different. Oversized memory is held by the VM whether it uses it or not, unless the host reclaims it under pressure. Cutting it frees capacity under both models, and in memory-bound clusters that is where host savings come from.
+- **Applications that manage their own memory.** Databases and Java heaps are the usual cases. The memory metric sees what the guest has handed over, not what the application needs inside it, so it can't tell you how much is spare. That's an inference from the metric's definition, and these VMs are better sized from the application's own counters.
+- **VMs sized for an event that hasn't happened**, for the history reason above.
+- **VMs whose real work runs at night, if the policy uses business hours.** [Recommendations under a business-hours schedule ignore spikes after hours](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/configuring-policies/using-the-monitoring-policy-workspace/policy-workspace/policy-workspace-capacity-details.html), so give them a separate policy.
 
-## A process that works
+Guest software licensed per vCPU needs one more check before any cut. Reducing vCPUs can lower third-party licence costs, which may be worth more than the infrastructure saving, and the performance guide calls [virtual socket and core layout "potentially relevant for software licensing"](https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices). Read the vendor's terms first, because this note isn't licensing advice.
 
-1. Run the out-of-the-box oversized and undersized reports and schedule them monthly.
-2. Exclude workloads whose demand the engine cannot see: databases and Java applications that manage their own memory, and anything sized for a known event that has not happened yet. Record the reason for each exclusion.
-3. Agree changes with the VM owner. Fix undersized VMs first: it improves performance and builds the trust you need for the reductions.
-4. Apply changes in a change window, using scheduled actions. Hot-add enabled VMs can grow without a reboot. Reductions need one.
-5. Record the CPU and memory reclaimed against the next capacity request, so the saving is visible when a host purchase is avoided.
+## A review cycle
 
-Oversized VMs are also slower in some cases. The vSphere performance guide notes that unused vCPUs still add scheduling overhead, and that a VM wider than one NUMA node sees higher average memory latency. Right-sizing is a performance task as well as a cost task, and presenting it that way helps with owners.
+[Broadcom's 9.1 design blueprint index](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for.html) has no entry on cost, capacity or VM sizing <AsOf date="2026-11-07" />, so this sequence is advice from this site, built from the pages above.
 
-## Pitfalls
-
-- **Acting on a month of data.** Quarter-end and year-end peaks will not be in it. Wait for the history the engine needs.
-- **Right-sizing without changing the request process.** If new VMs are still built from oversized templates, the waste returns. Review the catalogue sizes at the same time.
-- **Counting freed vCPUs as savings in a demand-based plan.** They free nothing under that model. Report memory and allocation savings separately.
-- **Software licensed per vCPU in the guest.** Reducing vCPUs can lower third-party licence costs, which may be worth more than the infrastructure saving. Check the licence terms before changing database VMs.
+1. Run reclamation first. The [Oversized list includes idle VMs and VMs with snapshots](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-rightsize-to-adjust-resource-allocation.html), and [the cost method on this site](/vcf/library/value/building-the-cost-case/) explains why an idle VM shouldn't be counted twice.
+2. Schedule the [two out-of-the-box Optimization Reports for oversized and undersized VMs](https://blogs.vmware.com/cloud-foundation/2025/08/12/vmware-cloud-foundation-helps-you-optimally-size-vms-and-keep-your-infrastructure-and-workloads-running-smoothly/) monthly, by email.
+3. Work per cluster, starting where capacity is tightest. The dashboard page says [analysis belongs at cluster level, with the focus on clusters low on capacity remaining](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/predefined-dashboards-in-vrealize-operations-manager/performance-dashboards/vm-rightsizing-dashboard.html).
+4. Take undersized VMs to their owners first, since those VMs are already short of resources and the fix builds the trust you need for the reductions. [The VM's capacity tab and the VM Rightsizing Details dashboard](https://blogs.vmware.com/cloud-foundation/2025/08/12/vmware-cloud-foundation-helps-you-optimally-size-vms-and-keep-your-infrastructure-and-workloads-running-smoothly/) are the evidence to show them, including the cost increase.
+5. Apply in a change window with Schedule Action, which [creates a job managed in Automation Central](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-rightsize-to-adjust-resource-allocation.html). Recurring jobs exist, and [failed ones run again at the next scheduled time](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/configuring-automation-using-jobs/automation-central.html). Because each run restarts workloads, keep unattended recurrence away from anything an owner hasn't agreed to.
+6. Record memory reclaimed against the next capacity request, and report allocation figures on a separate line. Then review the catalogue and template sizes, or new VMs will bring the same waste back.
