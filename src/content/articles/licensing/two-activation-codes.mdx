@@ -1,55 +1,149 @@
 ---
 title: "Two activation codes in 9.1: one for licensing, one for downloads"
-description: "VCF 9.1 uses the phrase \"activation code\" for two unrelated things. One registers VCF Operations for licensing. The other authorises the software depot to download binaries, replacing the 9.0 download token. Say which one you mean in every request."
+description: "VCF 9.1 issues two activation codes from one console. The licensing code registers VCF Operations in connected mode. The depot code authorises binary downloads for a Software Depot ID. The roles that issue them differ, so name the one you need. An air-gapped site still uses the depot code on its download host."
 category: licensing
 order: 2
-versions: ["9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [443647, 420374, 432201, 443166, 428209]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [443647, 420374, 432201, 443166, 428209, 443913, 446744, 441030, 443216, 452326, 443322, 442857, 441349, 432158, 435664]
 sources:
-  - title: "Using an activation code for the VCF 9.1 software depot"
+  - title: "\"Download token\" has been replaced by \"Activation Code\" for binary downloads in VCF Installer 9.1 (KB 443647)"
     url: "https://knowledge.broadcom.com/external/article/443647"
     by: "Broadcom KB"
-  - title: "Register VCF Operations in connected mode (9.1)"
+    kind: broadcom
+  - title: "Register VCF Operations and Your License Server in Connected Mode (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations/register-vcf-operation-in.html"
     by: "Broadcom TechDocs"
-  - title: "Is the activation code needed in disconnected mode?"
-    url: "https://knowledge.broadcom.com/external/article/432201/is-the-activation-code-from-the-vcf-busi.html"
-    by: "Broadcom KB"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Register VCF Operations and Your License Server in Disconnected Mode (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations/register-vcf-operations-in-disconnected-mode.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Registering VCF Operations and a License Server with the VCF Business Services Console (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Register VCF Operations in Connected Mode (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/register-vcf-operations/register-vcf-operation-in.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Switch from Disconnected to Connected Mode (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/switch-from-disconnected-to-connected-mode.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Reactivate a VCF Operations Instance (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/reactivate-a-vcf-operations-instance.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Single License Server Model, VCF Fleet in a Single Site blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections%281%29/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware Cloud Foundation Business Services Console (PDF)"
+    url: "https://techdocs.broadcom.com/content/dam/broadcom/techdocs/us/en/pdf/vmware/other/vcf-business-services-console/vmware-cloud-foundation-business-services-console.pdf"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-10-07
+  - title: "Configure a Software Depot Connection Mode (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/connect-sddc-manager-to-a-software-depot-for-downloading-bundles.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Connect VCF Installer to Broadcom or an Offline Depot and Download Binaries (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/preparing-your-environment/downloading-binaries-to-the-vcf-installer-appliance/connect-to-an-online-depot-to-download-binaries.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Download Binaries to an Offline Depot by Using the VCF Download Tool (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/download-bundles-to-an-offline-depot.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Download Binaries to Software Depot in Disconnected Mode by Using the VCF Download Tool (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/offline-download-of-vmware-cloud-foundation-5-2-upgrade-bundles.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VCF 9.1: VCF Download Tool (VCFDT) cheatsheet"
+    url: "https://williamlam.com/2026/05/vcf-9-1-vcf-download-tool-vcfdt-cheatsheet.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-05-27
 ---
 
 <InShort>
-Both codes come from the VCF Business Services console, and that is all they share. The **licensing activation code** connects a VCF Operations instance to the console in connected mode, so it can send usage and receive license files. Disconnected mode doesn't use one (<KB id={432201} />). The **depot activation code** (9.1) is issued when you register a **Software Depot ID** generated by the installer or the download tool. It replaces the 32-character download token that 9.0 used for binary downloads (<KB id={443647} />, <KB id={420374} />).
+Ask for a VCF 9.1 activation code by its full name, because the Business Services console issues two kinds and the roles that generate them differ. The **licensing activation code** registers VCF Operations [in connected mode](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations/register-vcf-operation-in.html), and [disconnected registration](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations/register-vcf-operations-in-disconnected-mode.html) exchanges files instead. The **depot activation code** authorises binary downloads for a registered Software Depot ID (<KB id={443647} />). Disconnected licensing doesn't remove the depot code: an air-gapped site still uses one on its download host.
 </InShort>
 
-<Compare v5Label="Licensing activation code" v9Label="Depot activation code (9.1)" title="Side by side" rows={[
-  ["Purpose", "Register VCF Operations for connected-mode licensing", "Authorise the software depot to download bundles"],
-  ["Generated from", "The console, during VCF Operations registration", "The console, after you register a Software Depot ID"],
-  ["Entered in", "VCF Operations: Licenses & Registration", "The VCF Installer or the depot settings, or the download tool"],
-  ["Replaces", "Nothing. Connected registration used it in 9.0 too.", "The 9.0 download token"],
-  ["Needed offline?", "No. Disconnected mode uses file exchange.", "Yes. It is used for online and offline depots."],
-]} />
+| | Licensing activation code | Depot activation code (9.1) |
+|---|---|---|
+| What it does | Registers VCF Operations and its license server in connected mode, after which [usage reporting is automated](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations.html) and VCF Operations can receive license files | Authorises downloads for one Software Depot ID |
+| Starts from | Manage > Licensing > Licenses & Registration in VCF Operations, which opens the console | A Software Depot ID from the [Installer](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/preparing-your-environment/downloading-binaries-to-the-vcf-installer-appliance/connect-to-an-online-depot-to-download-binaries.html), the [software depot in VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/connect-sddc-manager-to-a-software-depot-for-downloading-bundles.html) or [`vcf-download-tool configuration generate --software-depot-id`](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/download-bundles-to-an-offline-depot.html) |
+| Console location | The registration workflow: pick the Site ID, name the instance, generate the code. Instances are listed under [Licensing > VCF Operations Registrations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/reactivate-a-vcf-operations-instance.html) | Software Depot Registrations > New Registration, in the tenant and Site ID that hold the entitlement. Registering the ID returns the code. |
+| [Console roles](https://techdocs.broadcom.com/content/dam/broadcom/techdocs/us/en/pdf/vmware/other/vcf-business-services-console/vmware-cloud-foundation-business-services-console.pdf) | License Manager, Tenant Administrator, Administrator | Software Depot Manager, Tenant Administrator, Administrator |
+| Entered in | The Paste Activation Code card in VCF Operations, then activate | Installer: Depot Settings and Binary Management. Fleet: Build > Software Depot in VCF Operations. Tool: a file passed with `--depot-download-activation-code-file` |
+| History | [9.0 connected registration](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/register-vcf-operations/register-vcf-operation-in.html) used this code too | Replaces the 9.0 download token, though how fully is disputed (see below) |
+| Not used by | Disconnected licensing (<KB id={432201} /> for 9.0.x, the disconnected page above for 9.1) | An appliance set to Offline Depot or Disconnected. The tool host that feeds it still uses the code. |
 
-## Getting the depot code (9.1)
-
-1. In the VCF Installer UI, or with the VCF Download Tool, generate a **Software Depot ID**.
-2. Sign in to the console and register that ID. The console returns an **activation code**.
-3. Enter the code in the installer or depot configuration.
-
-Downloads then leave from the runtime node addresses, not only from SDDC Manager. If the code is accepted but downloads fail with 403, the firewall or proxy is the next suspect (<KB id={443166} />).
-
-## Getting the licensing code
-
-In VCF Operations, start registration in connected mode, sign in to the console, pick the Site ID, name the instance and generate the code. Paste it back into VCF Operations and activate. If it fails, generate a fresh code rather than retrying the old one (<KB id={428209} />).
-
-<Callout type="field">
-When asking a customer for "the activation code", say which one. In a change request, write "depot activation code for Software Depot ID ..." or "licensing activation code for VCF Operations instance ...". It saves a round trip with someone who has portal access and limited time.
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to say that a 403 after an accepted code points to the firewall or proxy, that an offline depot takes the depot code, that the token simply stops working, and that any failed licensing code should be regenerated. The documented firewall or proxy symptom is the code failing validation, an offline depot appliance takes a URL, the token's status is disputed, and a new licensing code is documented only for the cases listed below.
 </Callout>
 
-## Pitfalls
+## Write the request so the right person can act
 
-- **Pasting the licensing code into the depot settings,** or the other way round. Both look similar and both fail with unhelpful errors.
-- **Expecting the download token to keep working** after moving to 9.1. Plan the depot code as an upgrade prerequisite.
-- **Lowercase names.** The name registered in the console for the depot should be lowercase. Mixed case has caused authentication failures.
+A License Manager can register VCF Operations and a Software Depot Manager can register the Installer, a depot or the Download Tool, so a bare request for "the activation code" can land with someone whose [listed role](https://techdocs.broadcom.com/content/dam/broadcom/techdocs/us/en/pdf/vmware/other/vcf-business-services-console/vmware-cloud-foundation-business-services-console.pdf) doesn't cover it. Of those listed, only Administrator and Tenant Administrator span both. Find out who holds these roles before the change window.
+
+<Callout type="field">
+In a change request, write "depot activation code for Software Depot ID ..., tenant and Site ID ..." or "licensing activation code for VCF Operations instance ..., Site ID ...".
+</Callout>
+
+## Where the depot code is needed
+
+A new 9.1 deployment [carries its depot configuration over from the Installer](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/connect-sddc-manager-to-a-software-depot-for-downloading-bundles.html). An upgrade from 5.2 or 9.0.x has to configure the depot itself, so put the code on the upgrade's prerequisite list. Each ID gets its own code, and a code that doesn't match its ID is a documented cause of a 403 (<KB id={443913} />). You can keep [separate registrations](https://williamlam.com/2026/05/vcf-9-1-vcf-download-tool-vcfdt-cheatsheet.html) for development and production tool installs, William Lam notes.
+
+Depot setup also depends on licensing. The depot and the license server share one entitlement check, so a license server that is missing or not syncing can break depot setup (<KB id={452326} />). Get the sync working before you generate the depot code.
+
+<Callout type="analysis" title="What an air-gapped site still registers">
+In Offline Depot mode the appliance takes [a URL and optional credentials](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/preparing-your-environment/downloading-binaries-to-the-vcf-installer-appliance/connect-to-an-online-depot-to-download-binaries.html), and in Disconnected mode binaries arrive by upload. The Download Tool on the internet-connected host still passes a code in both the [offline](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/download-bundles-to-an-offline-depot.html) and [disconnected](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/offline-download-of-vmware-cloud-foundation-5-2-upgrade-bundles.html) procedures. <KB id={443647} /> says the code connects to online and offline depots, which fits those pages only if the offline half means the tool, and that reading is an inference. Plan a console registration for the tool host, even at a site whose licensing never reaches the console online.
+</Callout>
+
+## Is the download token dead?
+
+Broadcom's position is that download tokens "are no longer used for depot authentication" (<KB id={443647} />), and the [Download Tool page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/download-bundles-to-an-offline-depot.html) documents only the code. Practice is looser <AsOf date="2026-11-07" />. Lam's May cheat sheet says tokens ["can still be used"](https://williamlam.com/2026/05/vcf-9-1-vcf-download-tool-vcfdt-cheatsheet.html) in the Installer UI and the tool, and that codes will eventually replace them. <KB id={441349} /> still fixes a 9.1 403 by generating a new token under the right Site ID.
+
+Build new runbooks around the code either way. ESX downloads accept only a code, Lam says, so a token-based script can't fetch them. A token is a 32-character string from the Support Portal (<KB id={420374} />) and a code comes from the console, so where yours was issued tells you which one you hold.
+
+## When the depot code fails
+
+Suspect the network early, since three of the six symptoms below trace to a proxy or firewall. Rules written for SDDC Manager alone miss the traffic: in 9.1 Fleet Lifecycle components [run the downloads](https://knowledge.broadcom.com/external/article/443166), and after deployment the depot uses [dynamically assigned runtime pool addresses](https://knowledge.broadcom.com/external/article/443216). A working Installer doesn't prove the fleet's path. The host list and its sources are in [Getting binaries](/vcf/library/upgrades/getting-binaries/#runtime-egress).
+
+| Symptom (9.1) | Documented cause | Fix |
+|---|---|---|
+| Code validation fails: "Expected HTTP status 200 but received 403" | The allow-list covers SDDC Manager but not Fleet components (<KB id={443166} />) | Allow `eapi.broadcom.com`, `dl.broadcom.com`, `vvs.broadcom.com` and `vsanhealth.vmware.com`, plus `vcf.packages.broadcom.com` from 9.1.1. If that doesn't clear it, make the name registered in the console all lowercase. |
+| The same 403 on returning to connected mode, after the depot dropped to Disconnected during an upgrade to 9.1.0.0 | Software Depot ID and code don't match (<KB id={443913} />) | Find the matching code under Software Depot Registration and enter it again |
+| "Error occurred on the authorization server" | The proxy answers the token request with its own 403 (<KB id={446744} />), or doesn't allow every runtime node (<KB id={441030} />) | Allow the depot's HTTPS through the proxy, for all control plane and worker node IPs |
+| Validation passes, but the depot stays Disconnected | Broadcom URLs missing from the allow-list for the runtime pool (<KB id={443216} />) | Allow them, then stop and start the Software Depot service |
+| "A Problem has occurred on the server" during first setup | License server missing or not syncing (<KB id={452326} />) | Fix the sync, then create a new depot code |
+| Download Tool 403: "Cant access Broadcom depot with provided Customer download token" | Code file passed to `--depot-download-token-file` (<KB id={443322} />) | Use `--depot-download-activation-code-file` |
+
+Don't copy the ESXi command in <KB id={442857} />, which passes an activation code file to the token flag. That's the mistake <KB id={443322} /> describes.
+
+No Broadcom page checked for this note describes the error for a licensing code pasted into a depot field, or the reverse (7 Nov 2026). Confirm which console page issued the code before you chase the network.
+
+## When to generate a new licensing code
+
+Broadcom's [single-site blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections%281%29/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-simple-license-server-model.html) recommends connected licensing where management components can reach the internet, directly or by proxy, and keeps disconnected for sites whose policy forbids that. Designs that follow it use this code at registration.
+
+A new code is the documented answer in three cases: you [lost the old one](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/register-vcf-operations.html), the log shows `401` and `invalid_client` because the code is no longer valid (<KB id={432158} />), or a switch back to connected mode fails after [more than 180 days disconnected](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/switch-from-disconnected-to-connected-mode.html). Test `vcf.broadcom.com` and `eapi.broadcom.com` on 443 from every node first (<KB id={428209} />).
+
+A correct code can still be refused. On 9.0.x, "This activation code is not valid" with `407 authenticationrequired` in the log means the proxy credentials are wrong, and the fix is to correct the proxy and re-enter the code (<KB id={435664} />). More licensing messages are in [Licensing errors decoded](/vcf/library/licensing/licensing-errors-decoded/). This note covers mechanics only, so take entitlement and contract questions to Broadcom.

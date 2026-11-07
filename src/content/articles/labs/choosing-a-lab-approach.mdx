@@ -227,7 +227,7 @@ The three-host figure is from his bill of materials: $789 + $1,195 + $44.09 + $3
 
 The 9.1 run deploys three nested ESX VMs, initialises the Installer, syncs the depot, generates the JSON and starts the fleet deployment, with settings in one file passed through `-EnvConfigFile`. These details sit across his post, its comments and the README, so check them before the first run:
 
-- Binaries come first. An offline depot must have no basic auth for the script to use it, so build it with [Getting binaries](/vcf/library/upgrades/getting-binaries/) to suit. The README's online option still says "Download Token", which 9.1 no longer accepts.
+- Binaries come first. An offline depot must have no basic auth for the script to use it, so build it with [Getting binaries](/vcf/library/upgrades/getting-binaries/) to suit. The README's online option still says "Download Token". Broadcom documents only activation codes for 9.1 downloads, and that note sets out where practice differs.
 - The 9.1 nested ESX appliance has no default password, so set one at OVF deployment.
 - A [reader reports](https://williamlam.com/2026/05/vcf-9-1-automated-vmware-cloud-foundation-vcf-vmware-vsphere-foundation-vvf-nested-lab-deployment.html) the script waiting forever on the OVA until PowerCLI is set to ignore invalid certificates. The script doesn't set that itself.
 - Log Management isn't deployed. Lam calls it a Day-N activity in the comments.

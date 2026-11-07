@@ -8,7 +8,7 @@ level: Overview
 pubDate: 2026-11-02
 updated: 2026-11-07
 reviewed: 2026-11-07
-kbs: [440630, 443240, 441816]
+kbs: [440630, 443240, 441816, 405275]
 sources:
   - title: "Fleet deployment models (VCF 9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-operations-deployment-models.html"
@@ -113,7 +113,7 @@ A domain is unchanged in meaning: one vCenter, with NSX either dedicated or shar
 
 ## Why the layers matter in practice
 
-**Upgrades go top-down.** The fleet is upgraded before any instance, and an instance's management plane before its domains. In 9.1, VCF Operations must be upgraded first (<KB id={440630} />). A useful rule of thumb from [humbledgeeks](https://humbledgeeks.com/vcf-91-lifecycle-one-control-plane-and-the-real-work-to-get-there/) is "Fleet gates instance, never the reverse." In 5.x, the order started at SDDC Manager because there was nothing above it.
+**Upgrades go top-down.** The fleet is upgraded before any instance, and an instance's management plane before its domains. In 9.1, VCF Operations must be upgraded first (<KB id={440630} />). A useful rule of thumb from [humbledgeeks](https://humbledgeeks.com/vcf-91-lifecycle-one-control-plane-and-the-real-work-to-get-there/) is "Fleet gates instance, never the reverse." In 5.x, the order started at SDDC Manager (<KB id={405275} />).
 
 **The blast radius follows the layer.** If one domain's vCenter goes down, the damage stays inside that domain. If the first instance's management domain goes down, every instance loses the fleet-level services that live there. When VCF Operations itself is unavailable, workloads keep running and existing licences stay valid, but new licence assignments and capacity updates are blocked (<KB id={443240} />). The lifecycle and configuration screens are also unavailable.
 
