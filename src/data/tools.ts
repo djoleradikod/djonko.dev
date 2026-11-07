@@ -42,79 +42,82 @@ export const MAKERS: Record<Maker, { label: string; note: string }> = {
   fling: { label: 'Fling', note: 'Free Broadcom engineering tool. Not covered by product support; feedback goes through the Flings community.' },
   opensource: { label: 'VMware open source', note: 'Open-source project under the VMware GitHub organisation. Issues are handled on GitHub.' },
   vendor: { label: 'Other vendor', note: 'Free tool published by another company. Supported, if at all, by that company.' },
-  community: { label: 'Community', note: 'Written by an individual in the community. Not affiliated with Broadcom. Check the result against official documentation.' },
+  community: { label: 'Community', note: 'Written by an individual or a community project, outside Broadcom products and support. Check the result against official documentation.' },
   commercial: { label: 'Commercial', note: 'Third-party product with a paid licence. Listed for completeness, not endorsed.' },
 };
 
 const C = '2026-11-02';
+/** Entries re-read against the publisher's own page on this date. */
+const V = '2026-11-07';
 
 export const TOOLS: Tool[] = [
   // Plan and size
   {
     name: 'VCF 9.1 Upgrade Planning Tool', job: 'plan', maker: 'broadcom', publisher: 'Broadcom (VMware GitHub Pages)', versions: ['5.x', '9.0', '9.1'],
-    what: 'A browser-based planner. You describe the current estate (version, topology, add-ons) and it produces an ordered upgrade path to 9.1, with the prerequisites for each step. Later releases added 9.1.1 and express-patch paths, a VKS planner, and export of the plan to text or Markdown.',
+    what: 'A browser-based planner. You describe the current estate (version, topology, add-ons) and it produces an ordered upgrade path to 9.1, with the prerequisites for each step. It exports the plan to PDF. Later releases added 9.1.1 and express-patch paths, a separate planner for vCenter, Supervisor and VKS, and export and import of a session.',
     know: 'Runs in the browser and needs no access to the environment. Treat the output as a draft runbook: confirm each step against the release notes and the interoperability matrix.',
     get: { label: 'Open the planner', url: 'https://vmware.github.io/vcf-upgrade-planner/' },
     docs: [
       { label: 'Announcement', url: 'https://blogs.vmware.com/cloud-foundation/2026/05/28/announcing-the-vmware-cloud-foundation-9-1-upgrade-planning-tool/' },
       { label: 'Issues and feedback', url: 'https://github.com/vmware/vcf-upgrade-planner' },
     ],
-    checked: C,
+    checked: V,
   },
   {
     name: 'Broadcom Interoperability Matrix', job: 'plan', maker: 'broadcom', publisher: 'Broadcom', versions: ['5.x', '9.0', '9.1'],
     what: 'Which versions of VCF components, and of other Broadcom products, are supported together, and which upgrade paths between versions are supported.',
     know: 'Check it for every component that integrates with VCF, not only the core stack: backup, monitoring and any product that talks to vCenter or NSX.',
     get: { label: 'Open the matrix', url: 'https://interopmatrix.broadcom.com/Interoperability' },
-    checked: C,
+    checked: V,
   },
   {
     name: 'Broadcom Compatibility Guide', job: 'plan', maker: 'broadcom', publisher: 'Broadcom', versions: ['5.x', '9.0', '9.1'],
     what: 'Certified hardware for ESX and vSAN: servers, I/O controllers, NICs, drives and vSAN ReadyNodes. The successor to the VMware Compatibility Guide.',
-    know: 'VCF deployment and upgrade prechecks validate hosts against this data. Look up drivers and firmware for the target ESX release before the window, not during it.',
+    know: 'VCF deployment validation can fail when vSAN hardware is not certified for the target release (KB 427591). It can also report a false failure when the installer has stale compatibility data (KB 442952, 9.0.x). Look up drivers and firmware for the target ESX release before the window, not during it.',
     get: { label: 'Open the guide', url: 'https://compatibilityguide.broadcom.com/' },
     docs: [
       { label: 'vSAN ESA ReadyNode hardware guidance', url: 'https://compatibilityguide.broadcom.com/pages/vsan-esa-readynode-hardware-guidance' },
       { label: 'Verifying compatibility for VCF on vSAN', url: 'https://blogs.vmware.com/cloud-foundation/2024/11/20/verifying-compatibility-for-vmware-cloud-foundation-environments-powered-by-vsan/' },
     ],
-    kbs: [326717],
-    checked: C,
+    kbs: [326717, 427591, 442952],
+    checked: V,
   },
   {
     name: 'vSAN ReadyNode Sizer', job: 'plan', maker: 'broadcom', publisher: 'Broadcom', versions: ['5.x', '9.0', '9.1'],
     what: 'Sizes vSAN clusters from workload profiles: host count, capacity after protection overhead, and ReadyNode configurations that fit.',
-    get: { label: 'Open the sizer', url: 'https://vsansizer.esp.vmware.com/home' },
+    know: 'Its old address now redirects here, and the page asks for a Broadcom sign-in. Behind that sign-in, this description could not be rechecked on 7 Nov 2026.',
+    get: { label: 'Open the sizer', url: 'https://vcf.broadcom.com/tools/vsansizer/home' },
     checked: C,
   },
   {
     name: 'VCF Operations sizing', job: 'plan', maker: 'broadcom', publisher: 'Broadcom', versions: ['9.0', '9.1'],
-    what: 'Two calculators and a sizing KB. The Operations sizer picks node size and count from object and metric counts; the logs sizer does the same for VCF Operations for Logs from ingestion rate and retention.',
-    know: 'The KB also covers continuous-availability clusters and cloud proxy sizing, and attaches a sizing spreadsheet.',
-    get: { label: 'Operations sizer', url: 'https://vropssizer.broadcom.com/' },
-    docs: [{ label: 'Logs sizer', url: 'https://vrlisizer.broadcom.com/' }],
-    kbs: [397782],
-    checked: C,
+    what: 'Two estimators and a sizing KB. The Operations estimator asks for a version (9.1, 9.0 or 8.18) and covers VCF Operations and Log Management. The separate logs estimator sizes a VCF Operations for Logs cluster from average log size, infrastructure size or events per second, and the retention and archival periods.',
+    know: 'KB 397782 and its spreadsheet cover 9.0 only, including continuous-availability clusters and cloud proxies. For 9.1.x, the Broadcom sizing index (KB 324340) points to VMware Configuration Maximums.',
+    get: { label: 'Operations estimator', url: 'https://vropssizer.broadcom.com/' },
+    docs: [{ label: 'Logs estimator', url: 'https://vrlisizer.broadcom.com/' }],
+    kbs: [397782, 324340],
+    checked: V,
   },
   {
     name: 'VCF Upgrade Path Planner (vmtechie)', job: 'plan', maker: 'community', publisher: 'vmtechie.blog', versions: ['4.x', '5.x', '9.0'],
     what: 'A community web planner for major upgrades from vSphere 7 and 8, or VCF 4.x and 5.x, to VCF 9.0. It produces a roadmap with prerequisites, KB references and time estimates.',
     know: 'Targets 9.0, not 9.1. For 9.1 use the Broadcom planner above. The page states it is independent of Broadcom.',
     get: { label: 'Open the planner', url: 'https://avnish80.github.io/vcf-upgrade-planner' },
-    checked: C,
+    checked: V,
   },
   {
     name: 'RVTools', job: 'plan', maker: 'vendor', publisher: 'Dell Technologies', versions: [],
-    what: 'A Windows application that exports a vCenter inventory (VMs, hosts, datastores, networks, snapshots, tools versions) to spreadsheets. The usual first step of an assessment or migration plan.',
-    know: 'Check the release notes for the vCenter versions supported before running it against a 9.x vCenter. A read-only vCenter account is enough.',
+    what: 'A Windows application that reports a vCenter inventory (VMs, hosts, clusters, datastores, snapshots, tools versions), with export options.',
+    know: 'Check the release notes for the vCenter versions supported before running it against a 9.x vCenter. Dell runs a voluntary Product Improvement Program; you can change your participation under Edit, Preferences.',
     get: { label: 'Download from Dell', url: 'https://www.dell.com/en-us/shop/vmware/sl/rvtools' },
-    checked: C,
+    checked: V,
   },
   {
     name: 'VCF Designer', job: 'plan', maker: 'commercial', publisher: 'VCF Designer (third party)', versions: ['9.0', '9.1'],
     what: 'A browser-based design tool for VCF 9.x. It imports planning workbooks and RVTools exports, validates a design against VCF 9.0 and 9.1 rules, sizes domains, and exports design documents and diagrams.',
-    know: 'Paid subscription with a free trial. Not affiliated with Broadcom.',
+    know: 'Paid subscription with a 14-day free trial. Its page does not state any link to Broadcom.',
     get: { label: 'Product page', url: 'https://vcfdesigner-landing.pages.dev/' },
-    checked: C,
+    checked: V,
   },
 
   // Deploy and get binaries
@@ -144,11 +147,11 @@ export const TOOLS: Tool[] = [
   // Upgrade readiness
   {
     name: 'VCF Inspector', job: 'upgrade', maker: 'fling', publisher: 'Broadcom (Fling)', versions: ['9.1'],
-    what: 'A standalone diagnostic tool for VCF 9.1 and the management services. It reports upgrade readiness, reconstructs a timeline of past deployments and upgrades, and checks day-2 health. Builds for macOS, Windows and Linux.',
-    know: 'Needs network access on ports 22, 443, 5480 and 6443, and either the vmware-system-user account or SDDC Manager administrator credentials. Fling: no product support.',
+    what: 'A standalone diagnostic tool for VCF 9.1 and the management services. It runs pre-upgrade readiness checks, follows a running deployment or upgrade on a live timeline, and reports day-2 service health. Builds for macOS, Windows and Linux.',
+    know: 'Needs network access on ports 22, 443, 5480 and 6443, and either the vmware-system-user account or SDDC Manager administrator credentials. The announcement sends feedback and bug reports to the Flings community channels.',
     get: { label: 'Download (Broadcom Support Portal, free)', url: 'https://support.broadcom.com/group/ecx/productfiles?subFamily=Flings&displayGroup=VCF%20Inspector&release=1.400&os=&servicePk=&language=EN&freeDownloads=true' },
     docs: [{ label: 'Announcement', url: 'https://blogs.vmware.com/cloud-foundation/2026/07/28/vcf-inspector-fling/' }],
-    checked: C,
+    checked: V,
   },
   {
     name: 'SoS utility', job: 'upgrade', maker: 'broadcom', publisher: 'Broadcom (built into SDDC Manager)', versions: ['5.x', '9.0', '9.1'],
@@ -172,7 +175,7 @@ export const TOOLS: Tool[] = [
     what: 'A script attached to a KB that clears the local cache of the 9.1 fleet depot service, for binary downloads or deletions that fail on a checksum mismatch.',
     get: { label: 'KB with the script', url: 'https://knowledge.broadcom.com/external/article/444900/clearing-the-bundle-cache-on-vcf-91-flee.html' },
     kbs: [444900],
-    checked: C,
+    checked: V,
   },
 
   // Diagnose and repair
@@ -182,7 +185,7 @@ export const TOOLS: Tool[] = [
     know: 'Read-only, and it records no passwords. Use a release without the _beta suffix if a beta build misbehaves. Check the KB for the current version; the same package also has modes for SDDC Manager and VKS.',
     get: { label: 'Download from the KB', url: 'https://knowledge.broadcom.com/external/article/344917' },
     kbs: [344917],
-    checked: C,
+    checked: V,
   },
   {
     name: 'VDT for SDDC Manager', job: 'diagnose', maker: 'broadcom', publisher: 'Broadcom (KB attachment)', versions: ['5.x', '9.0', '9.1'],
@@ -190,7 +193,7 @@ export const TOOLS: Tool[] = [
     know: 'Read-only. Marked beta. Prompts for the SSO administrator password; without it only the unauthenticated checks run.',
     get: { label: 'How to run it', url: 'https://knowledge.broadcom.com/external/article/314610/using-the-vcf-diagnostic-tool-for-sddc-m.html' },
     kbs: [314610],
-    checked: C,
+    checked: V,
   },
   {
     name: 'VDT for VKS', job: 'diagnose', maker: 'broadcom', publisher: 'Broadcom (KB attachment)', versions: ['5.x', '9.0', '9.1'],
@@ -198,7 +201,7 @@ export const TOOLS: Tool[] = [
     know: 'Read-only. Marked beta. Run with `python vdt.py -p vks`; set SUPERVISOR_NAME when there is more than one Supervisor.',
     get: { label: 'How to run it', url: 'https://knowledge.broadcom.com/external/article/402184/using-the-vcf-diagnostic-tool-for-vspher.html' },
     kbs: [402184],
-    checked: C,
+    checked: V,
   },
   {
     name: 'vCert', job: 'diagnose', maker: 'broadcom', publisher: 'Broadcom (KB attachment)', versions: ['5.x', '9.0', '9.1'],
@@ -206,7 +209,7 @@ export const TOOLS: Tool[] = [
     know: 'Changes the system. Intended for use with Broadcom Support. Take offline snapshots or file-based backups of every vCenter in the SSO domain first. Replacing the STS signing certificate invalidates scheduled tasks.',
     get: { label: 'Download from the KB', url: 'https://knowledge.broadcom.com/external/article/385107' },
     kbs: [385107],
-    checked: C,
+    checked: V,
   },
   {
     name: 'VCF certificate tool (vcf-cert-tool)', job: 'diagnose', maker: 'broadcom', publisher: 'Broadcom (Support Portal download)', versions: ['5.2', '9.0', '9.1'],
@@ -214,7 +217,7 @@ export const TOOLS: Tool[] = [
     know: 'Changes the system. Use only under the direction of Broadcom Support, after backups. Replacing a certificate does not update the trust that other components hold; those may need a separate refresh. Download from the VCF 9 Drivers & Tools tab.',
     get: { label: 'KB with download steps', url: 'https://knowledge.broadcom.com/external/article/445742' },
     kbs: [445742],
-    checked: C,
+    checked: V,
   },
 
   // Operate and monitor
@@ -224,7 +227,7 @@ export const TOOLS: Tool[] = [
     know: 'After upgrading VCF Operations to 9.1.1, packs built with an earlier MP Builder stop collecting until each design is reopened and reinstalled from the updated builder.',
     get: { label: 'Overview', url: 'https://blogs.vmware.com/cloud-foundation/2026/02/04/extending-visibility-with-vmware-cloud-foundations-management-pack-builder/' },
     kbs: [454434],
-    checked: C,
+    checked: V,
   },
   {
     name: 'VMware.CloudFoundation.Reporting', job: 'operate', maker: 'opensource', publisher: 'VMware (GitHub)', versions: ['5.x'],
@@ -241,7 +244,7 @@ export const TOOLS: Tool[] = [
     know: 'Install from the PowerShell Gallery with `Install-Module VCF.PowerCLI`. Version numbers follow the VCF release they were built for.',
     get: { label: 'PowerShell Gallery', url: 'https://www.powershellgallery.com/packages/VCF.PowerCLI' },
     docs: [{ label: 'Introducing VCF PowerCLI 9.0', url: 'https://blogs.vmware.com/cloud-foundation/2025/06/24/introducing-vcf-powercli-9-0/' }],
-    checked: C,
+    checked: V,
   },
   {
     name: 'VCF SDK for Python and Java', job: 'automate', maker: 'broadcom', publisher: 'Broadcom', versions: ['9.0', '9.1'],
@@ -252,13 +255,13 @@ export const TOOLS: Tool[] = [
       { label: 'Source and samples', url: 'https://github.com/vmware/vcf-sdk-python' },
       { label: 'Introducing the unified SDK', url: 'https://blogs.vmware.com/cloud-foundation/2025/06/24/introducing-a-unified-vcf-sdk-9-0-for-python-and-java' },
     ],
-    checked: C,
+    checked: V,
   },
   {
     name: 'VCF API specifications', job: 'automate', maker: 'opensource', publisher: 'VMware (GitHub)', versions: ['9.0', '9.1'],
     what: 'Machine-readable API definitions for VCF components: OpenAPI 3 for SDDC Manager, the installer, fleet and SDDC lifecycle, VCF Operations and others; OpenAPI 2 for NSX; WSDL and OpenAPI for vSphere. Useful for generating clients in other languages and for reviewing what an API exposes.',
     get: { label: 'GitHub', url: 'https://github.com/vmware/vcf-api-specs' },
-    checked: C,
+    checked: V,
   },
   {
     name: 'Terraform provider for VCF', job: 'automate', maker: 'opensource', publisher: 'VMware (GitHub, Terraform Registry)', versions: ['5.x', '9.0', '9.1'],
@@ -270,10 +273,10 @@ export const TOOLS: Tool[] = [
   },
   {
     name: 'Ansible collection vmware.vmware', job: 'automate', maker: 'community', publisher: 'Ansible community, Red Hat certified', versions: [],
-    what: 'Ansible modules for vSphere: clusters, DRS, vCLS, appliance and guest facts, licences, and VM inventory. Certified content for Red Hat Ansible Automation Platform.',
+    what: 'Ansible modules for vSphere: clusters (DRS, HA, vCLS), ESX hosts, VMs and snapshots, content libraries, tags, key providers, appliance settings and backup schedules, and licence facts, plus inventory plugins for hosts and VMs. Certified content for Red Hat Ansible Automation Platform.',
     know: 'vSphere-level only; there are no VCF or SDDC Manager modules. The project does not state 9.x support, so test against your vCenter version first.',
     get: { label: 'GitHub', url: 'https://github.com/ansible-collections/vmware.vmware' },
-    checked: C,
+    checked: V,
   },
 
   // Lab and learning
@@ -292,14 +295,15 @@ export const TOOLS: Tool[] = [
     checked: C,
   },
   {
-    name: 'VCF 9 resource page (William Lam)', job: 'lab', maker: 'community', publisher: 'William Lam', versions: ['9.0', '9.1'],
-    what: 'An index of articles on VCF 9 deployment, offline depots, lab builds and automation, maintained on a personal site.',
-    get: { label: 'Open the page', url: 'https://williamlam.com/vmware-cloud-foundation-9-0' },
-    checked: C,
+    name: 'VCF 9 resource pages (William Lam)', job: 'lab', maker: 'community', publisher: 'William Lam', versions: ['9.0', '9.1'],
+    what: 'Indexes of articles on VCF 9.1 and 9.0: deployment, offline depots, lab builds and automation, maintained on a personal site.',
+    get: { label: 'Open the 9.1 page', url: 'https://williamlam.com/vmware-cloud-foundation-9' },
+    docs: [{ label: 'The 9.0 page', url: 'https://williamlam.com/vmware-cloud-foundation-9-0' }],
+    checked: V,
   },
   {
     name: 'Flings on the Broadcom Support Portal', job: 'lab', maker: 'fling', publisher: 'Broadcom', versions: ['5.x', '9.0', '9.1'],
-    what: 'Where every current Fling is downloaded, under Free Downloads. A free Broadcom account is enough. Discussion and questions are in the Flings community.',
+    what: 'Broadcom lists Flings on its Support Portal under Free Downloads. Feedback and questions go to the Flings community, which may ask you to sign in.',
     get: { label: 'Flings downloads', url: 'https://support.broadcom.com/group/ecx/productdownloads?subfamily=Flings&freeDownloads=true' },
     docs: [{ label: 'Flings community', url: 'https://community.broadcom.com/flings/home' }],
     checked: C,

@@ -1,0 +1,130 @@
+---
+title: "The October 2027 decision: VCF, VVF, Express, vSphere 8 in the EEA, or leave"
+description: "vSphere 8 and VCF 5.2.x reach end of service on 11 Oct 2027. Core count, region and the VCF functions you run narrow five routes. The public savings figures come from parties with a stake, so cost what remains on one scope. Decide by March 2027, which leaves about six months to act."
+category: value
+order: 14
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
+level: Practitioner
+pubDate: 2026-11-07
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [459135, 456708]
+sources:
+  - title: "End of General Support for vSphere 8.0 (KB 459135)"
+    url: "https://knowledge.broadcom.com/external/article/459135/end-of-general-support-for-vsphere-80.html"
+    by: "Broadcom Knowledge Base"
+    kind: broadcom
+    date: 2026-10-27
+  - title: "Upcoming End of Service for vSphere 8, vSAN 8, Aria 8, NSX 4 and VCF 5 product suite (KB 456708)"
+    url: "https://knowledge.broadcom.com/external/article/456708/upcoming-end-of-service-for-vsphere-8-vs.html"
+    by: "Broadcom Knowledge Base"
+    kind: broadcom
+    date: 2026-10-15
+  - title: "Broadcom Updates VMware Portfolio to Protect and Accelerate Private AI Cloud Deployments"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/11/04/broadcom-vcf-portfolio-updates/"
+    by: "VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "VCF 9.1.1 and vSphere Foundation 9.1.1: Feature Comparison & Upgrade Paths"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-feature-comparison-and-upgrade-paths"
+    by: "VMware by Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "VMware quietly offers European users extended sales and support for low-end vSphere"
+    url: "https://www.theregister.com/virtualization/2026/11/05/vmware-quietly-offers-european-users-extended-sales-and-support-for-low-end-vsphere/5307732"
+    by: "The Register"
+    kind: press
+    date: 2026-11-05
+  - title: "VMware returns to low-end server virtualization with 'vSphere Express'"
+    url: "https://www.theregister.com/virtualization/2026/11/04/vmware-returns-to-low-end-server-virtualization-with-vsphere-express/5307466"
+    by: "The Register"
+    kind: press
+    date: 2026-11-04
+  - title: "VMware kills vSphere Foundation in parts of EMEA"
+    url: "https://www.theregister.com/software/2025/12/11/vmware-kills-vsphere-foundation-in-parts-of-emea/2219962"
+    by: "The Register"
+    kind: press
+    date: 2025-12-11
+  - title: "VMware Cloud Foundation Total Cost of Ownership (September 2025)"
+    url: "https://www.vmware.com/docs/vmw-vcf-tco-whitepaper"
+    by: "Broadcom"
+    kind: broadcom
+  - title: "Financial and Operational Impact of VMware vSAN ESA vs. External Fibre Channel Storage (October 2026)"
+    url: "https://www.vmware.com/docs/signal65-storage-tco-comparison-october-2026"
+    by: "Jonathan Fellows, Signal65"
+    kind: sponsored
+  - title: "Tesco replacing VMware with Proxmox in its stores and on the edge"
+    url: "https://www.theregister.com/virtualization/2026/10/26/tesco-replacing-vmware-with-proxmox-in-its-stores-and-on-the-edge/5305281"
+    by: "The Register"
+    kind: press
+    date: 2026-10-26
+  - title: "VMware Explore Paris 2025: Our Take On Private AI And Private Cloud Sovereignty"
+    url: "https://www.forrester.com/blogs/vmware-explore-paris-2025-our-take-on-private-ai-and-private-cloud-sovereignty/"
+    by: "Dario Maisto, Forrester"
+    kind: analyst
+    date: 2025-10-20
+  - title: "VMware Alternatives 2026: Complete comparison guide"
+    url: "https://redresscompliance.com/vmware-alternatives-2026-complete-comparison-guide"
+    by: "Redress Compliance, a negotiation consultancy"
+    kind: vendor
+    date: 2026-07-10
+  - title: "vSphere 8 end of support 2027: VCF 9.1 upgrade guide"
+    url: "https://ecorpit.com/vsphere-8-end-of-general-support-vcf-9-upgrade-2027/"
+    by: "eCorpIT, an IT services firm"
+    kind: vendor
+    date: 2026-11-01
+---
+
+<InShort>
+**vSphere 8 and VCF 5.2.x reach end of service on 11 October 2027, and after that there is no technical support and there are no new patches ([KB 459135](https://knowledge.broadcom.com/external/article/459135/end-of-general-support-for-vsphere-80.html), [KB 456708](https://knowledge.broadcom.com/external/article/456708/upcoming-end-of-service-for-vsphere-8-vs.html)).** Five routes are open <AsOf date="2026-11-07" />. Core count, region and the VCF functions you run narrow them. Cost what remains on the same scope, then decide by March 2027. This note takes no side between staying and leaving, because the deciding numbers are your own. It isn't purchasing advice.
+</InShort>
+
+## The five routes
+
+| Route | Fits when | What is documented | Get in writing |
+|---|---|---|---|
+| VCF 9.1.1 | You run NSX overlay, VCF Automation, or fleet certificate and password management | Those functions have no VVF mark ([Feature Comparison](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-feature-comparison-and-upgrade-paths) p8-13). General support runs to August 2028, and 5.2.x can go straight there ([support clock](/vcf/library/upgrades/support-clock/)) | Your price |
+| VVF 9.1.1 | You run vSphere and vSAN without those functions | Same document. [The entitlement matrix](/vcf/library/value/using-what-vcf-includes/) lists where Broadcom's pages disagree. Broadcom [told The Register](https://www.theregister.com/software/2025/12/11/vmware-kills-vsphere-foundation-in-parts-of-emea/2219962) in December 2025 that "VVF is no longer available in some EMEA countries" | Your price, that VVF is sold in your country, and any matrix conflict you depend on |
+| vSphere Express | Your total is 128 cores or fewer | Runs on vSphere 9 "for customers with 128 cores across all environments" ([4 Nov post](https://blogs.vmware.com/cloud-foundation/2026/11/04/broadcom-vcf-portfolio-updates/)). Instances are discrete, with no central management, Broadcom's Prashanth Shenoy [told The Register](https://www.theregister.com/virtualization/2026/11/04/vmware-returns-to-low-end-server-virtualization-with-vsphere-express/5307466) | Eligibility and price, which are [only reported](/vcf/library/licensing/november-2026-portfolio/) so far |
+| vSphere 8 Standard or Enterprise Plus | You buy in the EEA and need more time | On sale until 31 Oct 2027. Extended Support is included in active subscriptions until the subscription ends or 31 Oct 2028, whichever comes first ([4 Nov post](https://blogs.vmware.com/cloud-foundation/2026/11/04/broadcom-vcf-portfolio-updates/)) | What Extended Support covers, and a quote. [The Register](https://www.theregister.com/virtualization/2026/11/05/vmware-quietly-offers-european-users-extended-sales-and-support-for-low-end-vsphere/5307732) often heard VMware seldom quoted these editions, and VMware's Paul Turner told it that was fixed |
+| Leave | A costed migration finishes in time and the target covers what you run | Broadcom's KBs recommend VCF 9 or VVF 9 and don't cover this route, so the evidence below comes from parties with a stake | Your target's support terms, and its price for your estate |
+
+Perpetual licences add a step on the Broadcom routes, because they have to [become subscriptions before an upgrade to VCF 9](/vcf/library/licensing/perpetual-after-support-lapses/).
+
+## The questions, in order
+
+**1. How many cores do you run across every environment?** Above 128 removes Express. At 128 or below, Express is a candidate only once Broadcom confirms you qualify, because [two channel sources give existing customers opposite answers](/vcf/library/licensing/november-2026-portfolio/).
+
+**2. Do you buy in the EEA, on vSphere 8 Standard or Enterprise Plus?** That route could provide up to an extra 12 months, independent analyst Michael Warrilow [told The Register](https://www.theregister.com/virtualization/2026/11/05/vmware-quietly-offers-european-users-extended-sales-and-support-for-low-end-vsphere/5307732), and he couldn't find what level of Extended Support applies. So use it to finish a move you have already chosen. The sentence names those two editions only, and VCF 5.x and VVF on vSphere 8 aren't in it.
+
+**3. Which VCF functions run in production today?** List the functions in use, leaving out what the current bundle merely includes. NSX overlay, VCF Automation and fleet certificate and password management point to VCF. A vSphere and vSAN estate without them points to VVF, or sets the scope a replacement has to match.
+
+**4. Will your hosts make the move?** A CPU or server that fails [the hardware checks](/vcf/library/upgrades/hardware-readiness/) means buying hardware on a Broadcom route, and that changes the comparison with any route that keeps the servers. Run the checks before pricing either side.
+
+**5. Does a policy rule anything out?** Dario Maisto of Forrester, which sells research on this market and whose consulting arm wrote a Broadcom-commissioned study on [the ledger](/vcf/library/value/cost-claims-ledger/), [wrote in October 2025](https://www.forrester.com/blogs/vmware-explore-paris-2025-our-take-on-private-ai-and-private-cloud-sovereignty/) that VCF 9.0 being offered as a subscription "doesn't align well with sovereignty-focused strategies". If your organisation has such a rule, settle what it means for you before comparing prices.
+
+## Whose numbers these are
+
+The figures in circulation all have an interest behind them, and none is a quote for your estate. [The cost claims ledger](/vcf/library/value/cost-claims-ledger/) checks the VCF ones line by line.
+
+| Source | What it offers | Its interest | What it's good for |
+|---|---|---|---|
+| [Broadcom's TCO white paper](https://www.vmware.com/docs/vmw-vcf-tco-whitepaper) | 51% TCO savings for VCF against traditional three-tier | Sells VCF | A list of cost lines. [Migration isn't one of them](/vcf/library/value/cost-claims-ledger/) |
+| [Signal65 report](https://www.vmware.com/docs/signal65-storage-tco-comparison-october-2026) | 13.5% and 39.5% lower combined five-year storage cost, vSAN ESA against Fibre Channel SAN, at OEM list prices | Broadcom named as sponsor | Its stated exclusions: facilities, migration, training, downtime and decommissioning |
+| [Redress Compliance guide](https://redresscompliance.com/vmware-alternatives-2026-complete-comparison-guide), updated 10 Jul 2026 | Nutanix and OpenShift "typically" 20 to 40 percent lower "against VCF", Hyper-V plus AVS 15 to 35 percent lower | Sells negotiation services and alternatives assessments | A candidate list. The percentages come with no method on that page |
+| [eCorpIT guide](https://ecorpit.com/vsphere-8-end-of-general-support-vcf-9-upgrade-2027/), 1 Nov 2026 | An upgrade checklist, and no prices | IT services firm selling that planning work. Its page says it was researched with AI assistance | One firm's statement that it found no Broadcom price list on 1 Nov 2026. Redress, above, gives a VCF list figure of roughly $350 per core a year. Compare routes on a written quote |
+| [The Register on Tesco](https://www.theregister.com/virtualization/2026/10/26/tesco-replacing-vmware-with-proxmox-in-its-stores-and-on-the-edge/5305281), 26 Oct 2026 | A job advert for a VMware to Proxmox migration across stores, from which it says Tesco "appears to have decided" | Press, reading an advert. Tesco is also suing VMware over a contract dispute, the article says | One named example, for an edge estate. It gives no migration cost or outcome |
+
+<Callout type="analysis" title="Cost both routes on one scope">
+Use the lines the published studies leave out as well as the ones they include: licences, hardware, migration labour, retraining, downtime, decommissioning, and the backup, monitoring and security tools that have to work on the target. Put a figure on every line for both routes, including staying, since an upgrade has labour and hardware costs too. Include the months of running two platforms if you would leave. If one route wins only with a line left blank, the comparison isn't finished.
+
+March 2027 is a judgement. A decision on 31 March leaves 194 days before 11 October, and the [9.1.1 route from 5.2.x](/vcf/library/upgrades/support-clock/) or a migration has to fit in that time, around your own change freezes. VCF 9.0 ends on 17 September 2027, and 5.0 and 5.1 may end on 1 June 2027, so count from the support clock.
+</Callout>
+
+## What would change the answer
+
+- **Express price and eligibility in writing.** A low quote matters only if you qualify, and the reported terms are [narrow](/vcf/library/licensing/november-2026-portfolio/).
+- **A definition of Extended Support.** If it covers less than you need, the EEA route buys less time than it appears to.
+- **The next VCF release.** Broadcom plans it for sometime in Q1FY27, and the features that post marks as planned [stay plans until release notes say otherwise](/vcf/library/licensing/november-2026-portfolio/), so design without them.
+- **Regulators.** Lobby group CISPE has succeeded in having the European Commission open an antitrust investigation into VMware's channel changes, [The Register reports](https://www.theregister.com/virtualization/2026/11/05/vmware-quietly-offers-european-users-extended-sales-and-support-for-low-end-vsphere/5307732). Reread this note if that produces terms, and don't plan on it before then.

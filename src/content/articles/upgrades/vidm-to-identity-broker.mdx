@@ -42,7 +42,7 @@ sources:
 ---
 
 <InShort>
-Workspace ONE Access (vIDM) 3.3.x has no in-place upgrade to 9.x. It stays managed by Aria Suite Lifecycle 8.x for as long as you keep it (<KB id={390634} />). The VCF Identity Broker is always a new component: on 9.0 you install it after VCF Operations, SDDC Manager and the management domain vCenter are on 9.0 (<KB id={390634} />), and in an upgrade to 9.1 it is deployed with VCF management services. Every consumer of vIDM, above all VCF Automation, then has to be pointed at the broker, and 9.1 gives you a script for part of that. Plan it as an identity cut-over with users, groups, roles and a test list, and give it its own change.
+Workspace ONE Access (vIDM) 3.3.x has no in-place upgrade to VCF 9.0, and it stays managed by Aria Suite Lifecycle 8.x for as long as you keep it (<KB id={390634} />). The VCF Identity Broker is always a new component: on 9.0 you install it after VCF Operations, SDDC Manager and the management domain vCenter are on 9.0 (<KB id={390634} />), and in an upgrade to 9.1 it is deployed with VCF management services. Every consumer of vIDM, above all VCF Automation, then has to be pointed at the broker, and 9.1 gives you a script for part of that. Plan it as an identity cut-over with users, groups, roles and a test list, and give it its own change.
 </InShort>
 
 <Callout type="note" title="Corrected on 7 November 2026">
