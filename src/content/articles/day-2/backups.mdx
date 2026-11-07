@@ -1,70 +1,203 @@
 ---
-title: "Backups: SDDC Manager SFTP in 5.x, fleet-level and instance-level in 9.x"
-description: "Backups used to mean one SFTP target in SDDC Manager plus vCenter's own file-based backup. In 9.x there are more components, two configuration places, a new runtime to protect, and a few formatting rules that silently break the job."
+title: "Backups in VCF 9.x: the method for each component, and what stops the job"
+description: "On 9.1, management services, SDDC Manager, NSX and vCenter back up to SFTP from three separate places, VCF Operations needs a third-party image-based tool, and the license server has no backup. Only NSX has a documented default schedule. Start from Broadcom's daily, seven-day baseline and plan NSX cleanup yourself."
 category: day-2
 order: 4
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [417255, 450561, 456790, 439473, 447314, 442696, 436904, 450430]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [417255, 420088, 433822, 436904, 439473, 442696, 443787, 447314, 448811, 450430, 450561, 451514, 453300, 456277, 456790, 459138]
 sources:
+  - title: "VCF Component Backup and Restore (9.1 design blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-backup-and-restore.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Instance Backup and Restore (9.1 design blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-instance-recovery.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Fleet Disaster Recovery (9.1 design blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-disaster-recovery.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Component Backup and Restore of VMware Cloud Foundation (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configure File-Based Backup Schedules in VMware Cloud Foundation (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/file-based-backups-for-sddc-manager-and-vcenter-server.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configure File-Based Backup Schedule for VCF Management Services and VCF Automation (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/file-based-backups-for-sddc-manager-and-vcenter-server/configure-backup-schedule-in-vcf-fleet-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configure an External SFTP Server for VCF Management Services and VCF Automation Backups (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/configure-sftp-backup-target-in-vmware-cloud-foundation-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configure an External SFTP Server for SDDC Manager and NSX Manager Backups (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/reconfigure-sftp-backups-for-sddc-manager-and-nsx-manager.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configure Image-Based Backup of VCF Operations and VCF Operations for Networks (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/configure-vmware-cloud-foundation-operations-vm-level-backup.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configure File-Based Backup Schedule and External SFTP Server for vCenter (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/file-based-backups-for-sddc-manager-and-vcenter-server/configure-a-backup-schedule-for-vcenter-server.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "On-Demand Backup of SDDC Manager Credential Store (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/on-demand-backups-in-vmware-cloud-foundation/backup-sddc-manager-credential-store.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Restore SDDC Manager (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/restoring-vmware-cloud-foundation/file-based-restore-for-sddc-manager-vcenter-server-and-nsx-t-data-center/vcf-52-restore-sddc-manager.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "File-Based Restore of VCF Management Services (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/restoring-vmware-cloud-foundation/restore-vcf-management-services.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "vCenter 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcenter-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 5.1 operations guide: backup operations"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-1/vmware-cloud-foundation-operations-5-1/vcf-best-practices-operations/backup-operatoins-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2025-07-07
   - title: "VCF 9.1: automating VCF backup scheduling with the Fleet LCM API"
     url: "https://williamlam.com/2026/07/vcf-9-1-automating-vcf-backup-scheduling-with-the-fleet-lcm-api.html"
     by: "William Lam"
+    kind: practitioner
+    date: 2026-07-17
   - title: "10 VCF 9 enhancements simplifying your Day-2 operations (backup configuration)"
     url: "https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/"
     by: "VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-09-18
   - title: "Modernizing infrastructure: VCF 9.0.x to 9.1 upgrade guide (backup methods)"
     url: "https://blogs.vmware.com/cloud-foundation/2026/07/28/modernizing-infrastructure-vmware-cloud-foundation-9-0-x-to-9-1-upgrade-guide/"
     by: "VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-07-28
 ---
 
 <InShort>
-In 5.x, SDDC Manager backed itself up to SFTP and configured NSX backups. vCenter used its own file-based backup, and Aria products were backed up separately. In 9.x, backup configuration lives in VCF Operations at two levels. **Fleet-level** settings cover management components: VCF Operations, VCF Automation, the identity broker and, in 9.1, the management services runtime. **Instance-level** settings cover SDDC Manager and the domains. In 9.1, fleet lifecycle schedules the management component backups per instance to SFTP, with a host key thumbprint and an encryption passphrase. The services runtime is new, important, and easy to forget.
+On 9.1, backup is several jobs in several places. Management services and VCF Automation go to SFTP from VCF Operations, SDDC Manager and NSX Manager have their own SFTP target, and each vCenter schedules itself. VCF Operations needs a third-party image-based tool, and the license server has no backup at all. Only NSX Manager gets a documented default schedule, and it writes to the SDDC Manager appliance until you redirect it. Point every SFTP job at an external server, start from Broadcom's once-a-day, seven-day baseline, and plan NSX cleanup yourself, because NSX retention isn't enforced.
 </InShort>
 
-<Compare rows={[
-  ["Where configured", "SDDC Manager: Administration > Backup", "VCF Operations. 9.0: Fleet Management > Lifecycle > Settings, plus Inventory > VCF Instance > Manage VCF Instance Settings > Backup Settings. 9.1: Build > Lifecycle > VCF Management > Backup and Restore."],
-  ["Target", "SFTP", "SFTP, with a SHA-256 host key thumbprint and an encryption passphrase (9.1)"],
-  ["What is covered", "SDDC Manager and NSX. vCenter separately.", "Management components including the services runtime (9.1), SDDC Manager and NSX. vCenter still uses its native file-based backup."],
-  ["Automation", "SDDC Manager API", "Fleet lifecycle API in 9.1 (backupConfigSpec)"],
-  ["Monitoring", "SDDC Manager task status", "VCF Operations management services dashboard, including backup failures (<a href='https://knowledge.broadcom.com/external/article/417255' target='_blank' rel='noopener'>KB 417255</a>)"],
-]} />
-
-## What to back up, and how
-
-| Component | Method |
-|---|---|
-| SDDC Manager | SFTP file-based backup, configured per instance |
-| NSX Manager | Configured through SDDC Manager. Mind the retention-setting issue in <KB id={442696} />. |
-| vCenter | Native file-based backup from the VAMI |
-| VCF Operations | SFTP through fleet lifecycle, plus image-based backup |
-| Services runtime and management services (9.1) | Fleet lifecycle schedule, per instance, to SFTP |
-| VCF Automation, identity broker | Fleet-level backup settings |
-
-## Rules that silently break backups
-
-- **SFTP user in UPN form.** `user@domain`, not `domain\user`. The backslash breaks the job, and in 9.1 it fails the fleet lifecycle upgrade too (<KB id={450561} />).
-- **Standard SFTP port.** Non-standard ports have failed host key validation in 9.1.
-- **Frequency.** Fifteen-minute incrementals look safe, but they queue other lifecycle tasks such as VCF Automation prechecks. Every four hours is a better default during change windows (<KB id={456790} />).
-- **Locks.** A hung backup can leave a lock that blocks password remediation and host operations (<KB id={439473} />, <KB id={447314} />).
-
-## Restores need practice
-
-A backup no one has restored is a hope, not a control. Two restores are worth practising in a lab:
-
-- **SDDC Manager** from SFTP onto a fresh appliance.
-- **9.1 log management** onto a rebuilt runtime, which needs a documented post-restore step to resume ingestion (<KB id={436904} />).
-
-Before upgrades, VCF Operations has its own snapshot ritual: take the cluster offline, snapshot every node, bring it online, then upgrade (<KB id={450430} />).
-
-<Callout type="field">
-Add "last successful backup per component" to the weekly operations report, as one line per component with a date. A recovery starts from that date.
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to list VCF Operations as backed up over SFTP, say non-standard SFTP ports fail host key validation, and call every four hours a better default. On 9.1 VCF Operations is image-based, custom ports are supported from 9.1.1, Broadcom's recommended cadence is once a day, and the four-hour figure is one KB's remedy for a stuck precheck.
 </Callout>
 
-## Pitfalls
+## What each component needs
 
-- **Backing up the old list.** The 9.1 services runtime holds fleet lifecycle, the depot and, possibly, the identity broker. Confirm it appears in the backup configuration and that a recent backup exists.
-- **Losing the passphrase.** Encrypted backups without the passphrase are useless. Store it in the vault with an owner.
-- **Using snapshots as backups.** They aren't.
+Methods come from the [9.1 backup blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-backup-and-restore.html) and the [component list in TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation.html). Cadence is the [recommended schedule table](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/file-based-backups-for-sddc-manager-and-vcenter-server.html) <AsOf date="2026-11-07" />.
+
+| Component | Method | Where | Cadence and retention |
+|---|---|---|---|
+| VCF management services (services runtime, fleet and SDDC lifecycle, identity broker, depot, Salt, log management, telemetry, real-time metrics) | File, SFTP only | Build > Lifecycle > VCF Management > Backup & Restore, per VCF instance | Daily, 7 days |
+| VCF Automation | File, SFTP only | Same | Daily, 7 days |
+| SDDC Manager | File, which the design recommends, or image | Target under Operate > Administration > SDDC Manager > Backup Settings | Daily, 7 days, starting within the same 5-minute window as every vCenter |
+| vCenter | File, which the design recommends, or image | Management interface on port 5480, per vCenter. Select Supervisors Control Plane if a Supervisor runs there. | Daily, 7 days, same window |
+| NSX Manager | File, SFTP only | Set by SDDC Manager at bring-up | Hourly, 7 days on paper (see below) |
+| NSX Edge | Inside the NSX Manager backup | Recovery: failed nodes are redeployed from NSX Manager | |
+| VCF Operations | Image, third-party tool | VADP-compatible backup job, quiescing off | Daily, keep at least 3 days |
+| VCF Operations for networks | Image, third-party tool | VADP-compatible backup job, quiescing on | Daily, keep at least 3 days |
+| Distributed switch configuration | Export, on demand | | Keep the last 3 configurations |
+| SDDC Manager credential store | JSON from the API, if you have no external vault | SDDC Manager developer center or REST API | [At least daily](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/on-demand-backups-in-vmware-cloud-foundation/backup-sddc-manager-credential-store.html) |
+| License server | None | Recovery: deploy a new one and reconfigure licensing | |
+
+Two rows need action before anything else. VCF Operations has no SFTP path, so an estate without a [VADP-compatible tool](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/configure-vmware-cloud-foundation-operations-vm-level-backup.html) has an unprotected operations cluster. Back up all its nodes at the same time, cloud proxies included, offline if you can and unquiesced if you can't. Keep the job away from dynamic threshold calculations, which [run at 2 a.m. by default](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-backup-and-restore.html), because an overlap can cause performance problems or loss of nodes. The license server belongs in the recovery runbook as a redeployment.
+
+## Set schedules before the first upgrade
+
+Only NSX Manager has a documented default schedule, so treat everything else as unprotected until someone configures it. NSX and SDDC Manager backups [sit on the SDDC Manager appliance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/reconfigure-sftp-backups-for-sddc-manager-and-nsx-manager.html) until redirected, and an external server is [a prerequisite for restoring SDDC Manager](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation.html). The management services SFTP target is also a [prerequisite for patching or upgrading](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/configure-sftp-backup-target-in-vmware-cloud-foundation-operations.html) those services, which makes a broken target an upgrade blocker.
+
+Use once a day unless a recovery point objective demands more. Incrementals exist only for fleet lifecycle, SDDC lifecycle, identity broker and Salt RaaS, and TechDocs says to [enable them only if you need hourly backups](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/file-based-backups-for-sddc-manager-and-vcenter-server/configure-backup-schedule-in-vcf-fleet-management.html). Tighter schedules can have a cost: incrementals every 15 minutes kept a VCF Automation 9.0.2 to 9.1.1 precheck queued, and <KB id={456790} /> fixes that by moving all components to every 4 hours. The pages don't reconcile the two figures. This site reads 4 hours as that failure's remedy and once a day as the design baseline.
+
+Don't rely on Back Up Now alone. Scheduled backups capture telemetry and real-time metrics, and on-demand ones [don't](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/file-based-backups-for-sddc-manager-and-vcenter-server.html). After a restore from a manual backup those components show as Unknown and have to be cleaned up and reinstalled (<KB id={459138} />). TechDocs still recommends an [on-demand backup immediately before an upgrade](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation.html), so take it and confirm a recent scheduled backup exists as well.
+
+Recheck schedules after moving to 9.1. Any schedule created before VCF Automation was deployed or upgraded to 9.1 [must be reconfigured by re-entering the password](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/file-based-backups-for-sddc-manager-and-vcenter-server/configure-backup-schedule-in-vcf-fleet-management.html), while the schedule picks up log management and identity broker automatically. Confirm the services runtime appears in the backup configuration and that a recent backup exists. With many instances, William Lam's [17 July script](https://williamlam.com/2026/07/vcf-9-1-automating-vcf-backup-scheduling-with-the-fleet-lcm-api.html) shows the same per-instance schedule through the Fleet LCM API's `backupConfigSpec`. That payload holds the SFTP password and passphrase, so keep it out of source control.
+
+## What the SFTP server has to satisfy
+
+One server should be able to serve every SFTP job, but the pages set different requirements. Offering both RSA and ECDSA host keys meets all the host key lists, FIPS mode aside. That's an inference from the pages below, and Broadcom doesn't state it.
+
+| Setting | Do this | Why |
+|---|---|---|
+| Host keys, management services | Offer ssh-ed25519, rsa-sha2-512 or rsa-sha2-256 | [Target page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/configure-sftp-backup-target-in-vmware-cloud-foundation-operations.html). The [schedule page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/file-based-backups-for-sddc-manager-and-vcenter-server/configure-backup-schedule-in-vcf-fleet-management.html) lists only the two RSA options. |
+| Host keys, SDDC Manager and NSX | 256-bit ECDSA and 2048-bit RSA | [Target page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/reconfigure-sftp-backups-for-sddc-manager-and-nsx-manager.html), which adds FIPS-mode algorithm limits |
+| OpenSSH 9.8 or later | Add SDDC Manager and NSX Manager IPs to `PerSourcePenaltyExemptList` | Same page |
+| Server name | All-lowercase FQDN | Known-hosts validation is case-sensitive, and an uppercase name stopped the pre-upgrade backup on 9.1.x (<KB id={453300} />) |
+| Username | `user@domain` or a plain service account, not `domain\user` | A script defect on 9.1.0.x fails the fleet lifecycle upgrade at `vmsp_upgrade` on the backslash (<KB id={450561} />) |
+| Port | 22, or a custom port [from 9.1.1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/configure-sftp-backup-target-in-vmware-cloud-foundation-operations.html) | Runtime control plane and worker nodes must reach the server, or fingerprint retrieval fails (<KB id={451514} /> covers TCP 22) |
+| Directory rights | Full access on the path and its parents | The configuration precheck fails on permissions (<KB id={456277} />) |
+
+On 9.1.1, vCenter doesn't insist on a verified server by default. Its default mode transfers as before and [records a non-blocking advisory](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcenter-9-1-1-0-release-notes.html). Enable strict validation if you need the connection to fail instead.
+
+## NSX retention is yours to enforce
+
+Broadcom's pages conflict here. The schedule table recommends 7 days for NSX Manager, but <KB id={442696} /> calls unenforced retention a known limitation in 9.0 and 9.1, with backups piling up until storage runs out. It defers a fix to a future release. Hourly for 7 days is 168 backups, and past that point nothing removes the older ones.
+
+Keep the hourly schedule, run the NSX cleanup script that <KB id={448811} /> points to, and alert on SFTP free space. The KB's alternative is a move to daily through properties files on the appliance. That slows growth without enforcing retention and gives up the hourly recovery point, so it suits an estate that can't run the script.
+
+## What a restore needs
+
+A backup job doesn't produce everything a restore requires, and these items should be in place before a failure.
+
+- The SFTP passphrase [is required to restore](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/configure-sftp-backup-target-in-vmware-cloud-foundation-operations.html), so store it in the vault with an owner. vCenter's encryption password can't be recovered from the backup, so [record it outside the VCF instance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/file-based-backups-for-sddc-manager-and-vcenter-server/configure-a-backup-schedule-for-vcenter-server.html).
+- [SDDC Manager restores](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/restoring-vmware-cloud-foundation/file-based-restore-for-sddc-manager-vcenter-server-and-nsx-t-data-center/vcf-52-restore-sddc-manager.html) onto a new appliance at the backup's version, and vCenter must already be available. vCenter needs a same-version replacement appliance too, so [TechDocs says](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/file-based-backups-for-sddc-manager-and-vcenter-server/configure-a-backup-schedule-for-vcenter-server.html) to store that image with your backups and refresh it after each patch.
+- The [instance recovery blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-instance-recovery.html) wants backups at a remote site or duplicated off-site, plus as-built records on secure secondary storage. Its rebuild stays in the same site, so site loss needs the separate [fleet disaster recovery blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-disaster-recovery.html).
+
+Management services recovery depends on how much is left. A single lost node redeploys automatically, while losing two or three means [redeploying the services cluster and then restoring](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/restoring-vmware-cloud-foundation/restore-vcf-management-services.html). Component corruption takes an in-place restore.
+
+Rehearse two restores in a lab: SDDC Manager onto a new appliance, and Log Management onto a rebuilt runtime, which has extra steps. Its [log data isn't in the backup](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation.html) and must be archived separately, so a restore returns the service without the history. On a rebuilt cluster, ingestion may need the recovery bundle's `--post-restore` mode (<KB id={436904} />). Step 1 of that KB still shows placeholders for the download location <AsOf date="2026-11-07" />, so get the bundle from Broadcom before you schedule the rehearsal. On 9.1.1, a [restart of the service clears an "Unable to access logs" error](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) after restoration, and an SDDC Lifecycle restore that reports failure may be a reporting error, so check the component before you restore again.
+
+## Snapshots and stale locks
+
+Snapshots aren't backups. They belong to the upgrade plan, and the blueprint's method table doesn't list them. For 9.0.2 to 9.1, <KB id={450430} /> takes VCF Operations offline, snapshots "all primary nodes", brings it back online, then installs. That wording is narrower than the node list for image-based backups, so use [Rollback checkpoints](/vcf/library/upgrades/rollback-checkpoints/) for the per-component list. Never snapshot NSX Managers or Edges, because that can destabilise the cluster or corrupt its database (<KB id={433822} />).
+
+A hung SDDC Manager backup can leave a stale lock that blocks password remediation (<KB id={447314} />, 5.x) or host commissioning and backup target edits (<KB id={439473} />, 5.x and 9.0.x). Neither KB lists 9.1 and both fixes edit the appliance database, so open a support case if you see this on 9.1.
+
+<Callout type="analysis" title="One line per component in the weekly report">
+Backup status lives in several places: the [VCF Operations Health dashboard](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/file-based-backups-for-sddc-manager-and-vcenter-server.html) (<KB id={417255} /> has the remediation steps), a 9.1.1 alert for a services runtime with no recent backup (<KB id={443787} />), each vCenter's Activity pane and your image-based tool. Report the last successful backup per component with its date, since recovery starts from that date.
+</Callout>
+
+## Coming from 5.x or 9.0
+
+<Compare rows={[
+  ["Where configured", "SDDC Manager: Administration > Backup", "9.0: in VCF Operations, Fleet Management > Lifecycle > Settings, plus Inventory > VCF Instance > Actions > Manage VCF Instance Settings > Backup Settings. 9.1: the paths in the table above."],
+  ["SFTP target", "One SFTP target in SDDC Manager", "Two targets on 9.1, each with an SSH fingerprint to confirm and an encryption passphrase, plus each vCenter's own. The management services fingerprint is a SHA-256 host key thumbprint."],
+  ["Coverage", "SDDC Manager and NSX, with vCenter on its own schedule in its management interface and Aria products backed up separately", "9.0 fleet-level backups cover management nodes, VCF Automation and identity broker. On 9.0.0 and 9.0.1 the management node is image-based only, and Back Up Now stays in /data on the appliance (<a href='https://knowledge.broadcom.com/external/article/420088' target='_blank' rel='noopener'>KB 420088</a>)."],
+  ["Automation", "SDDC Manager API", "Fleet LCM API on 9.1 (backupConfigSpec)"],
+  ["Monitoring", "SDDC Manager task status", "Several places, listed in the weekly report note above"],
+]} />
+
+The 5.x column draws on the [5.1 operations guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-1/vmware-cloud-foundation-operations-5-1/vcf-best-practices-operations/backup-operatoins-operations.html), and the 9.0 paths on the [September 2025 VMware blog](https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/). The [July 2026 upgrade guide](https://blogs.vmware.com/cloud-foundation/2026/07/28/modernizing-infrastructure-vmware-cloud-foundation-9-0-x-to-9-1-upgrade-guide/) summarises the backup methods in one line. The console moves are in [Where did that button go](/vcf/library/day-2/where-did-that-button-go/).

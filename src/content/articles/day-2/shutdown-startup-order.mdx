@@ -1,84 +1,193 @@
 ---
 title: "Shutdown and startup order for a 9.x fleet"
-description: "In 9.x the order gained a fleet rule, a License Server and a Kubernetes runtime with its own script. The instance that runs VCF Operations goes down last and comes up first. Here is the sequence with the reasoning, so it can be adapted rather than memorised."
+description: "On 9.1 the 11-step management domain startup is the exact reverse of shutdown, and the instance running VCF Operations goes down last and comes up first. The runtime needs its script and then a vCenter step. Documented waits total at least 2 hours 20 minutes per round trip."
 category: day-2
 order: 7
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
 kbs: [440874, 440862, 341964]
 sources:
-  - title: "Shutting down VMware Cloud Foundation (9.0)"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/vcf-shutdown-and-startup/vcf-shutdown.html"
+  - title: "Shut Down the Management Domain (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain.html"
     by: "Broadcom TechDocs"
-  - title: "Shut down the management domain (9.0)"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain.html"
-    by: "Broadcom TechDocs"
-  - title: "Shut down VCF management services (9.1)"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain/shut-down-vcf-managament-services.html"
-    by: "Broadcom TechDocs"
-  - title: "Start the management domain (9.1)"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Start the Management Domain (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Shutting Down VMware Cloud Foundation (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Starting Up VMware Cloud Foundation (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Shut Down VCF Management Services (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain/shut-down-vcf-managament-services.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Start VCF Management Services (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain/start-vcf-management-services.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Shut Down VCF Operations (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain/shut-down-vcf-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Start VCF Operations (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain/start-the-vcf-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Shut Down VCF Automation (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain/shut-down-the-vrealize-automation-cluster.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Shut Down the License Server (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain/shut-down-the-license-server.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Start the License Server (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain/start-the-license-server.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Start NSX Manager in the management domain (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain/start-the-nsx-t-manager-virtual-machines-in-the-management-domain.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Shut Down vSAN and the ESX Hosts in the Management Domain (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain/shut-down-the-esx-hosts-in-management-domain/shut-down-vsan-and-the-esx-hosts-in-a-management-domain.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Start vSAN and the ESX Hosts in the Management Domain (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain/start-the-esx-hosts-and-vcenter-server-in-management-domain/start-vsan-and-the-esxi-hosts-in-the-management-domain.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Shut Down a Workload Domain (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-virtual-infrastructure-workload-domain.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Start a Workload Domain (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-virtual-infrastructure-workload-domain.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF management appliances (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/vcf-management-appliances.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Shut Down the Management Domain (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Shut Down the Management Domain (5.2)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/vmware-cloud-foundation-operations-5-2/vcf-shutdown-and-startup-operations/vcf-shutdown-operations/shut-down-the-management-domain-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-01
+  - title: "VCF 9.1 General FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
   - title: "VCF 9 deployment planning and operations: shutdown and startup"
     url: "https://vcf-planning.hollebollevsan.nl/docs/13-shutdown-startup/"
-    by: "Community guide"
+    by: "Paul van Dieen"
+    kind: practitioner
 ---
 
 <InShort>
-The principle hasn't changed since 5.x: shut down consumers before what they depend on, and start in reverse. Workload domains go before the management domain, and the management components go before the infrastructure that hosts them. VCF 9 adds a fleet rule: **the instance that runs VCF Operations goes down last and comes up first**. 9.1 adds two components to the management domain sequence. The **License Server** is an ordinary VM. The **services runtime** is shut down only with its script, which knows the runtime's internal order. After an unclean power event, the runtime comes back control plane first.
+Across a fleet, [instances running neither VCF Operations nor VCF Automation go down first, and the instance running VCF Operations goes down last](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown.html) and [comes up first](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain.html). In each instance, workload domains go down before the management domain and come up after it. On 9.1, startup in the management domain is the exact reverse of shutdown, so one table below covers both directions. The step that catches runbooks is the services runtime: its script stops the platform and leaves the VMs running until they are shut down from vCenter. Budget at least 2 hours 20 minutes of documented waits per instance.
 </InShort>
 
-<Compare rows={[
-  ["Fleet rule", "None. Each SDDC Manager stood alone.", "Instances without VCF Operations or Automation first. The VCF Operations instance last down, first up."],
-  ["Management components", "Aria products (if any), then NSX edges and managers, SDDC Manager, vCenter and hosts", "VCF Automation, Ops for networks, collectors or cloud proxies, logs (9.0), the broker (9.0), fleet management (9.0), VCF Operations, then NSX, SDDC Manager and hosts"],
-  ["New in 9.1", "Not applicable", "License Server, then the services runtime with its shutdown script, before VCF Operations"],
-  ["Timing", "Minutes per component", "VCF Operations offline or online takes about an hour each way. Runtime workers can take about 20 minutes to settle."],
-]} />
-
-## Shutdown, 9.1 management domain
-
-After every workload domain is down (customer workloads, protection, edges, NSX managers if not shared, hosts, then the workload domain vCenter):
-
-1. VCF Automation
-2. VCF Operations for networks
-3. Cloud proxies
-4. License Server
-5. **Management services:** `vcf_services_runtime_shutdown.sh` (<KB id={440874} />). Run it with `--dry-run` first. Don't stop runtime VMs by hand.
-6. **VCF Operations:** take the cluster offline, then shut the nodes down in the documented order (<KB id={341964} />)
-7. Protection and recovery, if deployed, as late as possible
-8. NSX edges, then NSX managers
-9. SDDC Manager
-10. Hosts and the management vCenter through the vSAN shutdown wizard. DNS, NTP and AD VMs go last if they live here.
-
-For 9.0, the list differs in the middle. There is no License Server or runtime, but VCF Operations for logs, the identity broker appliance and the fleet management appliance are shut down before VCF Operations.
-
-## Startup, 9.1 management domain
-
-1. Hosts, powered on out of band
-2. SDDC Manager
-3. NSX managers (wait for the cluster to be stable), then edges
-4. Protection and recovery
-5. **VCF Operations:** power on in order, then bring the cluster online
-6. **Management services:** control plane nodes first, then workers. Allow about 20 minutes, and confirm no workers are still being replaced.
-7. License Server
-8. Cloud proxies
-9. VCF Operations for networks
-10. VCF Automation
-
-Then each workload domain: vCenter, hosts, a cluster restart to re-establish principal storage integration (easy to miss), NSX, edges and workloads. With shared NSX, bring up the other workload domains first, then the domain that runs the shared edges.
-
-## After an unclean power event
-
-If the runtime came back on its own in the wrong order, services can stay at zero replicas and nodes at "Ready,SchedulingDisabled". The documented recovery is to power on the control plane first, wait five minutes, power on the workers, then wait 15 to 20 minutes (<KB id={440862} />). The same KB covers the power-off marker that the shutdown script leaves behind.
-
-<Callout type="field">
-Write the order for the actual estate, not the generic one. List which optional components exist, where DNS, NTP and AD run, and which domains share NSX. Then time a planned shutdown in a maintenance window. Allow for the hour each way that VCF Operations takes.
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to say the runtime goes down only through its script and that its VMs shouldn't be stopped by hand. Broadcom's procedure has you shut the listed VMs down from vCenter after the script, unless `--poweroff-vms` is used. It also applied <KB id={440862} /> to unclean power events and wrong power-on order, but that KB is scoped to 9.1.0.x, blames nodes left cordoned after a graceful shutdown, and 9.1.1.0 lists the failure as resolved. The vSAN restart step was missing, and the 5.x comparison and the claims that backup jobs "fail noisily" and that snapshots should be consolidated had no source, so they are gone.
 </Callout>
 
-## Pitfalls
+## The 9.1 management domain, in both directions
 
-- **Forgetting the backup tools.** Stop VADP-based backup jobs first, or they fail noisily and hold snapshots.
-- **Running management VMs on snapshots** through a shutdown. Consolidate first.
-- **Credentials.** Save the host and vCenter credentials before you start. SSO may not be available halfway through.
+Read the [shutdown order](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain.html) down the first column and the [startup order](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain.html) by the second. Shut every workload domain down before you start.
+
+| Down | Up | Component | How | Documented wait |
+|---|---|---|---|---|
+| 1 | 11 | VCF Automation | [VCF Operations lifecycle action](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain/shut-down-the-vrealize-automation-cluster.html): Build > Lifecycle > VCF Management Components > Actions > State management | Until the task finishes |
+| 2 | 10 | VCF Operations for networks | | |
+| 3 | 9 | Cloud proxy appliances | | |
+| 4 | 8 | License Server | [Shut Down Guest OS](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain/shut-down-the-license-server.html) and [Power On](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain/start-the-license-server.html) from vCenter | |
+| 5 | 7 | VCF management services | Script, then vCenter (next section). Coming up, control nodes before workers | [Control nodes several minutes, workers about 20 minutes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain/start-vcf-management-services.html) |
+| 6 | 6 | VCF Operations | [Take the cluster offline, then shut the appliances down](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain/shut-down-vcf-operations.html). Coming up, [power on, then Bring Cluster Online](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain/start-the-vcf-operations.html) | About an hour each way, plus several minutes per appliance |
+| 7 | 5 | Protection and recovery, if deployed | As late as possible going down | |
+| 8 | 4 | NSX Edge nodes, if in this domain | | |
+| 9 | 3 | NSX Manager nodes | Coming up, [wait for a Stable cluster with all nodes available](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain/start-the-nsx-t-manager-virtual-machines-in-the-management-domain.html) | Several minutes |
+| 10 | 2 | SDDC Manager | | |
+| 11 | 1 | ESX hosts and vCenter | [vSAN shutdown wizard, with the cluster hosting vCenter last](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain/shut-down-the-esx-hosts-in-management-domain/shut-down-vsan-and-the-esx-hosts-in-a-management-domain.html). Coming up, [out-of-band power-on, vCenter starts itself, then Restart cluster on each vSAN cluster, vCenter's first](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain/start-the-esx-hosts-and-vcenter-server-in-management-domain/start-vsan-and-the-esxi-hosts-in-the-management-domain.html). Those are the vSAN steps, so other storage needs its own procedure | Several minutes per host |
+
+## Rows 5 and 6
+
+The [TechDocs procedure](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain/shut-down-vcf-managament-services.html) runs `vcf_services_runtime_shutdown.sh --node-ip <control_node_ip>` from SDDC Manager, with `--dry-run` first. When it finishes, it prints the VMs to shut down, and each one then gets Shut Down Guest OS in the management vCenter. <KB id={440874} /> also allows any Linux machine that reaches port 5480 on the node, and adds `--poweroff-vms`, which needs `govc` and vCenter credentials and does the vCenter step for you. This site's advice is the TechDocs path unless `govc` is already in place, since it's the path the sequence documents.
+
+Don't force a VM off while the script runs (<KB id={440874} />). The script stops the management components on the platform, including Log Management and VCF Operations lifecycle. Note every control node's IP address and VM name before you run it, along with the `vmware-system-user` password, since [startup powers on those noted nodes first](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain/start-vcf-management-services.html).
+
+The [identity broker is listed among the runtime's services](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/vcf-management-appliances.html), so expect sign-in through it to stop at row 5 and keep local accounts to hand. That's an inference, and the shutdown pages don't state it.
+
+Coming back, [the startup may redeploy some workers](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain/start-vcf-management-services.html). Confirm that all workers are running and none are still deploying, then check that the Lifecycle page in VCF Operations loads and every service shows running.
+
+Row 6 has a catch too. TechDocs points to <KB id={341964} /> for the appliance order, but that KB is written for rebooting nodes when the Admin UI can't take the cluster offline, and it prefers the Admin UI. Only its order applies here: data nodes then primary, or with HA, data nodes, then primary replica, then primary, reversed for startup. Continuous availability clusters have a longer list in the KB, starting with the witness.
+
+## Before the first host goes down
+
+[Take complete backups of the management components, make sure no management VM runs on a snapshot, and shut VADP-based backup down as its vendor directs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown.html). [Save the ESX host and vCenter credentials](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain.html), because you need them to stop the hosts and to start them again. The vSAN wizard wants [healthy Skyline categories, no resync in progress and any locked-down host's root account in Exception Users](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain/shut-down-the-esx-hosts-in-management-domain/shut-down-vsan-and-the-esx-hosts-in-a-management-domain.html), and if vCenter is on that cluster, record the orchestration host. Moving vCenter to the first host of the default management cluster is [optional and shortens startup](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown.html).
+
+[Active Directory, NTP, DNS and DHCP VMs that live in this domain stop after vCenter](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain.html). On vSAN, confirm them as infrastructure VMs in the wizard. Elsewhere, migrate them to the first host running vCenter and shut them down once vCenter is off.
+
+<Callout type="analysis" title="Infrastructure VMs on the management cluster">
+[Startup expects storage, Active Directory, DNS, NTP, SMTP and FTP or SFTP to be available](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup.html), yet the vSAN host-start page has no step for VMs that provide them. If yours live on this cluster, add your own step between vCenter coming up and SDDC Manager. Broadcom doesn't state that placement, so test it before relying on it.
+</Callout>
+
+## Workload domains and shared NSX
+
+A workload domain [shuts down as workloads, protection and recovery, edges, NSX Manager if not shared, hosts, then vCenter](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-virtual-infrastructure-workload-domain.html). It [starts as vCenter, hosts, Restart clusters, NSX Manager, edges, protection and recovery, then workloads](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-virtual-infrastructure-workload-domain.html). So vCenter leads here, unlike the management domain. Restart clusters re-establishes principal storage integration, and it has no shutdown equivalent, "which is why it gets skipped", as Paul van Dieen's [planning guide](https://vcf-planning.hollebollevsan.nl/docs/13-shutdown-startup/) puts it.
+
+Shared NSX changes the order between domains. [Stop consumer workloads in every sharing domain first, then the domain running the shared edges, then the others](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-virtual-infrastructure-workload-domain.html). [Startup reverses that: the other domains, then the one running the shared edges, then the workloads that depend on NSX](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-virtual-infrastructure-workload-domain.html).
+
+## When the runtime doesn't come back
+
+On 9.1.0.x, a graceful shutdown can leave nodes cordoned, so automatic recovery never finishes: services sit at 0 replicas and nodes at "Ready,SchedulingDisabled". <KB id={440862} /> powers on the control plane VMs, waits 5 minutes, powers on the workers and allows 15 to 20 minutes. If nodes stay stuck and the `power-off-marker` ConfigMap that the shutdown script leaves behind still exists in `vmsp-platform`, the KB has you run the attached `cluster-manual-recovery.sh`. That path depends on the marker, so don't delete it. <KB id={440874} /> sends forced shutdowns to the same KB.
+
+The [9.1.1.0 notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) list this as resolved, with services recovering automatically after a shutdown or power-cycle <AsOf date="2026-11-07" />. The [9.1 startup page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-shutdown-and-startup/sddc-startup/start-the-management-domain/start-vcf-management-services.html) still links the KB, and the KB's scope doesn't list 9.1.1. So if services stay down on 9.1.1, this site's advice is to open a case before running the script. [The runtime note](/vcf/library/troubleshooting/services-runtime-kubectl/) has the read-only commands.
+
+## Runbooks from earlier releases
+
+The middle of a 9.0 runbook changes with the move to 9.1. [9.0 has no License Server or runtime steps](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/vcf-shutdown-and-startup/vcf-shutdown/shut-down-the-management-domain.html), and it shuts down the collector, VCF Operations for logs, the identity broker and fleet management separately, before VCF Operations. On 9.1, [log management, the broker and fleet lifecycle are runtime services](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/vcf-management-appliances.html). The [License Server is a new headless appliance](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs), and [what its downtime blocks](/vcf/library/licensing/license-server/) has its own note.
+
+The [5.2 order](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/vmware-cloud-foundation-operations-5-2/vcf-shutdown-and-startup-operations/vcf-shutdown-operations/shut-down-the-management-domain-operations.html) has the same outline: the Aria products if any, then NSX, SDDC Manager, vCenter and the hosts. If infrastructure VMs live in a 5.2 management domain, that page sends you to the 4.4 documentation.
+
+<Callout type="analysis" title="Time the round trip">
+The largest documented waits are an hour offline, an hour online and 20 minutes for workers, so 2 hours 20 minutes for one instance, before the several-minute waits in the table. The pages cited here give no duration for the script or the vSAN wizard, and van Dieen's [guide](https://vcf-planning.hollebollevsan.nl/docs/13-shutdown-startup/) wants those timed once, "outside a real maintenance window". Write the runbook for what the estate has: which optional components exist, where DNS, NTP and AD run, and which domains share NSX.
+</Callout>
