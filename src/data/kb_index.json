@@ -89,7 +89,7 @@
  },
  {
   "kb": 317794,
-  "topic": "Compute manager errors 7055 and 90204",
+  "topic": "NSX compute manager shows Down: read its message",
   "decks": [
    "How it all connects"
   ],
@@ -1036,7 +1036,7 @@
  },
  {
   "kb": 435599,
-  "topic": "9.0: password rotation not automated for some components",
+  "topic": "9.x: no Never Expire setting; set rotation intervals",
   "decks": [
    "Meet the fleet"
   ],
@@ -2437,7 +2437,7 @@
  },
  {
   "kb": 451125,
-  "topic": "Compute manager 7058 after a root CA change",
+  "topic": "Compute manager: trusted root not found after a root change",
   "decks": [
    "How it all connects"
   ],

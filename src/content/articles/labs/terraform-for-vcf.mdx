@@ -1,6 +1,6 @@
 ---
 title: "Terraform for VCF: the vcf provider and where it fits with vSphere and NSX"
-description: "Pin vmware/vcf to your release: v0.19.0 or later for VCF 9.1.1, v0.17.0 or later for 9.0, v0.13.0 to below v0.17.0 for 5.2.1. Keep bring-up and day 2 in separate configurations. The provider lists no 9.1.0 row, and vcf_edge_cluster calls SDDC Manager operations deprecated in 9.1."
+description: "Pin vmware/vcf to your release: v0.19.0 or later for VCF 9.1.1, v0.18.2 to below v0.19.0 for a 9.0 bring-up, v0.13.0 to below v0.17.0 for 5.2.1. Keep bring-up and day 2 in separate configurations. The provider lists no 9.1.0 row, and vcf_edge_cluster calls SDDC Manager operations deprecated in 9.1."
 category: labs
 order: 8
 versions: ["5.x", "9.0", "9.1", "9.1.1"]
@@ -118,7 +118,7 @@ sources:
 ---
 
 <InShort>
-Use **vmware/vcf** for the platform layer, **vmware/vsphere** for compute configuration and **vmware/nsxt** for networking inside the domains. Pin vcf to your VCF release: [v0.19.0 or later for 9.1.1, v0.17.0 or later for 9.0, and v0.13.0 to below v0.17.0 for 5.2.1](https://github.com/vmware/terraform-provider-vcf/blob/main/docs/index.md). One provider block reaches either the VCF Installer for bring-up or SDDC Manager for day 2, so keep those in separate configurations. Two things need a decision on 9.1: the support table has no 9.1.0 row, and `vcf_edge_cluster` calls SDDC Manager operations that 9.1 deprecates. [VCF on Dell VxRail isn't supported](https://www.github.com/vmware/terraform-provider-vcf) by this provider, so the platform layer here doesn't apply to a VxRail estate.
+Use **vmware/vcf** for the platform layer, **vmware/vsphere** for compute configuration and **vmware/nsxt** for networking inside the domains. Pin vcf to your VCF release: [v0.19.0 or later for 9.1.1, v0.17.0 or later for 9.0, and v0.13.0 to below v0.17.0 for 5.2.1](https://github.com/vmware/terraform-provider-vcf/blob/main/docs/index.md). That table gives 9.0 no ceiling, but [v0.19.0's `vcf_instance` can't do bring-up for 9.0.0 and earlier](https://github.com/vmware/terraform-provider-vcf/pull/445), so pin `~> 0.18.2` for a 9.0 bring-up. One provider block reaches either the VCF Installer for bring-up or SDDC Manager for day 2, so keep those in separate configurations. Two things need a decision on 9.1: the support table has no 9.1.0 row, and `vcf_edge_cluster` calls SDDC Manager operations that 9.1 deprecates. [VCF on Dell VxRail isn't supported](https://www.github.com/vmware/terraform-provider-vcf) by this provider, so the platform layer here doesn't apply to a VxRail estate.
 </InShort>
 
 <Callout type="note" title="Corrected on 7 November 2026">
@@ -127,7 +127,7 @@ This note used to show `>= 0.19.0` as a pin, call `terraform plan` output an exc
 
 <Compare rows={[
   ["Bring-up target", "Cloud Builder, using provider versions below v0.17.0", "VCF Installer"],
-  ["Provider version", "v0.9.0 or later for 5.0 and 5.1. v0.12.0 or later for 5.2.0. v0.13.0 to below v0.17.0 for 5.2.1.", "v0.17.0 or later for 9.0. v0.19.0 or later for 9.1.1. No row for 9.1.0."],
+  ["Provider version", "v0.9.0 or later for 5.0 and 5.1. v0.12.0 or later for 5.2.0. v0.13.0 to below v0.17.0 for 5.2.1.", "v0.17.0 or later for 9.0, below v0.19.0 for bring-up. v0.19.0 or later for 9.1.1. No row for 9.1.0."],
   ["Domain and cluster changes", "SDDC Manager API", "The provider still uses the SDDC Manager API. On 9.1, new domains start in VCF Operations, and clusters can be added from the vSphere Client."],
 ]} />
 
@@ -136,12 +136,14 @@ This note used to show `>= 0.19.0` as a pin, call `terraform plan` output an exc
 | VCF | Provider |
 |---|---|
 | 9.1.1 | v0.19.0 or later |
-| 9.0.0 | v0.17.0 or later |
+| 9.0.0 | v0.17.0 or later, with no ceiling stated |
 | 5.2.1 | v0.13.0 to below v0.17.0 |
 | 5.2.0 | v0.12.0 or later |
 | 5.0 and 5.1 | v0.9.0 or later |
 
 The provider can trail the platform, so check it before scheduling an upgrade. [VCF 9.1.1 shipped on 3 September 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html) and [v0.19.0, the first version listed for it, on 7 October](https://github.com/vmware/terraform-provider-vcf/blob/main/CHANGELOG.md), a gap of 34 days.
+
+The 9.0 row needs a ceiling for bring-up. [The pull request behind v0.19.0](https://github.com/vmware/terraform-provider-vcf/pull/445) marks itself breaking and says `vcf_instance` "will not be able to do bringup for VCF 9.0.0 and earlier", so use `~> 0.18.2` there, which also carries the password fix below. This site hasn't confirmed how v0.19.0's other resources behave on 9.0, so test day 2 before moving a 9.0 estate to it.
 
 If you run 9.1.0, the table gives you no version to pin. The omission looks deliberate, because the [NSX provider lists 9.1.0 and 9.1.1 separately](https://github.com/vmware/terraform-provider-nsxt) and [the v0.19.0 change to `vcf_instance`](https://github.com/vmware/terraform-provider-vcf/pull/445) adapts it to a schema introduced in 9.1. That reading is an inference, and Broadcom doesn't state it. Move to 9.1.1 before adopting the provider, or ask support which version applies to 9.1.0.
 
@@ -171,7 +173,7 @@ The two sets of provider arguments [conflict with each other in the provider sch
 ```hcl
 terraform {
   required_providers {
-    vcf = { source = "vmware/vcf", version = "~> 0.19.0" }
+    vcf = { source = "vmware/vcf", version = "~> 0.19.0" } # 9.1.1. A 9.0 bring-up needs ~> 0.18.2.
   }
 }
 

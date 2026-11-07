@@ -11,7 +11,7 @@ const today = process.env.TODAY ? new Date(process.env.TODAY) : new Date();
 const files = [];
 (function walk(d) { for (const f of readdirSync(d)) { const p = join(d, f); statSync(p).isDirectory() ? walk(p) : /\.mdx?$/.test(p) && files.push(p); } })(ROOT);
 
-const field = (fm, name) => (fm.match(new RegExp(`^${name}:\\s*["']?([^"'\\n]+)`, 'm')) ?? [])[1];
+const field = (fm, name) => (fm.match(new RegExp(`^${name}:[ \\t]*["']?([^"'\\n]+)`, 'm')) ?? [])[1];
 const missing = [], noSources = [], stale = [];
 let notes = 0;
 for (const f of files) {

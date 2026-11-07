@@ -1,6 +1,6 @@
 ---
 title: "Building a cost case for VCF 9 optimisation without inventing numbers"
-description: "A savings figure needs a dated VCF Operations baseline, levers in a fixed order, a written assumptions table and a pessimistic result. Removing hosts lowers core usage, but subscribed capacity falls at subscription end, and each VCF core removed takes 1 TiB of included vSAN with it."
+description: "A savings figure needs a dated VCF Operations baseline, levers in a fixed order, a written assumptions table and a pessimistic result. Removing hosts lowers core usage, but subscribed capacity falls at subscription end, and each VCF core dropped from it takes 1 TiB of included vSAN with it."
 category: value
 order: 11
 versions: ["9.0", "9.1", "9.1.1"]
@@ -9,7 +9,7 @@ pubDate: 2026-11-02
 updated: 2026-11-07
 reviewed: 2026-11-07
 reviewDue: 2027-02-15
-kbs: [313548]
+kbs: [313548, 400416]
 sources:
   - title: "Licensing Model (VCF 9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html"
@@ -75,7 +75,7 @@ sources:
 ---
 
 <InShort>
-A cost case holds up when every saving traces to a dated measurement or a written assumption. Measure a baseline in VCF Operations, apply the levers in a fixed order so nothing is saved twice, and show the pessimistic result first. State savings in hosts, cores and TiB, then convert with your own quote. Date each saving too: core usage drops when hosts leave, subscribed capacity falls on a subscription's end date, and every VCF core you drop takes 1 TiB of included vSAN with it.
+A cost case holds up when every saving traces to a dated measurement or a written assumption. Measure a baseline in VCF Operations, apply the levers in a fixed order so nothing is saved twice, and show the pessimistic result first. State savings in hosts, cores and TiB, then convert with your own quote. Date each saving too: core usage drops when hosts leave, subscribed capacity falls on a subscription's end date, and every VCF core you stop subscribing to takes 1 TiB of included vSAN with it.
 </InShort>
 
 <Callout type="note" title="Corrected on 7 November 2026">
@@ -86,7 +86,7 @@ This note gave the reclaim path as Capacity > Reclaim, called the 25% in the tie
 
 Date each saving before totalling anything, because a change's costs and its licence effect can land in different years. [Only ESX hosts use primary licence capacity](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html), counted in physical cores with a minimum of 16 per CPU on most products, so core usage drops when a host leaves. Subscribed capacity is a separate number, and the same page has it [reducing on the end date of each subscription](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html) <AsOf date="2026-11-07" />. A host retired mid-term therefore frees room for growth, and whether it also cuts cost before that date is a question for your contract. That's an inference from the licensing page, and it isn't legal or purchasing advice.
 
-Cores and TiB can't be saved independently. VCF [includes 1 TiB of vSAN per core](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html), and add-on TiB pool with it: Broadcom's example is 300 cores plus a 50 TiB add-on, giving 350 TiB. Take that example and remove 60 cores in a constructed consolidation. Capacity falls to 290 TiB, so an estate with 320 TiB raw is now 30 TiB short and would have to buy back part of what it saved. It follows that reducing raw TiB changes the licence bill only where raw exceeds what's included. Below that line, fewer drives are a hardware saving at the next storage purchase.
+Cores and TiB can't be saved independently. VCF [includes 1 TiB of vSAN per core](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html), and add-on TiB pool with it: Broadcom's example is 300 cores plus a 50 TiB add-on, giving 350 TiB. Take that example and subscribe to 60 fewer cores at renewal after a constructed consolidation. Capacity then falls to 290 TiB, so an estate with 320 TiB raw is 30 TiB short and would have to buy back part of what it saved. It follows that reducing raw TiB changes the licence bill only where raw exceeds what's included. Below that line, fewer drives are a hardware saving at the next storage purchase.
 
 Set the one-time costs against those dates: NVMe devices for tiering, migration effort to merge clusters, engineering time for right-sizing reviews, [workload restarts that may interrupt work](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-rightsize-to-adjust-resource-allocation.html), and any change to third-party licences that follow cluster boundaries. Show each saving in the year it lands, since annualising everything from day one overstates the first year.
 
@@ -98,7 +98,7 @@ Take every figure from a system of record, with its date and history window besi
 |---|---|
 | Licensed cores, 9.x | [Manage > Licensing > Usage Analytics](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-usage-analytics/view-license-usage-per-product-in-vcf-operations.html), which also shows maximum usage by month or day. On 9.1 the figure [includes 8.x hosts](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html) |
 | Raw vSAN TiB, 9.x | That page doesn't mention vSAN or TiB, so use the raw figure in [The vSAN entitlement](/vcf/library/value/vsan-entitlement/) |
-| Licensed cores and raw vSAN TiB, before 9 | The script in <KB id={313548} />, whose environment lists VCF 4.5 and 5.1 and ESXi to 8.0. It needs PowerCLI 13.3 and PowerShell 7.4.6 or later, and the KB warns against counting vSAN TiB by hand from the UI |
+| Licensed cores and raw vSAN TiB, before 9 | The script in <KB id={313548} />, whose environment lists VCF 4.5 and 5.1 and ESXi to 8.0. On vSAN 8.0 U3 it fails, so use the updated script in <KB id={400416} />. It needs PowerCLI 13.3 and PowerShell 7.4.6 or later, and the KB warns against counting vSAN TiB by hand from the UI |
 | Hosts per cluster and what each cluster runs out of first | VCF Operations capacity, time remaining per resource |
 | Allocated and active memory per cluster | VCF Operations, or [MTAT](https://blogs.vmware.com/cloud-foundation/2026/07/31/meet-mtat-your-zero-friction-path-to-memory-tiering-in-vmware-cloud-foundation-9-0/) for a tiering assessment, from vCenter history. Full history needs Statistical Level 2 or higher |
 | Reclaimable CPU, memory and disk, with monthly potential savings per category | [Manage > Capacity > Optimize](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-reclaim-to-free-up-resources.html), then a data center |

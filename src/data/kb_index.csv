@@ -9,7 +9,7 @@ kb,topic,decks,url
 316026,EMM suppression can still fail at install,Follow the signposts,https://knowledge.broadcom.com/external/article/316026
 316028,fix_known_hosts.sh / fixHostKeys.py,Follow the signposts,https://knowledge.broadcom.com/external/article/316028
 316098,Insufficient free IPs in network pool,Follow the signposts,https://knowledge.broadcom.com/external/article/316098
-317794,Compute manager errors 7055 and 90204,How it all connects,https://knowledge.broadcom.com/external/article/317794
+317794,NSX compute manager shows Down: read its message,How it all connects,https://knowledge.broadcom.com/external/article/317794
 317900,NSX scripted VMCA certificate replacement,Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/317900
 318768,Ops data retriever: add a disk to every node,Follow the signposts,https://knowledge.broadcom.com/external/article/318768
 318853,Maintenance-mode dry-run precheck fails,Follow the signposts,https://knowledge.broadcom.com/external/article/318853
@@ -123,7 +123,7 @@ kb,topic,decks,url
 434671,vCenter /storage/log full from ESX syslog,Follow the signposts,https://knowledge.broadcom.com/external/article/434671
 435258,VCF Instance page: 443 SDDC Manager to Ops nodes,How it all connects,https://knowledge.broadcom.com/external/article/435258
 435569,Stuck Fleet or SDDC lifecycle task,"Meet the fleet; Upgrading to VCF 9.1, the right way round; Follow the signposts",https://knowledge.broadcom.com/external/article/435569
-435599,9.0: password rotation not automated for some components,Meet the fleet,https://knowledge.broadcom.com/external/article/435599
+435599,9.x: no Never Expire setting; set rotation intervals,Meet the fleet,https://knowledge.broadcom.com/external/article/435599
 435664,"""This activation code is not valid""",Mind the licensing clock,https://knowledge.broadcom.com/external/article/435664
 435717,Installer DNS validation: PTR case mismatch,Meet the fleet,https://knowledge.broadcom.com/external/article/435717
 436026,Duplicate VCF adapters pushed back,How it all connects,https://knowledge.broadcom.com/external/article/436026
@@ -291,7 +291,7 @@ kb,topic,decks,url
 450589,Remediate disconnected NSX and Avi service accounts,Follow the signposts,https://knowledge.broadcom.com/external/article/450589
 450972,Back-in-time releases: 5.2.4 cannot go to 9.1.0,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/450972
 451010,"vmsp_upgrade: false ""IP pool exhausted""","Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/451010
-451125,Compute manager 7058 after a root CA change,How it all connects,https://knowledge.broadcom.com/external/article/451125
+451125,Compute manager: trusted root not found after a root change,How it all connects,https://knowledge.broadcom.com/external/article/451125
 451249,Duplicate key: CA imported by hand,How it all connects,https://knowledge.broadcom.com/external/article/451249
 451344,Compute manager 7059: vCenter 9.0 into NSX 4.2,How it all connects,https://knowledge.broadcom.com/external/article/451344
 451550,Stale svc-vcf-ESX account blocks re-commission,Follow the signposts,https://knowledge.broadcom.com/external/article/451550
