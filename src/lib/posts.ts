@@ -24,7 +24,7 @@ export async function projectMeta(p: Project): Promise<ProjectMeta | undefined> 
 }
 export const repoOf = (p: Project) => p.data.repo ?? `${SITE.githubOwner}/${slugOf(p)}-for-vcf-operations`;
 
-export const fmtDate = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+export const fmtDate = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 
 /** Minutes to read, from the raw Markdown body, ignoring code blocks and component markup. */
 export function readingTime(body = ''): number {

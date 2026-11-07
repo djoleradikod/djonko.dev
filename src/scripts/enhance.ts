@@ -247,6 +247,7 @@ if (navMenu) {
     if (e.key === 'Escape' && navMenu.open) { navMenu.open = false; navMenu.querySelector('summary')?.focus(); }
   });
   document.addEventListener('click', (e) => { if (navMenu.open && !navMenu.contains(e.target as Node)) navMenu.open = false; });
+  addEventListener('pagehide', () => { navMenu.open = false; }); // or Back restores the page with the panel open
   navMenu.addEventListener('focusout', (e) => {
     const next = e.relatedTarget as Node | null;
     if (navMenu.open && next && !navMenu.contains(next)) navMenu.open = false;

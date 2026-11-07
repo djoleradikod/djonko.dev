@@ -15,14 +15,15 @@ export const DECISION_NOTES = [
 
 type Dated = { data: { updated?: Date; pubDate: Date; title: string } };
 
-/** Notes with an `updated` date, newest first. Notes first published that day lead a tie, as the newest work. */
+/** The day a note last changed: its `updated` date, or its publication date if it hasn't been edited. */
+export const changedOn = (a: Dated) => a.data.updated ?? a.data.pubDate;
+
+/** Notes newest first. Notes first published that day lead a tie, as the newest work. */
 export function latestChanges<T extends Dated>(items: T[]) {
-  const changed = items
-    .filter((a) => a.data.updated)
-    .sort((a, b) => +b.data.updated! - +a.data.updated! || +b.data.pubDate - +a.data.pubDate || a.data.title.localeCompare(b.data.title));
-  const lastDay = changed[0]?.data.updated;
-  const sameDay = changed.filter((a) => +a.data.updated! === +lastDay!);
-  const isNew = (a: T) => +a.data.pubDate >= +a.data.updated!;
+  const changed = [...items].sort((a, b) => +changedOn(b) - +changedOn(a) || +b.data.pubDate - +a.data.pubDate || a.data.title.localeCompare(b.data.title));
+  const lastDay = changed[0] && changedOn(changed[0]);
+  const sameDay = changed.filter((a) => +changedOn(a) === +lastDay!);
+  const isNew = (a: T) => +a.data.pubDate >= +changedOn(a);
   return { changed, lastDay, sameDayCount: sameDay.length, newCount: sameDay.filter(isNew).length, isNew };
 }
 

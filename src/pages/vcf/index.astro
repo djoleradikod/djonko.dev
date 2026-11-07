@@ -3,8 +3,8 @@ import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import SearchBox from '../../components/SearchBox.astro';
 import { CATEGORIES, categoryById } from '../../data/categories';
-import { changeSummary, DECISION_NOTES, latestChanges, summaryLine } from '../../data/decisions';
-import { AXIS, CURRENT_RELEASE, MUST_APPEAR_IN_NOTE, NEXT_RELEASE, SUPPORT_ENDS, SUPPORT_NOTE } from '../../data/releases';
+import { changedOn, changeSummary, DECISION_NOTES, latestChanges, summaryLine } from '../../data/decisions';
+import { AXIS, CURRENT_RELEASE, NEXT_RELEASE, noteProblems, SUPPORT_ENDS, SUPPORT_NOTE } from '../../data/releases';
 import { SITE } from '../../data/site';
 import { KB_INDEX } from '../../data/kb';
 import { TOOLS } from '../../data/tools';
@@ -30,8 +30,8 @@ const start = [
 
 // Where things stand. The dates live in src/data/releases.ts; the note is what they answer to.
 const clock = note(SUPPORT_NOTE);
-const stale = MUST_APPEAR_IN_NOTE.filter((s) => !(clock.body ?? '').includes(s));
-if (stale.length) throw new Error(`src/data/releases.ts no longer matches ${SUPPORT_NOTE}. Not found in the note: ${stale.join(' | ')}`);
+const stale = noteProblems(clock.body ?? '');
+if (stale.length) throw new Error(`src/data/releases.ts no longer matches ${SUPPORT_NOTE}: ${stale.join('; ')}`);
 const t0 = Date.parse(AXIS.from), t1 = Date.parse(AXIS.to);
 const at = (iso: string) => ((Date.parse(iso) - t0) / (t1 - t0)) * 100;
 const pct = (n: number) => `${n.toFixed(2)}%`;
@@ -142,8 +142,8 @@ const reference = [
       </div>
       <ol class="hub-rows rows-new">
         {recent.map((a, i) => {
-          const d = a.data.updated!;
-          const repeat = i > 0 && +recent[i - 1].data.updated! === +d;
+          const d = changedOn(a);
+          const repeat = i > 0 && +changedOn(recent[i - 1]) === +d;
           return (
             <li><a href={urlOf(a)}>
               <time class:list={[repeat && 'rep']} datetime={d.toISOString().slice(0, 10)}>{fmt(d)}</time>
