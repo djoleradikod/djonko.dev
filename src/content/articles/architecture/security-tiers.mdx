@@ -117,7 +117,7 @@ sources:
 ---
 
 <InShort>
-**Start with Security Posture Management and the hardening guide, since neither costs extra, and buy an add-on where core has no substitute.** That order is analysis; the product facts below are checked against Broadcom's 4 November documents <AsOf date="2026-11-07" />.
+**Start with Security Posture Management, which the 4 November FAQ puts in the baseline VCF entitlement, and the free hardening guide, and buy an add-on where core has no substitute.** That order is analysis; the product facts below are checked against Broadcom's 4 November documents <AsOf date="2026-11-07" />.
 
 - Core VCF and VCF Edge include Security Posture Management, the Security Operations dashboard, Audit Trail and drift detection on vCenter and clusters. The hardening guide is free.
 - The add-ons are VMware Compliance and Configuration Management for what runs inside guests, VMware vDefend for firewall rules, VMware Live Recovery for clean-room recovery, VMware HyperArmor for runtime defence of ESX.
@@ -166,7 +166,7 @@ Advanced Services are separate purchases, outside core (footnote 13, p19, of the
 8. **Is the unpatched window on ESX your remaining exposure?** That is HyperArmor's case, and it goes last because Broadcom has published no date. It covers virtual patching, positive guardrails and MFA on the SSH path ([13 Oct](https://blogs.vmware.com/cloud-foundation/2026/10/13/proactive-hypervisor-defense-introducing-vmware-hyperarmor/)), for [ESX 8.x and later](https://mfn.se/all/a/broadcom/broadcom-introduces-vmware-hyperarmor-expanding-hypervisor-security-and-protections-for-vmware-cloud-foundation-893cf3cd). Network threats stay with vDefend and recovery with Live Recovery, the 13 October post says. [Channel Dive](https://www.channeldive.com/news/broadcom-vmware-hypervisor-security-software-ai-attacks/833031/) (press, 14 Oct) reports per-core sale through partners, general availability expected in Q1FY27 and no disclosed price.
 
 <Callout type="analysis" title="Where to put the money">
-Run Security Posture Management and the SCG first, since neither costs extra and the results show what is left. Then buy where core has no substitute: vDefend if rules between workloads are required, Live Recovery if clean restore must be proven. Compliance and Configuration Management is the easiest to defer when another tool already governs guests. Leave HyperArmor until the date and price are written down.
+Run Security Posture Management and the SCG first, since the FAQ puts the first in the baseline entitlement, the SCG is free and the results show what is left. Then buy where core has no substitute: vDefend if rules between workloads are required, Live Recovery if clean restore must be proven. Compliance and Configuration Management is the easiest to defer when another tool already governs guests. Leave HyperArmor until the date and price are written down.
 
 The gap to raise at renewal is automatic ESX remediation between an ACC expiry and the native feature shipping. Q86 names the replacement add-on "for workloads", while Reed credits Advanced Cyber Compliance with that function, and no Broadcom page says what does the job in between. The gap is inference from those two statements, so ask before the term ends.
 </Callout>

@@ -64,12 +64,12 @@ This note used to say Holodeck covers VCF 5.2.x and 9.0, left 9.1 open, and gave
 | Good for | Teaching, shared exercises, dual-site work | Fast personal rebuilds | vSAN ESA and tiering on real devices |
 
 <Callout type="analysis" title="When to skip it">
-Holodeck's value is network isolation and sameness, and you pay for both in memory. If neither matters to you, the sizing note shows smaller builds that still reach a complete fleet. For anyone who doesn't meet Holodeck's requirements, Lam points to his [VIS appliance](https://williamlam.com/2026/07/vcf-infrastructure-services-vis-appliance-for-vcf-9-1-lab-poc.html). He also [moved from nested to physical](https://williamlam.com/2026/05/vcf-9-1-automated-vmware-cloud-foundation-vcf-vmware-vsphere-foundation-vvf-nested-lab-deployment.html) himself, mainly for lack of resources.
+Holodeck's value is network isolation and sameness, and you pay for both in memory. If neither matters to you, the sizing note shows smaller builds that still reach a complete fleet. Asked in a comment why not Holodeck, Lam says his [VIS appliance](https://williamlam.com/2026/07/vcf-infrastructure-services-vis-appliance-for-vcf-9-1-lab-poc.html) suits anyone who doesn't meet its requirements, "which can be quite significant". VIS supplies infrastructure services such as a depot, DNS and NTP. He also [moved from nested to physical](https://williamlam.com/2026/05/vcf-9-1-automated-vmware-cloud-foundation-vcf-vmware-vsphere-foundation-vvf-nested-lab-deployment.html) himself, mainly for lack of resources.
 </Callout>
 
 ## What toolkit 9.1.1 deploys, and on what
 
-Toolkit 9.1.1 is dated October 2026 in the [release notes](https://vmware.github.io/Holodeck/latest/release_notes/). Its `-Version` parameter [accepts](https://vmware.github.io/Holodeck/latest/) 9.1.1.0, 9.1.0.0, 9.0.2.0, 9.0.1.0, 9.0.0.0 and 5.2 through 5.2.4, and VVF needs 9.0.0.0 or later. VCF Installer 9.0.0.0 is "no longer supported" for nested deployments, and the 9.0.2 notes say Installer 9.0.2.0 can deploy 9.0.0.0 environments, so expect a 9.0.0.0 target to go through a newer installer <AsOf date="2026-11-06" />.
+Toolkit 9.1.1 is dated October 2026 in the [release notes](https://vmware.github.io/Holodeck/latest/release_notes/). Its `-Version` parameter [accepts](https://vmware.github.io/Holodeck/latest/) 9.1.1.0, 9.1.0.0, 9.0.2.0, 9.0.1.0, 9.0.0.0 and 5.2 through 5.2.4, and VVF needs 9.0.0.0 or later. VCF Installer 9.0.0.0 is "no longer supported" for nested deployments, and the 9.0.2 notes say Installer 9.0.2.0 can deploy 9.0.0.0 environments, so this site expects a 9.0.0.0 target to go through a newer installer <AsOf date="2026-11-06" />. For VVF 9.0.0.0 on Installer 9.0.2.0, those notes say to download the vCenter 9.0.2.0 bundle as well.
 
 Two switches change what you deploy: VCF Automation stays out unless you pass `-DeployVcfAutomation`, and `-ManagementOnly` drops the workload domain. The sizing note covers what those are worth. On the host side, the docs give vSphere 8.0 U3 and 9.0 as tested targets and ask for SSD or NVMe backing storage.
 
@@ -89,6 +89,6 @@ Holodeck 9 "is not a VMware supported product, it is similar to a Fling", the do
 
 Entitlement and binaries stay your job. The docs assume entitlement for downloads from the Broadcom Support Portal and leave licensing to you, and [choosing a lab](/vcf/library/labs/choosing-a-lab-approach/) covers the routes.
 
-Under-sizing warns without stopping you. Version 9.1 "allows deployment with lower resources, but performance may be impacted", in the docs' words, so a passing pre-check isn't evidence the lab will behave.
+Under-sizing warns without stopping you. Holodeck 9.1 "allows deployment with lower resources, but performance may be impacted", in the docs' words, so a passing pre-check isn't evidence the lab will behave.
 
 Two old known issues may not be gone. Memory tiering on the host may destabilise nested workloads and nested vSAN ESA may use more storage than expected, the notes for 9.0 through 9.0.2 warn. The 9.1 and 9.1.1 notes have no known-issues section, which leaves both unconfirmed either way, though Lam reports nested ESX VMs now run on tiered hosts from 9.1. If you see instability on a tiered host, turn tiering off first.
