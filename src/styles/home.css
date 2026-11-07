@@ -4,8 +4,8 @@
 /* ------------------------------------------------------------------------------------------------
    Home. Ink on paper. The fold is the support clock, with its label and plot columns. Below it the page is paced like a
    sequence of screens: one dominant thing at a time (the latency ruler first, the fleet drawing second), and air, not rules, at
-   every section seam. The surface changes once: the ruler is set in reverse, edge to edge, its paper the page's ink and its ink
-   the page's paper, in both themes. Nothing else on the page is toned.
+   every section seam. The surface changes once: the featured note's head and its ruler are set in reverse, edge to edge, the paper
+   the page's ink and the ink the page's paper, in both themes. Nothing else on the page is toned.
 
    Emphasis is the clock's language and nothing else: rule weight, heavy bar against thin bar, scale, and one red pencil for
    what is unresolved, which appears nowhere else. Hatching means unresolved and stays in the clock. Everything drawn is a
@@ -15,7 +15,7 @@
      1px ink       the clock's axis and column line, the ruler's axis, a table's header and closing rules, the index's heads
      1px --dw-grid hairlines inside a section
      24 / 10 / 4 / 1px  the fleet drawing's fleet, instances, management domains and workload domains
-     32 / 12px     the ruler's two thresholds and its four other bounds; the thresholds are 20px at 1080px and below
+     32 / 12px     the ruler's two thresholds and its other bounds, one bar to a bound; the thresholds are 20px at 1080px and below
 
    Left edges. Three, held down the page, collapsing to the first below 1080px, except that the decision table and What I do keep
    the midline down to 761px, with the table's question on --hang there:
@@ -28,7 +28,7 @@
 
    One type scale, on these tokens, and nothing off it. Ranks: a section opener is --t-head, well under the headline, a note's
    title --t-feature, and an index's head a small label. The ruler's numerals are the one thing below the fold larger than the
-   headline, and its other bounds sit between those numerals and reading size.
+   headline, and its other bounds sit between those numerals and reading size. The note's head on the band keeps a note's ranks.
      --t-num     144  the ruler's two thresholds
      --t-display  72  the headline and the closing line
      --t-head     40  section openers: one size, one weight; the ruler's other bounds
@@ -39,12 +39,13 @@
      --t-body     18  reading text, links, the index's rows, the ruler's paths
      --t-note     16  index heads, tables, steps, dates, and the page's three notes (below)
      --t-small    13  axis labels and the clock's dates on a phone
-   The three notes are 16px, never smaller, and each has one job. The clock's foot is status: release facts in ink, their labels
+   The three notes are 16px, never smaller, and each has one job. The clock's foot is status, so it waits under the takeaway: release facts in ink, their labels
    and its provenance in the second ink. The ruler's caption is the caveat on the drawing, so it is in full ink. The sources are
    evidence, so each one has its own line, its title in ink and its author and date in the second ink.
 
    Every gap is a multiple of 4px. --sec is the air between sections, --near the shorter air before the index, which
-   belongs to the note above it, --band the padding inside the reversed surface, and --head the air under a section heading.
+   belongs to the note above it, and before Field Notes, which follows the clock's foot, --band the padding inside the reversed
+   surface, and --head the air under a section heading.
    ------------------------------------------------------------------------------------------------ */
 .page-home { --shell: 1320px; --t-display: clamp(1.875rem, 9vw, 3.75rem); --t-num: min(10vw, 9rem); --t-head: max(2rem, calc(var(--t-display) / 1.8)); --t-feature: 1.625rem; --t-title: max(1.5rem, calc(var(--t-display) * 0.39)); --t-sub: 1.5rem; --t-lead: 1.25rem; --t-body: 1.125rem; --t-note: 1rem; --t-small: 0.8125rem; --sec: 160px; --near: 96px; --band: 96px; --head: 72px; --name: 11rem; --gut: 40px; --hang: 48px; --row: 40px; }
 .page-home.docs { --bg: var(--home-bg); }
@@ -70,8 +71,9 @@
 .go:hover { color: var(--accent-ink); }
 .page-home .btn.primary:hover { background: var(--ink); border-color: var(--ink); color: var(--bg); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 
-/* The hero: air above the eyebrow, then gaps that grow in step, up to the pause before the clock. All of it, the five rows,
-   the takeaway and the source line fit above 900px at 1440 wide, with air left under the source line. */
+/* The hero: air above the eyebrow, then gaps that grow in step, up to the pause before the clock. All of it, the five rows and
+   the takeaway fit above 900px at 1440 wide, so the first screen ends on the takeaway with air under it. The foot starts past that
+   edge. */
 .home-lead { padding-top: 32px; }
 .home-who { margin: 0 0 12px; font-size: var(--t-note); line-height: 1.5; font-weight: 400; color: var(--ink-2); }
 .home-lead h1 { margin: 0; font-size: var(--t-display); line-height: 1.06; letter-spacing: -0.022em; font-weight: 500; color: var(--ink); }
@@ -130,20 +132,20 @@
 /* "Unresolved" sits on the span the way a dimension sits on its line; its mask is taller than the hatching. */
 .sc-b a { position: absolute; top: 50%; left: var(--end); width: calc(var(--to) - var(--end)); display: flex; justify-content: center; transform: translateY(-50%); text-decoration: none; pointer-events: auto; }
 .sc-flag { padding-inline: 8px; background: var(--bg); font-size: var(--t-note); line-height: 24px; font-weight: 500; white-space: nowrap; color: var(--dw-red-ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-/* Under the plot, on the bars' left edge: the takeaway at a title's size, the chart's payoff, with its instruction in weight.
-   Then the foot, which is status: the release facts on the same edge in ink, and where the dates come from starting on the first
-   labelled tick. */
+/* Under the plot, on the bars' left edge: the takeaway at a title's size, the chart's payoff, with its instruction in weight, and
+   air both sides. Then, --near below it and past the fold at 1440 by 900, the foot, which is status: the release facts on the same
+   edge in ink, and where the dates come from starting on the first labelled tick. */
 .sc-lead, .sc-facts { margin-left: var(--name); }
-.sc-lead { min-width: 0; margin-block: 0; padding-top: 20px; font-size: var(--t-sub); line-height: 32px; font-weight: 400; letter-spacing: -0.014em; color: var(--ink); text-wrap: pretty; }
+.sc-lead { min-width: 0; margin-block: 0; padding-top: 40px; font-size: var(--t-sub); line-height: 32px; font-weight: 400; letter-spacing: -0.014em; color: var(--ink); text-wrap: pretty; }
 .sc-lead b { font-weight: 600; }
-.sc-facts { display: grid; grid-template-columns: calc((100% - var(--tail)) * var(--c)) minmax(0, 1fr); padding-top: 16px; font-size: var(--t-note); line-height: 24px; color: var(--ink-2); }
+.sc-facts { display: grid; grid-template-columns: calc((100% - var(--tail)) * var(--c)) minmax(0, 1fr); padding-top: var(--near); font-size: var(--t-note); line-height: 24px; color: var(--ink-2); }
 .sc-rel { margin: 0; padding-right: 16px; }
 .sc-rel > div { display: flex; flex-wrap: wrap; gap: 0 8px; }
 .sc-rel dd { margin: 0; color: var(--ink); font-variant-numeric: tabular-nums; }
 .sc-cap { margin: 0; }
 .sc-cap a { color: var(--ink); }
 .sc-cap span { display: block; }
-@media (min-width: 1081px) and (max-height: 820px) { .home-lead { padding-top: 24px; } .sc { --row: 38px; padding-top: 32px; } }
+@media (min-width: 1081px) and (max-height: 820px) { .home-lead { padding-top: 24px; } .sc { --row: 38px; padding-top: 32px; } .sc-lead { padding-top: 20px; } }
 /* Below the width where the plot fits, the clock is recomposed: a ruler on top, then each row is its name and date on one
    line, every date at the right margin, with the bar directly under them. "Unresolved" sits on the bar's line, right after
    the hatching, so it never shares a line with the date. */
@@ -165,11 +167,12 @@
   .sc-span::before, .sc-span::after { top: -2px; bottom: -2px; }
   .sc-stop { height: 16px; margin-top: -8px; }
   .sc-lead { padding-top: 24px; line-height: 1.4; }
-  .sc-facts { display: block; }
+  .sc-facts { display: block; padding-top: 40px; }
   .sc-cap { padding-top: 12px; }
 }
 @media (max-width: 640px) {
   .sc { padding-top: 40px; }
+  .sc-facts { padding-top: 32px; }
   .sc-r { margin-top: 12px; }
   .sc-t .sc-n { font-size: var(--t-note); letter-spacing: -0.02em; }
   .sc-dt, .sc-flag { font-size: var(--t-small); }
@@ -189,9 +192,10 @@
 .sheet-t thead th { padding-top: 0; border-bottom: 1px solid var(--dw-ink); font-weight: 500; color: var(--ink); }
 .sheet-t tbody th { font-weight: 500; color: var(--ink); }
 
-/* Field Notes. The heading, then the note set open at full width: its title a clear step below the heading, its drawing the
-   section's peak, its table at reading size. Open type on horizontal rules, flush to both page edges, every cell on the first
-   baseline. */
+/* Field Notes. The heading on the page's ground, then the note set open at full width: its head and drawing on the band, the
+   drawing the section's peak, its table at reading size. Open type on horizontal rules, flush to both page edges, every cell on the
+   first baseline. */
+.home-sec.fn { padding-top: var(--near); }
 .sheet-q { margin-top: var(--head); }
 .sheet-run { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 24px; margin: 0 0 12px; font-size: var(--t-note); line-height: 1.5; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .sheet-path { display: flex; flex-wrap: wrap; gap: 0 16px; }
@@ -199,12 +203,14 @@
 .sheet-q h3 { font-size: var(--t-feature); line-height: 1.2; letter-spacing: -0.016em; font-weight: 500; }
 .sheet-q .sheet-sum { margin-top: 8px; max-width: 52rem; font-size: var(--t-body); line-height: 1.5; }
 
-/* The latency ruler: the second chart, in the clock's language at a larger scale, and the page's one change of surface. It is set
-   in reverse, edge to edge, by redefining the page's tokens here, so every rule below it stays in those tokens. The shadow paints
-   the surface out to the window's edges and adds no scrollable width; clip-path holds it to the figure's own height.
+/* The band: the page's one change of surface, holding the note's running head, title and summary as its heading, then the ruler.
+   It is set in reverse, edge to edge, by redefining the page's tokens here, so every rule inside it stays in those tokens. The shadow
+   paints the surface out to the window's edges and adds no scrollable width; clip-path holds it to the band's own height.
+   The latency ruler: the second chart, in the clock's language at a larger scale.
    A pole stands at each threshold from its numeral through the axis to the end of its heavy bar. What each threshold bounds sits
    right after the bar, as a date does on the clock. --a and --b are the thresholds' places on the scale. */
-.rl { --bg: var(--inv-bg); --ink: var(--inv-ink); --ink-2: var(--inv-ink-2); --dw-ink: var(--inv-ink); --accent: var(--inv-ink); --accent-ink: var(--inv-ink); --rl-h: 32px; --rl-gap: 12px; margin: var(--head) 0 0; padding-block: var(--band); color: var(--ink); background: var(--bg); box-shadow: 0 0 0 100vmax var(--bg); clip-path: inset(0 -100vmax); }
+.sheet-band { --bg: var(--inv-bg); --ink: var(--inv-ink); --ink-2: var(--inv-ink-2); --dw-ink: var(--inv-ink); --accent: var(--inv-ink); --accent-ink: var(--inv-ink); padding-block: var(--band); color: var(--ink); background: var(--bg); box-shadow: 0 0 0 100vmax var(--bg); clip-path: inset(0 -100vmax); }
+.rl { --rl-h: 32px; --rl-gap: 12px; margin: var(--head) 0 0; }
 /* Selected text keeps full contrast on this page and on the band, which redefines these two tokens. */
 .page-home main ::selection { background: var(--ink); color: var(--bg); }
 .rl-plot, .rl-in { position: relative; }
@@ -231,11 +237,14 @@
 .rl-txt b { font-weight: 600; }
 .rl-v { color: var(--ink); font-variant-numeric: tabular-nums; }
 .rl-path { display: block; font-size: var(--t-note); line-height: 24px; color: var(--ink-2); }
-/* The middle tier: the four other bounds on the same scale, between the numerals and reading size. Each is a 12px bar with its
-   stop, then, under the bar, one row on the page's three edges: the bound, the path, what lies past it. */
+/* The middle tier: the other bounds on the same scale, between the numerals and reading size, one group to a bound. Each is a 12px
+   bar with its stop, then, under the bar, the bound on the page edge and, beside it, one row for each path on that bound: the path
+   on the second edge, what lies past it on the midline. The rows take their columns from the group's, through subgrid. */
 .rl-minor { list-style: none; margin: 56px 0 0; padding: 0; }
-.rl-minor li { display: grid; grid-template-columns: var(--name) calc(50% + var(--gut) / 2 - var(--name)) minmax(0, 1fr); align-items: baseline; margin: 40px 0 0; }
-.rl-minor li:first-child { margin-top: 0; }
+.rl-minor > li { display: grid; grid-template-columns: var(--name) calc(50% + var(--gut) / 2 - var(--name)) minmax(0, 1fr); align-items: baseline; margin: 56px 0 0; }
+.rl-minor > li:first-child { margin-top: 0; }
+.rl-mrows { grid-column: 2 / -1; display: grid; grid-template-columns: subgrid; row-gap: 16px; min-width: 0; list-style: none; margin: 0; padding: 0; }
+.rl-mrows > li { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: baseline; min-width: 0; margin: 0; }
 .rl-mbar { grid-column: 1 / -1; position: relative; display: block; justify-self: start; width: var(--at); height: 0; margin: 6px 0 16px; border-top: 12px solid var(--ink-2); }
 .rl-mbar::after { content: ""; position: absolute; right: -1px; top: -18px; height: 24px; border-left: 2px solid var(--dw-ink); }
 .rl-mv, .rl-mpath, .rl-mthen { margin: 0; }
@@ -246,6 +255,7 @@
 /* The caption is the drawing's caveat, so it is set to be read: full ink, on the second edge, at a reading measure. */
 .rl-cap { max-width: 44rem; margin: 56px 0 0 var(--name); font-size: var(--t-note); line-height: 24px; color: var(--ink); }
 .rl-cap a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.rl-cap a:hover { text-decoration-thickness: 2px; }
 /* No room beside the long bars: each row's words go under its bar, on the paper, and the poles pass behind them. */
 @media (max-width: 1080px) {
   .rl { --rl-h: 20px; }
@@ -253,7 +263,8 @@
   .rl-row, .rl-r1 { display: block; min-height: 0; padding: 12px 0 0; }
   .rl-bar { position: static; display: block; margin: 0; }
   .rl-txt { position: relative; z-index: 1; padding: 8px 0 4px; background: var(--bg); }
-  .rl-minor li { display: block; }
+  .rl-minor > li, .rl-mrows, .rl-mrows > li { display: block; }
+  .rl-mrows > li + li { margin-top: 20px; }
   .rl-mv { margin-bottom: 8px; }
   .rl-mpath { padding: 0; }
   .rl-mthen { margin-top: 4px; }
@@ -471,11 +482,11 @@
   .page-home.docs { --bg: Canvas; }
   .sc-dt, .sc-flag, .sc-n { forced-color-adjust: auto; }
   :root:root:root .page-home main { --inv-bg: Canvas; --inv-ink: CanvasText; --inv-ink-2: CanvasText; }
-  .rl { box-shadow: none; clip-path: none; }
+  .sheet-band { box-shadow: none; clip-path: none; }
 }
 
 @media print {
   :root .page-home main, :root[data-theme="dark"] .page-home main, :root:not([data-theme="light"]) .page-home main { --ink-2: #333; --inv-bg: transparent; --inv-ink: #111; --inv-ink-2: #333; }
-  .rl { padding-block: 0; background: none; box-shadow: none; clip-path: none; }
+  .sheet-band { padding-block: 0; background: none; box-shadow: none; clip-path: none; }
   .rl-txt { background: #fff; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }

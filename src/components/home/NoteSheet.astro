@@ -1,6 +1,7 @@
 ---
 // One note set open on the page: running head, title, one-line summary, an optional drawing, then a real table from the note's
-// own body, always whole rows, and an optional footnote. Everything comes from the note at build time. The explicit roles keep
+// own body, always whole rows, and an optional footnote. With a drawing, the head and the drawing share the page's reversed band.
+// Everything comes from the note at build time. The explicit roles keep
 // it a table for a screen reader at every width, because its rows are laid out as grids and stack on a phone; each answer carries its column's name for that layout. A
 // cell the note itself says has no fixed answer is set in the page's one accent for what is unresolved, and an answer that
 // states a latency threshold keeps a little more weight than the others.
@@ -27,10 +28,12 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 
 const mark = (c: string) => /^Nothing fixed\b/.test(c) ? 'open' : /\b\d+ ms\b/.test(c) ? 'lim' : undefined;
 ---
 <article class:list={['sheet', cls]}>
-  <p class="sheet-run"><span class="sheet-path"><span>{area.short}</span><span>{note.data.level}</span><span>VCF {note.data.versions.join(', ')}</span></span><span>Sources checked <time datetime={reviewed.toISOString().slice(0, 10)}>{fmt(reviewed)}</time></span></p>
-  <h3><a href={urlOf(note)}>{note.data.title}</a></h3>
-  <p class="sheet-sum">{summaryLine(note.data.description)}</p>
-  <slot name="figure" />
+  <div class:list={[Astro.slots.has('figure') && 'sheet-band']}>
+    <p class="sheet-run"><span class="sheet-path"><span>{area.short}</span><span>{note.data.level}</span><span>VCF {note.data.versions.join(', ')}</span></span><span>Sources checked <time datetime={reviewed.toISOString().slice(0, 10)}>{fmt(reviewed)}</time></span></p>
+    <h3><a href={urlOf(note)}>{note.data.title}</a></h3>
+    <p class="sheet-sum">{summaryLine(note.data.description)}</p>
+    <slot name="figure" />
+  </div>
   <table class="sheet-t" role="table">
     <caption class="sr-only">A table from this note</caption>
     <thead role="rowgroup"><tr role="row">{table.head.map((h) => <th role="columnheader" scope="col">{h}</th>)}</tr></thead>

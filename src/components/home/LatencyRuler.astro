@@ -2,8 +2,8 @@
 // The latency bounds, drawn to scale: the second chart on the page, in the clock's language and at a larger scale. Every bound,
 // path and consequence is read from the note's own table at build time, so the drawing can't drift from the note, and the
 // build fails if a row has gone or a bound is no longer a plain "≤N ms". The two bounds that change the count of instances and
-// fleets are heavy bars, as 9.x is on the clock. The other four are a middle tier on the same scale: a lighter bar, then the bound,
-// the path and the consequence, on one row above 1080px.
+// fleets are heavy bars, as 9.x is on the clock. The other four are a middle tier on the same scale, grouped by the bound the note
+// gives them: one lighter bar and one numeral to a bound, then each path on it with its own consequence, on one row above 1080px.
 // Bars and poles are borders, so forced colours and print keep them. All the words are real text; only the marks are hidden.
 import type { allArticles } from '../../lib/articles';
 import { fmtDate } from '../../lib/posts';
@@ -27,6 +27,10 @@ const minor = [bound(/^Collector to/), bound(/^NSX Manager to/), bound(/^Identit
 if (instance.ms >= fleet.ms || instance.then !== 'Second instance' || fleet.then !== 'Second fleet') {
   throw new Error(`The latency ruler's two large bounds stand for a second instance and a second fleet, in that order, and the table in ${note.id} no longer says so.`);
 }
+const drawn = new Set([instance, fleet, ...minor].map((r) => r.path));
+if (drawn.size !== table.rows.length) throw new Error(`The latency ruler draws each of the ${table.rows.length} rows in ${note.id} once, and it now draws ${drawn.size}.`);
+// One group to a bound, smallest first. A row keeps its path and consequence together, and rows sharing a bound keep the order above.
+const groups = [...new Set(minor.map((m) => m.ms))].map((ms) => minor.filter((m) => m.ms === ms));
 const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 
 const diagram = note.data.sources.find((s) => s.title.includes('fleet latency diagrams'));
@@ -75,12 +79,18 @@ const b = (fleet.ms / SCALE_END) * 100;
     <i class="rl-pole rl-p2" aria-hidden="true"></i>
   </div>
   <ul class="rl-minor" role="list">
-    {minor.map((m) => (
-      <li style={`--at:${m.at}`}>
+    {groups.map((rows) => (
+      <li style={`--at:${rows[0].at}`}>
         <i class="rl-mbar" aria-hidden="true"></i>
-        <p class="rl-mv">≤{m.ms}<small> ms</small></p>
-        <p class="rl-mpath" set:html={m.path}></p>
-        <p class="rl-mthen" set:html={`Beyond ${m.ms} ms: ${lower(m.then)}`}></p>
+        <p class="rl-mv">≤{rows[0].ms}<small> ms</small></p>
+        <ul class="rl-mrows" role="list">
+          {rows.map((m) => (
+            <li>
+              <p class="rl-mpath" set:html={m.path}></p>
+              <p class="rl-mthen" set:html={`Beyond ${m.ms} ms: ${lower(m.then)}`}></p>
+            </li>
+          ))}
+        </ul>
       </li>
     ))}
   </ul>
