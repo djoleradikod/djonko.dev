@@ -13,6 +13,12 @@
 # export goes, for machines with a small /tmp.
 set -uo pipefail
 
+# `npm run gate --status`, without the `--`, gives the option to npm instead of this script.
+if [ -n "${npm_config_status:-}${npm_config_external:-}" ]; then
+  echo "gate: pass options after --, as in: npm run gate -- --status" >&2
+  exit 2
+fi
+
 post_status=0
 external=0
 for arg in "$@"; do
@@ -23,6 +29,10 @@ for arg in "$@"; do
   esac
 done
 
+# npm run puts this checkout's node_modules/.bin on PATH. Take it off, so no step passes on a tool the clean
+# install doesn't have.
+PATH="$(printf '%s' "$PATH" | tr ':' '\n' | grep -v '/node_modules/\.bin$' | paste -sd: -)"
+
 repo="$(git rev-parse --show-toplevel)" || exit 2
 cd "$repo" || exit 2
 sha="$(git rev-parse HEAD)"
@@ -30,6 +40,7 @@ work="$(mktemp -d "${GATE_DIR:-${TMPDIR:-/tmp}}/gate.XXXXXX")" || exit 2
 trap 'rm -rf "$work"' EXIT
 
 failed=""
+status_lost=0
 step() {
   local name="$1"
   shift
@@ -37,6 +48,16 @@ step() {
   echo "=== gate: $name"
   if ! "$@"; then
     failed="$name"
+    return 1
+  fi
+}
+
+check_node() {
+  local want have
+  want="$(cat .node-version)"
+  have="$(node -p 'process.versions.node')"
+  if [ "${have%%.*}" != "${want%%.*}" ]; then
+    echo "This repo builds on Node $want, and this is Node $have." >&2
     return 1
   fi
 }
@@ -58,7 +79,8 @@ validate_caddy() {
 run_checks() {
   git archive HEAD | tar -x -C "$work" || return 1
   cd "$work" || return 1
-  step "install" npm ci --no-audit --no-fund &&
+  step "Node version" check_node &&
+    step "install" npm ci --no-audit --no-fund &&
     step "refresh tool facts" npm run sync:projects &&
     step "build, privacy scan, link check" npm run build &&
     step "browser audit" npm run audit &&
@@ -77,13 +99,16 @@ fi
 cd "$repo" || exit 2
 if [ "$post_status" -eq 1 ]; then
   if [ "$result" -eq 0 ]; then state=success; text="All checks passed"; else state=failure; text="Failed: ${failed:-export}"; fi
-  gh api -X POST "repos/{owner}/{repo}/statuses/$sha" -f state="$state" -f context=gate -f description="$text" >/dev/null ||
+  gh api -X POST "repos/{owner}/{repo}/statuses/$sha" -f state="$state" -f context=gate -f description="$text" >/dev/null || {
     echo "gate: couldn't record the commit status" >&2
+    status_lost=1
+  }
 fi
 
 echo
 if [ "$result" -eq 0 ]; then
   echo "gate: PASS $sha"
+  [ "$status_lost" -eq 0 ] || exit 3
 else
   echo "gate: FAIL $sha at ${failed:-export}"
 fi
