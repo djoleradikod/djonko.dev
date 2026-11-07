@@ -1,81 +1,147 @@
 ---
-title: "vSAN ESA space efficiency: protection schemes, compression and global deduplication"
-description: "How much raw capacity a TiB of VM data needs on vSAN ESA depends on the protection scheme the host count allows, compression, deduplication and whether deleted blocks are returned. What each one does in 9.0 and 9.1, and how it differs from OSA in 5.x."
+title: "vSAN ESA on VCF 9.1: usable capacity, entitlement and the limit you'll hit first, worked through"
+description: "Plan usable data at raw x 0.47 x your measured reduction ratio. The licence counts raw whatever the ratio. Hosts with few large NVMe devices hit the 3,000-per-device component limit first, and dedupe brings it closer. One constructed six-host sizing, with the arithmetic."
 category: value
 order: 6
-versions: ["5.x", "9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Deep dive
 pubDate: 2026-11-02
-kbs: [384397]
+updated: 2026-11-07
+reviewed: 2026-11-07
+kbs: [313548, 315533]
 sources:
-  - title: "vSAN ESA space efficiency (VCF 9.1)"
+  - title: "vSAN Space Efficiency Technologies (VCF 9.1)"
     url: "https://www.vmware.com/docs/vmw-vsan-space-efficiency"
-    by: "VMware"
-  - title: "vSAN compression and global deduplication in VCF 9.1"
+    by: "Pete Koehler, Broadcom"
+    kind: broadcom
+    date: 2026-05-11
+  - title: "More Capacity with VMware vSAN Compression and Global Deduplication in VCF 9.1"
     url: "https://blogs.vmware.com/cloud-foundation/2026/05/07/vsan-compression-and-global-deduplication-in-vcf-9-1/"
-    by: "VMware Cloud Foundation blog"
-  - title: "Global deduplication in vSAN ESA for VCF 9.0"
-    url: "https://blogs.vmware.com/cloud-foundation/2025/06/19/global-deduplication-in-vsan-esa-for-vmware-cloud-foundation-9-0/"
-    by: "VMware Cloud Foundation blog"
-  - title: "vSAN 8.0 ESA and compression by default"
-    url: "https://www.yellow-bricks.com/2022/10/24/vsan-8-0-esa-and-compression-by-default/"
+    by: "Pete Koehler, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-05-07
+  - title: "Auto-RAID in VMware vSAN for VCF 9.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/08/auto-raid-in-vsan-for-vcf-9-1/"
+    by: "Pete Koehler, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-05-08
+  - title: "Simplifying Storage with the New Effective Capacity View in VMware vSAN for VCF 9.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/11/effective-capacity-view-in-vsan-for-vcf-9-1/"
+    by: "Pete Koehler, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-05-11
+  - title: "Optimize, Modernize and Protect Your Private Cloud Storage with vSAN in VCF 9.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/05/announcing_vsan_in_vcf_9-1/"
+    by: "Tom Nagelmeyer, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-05-05
+  - title: "vSAN and the component limits"
+    url: "https://www.yellow-bricks.com/2026/02/10/vsan-and-the-component-limits/"
     by: "Duncan Epping"
+    kind: practitioner
+    date: 2026-02-10
+  - title: "What's new for vSAN in 9.1?"
+    url: "https://www.yellow-bricks.com/2026/05/07/whats-new-for-vsan-in-9-1/"
+    by: "Duncan Epping"
+    kind: practitioner
+    date: 2026-05-07
+  - title: "vSAN Storage Rules policy capability: the 2026 update"
+    url: "https://www.yellow-bricks.com/2026/10/01/vsan-storage-rules-policy-capability-allows-to-set-dedupe-compression-encryption-per-vm-the-2026-update/"
+    by: "Duncan Epping"
+    kind: practitioner
+    date: 2026-10-01
+  - title: "vSAN Health Service: cluster and host component utilization"
+    url: "https://knowledge.broadcom.com/external/article/315533"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "Counting cores for VMware Cloud Foundation and vSphere Foundation (vSAN TiB rules)"
+    url: "https://knowledge.broadcom.com/external/article/313548/counting-cores-for-vmware-cloud-foundati.html"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "vSAN 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vsan-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
 ---
 
 <InShort>
-On vSAN ESA, the raw capacity behind each TiB of VM data is set by four things. The **protection scheme** (1.5 times for RAID-5 2+1 or RAID-6 4+2, twice for mirroring). **Compression**, which is on by default and in 9.1 uses ZSTD. **Global deduplication**, which works across the whole cluster and is generally available from 9.1. And **TRIM/UNMAP**, which returns space the guest has freed. OSA in 5.x deduplicated within one disk group at a time and in the write path. ESA deduplicates across the cluster after the data has cooled. None of the reduction ratios are guaranteed, and Broadcom advises estimating them conservatively.
+**Plan usable data at raw x 0.47 x the data reduction ratio you have measured**, on any single-site cluster of three hosts or more. That is 1.5x protection with 30% of raw kept free. The licence counts installed raw whatever the ratio turns out to be, so reduction only saves money if it means buying fewer drives. **Then count components before you choose the drive.** A host with eight or fewer devices runs out at 3,000 per device, well short of the 27,000 per-host limit, and every gain from deduplication puts more VMs on the same devices. In the example below, nine 3.84 TB drives per host fit the entitlement and leave room, and two 15.36 TB drives fail before the cluster is full.
 </InShort>
 
-<Compare rows={[
-  ["Deduplication", "OSA: per disk group, inline during destage. ESA: none.", "ESA: cluster-wide, post-process. 9.0 limited availability, 9.1 generally available."],
-  ["Compression", "OSA: on destage. ESA: inline, set by storage policy.", "ESA: inline, cluster-wide, on by default. 9.1 moves from LZ4 to ZSTD."],
-  ["Protection choice", "Adaptive RAID-5: 2+1 below six hosts, 4+1 from six", "9.1 Auto-RAID: RAID-5 2+1 for three to five hosts, RAID-6 4+2 from six"],
-]} />
+## From raw to usable
 
-## Protection overhead
+| Cluster, 9.1 Auto-RAID | Scheme | Raw per TiB stored | Capacity components per object | Global dedupe |
+|---|---|---|---|---|
+| 3 to 5 hosts | RAID-5 2+1 | 1.5 | 3 | Yes |
+| 6 to 64 hosts | RAID-6 4+2 | 1.5 | 6 | Yes |
+| Stretched, 3 or more per site | Site mirror plus RAID-5 or RAID-6 | 3.0 | 3 or 6 in each site | No |
+| 2-node | Mirror | 2.0 | | No |
 
-| Cluster | 9.1 Auto-RAID | Raw per TiB of data |
-|---|---|---|
-| 3 to 5 hosts | RAID-5 (2+1) | 1.5 |
-| 6 or more hosts | RAID-6 (4+2) | 1.5 |
-| 2-node | Mirror | 2.0 |
-| Stretched, 3 or more hosts per site | Site mirror plus RAID-5 or RAID-6 | 3.0 |
+Overheads are from the [May 2026 guide](https://www.vmware.com/docs/vmw-vsan-space-efficiency). Component counts follow from each scheme's fragments.
 
-Before 9.1, adaptive RAID-5 used 4+1 at 1.25 times from six hosts. Under 9.1 Auto-RAID, six-host and larger clusters use RAID-6, which tolerates two failures at 1.5 times. If a 9.0 capacity plan assumed 1.25 times, check which scheme the cluster uses after the upgrade before you plan growth. The difference is 20% more raw capacity for the same data.
+An upgraded cluster [keeps its existing policies](https://blogs.vmware.com/cloud-foundation/2026/05/08/auto-raid-in-vsan-for-vcf-9-1/) until you switch it to Auto-RAID, and until then it stays on the legacy capacity view, because [the Effective Capacity view requires Auto-RAID](https://blogs.vmware.com/cloud-foundation/2026/05/11/effective-capacity-view-in-vsan-for-vcf-9-1/). If a 9.0 plan on six or more hosts assumed [RAID-5 4+1 at 1.25x](https://www.vmware.com/docs/vmw-vsan-space-efficiency), switching costs 20% more raw and one more component per object, in exchange for tolerating a second failure.
 
-Stretched clusters are the expensive case at three times the data. Check that every workload placed on one needs site-level availability. Workloads that do not can sit on a single-site cluster at half the raw cost.
+The effective figure already includes the reserves. [Broadcom's example](https://www.vmware.com/docs/vmw-vsan-space-efficiency) is ten hosts with 394 TB raw showing 203 TB effective. RAID-6 alone would leave 263 TB, so a further 23% is withheld, and you can [safely use all the free capacity vSAN advertises](https://blogs.vmware.com/cloud-foundation/2026/05/11/effective-capacity-view-in-vsan-for-vcf-9-1/). That reconciles with the 30% free in [The vSAN entitlement](/vcf/library/value/vsan-entitlement/) and the [storage decision](/vcf/library/architecture/storage-decision/): 30% of raw is that 23% plus seven points of growth margin. Apply it to raw when you buy, and never to the effective number, which would count the reserve twice. Broadcom doesn't itemise the 23%, and a host is a bigger share of a small cluster, so expect a six-host cluster to show less than half of raw. That part is inference, and the built cluster settles it.
 
-## Compression
+## Compression and deduplication
 
-ESA compresses on the host that receives the write, before the data crosses the network. Each 4 KB block is stored in 512-byte sectors, so it can shrink to anywhere from seven-eighths to one-eighth of its size. Data that is already compressed, such as media files, compressed backups or encrypted guest volumes, gains little.
+In 9.1 compression is [always on and can't be turned off in the UI](https://www.vmware.com/docs/vmw-vsan-space-efficiency), using ZSTD in place of LZ4 ([Koehler, 7 May 2026](https://blogs.vmware.com/cloud-foundation/2026/05/07/vsan-compression-and-global-deduplication-in-vcf-9-1/)). Three things follow for sizing:
 
-In vSAN 8 ESA, compression was a storage policy rule: on by default, and switched off for new writes with the "No space efficiency" option (<KB id={384397} />). The 9.1 space efficiency guide describes compression as a cluster-wide feature that is on by default and cannot be turned off in the UI. 9.1 also changes the algorithm from LZ4 to ZSTD. Existing data keeps the old algorithm until it is rewritten, and an upgraded cluster needs a disk format update from the health service before new writes use ZSTD.
+- A ratio measured on 9.0 is an LZ4 ratio, which should understate 9.1. Broadcom's guide and compression post give no ZSTD figure, only "noticeably higher", and [the guide asks for a conservative estimate](https://www.vmware.com/docs/vmw-vsan-space-efficiency).
+- An upgraded cluster needs a [quick, non-disruptive disk format update](https://blogs.vmware.com/cloud-foundation/2026/05/07/vsan-compression-and-global-deduplication-in-vcf-9-1/), and old data keeps LZ4 until it's read and rewritten, so don't count on new capacity on upgrade day.
+- The ESA "No data reduction" rule used to disable compression on its objects, and [from 9.1 it only filters datastores](https://www.yellow-bricks.com/2026/10/01/vsan-storage-rules-policy-capability-allows-to-set-dedupe-compression-encryption-per-vm-the-2026-update/) (Epping, 1 October 2026). Find those policies before upgrading.
 
-## Global deduplication
+Global deduplication is [optional](https://www.vmware.com/docs/vmw-vsan-space-efficiency) and [generally available in 9.1](https://blogs.vmware.com/cloud-foundation/2026/05/07/vsan-compression-and-global-deduplication-in-vcf-9-1/), for HCI and storage clusters of 3 to 64 hosts, with vSAN data-at-rest encryption. vSphere VM encryption [cancels its savings](https://www.vmware.com/docs/vmw-vsan-space-efficiency). [Results can take a few days](https://www.vmware.com/docs/vmw-vsan-space-efficiency) because it runs after the write, and then the compression ratio usually falls while the overall ratio rises, so track the overall figure and don't multiply the two.
 
-ESA deduplication hashes 4 KB blocks across the whole cluster after they have been written and have cooled, using spare CPU. It stays out of the write path, which is the main difference from OSA, where deduplication ran during destaging and could add latency on slower devices. It also grows with the cluster instead of being split by disk group.
+It [blocks stretching](/vcf/library/architecture/vsan-esa-osa/), so settle that first. The launch post's ["up to 8x"](https://blogs.vmware.com/cloud-foundation/2026/05/05/announcing_vsan_in_vcf_9-1/) is a ceiling and has no place in a purchase.
 
-| | 9.0 | 9.1 |
-|---|---|---|
-| Availability | Limited, by qualification request | General |
-| Cluster size | 3 to 16 hosts | 3 to 64 hosts |
-| Stretched and 2-node | Not supported | Not supported |
-| vSAN data-at-rest encryption | Not supported | Supported |
+## The limit that arrives first
 
-The savings depend on how similar the data is. Many VMs built from the same template, VDI pools and repeated database copies deduplicate well. Unique or encrypted data does not. Use vSAN data-at-rest encryption, not VM encryption, where encryption is required: VM encryption makes identical blocks look different and removes the deduplication saving.
+[Duncan Epping's post of 10 February 2026](https://www.yellow-bricks.com/2026/02/10/vsan-and-the-component-limits/) explains the mechanism, so read it first. An ESA device holds at most 3,000 data components and 3,000 metadata components, so a host with eight or fewer devices tops out at devices x 3,000, and his comment the next day confirms 27,000 still caps larger hosts. He counts 35 to 40 components per VM and lands on 75 to 80 VMs on one device. Four things change that for a 9.1 design.
 
-Turning deduplication off pauses the background process. Data already deduplicated stays that way, so there is no sudden capacity jump when you disable it.
+His example scheme has gone. RAID-5 4+1 is never selected by Auto-RAID, and seven or eight objects at six components, which is how his count reads, gives 42 to 48 per VM under RAID-6.
 
-## Effective capacity, not raw
+The sixth host can cost you room, because going from five hosts to six moves Auto-RAID from [RAID-5 2+1 to RAID-6 4+2](https://www.vmware.com/docs/vmw-vsan-space-efficiency), which is three components per object to six. With two devices per host, five hosts offer 30,000 data slots, or 10,000 objects, and six hosts offer 36,000, or 6,000 objects. Overhead stays at 1.5x, so the effective view gives no warning. That's an inference from those rules, and Broadcom doesn't state it, so model it before adding that host.
 
-The 9.1 capacity view reports **effective** capacity, with protection overhead and reserves already applied. Broadcom's guide gives the relationship for a single-site cluster: an overall reduction ratio of 2:1 yields effective capacity roughly equal to raw, and 4:1 yields about twice raw. Stretched clusters get about half of that. The guide's own example is a 10-host cluster with about 394 TB raw showing about 203 TB effective. Use the vSAN capacity view for these figures. The datastore view in the vSphere Client does not include them.
+A failed device is the real test. At the limit, [new VMs fail to deploy and rebuilds can't complete](https://knowledge.broadcom.com/external/article/315533). [RAID-6 spreads 4+2 across at least six hosts](https://www.vmware.com/docs/vmw-vsan-space-efficiency), so on exactly six hosts each object has a component on every host, and a lost device's components can only rebuild on that host's other devices. That rebuild constraint is an inference from the placement rule. Design so that devices minus one still fits, and stay under the 80% where health turns yellow.
 
-## Returning freed space
+Past ten hosts the cluster limit takes over. <KB id={315533} /> caps a cluster at 288,000 components, which is 10.7 full hosts. A 64-host cluster averages 4,500 per host, and at 48 per VM the ceiling is 6,000 VMs however much flash you install.
 
-When a guest deletes files, the blocks stay allocated on vSAN unless the guest sends TRIM or UNMAP. Guest TRIM/UNMAP is on by default in recent releases and can be checked in the cluster advanced options. It needs virtual hardware version 11 for Windows or 13 for Linux. After enabling it at cluster level, each VM needs a full power-off and power-on, not a guest reboot. Backup snapshots can stop UNMAP reaching the base disk, so check that space returns after the backup window as well.
+The KB's remedies are more hosts, policies with fewer components, or deleting data. Under Auto-RAID the policy route is costly, because turning off the toggle [disables the Effective Capacity view](https://blogs.vmware.com/cloud-foundation/2026/05/08/auto-raid-in-vsan-for-vcf-9-1/), so choose more devices per host at purchase.
 
-## Pitfalls
+Epping states the per-device figure for 9.0. The KB covers all versions but is undated, and neither the [9.1 guide](https://www.vmware.com/docs/vmw-vsan-space-efficiency) nor the [9.1.1 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vsan-9-1-1-0-release-notes.html) mention component limits. So get the 9.1 figure from Broadcom in writing before ordering hosts with three devices or fewer <AsOf date="2026-11-07" />.
 
-- **Promising a ratio before measuring it.** Size purchases on a measured ratio or on 1:1. See the [vSAN entitlement](/vcf/library/value/vsan-entitlement/) example for how far the answer moves.
-- **Reading compression and deduplication separately.** The guide recommends watching the overall data reduction ratio.
-- **Multi-rack deduplication without redundant uplinks.** Deduplication adds east-west traffic. Broadcom prefers single-rack clusters or redundant spine and leaf paths.
+## A sizing from start to finish
+
+This example is constructed, so replace each number with your own. It takes the cluster from [The vSAN entitlement](/vcf/library/value/vsan-entitlement/) as far as components.
+
+- Six VCF hosts, 2 x 16 cores: 192 cores, so 192 TiB of entitlement (<KB id={313548} />).
+- 120 TiB of VM data after thin provisioning, at a mean of 150 GiB per VM: 120 x 1,024 / 150, about 820 VMs.
+- Auto-RAID on six hosts: RAID-6, 1.5x, one capacity component per object on each host.
+- Eight objects per VM, the top of Epping's range, and 30% of raw kept free.
+- 1.5:1 measured on similar data with compression alone, and the figure to buy on. Deduplication is expected to reach 2:1 overall, and that is treated as headroom.
+- Hosts have bays for nine drives. All ratios here are invented.
+
+**Raw needed:** 120 / 1.5 = 80 TiB after reduction. 80 x 1.5 / 0.7 = 171.4 TiB, or 28.6 TiB per host.
+
+**Components per host:** 820 x 8 x 6 / 6 hosts = 6,560 at 120 TiB.
+
+| Drives per host | Raw, six hosts | Add-on TiB | Host limit | Used at 120 TiB | After losing one device | Full at 2:1 |
+|---|---|---|---|---|---|---|
+| 9 x 3.84 TB (3.49 TiB) | 188.6 | None | 27,000 | 24% | 24,000, fits | 1,202 VMs, 36% |
+| 5 x 7.68 TB (6.98 TiB) | 209.5 | 18 | 15,000 | 44% | 12,000, fits | 1,335 VMs, 71% |
+| 3 x 15.36 TB (13.97 TiB) | 251.5 | 60 | 9,000 | 73% | 6,000, **short by 560** | 1,602 VMs, **142%** |
+| 2 x 15.36 TB (13.97 TiB) | 167.6, short of 171.4 | None | 6,000 | **109%** | 3,000 | 1,068 VMs, **142%** |
+
+"Full at 2:1" fills raw to the 30% line (raw x 0.7 / 1.5 x 2) with 150 GiB VMs at eight components per host each.
+
+**Buy nine 3.84 TB drives per host.** That needs no add-on, leaves 3.4 TiB of the 192 spare, and holds 132 TiB at 1.5:1 and 176 TiB at 2:1 without nearing a limit. Five 7.68 TB drives are the fallback if the chassis can't take nine. Three 15.36 TB drives pass on day one and then fail twice: a device failure can't fully rebuild, and at 2:1 each device holds data for 534 VMs with slots for 375. Two 15.36 TB drives miss on both capacity and components.
+
+On day one expect 80 TiB used against at most about 97 TiB effective (188.6 x 0.515, the ratio in Broadcom's ten-host example). That view doesn't show what the licence counts, so use the PowerCLI tool from <KB id={313548} /> for raw.
+
+With no measured ratio, buy on 1:1 as the entitlement note advises: 257.1 TiB raw and 65.1 TiB of add-on before drive rounding. On VVF the same cores bring 48 TiB, so the nine-drive build needs 141 TiB of add-on. Stretching removes deduplication and doubles raw per TiB, so size it again.
+
+## Getting freed space back
+
+Thin disks only shrink if the guest sends TRIM or UNMAP, which [needs VM hardware 11 on Windows or 13 on Linux](https://www.vmware.com/docs/vmw-vsan-space-efficiency) and one full power-off and power-on of each VM after enabling it on the cluster. [Backup snapshots can stop UNMAP reaching the base disk](https://www.vmware.com/docs/vmw-vsan-space-efficiency), so check space returns after the backup window.
