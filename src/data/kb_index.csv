@@ -316,8 +316,8 @@ kb,topic,decks,url
 453800,vCenter to License Server: sustained TLS on 443,Meet the fleet,https://knowledge.broadcom.com/external/article/453800
 454179,"503, identity broker not reachable: IP conflict",How it all connects,https://knowledge.broadcom.com/external/article/454179
 454287,Licenses could not be synchronized with vCenters,Mind the licensing clock,https://knowledge.broadcom.com/external/article/454287
-454432,9.1.1: sixteen packs must be upgraded,How it all connects,https://knowledge.broadcom.com/external/article/454432
-454434,9.1.1: MP Builder packs re-save and re-install,How it all connects,https://knowledge.broadcom.com/external/article/454434
+454432,9.1.1: 17 listed packs stop collecting until upgraded,How it all connects,https://knowledge.broadcom.com/external/article/454432
+454434,9.1.1: MP Builder packs need a design edit and upgrade,How it all connects,https://knowledge.broadcom.com/external/article/454434
 454467,"""A vCenter upgrade is already running"": cancel script","Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/454467
 454593,PAK upload: No space left on device,Follow the signposts,https://knowledge.broadcom.com/external/article/454593
 454943,VVF: management services are optional,Meet the fleet,https://knowledge.broadcom.com/external/article/454943

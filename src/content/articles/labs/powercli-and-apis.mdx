@@ -1,76 +1,264 @@
 ---
-title: "PowerCLI and the APIs in VCF 9: the toolkit, the endpoints, and a safe first script"
-description: "VMware PowerCLI is now VCF PowerCLI, and existing scripts keep working. Underneath, SDDC Manager, VCF Operations, vCenter and NSX each expose a REST API. A short map of where to automate what, with read-only examples to start from."
+title: "PowerCLI and the APIs in VCF 9: which one to script against, and a safe first script"
+description: "Beside vCenter and NSX, VCF 9.1 splits automation across SDDC Manager, VCF Operations, Fleet LCM and SDDC LCM, each with its own token flow. Use VCF PowerCLI on PowerShell 7, pick the API that owns the job, start read-only, and check older scripts against 21 SDDC Manager operations deprecated in 9.1."
 category: labs
 order: 7
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
 kbs: []
 sources:
   - title: "VCF PowerCLI"
     url: "https://developer.broadcom.com/tools/vcf-powercli/latest"
     by: "Broadcom Developer"
-  - title: "VCF.PowerCLI on the PowerShell Gallery"
-    url: "https://www.powershellgallery.com/packages/VCF.PowerCLI/9.1.0.25380678"
-    by: "PowerShell Gallery"
-  - title: "SDDC Manager API: Tasks"
-    url: "https://developer.broadcom.com/xapis/sddc-manager-api/9.0/tasks/"
+    kind: broadcom
+  - title: "Getting started with VCF PowerCLI"
+    url: "https://developer.broadcom.com/powercli"
     by: "Broadcom Developer"
+    kind: broadcom
+  - title: "Install VCF PowerCLI (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/administration-sdks-cli-and-tools/introduction-to-vmware-vsphere-powercli/installing-vmware-vsphere-powercli/install-powercli.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Uninstall VCF PowerCLI (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/administration-sdks-cli-and-tools/introduction-to-vmware-vsphere-powercli/installing-vmware-vsphere-powercli/uninstall-powercli.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Compatibility Matrix for VCF PowerCLI (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/administration-sdks-cli-and-tools/introduction-to-vmware-vsphere-powercli/vmware-powercli-compatibility-matrix.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-08-25
+  - title: "VCF PowerCLI 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcf-sdks--apis--and-clis-9-1-1/vcf-powercli-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-14
+  - title: "Changelog for VCF PowerCLI 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-cli-api-sdk/vcf-powercli-changelog.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Changelog for VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-cli-api-sdk/vcf-changelog.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Changelog for VCF 9.1.1.0"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcf-sdks--apis--and-clis-9-1-1/vcf-changelog.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrading to VMware Cloud Foundation 9.1.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "SDDC Manager API 9.1 changelog"
+    url: "https://developer.broadcom.com/xapis/sddc-manager-api/9.1/changelog/"
+    by: "Broadcom Developer"
+    kind: broadcom
+  - title: "SDDC Manager API 9.1.1: operations index"
+    url: "https://developer.broadcom.com/xapis/sddc-manager-api/9.1.1/operation-index/"
+    by: "Broadcom Developer"
+    kind: broadcom
+  - title: "SDDC Manager API 9.1.1: Create Token"
+    url: "https://developer.broadcom.com/xapis/sddc-manager-api/9.1.1/v1/tokens/post/"
+    by: "Broadcom Developer"
+    kind: broadcom
+  - title: "SDDC Manager API 9.1.1: Get Domains"
+    url: "https://developer.broadcom.com/xapis/sddc-manager-api/9.1.1/v1/domains/get/"
+    by: "Broadcom Developer"
+    kind: broadcom
+  - title: "SDDC Manager API 9.1.1: Get Tasks"
+    url: "https://developer.broadcom.com/xapis/sddc-manager-api/9.1.1/v1/tasks/get/"
+    by: "Broadcom Developer"
+    kind: broadcom
+  - title: "SDDC Manager API 9.1.1: Get Roles"
+    url: "https://developer.broadcom.com/xapis/sddc-manager-api/9.1.1/v1/roles/get/"
+    by: "Broadcom Developer"
+    kind: broadcom
+  - title: "VCF Operations API 9.1.1"
+    url: "https://developer.broadcom.com/xapis/vcf-operations-api/latest/"
+    by: "Broadcom Developer"
+    kind: broadcom
+  - title: "VCF Operations API 9.1.1: acquire token"
+    url: "https://developer.broadcom.com/xapis/vcf-operations-api/9.1.1/suite-api/api/auth/token/acquire/post/"
+    by: "Broadcom Developer"
+    kind: broadcom
+  - title: "VCF Fleet LCM Service APIs"
+    url: "https://developer.broadcom.com/xapis/vcf-fleet-lcm-service-apis/latest/"
+    by: "Broadcom Developer"
+    kind: broadcom
+  - title: "VCF SDDC LCM Service APIs"
+    url: "https://developer.broadcom.com/xapis/vcf-sddc-lcm-service-apis/latest/"
+    by: "Broadcom Developer"
+    kind: broadcom
+  - title: "NSX API reference"
+    url: "https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/latest/"
+    by: "Broadcom Developer"
+    kind: broadcom
+  - title: "Connect-VcfSddcManagerServer"
+    url: "https://developer.broadcom.com/powercli/latest/vmware.sdk.vcf.sddcmanager/commands/connect-vcfsddcmanagerserver"
+    by: "Broadcom Developer"
+    kind: broadcom
+  - title: "Get-SddcDomain"
+    url: "https://developer.broadcom.com/powercli/latest/vmware.vcf.sddcmanager/commands/get-sddcdomain"
+    by: "Broadcom Developer"
+    kind: broadcom
+  - title: "Get-SddcTask"
+    url: "https://developer.broadcom.com/powercli/latest/vmware.vcf.sddcmanager/commands/get-sddctask"
+    by: "Broadcom Developer"
+    kind: broadcom
+  - title: "VCF.PowerCLI 9.1.1 on the PowerShell Gallery"
+    url: "https://www.powershellgallery.com/packages/VCF.PowerCLI/9.1.1.25718932"
+    by: "PowerShell Gallery"
+    kind: reference
+    date: 2026-09-10
+  - title: "vcf-api-specs"
+    url: "https://github.com/vmware/vcf-api-specs"
+    by: "VMware on GitHub"
+    kind: broadcom
+  - title: "Terraform Provider for VMware NSX"
+    url: "https://github.com/vmware/terraform-provider-nsxt"
+    by: "VMware on GitHub"
+    kind: broadcom
+  - title: "Introducing the hidden power of the PowerCLI SDK"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/03/introducing-the-hidden-power-of-the-powercli-sdk/"
+    by: "Angel Petrov, VMware Cloud Foundation Blog"
+    kind: broadcom
+    date: 2025-06-03
+  - title: "VMware Cloud Foundation APIs: API Documentation"
+    url: "https://jadenetworksolutions.co.uk/post/vcf-91-apis/vcf-91-api-endpoints/"
+    by: "Gary Blake"
+    kind: practitioner
+    date: 2026-07-08
+  - title: "VCF 9.1: automating VCF backup scheduling with the Fleet LCM API"
+    url: "https://williamlam.com/2026/07/vcf-9-1-automating-vcf-backup-scheduling-with-the-fleet-lcm-api.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-07-17
   - title: "VMware VCF PowerCLI 9"
     url: "https://vinfrastructure.it/2025/07/vmware-vcf-powercli-9/"
-    by: "vInfrastructure"
+    by: "Andrea Mauro, vInfrastructure"
+    kind: practitioner
+    date: 2025-07-26
+  - title: "Invoke-RestMethod"
+    url: "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod"
+    by: "Microsoft Learn"
+    kind: reference
+  - title: "about_Comparison_Operators"
+    url: "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_comparison_operators"
+    by: "Microsoft Learn"
+    kind: reference
+    date: 2026-10-28
+  - title: "Overview of the SecretManagement and SecretStore modules"
+    url: "https://learn.microsoft.com/en-us/powershell/utility-modules/secretmanagement/overview"
+    by: "Microsoft Learn"
+    kind: reference
+    date: 2026-06-22
 ---
 
 <InShort>
-**VCF PowerCLI** is the renamed continuation of VMware PowerCLI: existing cmdlets, modules and scripts keep working. Install it from the PowerShell Gallery as `VCF.PowerCLI`. For VCF-specific work, the **SDDC Manager API** still covers domains, clusters, hosts, tasks and credentials, and the **VCF Operations API** covers alerts, inventory, and in 9.x much of fleet management. Start every automation project with **read-only** calls: list domains, failed tasks and active alerts. Write operations come later, behind a change process.
+Choose the API by who owns the job, because VCF 9.1 has four of its own beside vCenter and NSX, and each has its own token flow: **SDDC Manager** for domains, hosts and tasks, **VCF Operations** for alerts, reports and fleet certificates and passwords, and **Fleet LCM** and **SDDC LCM** for lifecycle. Script from **VCF PowerCLI 9.1.1 on PowerShell 7**, start with read-only calls, and check older scripts first, since 9.1 deprecates 21 SDDC Manager operations, including edge-cluster, DNS and NTP calls.
 </InShort>
 
-<Compare rows={[
-  ["Toolkit", "VMware.PowerCLI", "VCF.PowerCLI (renamed, compatible)"],
-  ["SDDC Manager API", "Primary API for VCF operations", "Still present for domains, clusters, hosts, tasks. Some functions deprecated in favour of VCF Operations."],
-  ["Fleet API", "Aria Suite Lifecycle API", "VCF Operations and fleet lifecycle APIs"],
-  ["Auth to SDDC Manager", "POST /v1/tokens", "The same"],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to say the fleet API moved from Aria Suite Lifecycle to "VCF Operations and fleet lifecycle APIs", that SDDC Manager functions were deprecated in favour of VCF Operations, and its task filter looked only for `FAILED`. Fleet LCM and SDDC LCM are separate services, Broadcom names a successor for only one of the deprecated operations, and the filter missed timed-out tasks and read one page without showing how many there were.
+</Callout>
 
-## Where to automate what
+## Which API owns the job
 
-| Task | Best API or tool |
-|---|---|
-| Domains, clusters, hosts, network pools, failed tasks | SDDC Manager API |
-| Alerts, inventory, reports, health | VCF Operations API |
-| VMs, hosts, storage, vSphere configuration | vCenter, through PowerCLI |
-| Segments, gateways, firewall | NSX API, or the NSX Terraform provider |
-| Repeatable infrastructure | Terraform. See [Terraform for VCF](/vcf/library/labs/terraform-for-vcf/). |
+| Job | API (9.1.1) | Token | Authorization header |
+|---|---|---|---|
+| Domains, clusters, hosts, network pools, tasks, credentials | [SDDC Manager](https://developer.broadcom.com/xapis/sddc-manager-api/9.1.1/operation-index/) | [`POST /v1/tokens`](https://developer.broadcom.com/xapis/sddc-manager-api/9.1.1/v1/tokens/post/), read `accessToken` | `Bearer` |
+| Alerts, resources (inventory), reports, health, fleet certificates and passwords | [VCF Operations](https://developer.broadcom.com/xapis/vcf-operations-api/latest/) | [`POST /suite-api/api/auth/token/acquire`](https://developer.broadcom.com/xapis/vcf-operations-api/9.1.1/suite-api/api/auth/token/acquire/post/), read `token` | `OpsToken` |
+| Fleet components, upgrade plans, management backup schedules | [Fleet LCM](https://developer.broadcom.com/xapis/vcf-fleet-lcm-service-apis/latest/), `/fleet-lcm/v1` | Acquire a VCF Operations token, then exchange it at `/suite-api/api/auth/token/exchange` with service key `fleet-lcm` | `Bearer` |
+| Instance-level components, nodes, depot, support bundles | [SDDC LCM](https://developer.broadcom.com/xapis/vcf-sddc-lcm-service-apis/latest/), `/sddc-lcm/v1` | Password grant to `/api/v1/identity/token` on the VCF service runtime host | `Bearer` |
+| VMs, hosts, storage, vSphere configuration | [PowerCLI cmdlets](https://developer.broadcom.com/powercli) against vCenter | Not covered here | Not covered here |
+| Segments, tier-0 and tier-1 gateways, firewall | [NSX API](https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/latest/), or the [NSX Terraform provider](https://github.com/vmware/terraform-provider-nsxt), which lists NSX 9.0.0 to 9.1.1 | Not covered here | Not covered here |
+| Repeatable infrastructure | Terraform: see [Terraform for VCF](/vcf/library/labs/terraform-for-vcf/) | Not covered here | Not covered here |
+
+Broadcom publishes the category lists and token steps. The assignment of jobs to rows is this site's reading of them, because this site found no chooser or design blueprint on this topic in Broadcom's public 9.1 documentation <AsOf date="2026-11-07" />. Gary Blake's [July index of the API documentation sets](https://jadenetworksolutions.co.uk/post/vcf-91-apis/vcf-91-api-endpoints/) is the quickest way into the rest, and he found them harder to locate than they should be.
+
+Lifecycle is the row that catches 9.0 habits. The SDDC Manager UI [is being deprecated, and after an upgrade to 9.1 lifecycle work runs from VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html), with new Fleet and SDDC lifecycle components taking over from the fleet management appliance. Their API references start at 9.1, so neither has a reference to work from on a 9.0 estate. William Lam's [backup schedule script](https://williamlam.com/2026/07/vcf-9-1-automating-vcf-backup-scheduling-with-the-fleet-lcm-api.html) is a worked example of the Fleet LCM route, using its Update SDDC LCMS operation.
+
+## PowerCLI, the SDK cmdlets, or REST
+
+Install what [Broadcom documents](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/administration-sdks-cli-and-tools/introduction-to-vmware-vsphere-powercli/installing-vmware-vsphere-powercli/install-powercli.html), on PowerShell 7. The [compatibility matrix](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/administration-sdks-cli-and-tools/introduction-to-vmware-vsphere-powercli/vmware-powercli-compatibility-matrix.html) lists PowerShell 7.0.13 or later and marks Windows PowerShell 5.1 deprecated, and the [9.1.1 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcf-sdks--apis--and-clis-9-1-1/vcf-powercli-9-1-1-0-release-notes.html) raise the PowerShell Core minimum for `VMware.VimAutomation.Common` to 7.0.13. The [Gallery page](https://www.powershellgallery.com/packages/VCF.PowerCLI/9.1.1.25718932) still shows a 5.1 minimum, so don't plan around that figure.
+
+```powershell
+Install-Module VCF.PowerCLI -Scope CurrentUser
+Import-Module VCF.PowerCLI
+
+# Generated SDK cmdlets: one-to-one with the REST operations, auth headers handled
+Connect-VcfSddcManagerServer -Server sddc-manager.example.com -Credential (Get-Credential)
+(Invoke-VcfGetDomains).Elements | Select-Object Name, Type, Status
+
+# Find the cmdlet behind a REST path
+Get-VcfSddcManagerOperation -Path "*/v1/tasks" -Method Get
+```
+
+Prefer the SDK cmdlets where a module exists, since you get the REST operation without writing token handling. Angel Petrov's [June 2025 walkthrough](https://blogs.vmware.com/cloud-foundation/2025/06/03/introducing-the-hidden-power-of-the-powercli-sdk/) explains the pattern, and the SDDC Manager and VCF Operations SDK modules are [both dependencies of VCF.PowerCLI 9.1.1](https://www.powershellgallery.com/packages/VCF.PowerCLI/9.1.1.25718932). They carry their own 13.5.1 version number, which is expected when you list installed modules. Higher-level cmdlets such as [`Get-SddcDomain`](https://developer.broadcom.com/powercli/latest/vmware.vcf.sddcmanager/commands/get-sddcdomain) and [`Get-SddcTask`](https://developer.broadcom.com/powercli/latest/vmware.vcf.sddcmanager/commands/get-sddctask) sit alongside them.
+
+Fleet and SDDC lifecycle aren't among the [nine components with PowerCLI cmdlet references](https://developer.broadcom.com/powercli), so plan on REST for those two. Outside PowerShell, VCF 9.1 has [supported Java and Python SDK modules and OpenAPI specifications](https://github.com/vmware/vcf-api-specs). Stubs generated from those specs have no integration guarantee from Broadcom, and the repo's build scripts are reference-only.
+
+Broadcom says [existing cmdlets, modules and scripts continue to work](https://developer.broadcom.com/tools/vcf-powercli/latest) after the rename from VMware PowerCLI to VCF PowerCLI, and the [9.1 cmdlet changelog](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-cli-api-sdk/vcf-powercli-changelog.html) shows nothing deprecated or removed. It does show 8 modified commands and 5 type changes in `VMware.VimAutomation.Core`, without saying whether any break a script, so run old scripts on a test host before trusting them. Broadcom's install page doesn't cover moving from `VMware.PowerCLI`. Andrea Mauro's [July 2025 post](https://vinfrastructure.it/2025/07/vmware-vcf-powercli-9/) uninstalls every `VMware*` module first, while Broadcom's [uninstall page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/administration-sdks-cli-and-tools/introduction-to-vmware-vsphere-powercli/installing-vmware-vsphere-powercli/uninstall-powercli.html) deletes the module folders by hand. A fresh automation host avoids the question.
+
+## What older scripts have to check
+
+The [SDDC Manager API changelog for 9.1](https://developer.broadcom.com/xapis/sddc-manager-api/9.1/changelog/) lists 48 new operations, 21 deprecated and none deleted. The deprecated set is 8 edge-cluster calls, 5 DNS, 5 NTP, 2 upgrade-precheck and the overlay call, so a script that reads `/v1/edge-clusters` or `/v1/system/ntp-configuration` still has a target today but shouldn't be extended. Only the overlay call names a successor, [vCenter or NSX](https://developer.broadcom.com/xapis/sddc-manager-api/9.1.1/operation-index/). The edge-cluster and NTP pages say "Deprecated" and nothing more, so treat a replacement as a design question for each script, and use [Where did that button go](/vcf/library/day-2/where-did-that-button-go/) to see where the UI work went. Domains, tasks and tokens carry no deprecation marks in the [9.1.1 index](https://developer.broadcom.com/xapis/sddc-manager-api/9.1.1/operation-index/), though it does mark other families, including identity providers and NSX ALB clusters, and two upload operations no longer supported from 9.0.
+
+Deletions matter more than deprecations, and in 9.1 they all sit outside SDDC Manager. The [VCF 9.1 changelog](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-cli-api-sdk/vcf-changelog.html) records these:
+
+| API | New | Deprecated | Deleted |
+|---|---|---|---|
+| SDDC Manager | 48 | 21 | 0 |
+| vSphere Automation | 101 | 28 | 28 |
+| NSX Manager | 31 | 11 | 17 |
+| NSX Policy | 264 | 6 | 9 |
+| Log Management | 23 | 0 | 136 |
+| VCF Operations | 134 | 0 | 0 |
+
+The SDDC Manager changelog compares a version with the previous one, and the consolidated page names no baseline, so a script written on 5.x has also crossed the 9.0 changes and needs the 9.0 changelog read too. The [9.1.1 changelog](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcf-sdks--apis--and-clis-9-1-1/vcf-changelog.html) records 31 new VCF Operations calls, 6 new SDDC Manager calls, and 2 NSX Manager deprecations.
 
 ## A safe first script
 
-```powershell
-# Install once
-Install-Module VCF.PowerCLI -Scope CurrentUser
+This version uses plain REST, for hosts that can't load the modules. It only reads.
 
-# Read-only: list domains and failed tasks from SDDC Manager
-$sddc = "sddc-manager.rainpole.io"
+```powershell
+# Read-only calls, written against the SDDC Manager 9.1.1 API reference.
+$sddc = "sddc-manager.example.com"
 $cred = Get-Credential
 $body = @{ username = $cred.UserName; password = $cred.GetNetworkCredential().Password } | ConvertTo-Json
-$tok  = (Invoke-RestMethod -Method Post -Uri "https://$sddc/v1/tokens" -Body $body -ContentType "application/json" -SkipCertificateCheck).accessToken
+$tok  = (Invoke-RestMethod -Method Post -Uri "https://$sddc/v1/tokens" -Body $body -ContentType "application/json").accessToken
 $h    = @{ Authorization = "Bearer $tok" }
 
-(Invoke-RestMethod -Uri "https://$sddc/v1/domains" -Headers $h -SkipCertificateCheck).elements |
+(Invoke-RestMethod -Uri "https://$sddc/v1/domains" -Headers $h).elements |
   Select-Object name, type, status
 
-(Invoke-RestMethod -Uri "https://$sddc/v1/tasks" -Headers $h -SkipCertificateCheck).elements |
-  Where-Object status -eq "FAILED" | Select-Object name, creationTimestamp, id
+$page = Invoke-RestMethod -Uri "https://$sddc/v1/tasks?pageSize=100" -Headers $h
+"Task pages: $($page.pageMetadata.totalPages)"
+$page.elements |
+  Where-Object status -in 'FAILED', 'TIMED_OUT', 'Timed Out' |
+  Select-Object name, creationTimestamp, id, status
 ```
 
-`-SkipCertificateCheck` is for labs. In production, trust the CA instead. PowerCLI also includes SDK-generated cmdlets for the VCF APIs. Run `Get-Command -Module *Vcf*` to see what your version provides.
+Two details decide whether its output can be trusted. [`Get Tasks`](https://developer.broadcom.com/xapis/sddc-manager-api/9.1.1/v1/tasks/get/) caps `pageSize` at 100, so request more with `pageNumber` whenever the page count exceeds 1. The same reference lists status values in two spellings (`FAILED` and `Failed`, `TIMED_OUT` and `Timed Out`). PowerShell [string comparisons are case-insensitive](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_comparison_operators), which handles the first pair and not the second, so the filter names both timed-out spellings. Filtering on the server with `taskStatus` is shorter, but test which spelling your appliance accepts first.
 
-<Callout type="field">
-Give every automation a read-only mode and run it in that mode for a week before allowing changes. It finds the edge cases (an unexpected domain, an old task, a missing permission) without changing anything.
+The script assumes the host trusts the CA behind SDDC Manager's certificate. Adding `-SkipCertificateCheck`, a switch added in PowerShell 6.0.0, turns off all validation, and Microsoft [calls it insecure and meant for testing against known self-signed hosts](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod). `Connect-VcfSddcManagerServer` has an equivalent [`-IgnoreInvalidCertificate`](https://developer.broadcom.com/powercli/latest/vmware.sdk.vcf.sddcmanager/commands/connect-vcfsddcmanagerserver). Keep both out of production, and trust the CA instead.
+
+[`Create Token`](https://developer.broadcom.com/xapis/sddc-manager-api/9.1.1/v1/tokens/post/) also accepts `apiKey` and `idToken`, with every field marked optional and no statement of which combination is required, so test those on your appliance before designing around them.
+
+<Callout type="analysis" title="Accounts, secrets and the write path">
+Run automation under its own account rather than a person's administrator login. [`GET /v1/roles`](https://developer.broadcom.com/xapis/sddc-manager-api/9.1.1/v1/roles/get/) returns the roles your SDDC Manager offers, so grant the lowest one that can read what the script needs and confirm it by running the script.
+
+Keep passwords out of the script. Microsoft's [SecretManagement module](https://learn.microsoft.com/en-us/powershell/utility-modules/secretmanagement/overview) is still supported for this, but it's now feature complete with its repository archived, receiving security and critical fixes only, and it does nothing until a vault extension is registered. The other route is your vault's own supported client.
+
+Give every automation a read-only mode and run it that way for a week before allowing changes, which finds edge cases such as an unexpected domain, an old task or a missing permission without changing anything. Write operations come later, behind your change process. [Scripted health checks](/vcf/library/labs/scripted-health-checks/) extends this pattern into a weekly report.
 </Callout>
-
-## Pitfalls
-
-- **Using personal administrator accounts** for automation. Create a dedicated account with the least role needed.
-- **Hard-coding passwords** in scripts. Use a vault or the PowerShell SecretManagement module.
-- **Assuming 5.x endpoints still behave the same** in 9.x. Check the API reference for your version; some operations were deprecated.
