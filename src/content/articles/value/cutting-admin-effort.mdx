@@ -1,75 +1,170 @@
 ---
 title: "Cutting administration effort: the toil VCF 9 automates and how to measure it"
-description: "Certificate renewals, password rotation, per-component patching and licence keys were recurring manual work in VCF 5.x. VCF 9 moves most of it into VCF Operations fleet management. What changed, what still needs a person, and how to show the time saved."
+description: "VCF 9 centralises certificate, password, licence and lifecycle work in VCF Operations, but savings differ by task. Leaf certificates can auto-renew unless an external CA signs them; scheduled password rotation stays in SDDC Manager. Baseline each task on 5.x, then report the hours your own records show."
 category: value
 order: 10
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
 updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
 kbs: []
 sources:
   - title: "Why VCF 9.0 improves IT operations and management"
     url: "https://blogs.vmware.com/cloud-foundation/2026/02/06/why-vcf-9-0-improves-it-operations-and-management/"
-    by: "VMware Cloud Foundation blog"
+    by: "Brock Peterson and Sehjung Hah, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-02-06
   - title: "Eliminating toil"
     url: "https://sre.google/sre-book/eliminating-toil/"
-    by: "Google SRE book"
+    by: "Vivek Rau, Google SRE book"
+    kind: reference
   - title: "Licensing in VMware Cloud Foundation 9.0"
     url: "https://blogs.vmware.com/cloud-foundation/2025/06/24/licensing-in-vmware-cloud-foundation-9-0/"
-    by: "VMware Cloud Foundation blog"
+    by: "Sehjung Hah and Kyle Gleed, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-06-24
   - title: "Advanced memory tiering enhancements in VCF 9.1 (configuration profiles)"
     url: "https://blogs.vmware.com/cloud-foundation/2026/05/07/advanced-memory-tiering-enhancements-in-vmware-cloud-foundation-9-1/"
-    by: "VMware Cloud Foundation blog"
+    by: "Dave Morera, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-05-07
+  - title: "VMware Cloud Foundation 9.1 General FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "VCF Fleet Management blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Recommendations for VCF Certificate Management (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Recommendations for VCF Password Management (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/vcf-password-management/recommendations-for-vcf-password-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Set Up Automatic Renewal of Certificates (9.1.x)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0/set-up-automatic-renewal-of-certificates-in-vmware-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Managing certificates at scale with VMware Cloud Foundation 9.1.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/10/14/managing-certificates-at-scale-with-vmware-cloud-foundation-9-1-1/"
+    by: "Andrew Firth and Sehjung Hah, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-10-14
+  - title: "Manage passwords (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Rotate passwords for VCF components (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/using-sddc-manager-to-manage-passwords/rotate-passwords.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Lifecycle Management (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Update Licenses in Connected Mode (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/update-licenses/updatelicenses.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "What's new in VCF Operations 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VMware Cloud Foundation 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-03
+  - title: "VCF Operations 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Managing Certificates in VMware Cloud Foundation (5.2)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/certificate-management-admin.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Rotate passwords (5.2)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/manage-passwords-admin/rotate-passwords-admin.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Managing License Keys in VMware Cloud Foundation (5.2)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/license-management-admin.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Upgrade VMware Aria Suite Lifecycle and VMware Aria Suite Products (5.2)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/vmware-cloud-foundation-lifecycle-management/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2-lifecycle/upgrade-aria-suite-lifecycle.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
 ---
 
 <InShort>
-The SRE book defines **toil** as work that is manual, repetitive, automatable, has no lasting value and grows with the size of the estate. In VCF 5.x several administration tasks fitted that definition: replacing certificates component by component, rotating passwords by hand, patching each management product through its own tool, and managing licence keys. VCF 9 brings most of it into **VCF Operations**: fleet lifecycle from one screen, certificate auto-renewal through a CA, password expiry alerts and updates, a single licence file, and diagnostic findings that match the estate against known issues. The time this frees is a real saving, but only if you measure it before and after.
+Build the case on certificates, management lifecycle and connected licence reporting, and expect little from password rotation, which 5.2 could already schedule. That ranking is this site's analysis from the pages below. The [fleet management blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint.html) lists reduced administrative overhead as an objective and puts no figure on it, so the only number you can defend is your own: record each task's hours on 5.x, repeat after the feature is configured, and report the difference.
 </InShort>
 
-<Compare rows={[
-  ["Certificates", "Replaced per component through SDDC Manager or by hand", "Monitored across the fleet, with auto-renewal through VMCA or a Microsoft CA"],
-  ["Passwords", "Rotated through SDDC Manager or per product", "Expiry alerts and updates from VCF Operations fleet management"],
-  ["Management component lifecycle", "SDDC Manager for the core, Aria Suite Lifecycle for the Aria products", "One lifecycle view in VCF Operations, from an online or offline depot"],
-  ["Licensing", "Keys per component", "One licence file assigned to vCenter"],
-  ["Known-issue checks", "Manual reading of KBs and advisories", "Diagnostic findings for security advisories and known KB issues"],
+<Callout type="note" title="Corrected on 7 November 2026">
+This note said VCF 9 moves "most" of this work into fleet management, that 5.x passwords were rotated by hand, and that licensing is one file reported every 180 days. No source this note cites quantifies "most", 5.2 already scheduled rotation for most account types it lists, ESXi excepted, some add-ons still sit outside the file, and 9.1 in automated mode updates licences daily. It also limited auto-renewal to VMCA or Microsoft CA, which left out OpenSSL CA, and said findings were matched to the estate, which none of these sources states.
+</Callout>
+
+<Compare v5Label="VCF 5.2" v9Label="VCF 9.1" rows={[
+  ["Certificates", "<a href=\"https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/certificate-management-admin.html\">SDDC Manager for vCenter, NSX, Avi, itself and Aria Suite Lifecycle</a>; Aria Suite Lifecycle for other Aria products; VMCA rotates default ESXi certificates", "<a href=\"https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs\">One place in VCF Operations</a>, with <a href=\"https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0/set-up-automatic-renewal-of-certificates-in-vmware-cloud-foundation.html\">auto-renewal 60 days before expiry</a> for leaf certificates signed by VMCA, Microsoft CA or OpenSSL CA"],
+  ["Passwords", "<a href=\"https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/manage-passwords-admin/rotate-passwords-admin.html\">SDDC Manager rotates now or every 30, 60 or 90 days</a>; ESXi only by hand", "<a href=\"https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords.html\">Root and admin expiry alerts, policies and updates in VCF Operations</a>; <a href=\"https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/using-sddc-manager-to-manage-passwords/rotate-passwords.html\">scheduled rotation still in SDDC Manager</a>, ESX excluded"],
+  ["Management lifecycle", "SDDC Manager for the core; <a href=\"https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/vmware-cloud-foundation-lifecycle-management/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2-lifecycle/upgrade-aria-suite-lifecycle.html\">VCF doesn't manage upgrades for Aria Suite Lifecycle and Aria products</a>, so they run from Aria Suite Lifecycle", "<a href=\"https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html\">VCF Operations, with a declarative model</a>, from an online or offline depot: set a target version and it orchestrates binaries and dependencies"],
+  ["Licensing", "<a href=\"https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/license-management-admin.html\">Component keys in SDDC Manager, or a solution key on vCenter</a> plus a separate vSAN key", "<a href=\"https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs\">Licence files uploaded to VCF Operations and assigned to vCenters</a>; Avi, vDefend and Live Recovery licensed separately"],
 ]} />
 
-## Where the hours go
+## Where the hours come back, ranked
 
-Toil grows with the estate, which is why it matters for cost. Ten vCenters with certificates that expire on different dates generate ten pieces of work a cycle. The SRE book's guidance is to measure toil, keep it under a fixed share of each engineer's time, and spend the rest on engineering that removes more of it. The same approach works for a platform team.
+[Vivek Rau's chapter in the Google SRE book](https://sre.google/sre-book/eliminating-toil/) defines toil as manual, repetitive, automatable, tactical work with no enduring value that grows with the service. Growth is what makes it a cost line: ten vCenters whose certificates expire on different dates are ten jobs a cycle. Google's SRE organisation aims to keep toil below 50% of each engineer's time, and a platform team can borrow that target. The split below is this site's reading of the pages linked after it.
 
-The tasks below are recurring work in a VCF estate. The 9.x column shows what changes, and the last column shows what still needs a person.
-
-| Task | What VCF 9 does | Still needs a person for |
+| Task | Hours to count as saved | Stays on the team's books |
 |---|---|---|
-| Certificate renewal | Tracks expiry and renews through an integrated CA | The CA integration, and components outside VCF |
-| Password rotation | Alerts on expiry and updates centrally | Break-glass procedures and vaulting |
-| Patching management components | Lifecycle from one screen | Change approval and validation |
-| Licence management | One file, reported every 180 days | Registration and the reporting cycle |
-| Known-issue checks | Findings matched to the estate | Deciding what to fix and when |
-| Host configuration | Configuration profiles and vLCM images | Defining the standard |
+| Certificate renewal | Hands-on renewal of leaf certificates that auto-renew | CA set-up, root and intermediate certificates, anything an external CA signs, components outside VCF, failed renewals |
+| Management lifecycle | Separate tools and binary handling | Change approval, patch order, validation |
+| Licence reporting | The manual update, in 9.1 connected automated mode | Registration, disconnected uploads, add-on keys, watching that the daily update still runs |
+| Password work | Logging in to each component to change a password | Rotation schedules, ESX rotation, break-glass procedures, vaulting, outbound alerts |
+| Known-issue checks | Time spent looking for what applies, if you recorded it | Deciding what to fix and when |
+| Host configuration | Finding drift by hand on vSphere Configuration Profile clusters | Defining the standard and fixing the drift |
 
-Memory tiering in 9.1 is a small example of the same pattern. Broadcom moved its set-up into one configuration profile setting with automatic partitioning and no host reboot, and reports configuration time cut by more than half.
+Certificates are the largest change, and your CA decides whether you get it. [VCF Operations can't auto-renew certificates signed by an external CA](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0/set-up-automatic-renewal-of-certificates-in-vmware-cloud-foundation.html), or any root or intermediate. The [blueprint also wants default CA-signed certificates on management components replaced by an enterprise CA's before production](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html). Put together, an enterprise PKI other than Microsoft CA gets the trust baseline and keeps the manual work. That's an inference from those two pages, so settle the CA before promising this saving; the [certificates note](/vcf/library/day-2/certificates-in-9/) walks through the choice and treats OpenSSL as test and development only. Manual jobs do shrink: [9.1 runs up to 10 same-type operations in one batch, in sequence](https://blogs.vmware.com/cloud-foundation/2026/10/14/managing-certificates-at-scale-with-vmware-cloud-foundation-9-1-1/), as Firth and Hah describe, and the [9.1.1 release notes report concurrent replacement tasks failing after 2 hours](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), so don't run them side by side. VCF Operations 9.1 also [reaches VCF 5.2 components for certificates](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html), so take the 5.x baseline before that integration changes the work.
+
+Lifecycle gets one console and keeps its ordering. VCF Operations [handles binaries, upgrades and patches across fleet and instance components](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html), which removes the separate Aria path. Sequencing still needs a person. The [9.1.1 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html) put the fleet lifecycle component first, forbid patching VCF Operations in parallel with other components, and say not to use the Upgrade All button until every dependency is met <AsOf date="2026-11-07" />.
+
+Licence reporting should drop to almost nothing, but only in one mode. In [automated mode, licences update every 24 hours](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/update-licenses/updatelicenses.html). Manual mode needs an update at least every 180 days, and the [disconnected route is a usage-file upload and a file download](https://blogs.vmware.com/cloud-foundation/2025/06/24/licensing-in-vmware-cloud-foundation-9-0/) on the same cycle, though the [4 Nov FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) says APIs exist for those updates. [Late reporting ends with hosts disconnected from vCenter](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/update-licenses/updatelicenses.html), so an air-gapped site should keep this task in its figures; the [180-day note](/vcf/library/licensing/180-day-cycle/) has the dates. [Hah and Gleed's 2025 post](https://blogs.vmware.com/cloud-foundation/2025/06/24/licensing-in-vmware-cloud-foundation-9-0/) lists vDefend, Avi, Tanzu Platform and Data Services Manager as still on keys, and those stay in the count. None of this is licensing or purchasing advice, so check your entitlement with Broadcom.
+
+Passwords save the least. VCF Operations [alerts on expiring root and admin passwords and updates them without a login to each component](https://blogs.vmware.com/cloud-foundation/2026/02/06/why-vcf-9-0-improves-it-operations-and-management/), per Peterson and Hah. Its [9.1 password page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords.html) describes updates you run and a six-hour compliance check, with no rotation schedule, so keep the schedule you have. The [blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/vcf-password-management/recommendations-for-vcf-password-management.html) says to enable SDDC Manager auto-rotation for inter-component accounts only it can manage, at the same 30, 60 or 90 days as 5.2. Broadcom's wording on that console's future isn't consistent: the [certificate recommendations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html) say 9.0 deprecates its UI, while the [rotation page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/using-sddc-manager-to-manage-passwords/rotate-passwords.html) still uses that UI and says deprecation comes in a future release. Check the schedule at each upgrade. The [password recommendations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/vcf-password-management/recommendations-for-vcf-password-management.html) want credentials in an enterprise vault for API or manual processes, and outbound expiry alerts need the notification plugin. Both are work someone has to own.
+
+Findings and drift show you the work without doing it. Diagnostics [surfaces active findings, including security advisories and issues with known KBs](https://blogs.vmware.com/cloud-foundation/2026/02/06/why-vcf-9-0-improves-it-operations-and-management/), and [9.1 adds an API to feed them into ticketing](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html). Configuration is similar. [Templates for vSphere Configuration Profile clusters monitor and schedule drift detection](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html), [VCF Operations manages vSphere Lifecycle Manager images](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html), and the [blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint.html) says current configuration capabilities focus on drift detection, so budget time to act on what they find.
 
 ## Measuring it
 
-Vendor claims about effort saved come without a baseline you can check. Your own figures are more useful and more convincing. For each recurring task, record:
+Vendor effort figures arrive without a baseline you can check. Dave Morera's [May post on memory tiering](https://blogs.vmware.com/cloud-foundation/2026/05/07/advanced-memory-tiering-enhancements-in-vmware-cloud-foundation-9-1/) is the pattern: 9.1 collapses set-up into a vSphere Configuration Profiles pane, creates NVMe partitions automatically and drops the host reboot, though maintenance mode remains, and he gives "over 50% reduction in configuration time" with no method. Take that as something to test.
+
+For each recurring task, record:
 
 1. How often it happens per year across the estate.
 2. The hands-on time per occurrence, from change records or the team's estimate.
 3. The number of people involved.
 
-Annual hours for a task are frequency × time × people. Repeat the measurement after the task moves to fleet management. Report the difference in hours, and say what the team did with them. Hours that went into automation, design work or reducing incident load are the argument for the next round of improvement.
+Annual hours are frequency × time × people. This example is constructed, so replace each number with your own: 40 certificate renewals a year at 30 minutes with two people is 40 × 0.5 × 2 = 40 hours.
 
-Change records are the best source for the "before" figures because they already exist. If the team does not record hands-on time, start now. A month of honest records is worth more than a year of estimates.
+Change records are the best "before" source because they already exist. If the team doesn't log hands-on time, start now and cover a few quarters, because [the SRE target is an average over a few quarters or a year](https://sre.google/sre-book/eliminating-toil/): toil is spiky. Repeat the measurement after the feature is configured, not after the upgrade, since auto-renewal saves time only once the CA integration works and [any certificate within 60 days of expiry has to be renewed by hand before auto-renewal goes on](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0/set-up-automatic-renewal-of-certificates-in-vmware-cloud-foundation.html).
 
-## What does not get easier
+Record moved work as moved. The blueprint's stated principle is that [day 2 operations should run through API or workflow automation](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint.html), so a task someone still clicks through in VCF Operations is still manual under Rau's definition, however tidy the screen. Report what the team did with the hours as well, because time spent on automation, design or reducing incident load is the argument for the next round.
 
-Automation moves effort, it does not remove all of it. CA integration, depot connectivity, the 180-day licence reporting cycle and the fleet management components themselves are new things to run. The site's notes on [certificates in 9.x](/vcf/library/day-2/certificates-in-9/), [passwords and service accounts](/vcf/library/day-2/passwords-service-accounts/) and [health checks](/vcf/library/day-2/health-checks-sos/) cover what each one needs. Count that time on the other side of the ledger.
+## What goes on the other side of the ledger
 
-## Pitfalls
-
-- **Claiming savings from features not yet configured.** Auto-renewal saves time only once the CA integration works. Measure after the change, not after the upgrade.
-- **Automating a broken process.** If certificate replacements fail because of naming or trust problems, automation fails faster. Fix the underlying cause first.
-- **Losing the knowledge.** When fleet management does the work, fewer people remember how to do it by hand. Keep a tested manual runbook for the day the automation cannot run.
+New work needs counting against the saving: CA configuration, depot connectivity, the fleet management components themselves, the notification plugin, [Log Management for the audit retention the blueprint recommends](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/vcf-password-management/recommendations-for-vcf-password-management.html), and the [licence server appliance added in 9.1](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs), which is deployed and life-cycled automatically but has its own [9.1.1 known issue with inflated used capacity](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html). Failures also still reach a person: [9.1.1 alerts when a component-managed certificate renewal fails](https://blogs.vmware.com/cloud-foundation/2026/10/14/managing-certificates-at-scale-with-vmware-cloud-foundation-9-1-1/), and someone has to fix it. If certificate replacements already fail on naming or trust problems, automation fails faster, so fix the cause first. Fewer people will remember the manual steps once the automation runs, so keep a tested manual runbook for the day it can't. The [passwords and service accounts](/vcf/library/day-2/passwords-service-accounts/) and [health checks](/vcf/library/day-2/health-checks-sos/) notes cover what those areas need.

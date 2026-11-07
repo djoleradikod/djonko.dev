@@ -1,67 +1,140 @@
 ---
 title: "Reclaiming idle VMs, powered-off VMs, old snapshots and orphaned disks"
-description: "VCF Operations lists four kinds of reclaimable capacity, each with its own risk. Reclaim them in order of risk, with an owner and a waiting period, and track what was returned so the capacity is not quietly consumed again."
+description: "Clear powered-off VMs and snapshots first, check orphaned disks one by one, and leave idle VMs until last and ask their owners. On 9.1, VCF Operations shows potential savings on Manage > Capacity > Optimize. Primary licence capacity follows hosts, so a reclaimed figure pays off when it displaces a purchase."
 category: value
 order: 8
-versions: ["5.x", "9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
 kbs: [445643]
 sources:
-  - title: "Identifying and reviewing idle virtual machines"
+  - title: "Using Reclaim to Free Up Resources (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-reclaim-to-free-up-resources.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "List of Global Settings (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/-configuring-administration-settings/modifying-global-settings/list-of-global-settings.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "List of Global Settings (VCF 9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/infrastructure-operations/-configuring-administration-settings/modifying-global-settings/list-of-global-settings.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Automation Central (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/configuring-automation-using-jobs/automation-central.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "What's new in VCF Operations (VCF 9.1.0.0 release notes)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Licensing Model (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Add-on Licenses Included in Your VCF or vSphere Foundation Subscription (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/add-on-licenses-in-vcf-9-0.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware Cloud Foundation 9.1 general FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "Design blueprints for VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Identifying and Reviewing Idle Virtual Machines in Aria Operations"
     url: "https://knowledge.broadcom.com/external/article/445643/identifying-and-reviewing-idle-virtual-m.html"
     by: "Broadcom KB"
-  - title: "VMware Cloud Foundation helps you optimally size VMs (reclamation and potential savings)"
+    kind: broadcom
+  - title: "Rightsizing VMs with VMware Cloud Foundation"
     url: "https://blogs.vmware.com/cloud-foundation/2025/08/12/vmware-cloud-foundation-helps-you-optimally-size-vms-and-keep-your-infrastructure-and-workloads-running-smoothly/"
-    by: "VMware Cloud Foundation blog"
-  - title: "Aria Operations metrics for vSphere world objects (reclaimable and realised savings)"
-    url: "https://docs.vmware.com/en/VMware-Aria-Operations/8.18/Using-Operations/GUID-ACF48F67-B877-45DB-910C-4BFADC86F794.html"
-    by: "VMware"
+    by: "Kelcey Lemon, VCF blog"
+    kind: broadcom
+    date: 2025-08-12
 ---
 
 <InShort>
-VCF Operations finds four kinds of capacity that nobody is using: **powered-off VMs**, **snapshots**, **orphaned disks** and **idle VMs**. By default a VM is idle when its CPU stays below 100 MHz for the whole of each 24-hour period, for a number of consecutive days you set (<KB id={445643} />). Powered-off VMs, snapshots and orphaned disks hold storage. Idle VMs also hold memory and CPU allocation. Reclaim the low-risk categories first, give every candidate an owner and a waiting period, and record the capacity returned. The same feature existed in Aria Operations in 5.x. In 9.x it is in every estate because VCF Operations is mandatory.
+Work the four categories in this order: powered-off VMs and snapshots, then orphaned disks one at a time, then idle VMs, asking the owner before anything else. Don't use Delete as the first action on an idle VM, because the test behind that list is a CPU threshold. VCF Operations is [a required component of every VCF fleet](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs), so on 9.x you already have it, and on 9.1 the view is [Manage > Capacity > Optimize](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-reclaim-to-free-up-resources.html). Primary licence capacity follows ESX hosts, so record what you reclaim and set it against the next purchase.
 </InShort>
 
-## The four categories
+<Callout type="note" title="Corrected on 7 November 2026">
+This note gave the view as Capacity > Reclaim and the settings as Resource Reclamation, said Operations reports realised savings per category, said vCLS VMs will show as idle, and claimed 5.x coverage. On 9.1 the path is Manage > Capacity > Optimize, the settings category is Capacity Optimization, the Reclaim page covers potential savings with a separate dashboard for savings achieved, and vCLS VMs may be flagged; the risk ratings it gave weren't Broadcom's, beyond the KB calling snapshots and orphaned disks low-risk, and scheduled orphaned-disk cleanup isn't on the 9.1 job list.
+</Callout>
 
-| Category | Holds | Risk of reclaiming | Typical action |
+## The four categories on 9.1
+
+The last column is this site's call. Broadcom documents an order for some of these and its KB calls snapshots and orphaned disks low-risk, but it doesn't rate all four. Powered-off VMs, snapshots and orphaned disks hold storage; idle VMs also hold memory and CPU allocation.
+
+| Category | What gets listed, by default | Actions offered | What to do |
 |---|---|---|---|
-| Snapshots | vSAN or datastore capacity | Low, once confirmed unused | Consolidate after owner check |
-| Orphaned disks | Capacity, no VM attached | Low to medium | Archive, then delete |
-| Powered-off VMs | Capacity | Medium | Confirm owner, archive, delete |
-| Idle VMs | Memory, CPU allocation, capacity | Highest | Owner review, power off, wait, then treat as powered-off |
+| Powered-off VMs | [Continuously off for 7 days](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/-configuring-administration-settings/modifying-global-settings/list-of-global-settings.html) | Schedule, delete, exclude, export | First. Name an owner and a removal date, then archive or delete |
+| Snapshots | Older than the period you set, on [idle, powered-off and active VMs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-reclaim-to-free-up-resources.html) | Schedule, delete, exclude, export | First. Check with the owner, then delete |
+| Orphaned disks | [VMDKs of a VM no longer in inventory](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/-configuring-administration-settings/modifying-global-settings/list-of-global-settings.html), after a minimum number of days | Exclude, export, and a delete button the page contradicts | Next. Check each disk by hand, archive it, then delete |
+| Idle VMs | [Under 100 MHz for 100% of each day](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/-configuring-administration-settings/modifying-global-settings/list-of-global-settings.html), for a minimum number of consecutive days | Schedule, delete, power off, exclude, export | Last. Owner review, power off, wait, then treat as powered-off |
 
-Idle VMs are last because some of them are idle on purpose. Standby nodes, disaster recovery targets and month-end batch servers can show no CPU use for weeks. The KB advises reclaiming powered-off VMs and snapshots before idle VMs for this reason.
+The core of the order comes from <KB id={445643} />: it's [often safer](https://knowledge.broadcom.com/external/article/445643/identifying-and-reviewing-idle-virtual-m.html) to take powered-off VMs and snapshots before idle VMs, which are still running and may belong to seasonal or intermittent workloads. Putting orphaned disks between them is this site's call. The table on the Optimize page runs differently, with its [highest priority at the far left](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-reclaim-to-free-up-resources.html): powered-off, idle, snapshots, orphaned disks. That ranking decides how VMs are grouped, so don't read it as the order to act in.
+
+## Why orphaned disks get a manual pass
+
+Broadcom's material disagrees with itself here, and the cautious version should win. The KB calls [snapshots and orphaned disks low-risk items](https://knowledge.broadcom.com/external/article/445643/identifying-and-reviewing-idle-virtual-m.html) that Automation Central can clean up on a schedule. The 9.1 pages don't back that for disks: [Automation Central lists jobs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/configuring-automation-using-jobs/automation-central.html) for old snapshots, idle VMs and powered-off VMs but none for orphaned disks, and the actions listed for the [orphaned tab](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-reclaim-to-free-up-resources.html) don't include Schedule Action.
+
+That same Reclaim page describes a Delete button with a confirmation dialog, then says [you can't reclaim orphaned disks from the UI](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-reclaim-to-free-up-resources.html) and should export a CSV and do it manually. The [9.1 what's new page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html) lists identification and deletion of orphaned disks. Plan on the CSV route, and try the button on one disk you've already verified before relying on it.
+
+Verification is the part that matters. A disk in use [can be reported as orphaned](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-reclaim-to-free-up-resources.html) on a datastore shared among several vCenter instances when VCF Operations doesn't monitor them all. Find those datastores before trusting the list. The default also changed between releases: orphaned disks are [on by default in 9.1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/-configuring-administration-settings/modifying-global-settings/list-of-global-settings.html) and [off in 9.0](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/infrastructure-operations/-configuring-administration-settings/modifying-global-settings/list-of-global-settings.html), so an empty tab on 9.0 may only mean nobody turned it on.
 
 ## Settings that decide what is flagged
 
-Idle VM settings live under **Administration > Global Settings > Resource Reclamation**:
+These live under [Operate > Administration > Global Settings > Capacity Optimization](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-reclaim-to-free-up-resources.html) on 9.1, and the [category is called Reclamation on 9.0](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/infrastructure-operations/-configuring-administration-settings/modifying-global-settings/list-of-global-settings.html). The [9.1 list](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/-configuring-administration-settings/modifying-global-settings/list-of-global-settings.html) gives no defaults for the minimum idle days or the provisioning-age exclusion (days before a new VM is considered, so VMs being built aren't flagged) <AsOf date="2026-11-07" />, so read what yours are set to.
 
-- The CPU threshold (default 100 MHz) and the share of time below it (default 100%).
-- The **idle period**: consecutive days that meet the criteria before a VM is reclaimable.
-- The **exclusion period**: days after provisioning before a new VM is considered, so VMs being built are not flagged.
+Set the minimum idle days above your longest quiet cycle. The idle test [lists only a CPU threshold](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/-configuring-administration-settings/modifying-global-settings/list-of-global-settings.html), so a server that wakes only at month-end sits quiet for about four weeks at a stretch, and any shorter minimum can list it. Standby nodes and disaster recovery targets could pass the same test, though that's this site's reading of a CPU threshold and Broadcom names neither. Tag those groups and [exclude them through Exclusion Settings](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-reclaim-to-free-up-resources.html).
 
-Orphaned disk data is collected daily, by default at 20:00, and cost is calculated at 21:00. Keep the collection before the cost calculation if you change the schedule, or the savings figures will be a day behind.
+If you change the schedule, keep the daily orphaned disk collection (8:00 pm host time) [before cost calculation (9:00 pm host time)](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/-configuring-administration-settings/modifying-global-settings/list-of-global-settings.html), so the cost uses the recent list of disks.
 
-## Process
+## System VMs
 
-1. Review the **Capacity > Reclaim** view weekly with the people who can confirm ownership. A weekly cycle fits change windows and gives time to find owners.
-2. Snapshots and orphaned disks: consolidate or archive after a quick owner check. These are candidates for scheduled actions through Automation Central once the team trusts the process.
-3. Powered-off VMs: tag with the owner and a removal date, keep them for an agreed period, then archive or delete.
-4. Idle VMs: ask the owner first. If nobody answers, power the VM off with a dated note and treat it as powered-off from that point. Someone who still needs it will call before the removal date.
-5. Record the capacity returned. VCF Operations reports realised savings per category, which gives you the figure for the [cost case](/vcf/library/value/building-the-cost-case/).
+[Do not reclaim or delete vCLS VMs](https://knowledge.broadcom.com/external/article/445643/identifying-and-reviewing-idle-virtual-m.html), which may be flagged as idle and support DRS and HA. The [Exclude Broadcom appliances setting](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/-configuring-administration-settings/modifying-global-settings/list-of-global-settings.html) is on by default and takes appliance VMs off the powered-off, idle, oversized and undersized lists, but they stay on the snapshot list. The page doesn't say whether vCLS counts as an appliance, so check the [Appliance VMs tab](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-reclaim-to-free-up-resources.html), and if vCLS appears under Idle VMs, exclude it and any other system VMs, which is this site's advice. Read the snapshot list before selecting everything on it.
 
-<Callout type="warn">
-Do not reclaim the vSphere Cluster Services (vCLS) VMs. They support DRS and HA and will show as idle. Exclude them, and any other system VMs, from the reclaim views.
+## The weekly cycle
+
+<Callout type="analysis" title="Whose process this is">
+The weekly rhythm and the manual review of idle VMs are Broadcom's advice. The rest is this site's, to adapt: the [9.1 blueprint index](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for.html) has no entry on reclamation or capacity (checked 7 Nov 2026).
 </Callout>
 
-## Why this matters for licence cost
+1. Review the Optimize page [weekly](https://knowledge.broadcom.com/external/article/445643/identifying-and-reviewing-idle-virtual-m.html) with people who can confirm ownership. The KB still calls it Capacity > Reclaim.
+2. Powered-off VMs: tag with the owner and a removal date, keep them for an agreed period, then archive or delete. Same-day deletion removes the easy way back.
+3. Snapshots: delete after the owner check. A snapshot kept just in case is a sign the backup isn't trusted, so fix the backup, then remove the snapshot. Deleting a snapshot [leaves the VM in place](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-reclaim-to-free-up-resources.html), still eligible for idle reclamation. From 9.1 a VM can appear in several sections, so give each VM a single action.
+4. Orphaned disks: check each one with its owner, archive it, then delete it by the CSV route above.
+5. Idle VMs: ask the owner. If nobody answers, power the VM off with a dated note and treat it as powered-off from that point, so anyone who still needs it can object before the removal date.
+6. Automate only after a few clean cycles. Snapshots are the candidate: the KB calls them low-risk and schedulable. [Automation Central](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/configuring-automation-using-jobs/automation-central.html) can also power off or delete idle VMs on a schedule, but [the KB recommends manual review](https://knowledge.broadcom.com/external/article/445643/identifying-and-reviewing-idle-virtual-m.html) of powered-on idle VMs, so leave those jobs off. Automation Central's page limits it to the advanced license and above, so confirm yours before planning around it.
 
-Reclaimed storage reduces the raw capacity you need to install at the next expansion, which matters because [vSAN entitlement](/vcf/library/value/vsan-entitlement/) is counted on raw capacity. Reclaimed memory from idle VMs lowers the host count in memory-bound clusters. Neither changes the current invoice. Both change the next purchase, which is why the reclaimed figure must be recorded and used when the next growth request arrives.
+## Recording what came back
 
-## Pitfalls
+The Optimize page shows [potential monthly cost savings per category](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-reclaim-to-free-up-resources.html). Savings achieved from reclaimed idle VMs, snapshots, orphaned disks and powered-off resources are on the [Reclamation Dashboard](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html) that 9.1 added, and that's the figure to carry into the [cost case](/vcf/library/value/building-the-cost-case/), with the capacity numbers beside it.
 
-- **Old snapshots as backups.** A snapshot kept in case it is needed one day is a sign the backup process is not trusted. Fix the backup, then remove the snapshot.
-- **Deleting orphaned disks that are not orphaned.** Disks used by appliances, replication targets or detached for a migration can look orphaned. Archive before deleting.
-- **No waiting period.** Deleting a powered-off VM the day it is found removes the safety net. An agreed retention period costs little capacity and avoids restores.
+The dollar figures are rate-based. Powered-off and snapshot savings are [storage rate times storage](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/-configuring-administration-settings/modifying-global-settings/list-of-global-settings.html), with a VM's direct cost added for powered-off VMs. Calculations [use the demand model unless policy turns on allocation](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-reclaim-to-free-up-resources.html), and a legend above the table shows which applies. Demand [counts physical resources used, not those configured](https://blogs.vmware.com/cloud-foundation/2025/08/12/vmware-cloud-foundation-helps-you-optimally-size-vms-and-keep-your-infrastructure-and-workloads-running-smoothly/), as Kelcey Lemon explains in an August 2025 post on rightsizing. So expect an idle VM's reclaimable figure to sit below its configured size, which is an inference from that post.
+
+Before 9.1.1.0, on vCenter instances integrated through the VCF Management Pack, a $0 for reclaimable hosts doesn't prove there's nothing to reclaim: that release [lists the Potential Savings widget showing $0](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) for those instances as a resolved issue.
+
+## What it does to the licence bill
+
+Reclaiming a VM doesn't reduce licence usage by itself. [Only ESX hosts use primary licence capacity](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html), and a subscription's contribution is removed when it expires. [vSAN usage is total physical device capacity](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/add-on-licenses-in-vcf-9-0.html), so freeing space leaves the raw count where it was while the drives stay installed.
+
+The value arrives later, and this is inference from those rules. Reclaimed storage can defer drives at the next expansion, which matters where the [vSAN entitlement](/vcf/library/value/vsan-entitlement/) is the limit. Reclaimed memory or CPU can defer a host only where that resource runs out first, and the Optimize page shows [time remaining for each](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/how-to-optimize-capacity-and-improve-performance/using-reclaim-to-free-up-resources.html). Attach the recorded figure to the next growth request and name the purchase it displaces. None of this is legal or purchasing advice: your contract and quote decide what a smaller estate costs.

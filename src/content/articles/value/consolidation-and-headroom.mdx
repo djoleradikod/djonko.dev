@@ -1,76 +1,208 @@
 ---
 title: "Consolidation: fewer, fuller clusters without losing failover headroom"
-description: "Every cluster carries its own failover reserve, and every VCF instance carries its own management stack. Merging small clusters, choosing the capacity model deliberately and separating compute from storage growth reduce the hosts you license without removing the headroom you need."
+description: "Each small cluster holds a host in reserve, and those cores still count, so merge them. Two four-host clusters become seven hosts at the same usable capacity. Check third-party licences, CPU mix, vSAN and DRAM before merging. Storage clusters pay only at scale, and a new VCF instance costs three or four hosts on vSAN."
 category: value
 order: 9
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-kbs: []
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [313548]
 sources:
-  - title: "Configure admission control (vSphere availability)"
-    url: "https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-availability/GUID-C4059DB9-D673-45CB-918C-68C87FEB060A.html"
-    by: "VMware"
+  - title: "Single-Rack vSphere Cluster Model (VCF 9.1 design library)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/cluster-models/single-instance-single-availability-zone.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Cluster Resources Percentage Admission Control (vSphere 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control/cluster-resources-percentage-admission-control.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Memory Tiering and HA Admission Control (vSphere 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control/memory-tiering-and-ha-admission-control.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "vCenter 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcenter-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Counting Cores for VMware Cloud Foundation and vSphere Foundation and TiBs for vSAN (KB 313548)"
+    url: "https://knowledge.broadcom.com/external/article/313548/counting-cores-for-vmware-cloud-foundati.html"
+    by: "Broadcom Knowledge Base"
+    kind: broadcom
+  - title: "ESX model, VCF Fleet in a Single Site blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/common-design-selection-between-management-and-workload-domain/virtual-infrastructure-layer-fleet-single-site1/esx-model-fleet-single-site.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Fleet in a Single Site blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Single-Rack vSAN ESA Storage Model, minimal footprint blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-with-minimal-footprint-blueprint/management-domain-design-selections/virtual-infrastructure-layer/vsan-single-rack-hci-esa-storage-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "vSAN Storage Cluster Storage Model (VCF 9.1 design library)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/storage-models-9-x/standard-vsan-storage-model/single-rack-storage-models/vsan-storage-cluster-storage-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Storage Models (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/storage-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Sharing Remote vSAN Datastores with HCI Mesh (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsan-deployment-administration-and-monitoring/administering-vmware-vsan/expanding-and-managing-a-vsan-cluster/sharing-remote-vsan-datastores-with-hci-mesh.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Add-on licenses in VCF (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/add-on-licenses-in-vcf-9-0.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Allocation and Demand Model in Workload Optimization (VCF Operations 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/capacity-optimization-concepts/allocation-and-demand-model-in-workload-optimization.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "How Does VCF Operations Calculate and Forecast Capacity (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/capacity-optimization-concepts/how-does-vmware-aria-operations-calculate-and-forecast-capacity.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
   - title: "VMware Cloud Foundation helps you optimally size VMs (capacity models)"
     url: "https://blogs.vmware.com/cloud-foundation/2025/08/12/vmware-cloud-foundation-helps-you-optimally-size-vms-and-keep-your-infrastructure-and-workloads-running-smoothly/"
-    by: "VMware Cloud Foundation blog"
+    by: "Kelcey Lemon, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-08-12
   - title: "vSAN storage clusters in VCF 9.1"
     url: "https://blogs.vmware.com/cloud-foundation/2026/05/12/vsan-storage-clusters-in-vcf-9-1/"
-    by: "VMware Cloud Foundation blog"
-  - title: "Performance best practices for vSphere 9.0 (power management)"
+    by: "Pete Koehler, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-05-12
+  - title: "VMware Cloud Foundation 5.2 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/vcf-release-notes/vmware-cloud-foundation-52-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-01
+  - title: "Enable EVC on an existing cluster (vSphere 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vcenter-and-host-management/migrating-virtual-machines/cpu-compatibility-and-evc/enable-evc-on-an-existing-cluster.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "VCF Fleet Deployment Models (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-operations-deployment-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Deploy a New VCF Fleet or a New VCF Instance (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/deploy-a-new-vcf-fleet-or-a-new-vcf-instance.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1 general FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "Performance Best Practices for vSphere 9.0"
     url: "https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
-    by: "VMware"
+    by: "VMware by Broadcom"
+    kind: broadcom
+    date: 2025-08-01
 ---
 
 <InShort>
-A cluster that must survive a host failure keeps a host's worth of capacity in reserve, and that reserve is licensed like any other core. Two four-host clusters hold two hosts in reserve. One seven-host cluster running the same work holds one. Merging small clusters, where nothing forces them apart, is one of the simplest ways to remove a host. In 9.x two further levers apply: 9.1 lets compute-only clusters mount remote vSAN storage, so compute and storage can grow separately, and fewer VCF instances means fewer management stacks to run.
+Merging small clusters is one of the simplest ways to remove a host. A cluster built to survive one host failure keeps that host's share idle, and Broadcom counts [the physical cores of all hosts you intend to license](https://knowledge.broadcom.com/external/article/313548/counting-cores-for-vmware-cloud-foundati.html), with no carve-out listed for failover capacity. Two four-host clusters therefore pay for two hosts' worth of reserve where one seven-host cluster pays for one: 32 of 256 cores saved in the constructed example below. Right-size first, and check third-party licences, CPU mix, vSAN and DRAM. Storage clusters and fewer VCF instances remove more only at scale or where a new instance was never needed. This isn't legal or purchasing advice, so confirm counting rules against your agreement.
 </InShort>
 
-<Compare rows={[
-  ["Failover reserve", "Per cluster, through HA admission control", "The same"],
-  ["Storage and compute growth", "Tied together in HCI clusters. vSAN Max (5.2) for disaggregated storage.", "9.1 storage clusters, mountable by compute-only and HCI clusters of either vSAN architecture"],
-  ["Management overhead per site", "SDDC Manager, vCenter and NSX per instance, plus the Aria stack", "The same per instance, with VCF Operations and Automation shared across the fleet"],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+This note said demand-based planning usually fits more work on each host and that VCF Automation is always shared across a fleet. No Broadcom source here states the first, so it's now marked as this site's reasoning. VCF Automation is optional, with one per fleet at most. Its line on mixed CPUs and vSAN architectures also left out the downtime and the data move described below.
+</Callout>
 
-## The reserve is per cluster
+| Lever | What it can remove | What stops it |
+|---|---|---|
+| Merge clusters | One host's reserve for each cluster merged away | Third-party licences, isolation rules, mixed CPUs, separate vSAN datastores |
+| Capacity model and ratio | Hosts planned at a stricter ratio than you need | CPU ready time rising as density climbs |
+| Storage cluster | Hosts bought only for drive bays | ESA only, four hosts minimum, no HCI conversion, not in the default management cluster |
+| Fewer VCF instances | A whole management domain, three or four hosts on vSAN | A boundary that needs its own instance |
+| Power settings | Energy only | Latency-sensitive workloads |
 
-HA admission control holds back capacity so that VMs from a failed host can restart elsewhere. With the cluster resource percentage policy you set that reserve directly. With one host failure to tolerate, the reserve is roughly one host's share of the cluster, which is a quarter of a four-host cluster and an eighth of an eight-host one.
+## The reserve shrinks as a share of a larger cluster
+
+VCF 9.1's cluster design [recommends admission control for one host failure with percentage-based capacity](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/cluster-models/single-instance-single-availability-zone.html), and vSphere works out the percentage from the failures to tolerate and the host count: 33% at three hosts, 25% at four. At eight hosts that's 12.5%. A typed-in percentage doesn't follow the host count. Leave 25% on a merged seven-host cluster and it holds 1.75 hosts, which leaves 5.25 usable where the example below needs six.
+
+A green HA status doesn't prove the headroom exists. [Percentage admission control checks VM reservations against host capacity](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control/cluster-resources-percentage-admission-control.html), and a VM with no reservation counts as 0 MB and 32 MHz. A merged cluster of unreserved VMs can pass that check while six hosts can't carry the real load. Test the plan against measured demand with one host out.
 
 ### Worked example: merging two clusters
 
-This example is constructed. Two clusters of four hosts each, every host with two 16-core CPUs. Each is designed for one host failure, so each runs on three hosts' worth of capacity.
+This example is constructed, so replace each number with your own. Two clusters of four hosts each, every host with two 16-core CPUs, each designed for one host failure.
 
 | | Two clusters | One merged cluster |
 |---|---|---|
 | Hosts | 4 + 4 = 8 | 7 |
 | Usable hosts with one failure | 3 + 3 = 6 | 6 |
 | Licensed cores | 256 | 224 |
+| vSAN entitlement at 1 TiB per core | 256 TiB | 224 TiB |
 
-The merged cluster delivers the same usable capacity with one host fewer, 32 cores less to license. The calculation holds only if nothing requires the two clusters to stay separate. Check for:
+The merge gives the same usable compute with 32 fewer cores. On vSAN it also has two effects that pull in opposite directions. Broadcom's minimal-footprint ESA blueprint [recommends enabling Reserved Capacity](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-with-minimal-footprint-blueprint/management-domain-design-selections/virtual-infrastructure-layer/vsan-single-rack-hci-esa-storage-model.html), whose Host Rebuild Reserve is 25% at four nodes and 8% at twelve. Those two points fit one host's share, which would put seven nodes near 14%, down from 25% at four, though that's an inference and the blueprint gives no seven-node figure. Stretched and fault-domain clusters can't use this reserve. But [each VCF core brings 1 TiB, and usage counts raw device capacity](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/add-on-licenses-in-vcf-9-0.html), so the example gives up 32 TiB of entitlement. Check raw capacity against the lower figure before you count the saving.
 
-- **Separation required by someone else's licence.** Some database and operating system vendors license by the hosts a VM could run on. Moving those VMs into a larger cluster can raise that cost by more than the host saved.
-- **Compliance boundaries.** Payment card or classified workloads may need their own cluster by policy.
-- **Hardware mismatch.** Different CPU generations need EVC, and vSAN clusters need compatible devices and the same architecture.
-- **Failure tolerance.** A larger cluster loses the same single host, but a cluster-wide problem now affects more workloads. Consider whether one larger failure domain is acceptable.
+## What keeps two clusters apart
 
-## Choose the capacity model deliberately
+If a database or operating system licence is tied to the hosts a VM can reach, a larger cluster can raise that bill by more than the saved host is worth. Read those terms before moving the VMs.
 
-VCF Operations can plan capacity by **demand**, from measured use, or by **allocation**, from configured sizes and overcommit ratios such as 8 vCPUs per core. Demand-based planning usually fits more work on each host. Allocation-based planning is easier to explain to application owners and protects against everyone using their full allocation at once. Neither is wrong, but the ratio you choose sets the host count. A cluster planned at 4 vCPUs per core needs twice the cores of one planned at 8 for the same VMs. Pick the ratio from measured CPU ready time and contention at current density, then raise it in steps while watching those figures.
+Broadcom's single-site blueprint [lists cluster-based physical isolation](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint.html) as a design option. Where a compliance policy gives payment card or classified workloads their own cluster, those clusters stay apart.
 
-## Grow storage and compute separately
+A merge across CPU generations can cost downtime. [Enabling EVC on an existing cluster](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vcenter-and-host-management/migrating-virtual-machines/cpu-compatibility-and-evc/enable-evc-on-an-existing-cluster.html) means powering off VMs on hosts whose features exceed the chosen mode.
 
-In an HCI cluster, more storage means more disks in the same hosts, and when the hosts are full it means more hosts, each with cores to license. The 9.1 storage cluster model lets compute-only and HCI clusters mount remote vSAN datastores of either architecture. A cluster that needs capacity but not CPU can take it from a storage cluster. Check how storage cluster hosts are licensed under your agreement before relying on this, since the comparison depends on it.
+Separate vSAN datastores make the merge a data move. For OSA to ESA in 9.1, [Pete Koehler's May 2026 post](https://blogs.vmware.com/cloud-foundation/2026/05/12/vsan-storage-clusters-in-vcf-9-1/) mounts the target datastore remotely, vMotions across, unmounts and decommissions, and calls that trivial. Using the same route between like-for-like clusters is this site's suggestion, so try it on non-production first.
 
-## Fewer management stacks
+Memory-tiered clusters need a DRAM check. Up to 9.1, HA [treated DRAM and NVMe as one pool](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control/memory-tiering-and-ha-admission-control.html), so a cluster could admit VMs the survivors couldn't restart, with no alert. From [9.1.1 it tracks DRAM separately](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcenter-9-1-1-0-release-notes.html), and in auto mode it reserves the DRAM of the largest hosts up to the failover level. So merge tiered clusters on 9.1.1, and avoid the slot policy, which Broadcom advises against with tiering. With one host failure to tolerate, a single large-DRAM host then sets the reserve for the whole merged cluster. See [NVMe memory tiering](/vcf/library/value/nvme-memory-tiering/).
 
-Each VCF instance carries its own management domain with SDDC Manager, vCenter and NSX. VCF Operations and VCF Automation are shared across a fleet. Every instance therefore costs management hosts, cores and patching effort before it runs a single workload. Before creating a new instance for a new site or team, check whether a workload domain in an existing instance meets the need. The [VCF 9 mental model](/vcf/library/architecture/vcf9-mental-model/) explains the fleet, instance and domain boundaries.
+A single host failure still costs a larger cluster one host, but a cluster-wide fault now reaches more workloads. A workload whose owners can't accept that stays out of the merge.
 
-## Power
+## Choose the ratio before you count hosts
 
-The default host power policy is Balanced, which saves energy at little performance cost for most workloads. The vSphere performance guide recommends setting the BIOS to OS-controlled power management so ESX can use the processor's power states. Distributed Power Management can power off hosts that are not needed and bring them back as load rises. It reduces energy cost, not licence cost, because the powered-off hosts remain licensed.
+[VCF Operations always uses the demand model, and allocation is optional](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/capacity-optimization-concepts/allocation-and-demand-model-in-workload-optimization.html), turned on in the active policy by setting overcommit ratios. In Kelcey Lemon's August 2025 post, demand is [what use would have been without contention, and allocation ignores use](https://blogs.vmware.com/cloud-foundation/2025/08/12/vmware-cloud-foundation-helps-you-optimally-size-vms-and-keep-your-infrastructure-and-workloads-running-smoothly/), comparing configured sizes with a ratio such as 8:1. [Usable capacity already excludes the HA reserve, but the recommended size doesn't include it](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/cost-and-capacity-management/optimizing-capacity-and-improving-performance/capacity-optimization-concepts/how-does-vmware-aria-operations-calculate-and-forecast-capacity.html), so add the reserve back when you size from that figure.
 
-## Pitfalls
+The ratio sets the host count: at 4 vCPUs per core a cluster needs twice the cores it needs at 8 for the same VMs. Broadcom's blueprint gives [no fixed ratio for workload domains](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/common-design-selection-between-management-and-workload-domain/virtual-infrastructure-layer-fleet-single-site1/esx-model-fleet-single-site.html). It says to work out each ratio case by case from CPU intensity and to watch CPU ready time. The management domain gets a firmer line of 2:1 or below, with 3:1 and 4:1 supported under close monitoring, so don't consolidate management hosts on a workload ratio. Size on physical cores, and don't count SMT gains, the same page says.
 
-- **Removing the reserve to hit a target.** A cluster with no failover headroom turns the next host failure into an outage. Show the reserve in the business case rather than hiding it.
-- **Consolidating before right-sizing.** Merge after [right-sizing](/vcf/library/value/rightsizing-with-vcf-operations/) and [reclamation](/vcf/library/value/reclaiming-idle-capacity/), or you will plan the merged cluster around waste.
-- **Forgetting maintenance.** Patching takes a host out of service. A cluster sized exactly for one failure cannot tolerate a failure during patching.
+<Callout type="analysis" title="Which model to plan on">
+A cluster of oversized VMs looks fuller under allocation than under demand, so demand shows the larger saving there. It also has no margin if quiet VMs get busy, and allocation holds the commitment fixed whatever the use. Size the merge on demand, then set an allocation ratio on clusters whose owners want that commitment.
+</Callout>
+
+## Storage clusters pay only at scale
+
+When drive bays run out, an HCI cluster adds hosts, and each brings cores. A storage cluster breaks that link, because [compute clusters mount its datastore](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsan-deployment-administration-and-monitoring/administering-vmware-vsan/expanding-and-managing-a-vsan-cluster/sharing-remote-vsan-datastores-with-hci-mesh.html) and from 9.1 [compute-only and HCI clusters mount remote vSAN datastores of either architecture](https://blogs.vmware.com/cloud-foundation/2026/05/12/vsan-storage-clusters-in-vcf-9-1/). The storage cluster itself [requires ESA](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/storage-models.html). VCF 5.2 offered the earlier form as [vSAN Max, storage-only clusters on ESA](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/vcf-release-notes/vmware-cloud-foundation-52-release-notes.html).
+
+Broadcom's minimum is [four hosts with 20 TiB each, and the same page recommends six](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsan-deployment-administration-and-monitoring/administering-vmware-vsan/expanding-and-managing-a-vsan-cluster/sharing-remote-vsan-datastores-with-hci-mesh.html), while the design library [recommends designing for seven](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/storage-models-9-x/standard-vsan-storage-model/single-rack-storage-models/vsan-storage-cluster-storage-model.html) so that FTT=2 RAID-6 can still recover after a host failure. Plan on seven unless you accept less protection. An existing HCI cluster can't be converted without deactivating vSAN, so these are new hosts.
+
+The licence question stays open. The HCI Mesh page bases storage clusters on [a per-TiB metric](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsan-deployment-administration-and-monitoring/administering-vmware-vsan/expanding-and-managing-a-vsan-cluster/sharing-remote-vsan-datastores-with-hci-mesh.html), while <KB id={313548} /> counts cores on all hosts you intend to license and doesn't name storage clusters. If those hosts carry cores, seven two-socket hosts at the 16-per-CPU floor add 224, as many as the merged cluster above, which is why this note treats storage clusters as a move for large estates. Get the answer from Broadcom in writing, then run [the storage decision](/vcf/library/architecture/storage-decision/).
+
+Broadcom's material also conflicts on placement. The [4 Nov 2026 FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) (Q34, still worded for 9.0) offers disaggregated storage clusters for workload and management domains, but [Storage Models](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/storage-models.html) marks them not supported in the default management cluster, only in additional ones. Design to the stricter page.
+
+## Fewer instances, if nothing needs the boundary
+
+A new VCF instance needs [its own management domain, SDDC Manager, vCenter and NSX Manager](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/deploy-a-new-vcf-fleet-or-a-new-vcf-instance.html). A vSAN default management cluster starts at [three hosts for a simple install, or four for automatic rebuild](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/storage-models.html). With the example's hosts, that's 96 or 128 cores, plus their patching, before the instance's first workload domain. VCF Operations is [shared, one per fleet](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-operations-deployment-models.html), and a new instance in an existing fleet connects to it, so that part isn't repeated. On 5.x the overhead also included the Aria stack.
+
+So ask first whether a workload domain in an existing instance meets the need. It still costs something: the single-site blueprint gives [each workload domain its own vCenter and NSX Manager](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint.html). The [VCF 9 mental model](/vcf/library/architecture/vcf9-mental-model/) sets out the fleet, instance and domain boundaries.
+
+## Power saves energy, not licences
+
+Set the BIOS to [OS Controlled Mode](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/common-design-selection-between-management-and-workload-domain/virtual-infrastructure-layer-fleet-single-site1/esx-model-fleet-single-site.html) so ESX controls CPU power saving. The [default Balanced policy](https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices) typically costs little or no performance, and latency-sensitive workloads may need High Performance, according to the vSphere 9.0 guide of August 2025. Distributed Power Management, in the same guide, can move VMs onto fewer hosts, put the rest in standby and bring them back as load rises. KB 313548 lists no exemption for standby hosts, so budget them as licensed.
+
+## Merge in the right order
+
+Do [right-sizing](/vcf/library/value/rightsizing-with-vcf-operations/) and [reclamation](/vcf/library/value/reclaiming-idle-capacity/) first, or the merged cluster gets planned around waste. Show the reserve in the business case, because removing it to hit a host target turns the next host failure into an outage.
+
+The blueprint's [N+1 setting reserves one host "for failover or maintenance"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/common-design-selection-between-management-and-workload-domain/virtual-infrastructure-layer-fleet-single-site1/esx-model-fleet-single-site.html), and admission control [counts only hosts outside maintenance mode](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control/cluster-resources-percentage-admission-control.html). A cluster sized at exactly N+1 can't also absorb a failure during a patch window. Where that matters, plan a second spare, which on the example's hosts gives back the 32 cores the merge saved.
