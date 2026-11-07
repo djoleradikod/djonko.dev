@@ -9,7 +9,7 @@ pubDate: 2026-11-02
 updated: 2026-11-07
 reviewed: 2026-11-07
 reviewDue: 2027-02-15
-kbs: [443647, 420374, 441349, 442857, 443166, 443216, 453116, 447632, 442978, 447542, 442735, 444267, 432021, 416358, 440282, 450430, 441340, 446454, 448839, 447589, 421477, 424728, 447248, 447995, 419118]
+kbs: [443647, 312173, 420374, 441349, 442857, 443166, 443216, 453116, 447632, 442978, 447542, 442735, 444267, 432021, 416358, 440282, 450430, 441340, 446454, 448839, 447589, 421477, 424728, 447248, 447995, 419118]
 sources:
   - title: "VCF 9.1: VCF Download Tool (VCFDT) cheatsheet"
     url: "https://williamlam.com/2026/05/vcf-9-1-vcf-download-tool-vcfdt-cheatsheet.html"
@@ -176,7 +176,7 @@ Broadcom's KBs show no revision date, so each row gives the versions the article
 | "cannot be used to upload items to SDDC Manager with version 9.x and above" | The bundle transfer utility works only to 5.x | Upload with the Download Tool | <KB id={419118} />, 9.0, 7 Nov 2026 |
 | "NSX pre-upgrade bundle missing from SDDC Manager appliance" | Components upgraded out of order | Follow the guide for your baseline; the bundle comes at the NSX step | <KB id={447995} />, 5.2 to 9.1, 7 Nov 2026 |
 | "Unable to verify vSAN HCL" with an offline depot | HCL data older than 90 days | Upload a fresh `all.json` from `vvs.broadcom.com` to the depot | <KB id={424728} />, 9.0.x, 7 Nov 2026 |
-| "LCM Bundle folder disk space" pre-check failure | `/nfs/vmware/vcf/nfs-mount` is full | Snapshot SDDC Manager, then remove old bundles with the cleanup utility | <KB id={447248} />, 5.2.x and 9.x, 7 Nov 2026 |
+| "LCM Bundle folder disk space" pre-check failure | `/nfs/vmware/vcf/nfs-mount` is full | Snapshot SDDC Manager, then remove old bundles with the cleanup utility. On 9.x, try DELETE DOWNLOAD under Lifecycle Management > Binary Management first (<KB id={312173} />) | <KB id={447248} />, 5.2.x and 9.x, 7 Nov 2026 |
 | Tool doesn't recognise `NSX_ALB` for a Fleet Depot upload | Missing from the tool's upload inclusion list, Lam says in the comments on his June post | Upload the AVI binary to SDDC Manager, where that workflow runs | [Lam, comment](https://williamlam.com/2026/06/vcf-9-1-side-loading-vcf-binaries-into-vcf-installer-fleet-depot-service-for-air-gapped-environments.html), 15 Jul 2026 |
 | `esx configuration -G` rejects `--proxy-server` | Reader report, not documented behaviour | Pass the proxy on `esx download`, whose 9.1.1 help lists it. Lam expects this to work but hadn't confirmed it. | [Cheat sheet comments](https://williamlam.com/2026/05/vcf-9-1-vcf-download-tool-vcfdt-cheatsheet.html), 28 Oct 2026 |
 

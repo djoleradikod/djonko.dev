@@ -1,82 +1,185 @@
 ---
 title: "Scripted health checks for VCF 9: a weekly report you can trust"
-description: "The PowerShell reporting module for VCF 5.x is in sustaining mode and won't support 9.x. A small script around sos, the SDDC Manager API, VCF Operations alerts and a few appliance checks gives you a weekly report, and you can build it in a lab first."
+description: "VMware's PowerShell reporting module is sustained for VCF 5.x only and rules out future major releases. On 9.1 and 9.1.1, build the weekly report from the Findings and alert APIs, SDDC Manager tasks and SoS, and check separately the management services that SoS leaves out."
 category: labs
 order: 9
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
 updated: 2026-11-07
-kbs: [439473, 436398, 417255, 439946]
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [439473, 436398, 417255, 439946, 449007, 449796, 443851, 448518, 449122, 454898]
 sources:
   - title: "PowerShell module for VCF reporting: releases and support statement"
     url: "https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-reporting/releases"
     by: "VMware on GitHub"
+    kind: broadcom
+    date: 2025-05-22
   - title: "VCF reporting module: health report"
     url: "https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-reporting/documentation/getting-started/health-report"
     by: "VMware on GitHub"
-  - title: "SDDC Manager API: Tasks"
-    url: "https://developer.broadcom.com/xapis/sddc-manager-api/9.0/tasks/"
+    kind: broadcom
+    date: 2025-05-22
+  - title: "Diagnostics Public REST API (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/using-vcf-operations-diagnostics/diagnostics-public-rest-api.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations API: Query Alert (9.1.1)"
+    url: "https://developer.broadcom.com/xapis/vcf-operations-api/9.1.1/suite-api/api/alerts/query/post/"
     by: "Broadcom Developer"
+    kind: broadcom
+  - title: "VCF Operations API: acquire token (9.1.1)"
+    url: "https://developer.broadcom.com/xapis/vcf-operations-api/9.1.1/suite-api/api/auth/token/acquire/post/"
+    by: "Broadcom Developer"
+    kind: broadcom
+  - title: "SDDC Manager API: Get Tasks (9.1)"
+    url: "https://developer.broadcom.com/xapis/sddc-manager-api/9.1/v1/tasks/get/"
+    by: "Broadcom Developer"
+    kind: broadcom
+  - title: "SDDC Manager API: create token (9.1)"
+    url: "https://developer.broadcom.com/xapis/sddc-manager-api/9.1/v1/tokens/post/"
+    by: "Broadcom Developer"
+    kind: broadcom
+  - title: "Troubleshooting VMware Cloud Foundation or vSphere Foundation Deployments (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Monitoring and Alerting Blueprint"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/monitoring-and-alerting-guide.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Monitoring and Alerting Blueprint: Alerts"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/monitoring-and-alerting-guide/alerts.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "What's new in VCF Operations 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "New AI and Kubernetes Private Cloud Operations Capabilities in VCF 9.1.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/09/03/new-ai-and-kubernetes-private-cloud-operations-capabilities-in-vmware-cloud-foundation-9-1-1/"
+    by: "Sehjung Hah, VMware blog"
+    kind: broadcom
+    date: 2026-09-03
+  - title: "Diagnostics for VCF 9.1 with old versions of VCF components"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/28/diagnostics-for-vmware-cloud-foundation-vcf-9-1-with-old-versions-of-vcf-components/"
+    by: "James Walker, VMware blog"
+    kind: broadcom
+    date: 2026-05-28
+  - title: "VCF 9.1 Frequently Asked Questions"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
 ---
 
 <InShort>
-On **5.x**, `Invoke-VcfHealthReport` from the VCF reporting module wraps SoS checks into an HTML report. Its last release says it is sustained for **5.x only** and won't support future major releases. On **9.x**, build your own: `sos --health-check` for locks and credentials (<KB id={439473} />, <KB id={436398} />), the SDDC Manager API for failed tasks, the VCF Operations API for active critical alerts, the management services dashboard for runtime volumes (<KB id={417255} />), and disk on the appliances (<KB id={439946} />). Run it weekly, keep the output, and watch the trend.
+On 9.1 and 9.1.1, build the weekly report around the VCF Operations APIs and keep SoS for the layer it still covers. Pull [diagnostic findings](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/using-vcf-operations-diagnostics/diagnostics-public-rest-api.html) and [active critical alerts](https://developer.broadcom.com/xapis/vcf-operations-api/9.1.1/suite-api/api/alerts/query/post/) from VCF Operations, [failed tasks](https://developer.broadcom.com/xapis/sddc-manager-api/9.1/v1/tasks/get/) from SDDC Manager, and run `sos --health-check --domain-name ALL`. On 9.1, a green SoS run says nothing about [management services, VCF Automation or VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html), so check those separately. On 5.x, `Invoke-VcfHealthReport` still does the packaged job.
 </InShort>
 
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to run a plain `sos --health-check` through `sudo`, match tasks on the exact status `FAILED` with no seven-day filter, and say the reporting module won't support 9.x. It also cited KB 439946 for appliance disk and KB 417255 for runtime volumes, and gave 80% partition, 150-day licence, 60-day certificate and one-day alert limits as if documented; the table and script below replace all of that, and the limits that remain are marked as this site's.
+</Callout>
+
 <Compare rows={[
-  ["Packaged report", "VCF reporting module: Invoke-VcfHealthReport", "None equivalent. Build from sos, APIs and VCF Operations."],
-  ["Health views", "SDDC Manager dashboard, SoS", "VCF Operations VCF Health, management services dashboard, SoS"],
-  ["Automation hooks", "SDDC Manager API", "SDDC Manager API plus VCF Operations API"],
+  ["Packaged report", "Invoke-VcfHealthReport: an HTML report combining SoS with extra checks", "None to install. Build from SoS, the APIs and VCF Operations."],
+  ["Health views", "SDDC Manager dashboard, SoS", "VCF Health and diagnostic findings in VCF Operations, management services dashboard, SoS"],
+  ["Automation hooks", "SDDC Manager API", "SDDC Manager API, VCF Operations alert query, Findings API (Diagnostics 9.1 on)"],
 ]} />
+
+The module's last release, v2.7.0 of 22 May 2025, [sustains it for supported 5.x versions and gives no support or enhancements to future major releases](https://github.com/vmware/powershell-module-for-vmware-cloud-foundation-reporting/releases). The notice doesn't name 9.x, but 9 is the next major release after 5.x, so plan the report's replacement into the upgrade. What's lost is the [extra checks layered on SoS](https://vmware.github.io/powershell-module-for-vmware-cloud-foundation-reporting/documentation/getting-started/health-report), and on 9.1 the [Findings API](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html) looks like the closest thing to a successor: Broadcom pitches it for internal reporting, ticketing and trend analysis.
 
 ## What the weekly report checks
 
-| Check | Source | Red when |
+| Check | Read it from | Red when |
 |---|---|---|
-| Stale locks and account state | `sos --health-check` on SDDC Manager | Any active lock without a running task, any "Failed to get details" |
-| Failed tasks in the last 7 days | SDDC Manager `GET /v1/tasks` | Any FAILED task not yet explained |
-| Critical alerts | VCF Operations API | Any active critical alert older than a day |
-| Appliance disk | `df -h` on SDDC Manager, vCenter, VCF Operations nodes | Over 80% on any partition |
-| Runtime volumes (9.1) | Management services dashboard | Warning or above |
-| Last good backup | Backup status per component | Older than the agreed interval |
-| Licensing deadline | VCF Operations licensing view | Fewer than 150 days left |
-| Certificate expiry | VCF Operations certificates view | Under 60 days on anything, including auto-renew |
+| Diagnostic findings | `POST /api/diagnostics/findings/query` (9.1 on) | New critical or immediate finding since last week |
+| Critical alerts | `POST /suite-api/api/alerts/query` | Any active critical alert |
+| Failed tasks, last 7 days | `GET /v1/tasks` on SDDC Manager, with `completedAfter` | Any failed or timed-out task not yet explained |
+| SoS | `sos --health-check --domain-name ALL` on SDDC Manager | Any failure. On 5.x and 9.0.x, active locks for `OPERATIONS_MANAGER` with no task running (<KB id={439473} />). On 9.0, "Failed to get details" for an ESXi root account (<KB id={436398} />) |
+| Management services | Health and Diagnostics dashboard, by eye (<KB id={417255} />) | Overall memory, node memory or disk at Severe or Critical (over 90%), or a component unhealthy. Warning (80 to 90%) goes in the report as a trend |
+| Backups | VCF Operations alert for SDDC Manager (<KB id={449796} />), Restore view for management services (<KB id={443851} />) | The SDDC Manager alert raised after one day without a backup ("SDDC Manager app health is affected"), or the newest restore point is older than your agreed interval |
+| Licensing | Licence management in VCF Operations, plus licensing alerts on 9.1.1 | The usage report due date (<KB id={448518} />) is inside your margin. 30 days is this site's starting value |
+| Certificates | Alert query, and `--certificate-health` within SoS | Any expiry alarm, or a certificate SoS doesn't show green. [Green means more than 30 days left](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html) |
+| Appliance disk | `df -h` on SDDC Manager, vCenter and VCF Operations nodes | Over 80% on a partition, also this site's starting value |
+
+The 80% in the last row is a judgment call. The bands in KB 417255 apply to management services utilisation, and the disk figures in KB 439946 come from an upgrade precheck, so neither sets a partition limit. Tune it after a few weeks of data. On 9.1.0, watch the management services logging disk as well, because a full one [fails platform health checks and blocks platform operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) until the 9.1.1.0 fix.
+
+## Where the results mislead
+
+Task status comes in two spellings. The 9.1 reference [lists both `FAILED` and `Failed`, and both `TIMED_OUT` and `Timed Out`](https://developer.broadcom.com/xapis/sddc-manager-api/9.1/v1/tasks/get/), so an exact match on one form can miss tasks. The script upper-cases first. The same page defines a completed task as Successful or Failed, so `completedAfter` may not return timed-out tasks, and a timed-out workflow is worth a look in the task panel until a live response shows otherwise.
+
+The alert API can also disagree with the UI. On 9.1.x, self-monitoring alerts resolved or disabled in the UI [can stay active behind the API and fail the VCF Operations update precheck](https://knowledge.broadcom.com/external/article/449007/vcf-operations-update-precheck-fails-at.html). Keep these in the report, because they can still fail that precheck. In the other direction, `activeOnly` [excludes suspended alerts](https://developer.broadcom.com/xapis/vcf-operations-api/9.1.1/data-structures/alert-query/), so an alert someone suspended and forgot drops out silently.
+
+Findings age unevenly. Property-based findings [regenerate every 4 hours, while log-based ones update only on a manual refresh](https://blogs.vmware.com/cloud-foundation/2026/05/28/diagnostics-for-vmware-cloud-foundation-vcf-9-1-with-old-versions-of-vcf-components/), James Walker explains. Read `refreshMode` and `lastObservedTimeInMillis` before trusting a quiet week.
+
+SoS can cause what it reports. Health checks are among the workflows [that can leave a stale lock](https://knowledge.broadcom.com/external/article/439473) on 5.x and 9.0.x if they time out, so run it in a quiet window, which is this site's inference from the KB's cause. Leave [`--force`](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html) off too, since it runs SoS while workflows are in progress and TechDocs says to use it with caution. Leave out `--run-vsan-checks` as well, because it [creates a VM on each host in the vSAN cluster](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html), which a read-only report shouldn't do. `--domain-name` defaults to MANAGEMENT for SoS operations generally, so reading a plain run as management-only is an inference. Passing `ALL` removes the question, as [the SoS note](/vcf/library/day-2/health-checks-sos/) explains.
+
+A clean `df` and a failed precheck can both be true. SDDC Manager's upgrade precheck can report ["does not have enough disk space"](https://knowledge.broadcom.com/external/article/439946) with plenty free, because stale cached data leaves it without the values. The KB's fix is a service restart script, so don't start deleting files on that result.
+
+## Licensing and certificates may shrink on 9.1.1
+
+The licence check depends on mode. VCF 9 uses a [rolling 180-day licence file refreshed by reporting usage](https://knowledge.broadcom.com/external/article/448518/the-due-date-for-submitting-your-usage-r.html), and [licences expire if usage isn't provided](https://knowledge.broadcom.com/external/article/449122/license-update-fails-in-vcf-operations-b.html). Connected VCF Operations 9.1 [downloads a new file every 24 hours](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vcf-ops.html), so a due date closing in on a connected site suggests that automation has stopped, which is an inference from those pages. Disconnected sites need the margin most, since each refresh is a manual trip, though Broadcom's [FAQ of 4 Nov 2026](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) says APIs exist for those licensing updates. Either way a usage upload [won't move the end date of an unrenewed subscription](https://knowledge.broadcom.com/external/article/449122/license-update-fails-in-vcf-operations-b.html), so track that date too. This is operational guidance, not licensing or purchasing advice.
+
+9.1.1 adds [licensing dashboards and alerts](https://blogs.vmware.com/cloud-foundation/2026/09/03/new-ai-and-kubernetes-private-cloud-operations-capabilities-in-vmware-cloud-foundation-9-1-1/) (Sehjung Hah, 3 Sep 2026), and its release notes list [expiry alarms for all certificates across VCF components](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), including ones VCF Operations doesn't manage. If those reach the alert query, the two rows reduce to one API call. That's an inference, so confirm it by looking for such an alert in the query output before retiring the separate checks.
 
 ## A skeleton
 
+This is built from the API references and hasn't been run against an appliance, so test it in a lab first.
+
 ```bash
 #!/usr/bin/env bash
-# weekly-vcf-health.sh: read-only, run from a management VM with API access
+# weekly-vcf-health.sh: read-only pulls from a management VM.
+# Inject SDDC_USER, SDDC_PASS, OPS_USER, OPS_PASS and CA_BUNDLE at run time, from a vault or the environment.
 set -euo pipefail
-SDDC="sddc-manager.rainpole.io"
-OUT="report-$(date +%F).txt"
+SDDC="sddc-manager.example.com"
+OPS="vcf-operations.example.com"
+DAY=$(date +%F)
+SINCE=$(( ($(date +%s) - 7 * 86400) * 1000 ))   # seven days ago, in milliseconds
+CURL=(curl -s --cacert "$CA_BUNDLE" -H 'Content-Type: application/json' -H 'Accept: application/json')
 
-TOKEN=$(curl -sk -X POST "https://$SDDC/v1/tokens" -H 'Content-Type: application/json' \
-  -d "{\"username\":\"$SDDC_USER\",\"password\":\"$SDDC_PASS\"}" | jq -r .accessToken)
+SDDC_TOKEN=$("${CURL[@]}" -X POST "https://$SDDC/v1/tokens" \
+  -d "$(jq -n --arg u "$SDDC_USER" --arg p "$SDDC_PASS" '{username:$u,password:$p}')" | jq -r .accessToken)
+OPS_TOKEN=$("${CURL[@]}" -X POST "https://$OPS/suite-api/api/auth/token/acquire" \
+  -d "$(jq -n --arg u "$OPS_USER" --arg p "$OPS_PASS" '{username:$u,password:$p}')" | jq -r .token)
 
-{
-  echo "== Failed SDDC Manager tasks"
-  curl -sk -H "Authorization: Bearer $TOKEN" "https://$SDDC/v1/tasks" |
-    jq -r '.elements[] | select(.status=="FAILED") | "\(.creationTimestamp)  \(.name)  \(.id)"'
+# This asks for 100 tasks a page, so print totalPages and page on when it exceeds 1.
+"${CURL[@]}" -H "Authorization: Bearer $SDDC_TOKEN" \
+  "https://$SDDC/v1/tasks?completedAfter=$SINCE&pageSize=100" |
+  jq -r '"pages: \(.pageMetadata.totalPages)",
+    (.elements[] | select(.status | ascii_upcase | IN("FAILED","TIMED_OUT","TIMED OUT"))
+     | "\(.creationTimestamp)  \(.name)  \(.id)  \(.status)")' > "tasks-$DAY.txt"
 
-  echo "== SDDC Manager disk"
-  ssh "vcf@$SDDC" 'df -h /data /opt /var/log'
+# IMMEDIATE is pulled as well, for the trend. Only CRITICAL turns the report red.
+"${CURL[@]}" -H "Authorization: OpsToken $OPS_TOKEN" -X POST "https://$OPS/suite-api/api/alerts/query" \
+  -d '{"activeOnly":true,"alertCriticality":["CRITICAL","IMMEDIATE"]}' | jq -S '.alerts' > "alerts-$DAY.json"
 
-  echo "== SoS health check (summary)"
-  ssh "vcf@$SDDC" 'sudo /opt/vmware/sddc-support/sos --health-check' | grep -E 'RED|YELLOW|lock' || true
-} > "$OUT"
-echo "Wrote $OUT"
+# TechDocs gives this path as /api/...; /suite-api comes from the token and alert references, so confirm it.
+"${CURL[@]}" -H "Authorization: OpsToken $OPS_TOKEN" -X POST "https://$OPS/suite-api/api/diagnostics/findings/query" \
+  -d '{"filter":{}}' | jq -S . > "findings-$DAY.json"
+
+ssh "vcf@$SDDC" 'df -h' > "disk-$DAY.txt"
 ```
 
-Add VCF Operations alerts with its API (acquire a token, then list active alerts filtered to critical), and store each week's file. A diff against last week is the most useful part of the report.
+SoS stays a separate step because the [documented route is SSH as `vcf`, then `su` to root](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html), which doesn't script cleanly from a remote host. `--json-output-dir` gives you a file to diff, so copy it back to the report host:
 
-<Callout type="field">
-Build and test the report in a lab, including against a lab you broke on purpose. A health check that has never shown red is a health check nobody knows works.
+```bash
+/opt/vmware/sddc-support/sos --health-check --domain-name ALL --json-output-dir /tmp/sos-weekly
+```
+
+Give the VCF Operations account [`environment.vcfhealth.view` and `vcf_diagnostics.view`](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/using-vcf-operations-diagnostics/diagnostics-public-rest-api.html), the privileges the Findings API requires. Two details on that page need checking against your appliance: its prose calls the body field `filters` while its example uses `filter`, and it writes severity values in mixed case. That's why the script sends an empty filter and leaves severity to whatever reads the file. Store each week's files and diff them. The change from last week tells you more than the absolute count, so send the red count, that change and the top item, with the detail attached.
+
+<Callout type="analysis" title="What the weekly report doesn't replace">
+Broadcom's [Monitoring and Alerting Blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/monitoring-and-alerting-guide.html) starts from VCF Operations dashboards and [notification rules on alerts](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/monitoring-and-alerting-guide/alerts.html), and it doesn't describe a scripted report, so this pattern is this site's. A critical alert shouldn't wait a week, so route it through a notification rule and use the report for what notifications miss: drift, slow trends and the checks VCF Operations doesn't cover. Before an upgrade to 9.1, run Broadcom's [readiness set](https://knowledge.broadcom.com/external/article/454898) as well: SoS, the VCF Diagnostic Tool for vSphere on each vCenter, and management services platform health with service account sync on 9.x. Prove each red path in a lab before trusting green from it, since a check that has never failed may be reading the wrong field.
 </Callout>
-
-## Pitfalls
-
-- **Running SoS against every domain** every week. Start with the management domain and add scope when needed.
-- **Storing credentials in the script.** Use a vault or environment injected at run time.
-- **Reports nobody reads.** Send three lines (red count, change from last week, top item) and attach the detail.

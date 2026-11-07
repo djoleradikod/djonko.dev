@@ -1,64 +1,157 @@
 ---
 title: "What SDDC Manager still owns in 9.x, and what moved"
-description: "SDDC Manager is not gone in VCF 9. It stopped being the front door, but it still runs core lifecycle work, and in 9.1 it does that on instructions from the management services."
+description: "Keep SDDC Manager in the design and stop building on its console. Its UI and its password, certificate and identity APIs have been deprecated since 9.0, yet it still supplies core lifecycle and workload domain work behind VCF Operations in 9.1."
 category: architecture
 order: 2
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Overview
 pubDate: 2026-11-02
 updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
 kbs: [443680, 435599, 426872, 450375]
 sources:
-  - title: "SDDC Manager design (VCF 9.0)"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/design/design-library/vcf-operations-design/sddc-manager-design.html"
-    by: "Broadcom TechDocs"
   - title: "Components in VCF and vSphere Foundation 9.1"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/vcf-management-appliances.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "SDDC Manager design (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/sddc-manager-design.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "SDDC Manager design (VCF 9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/design/design-library/vcf-operations-design/sddc-manager-design.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
   - title: "Lifecycle management (VCF 9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html"
     by: "Broadcom TechDocs"
-  - title: "Upgrading VCF 5.2 to 9.0: the top 10 questions answered"
-    url: "https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/"
-    by: "VMware Cloud Foundation blog"
-  - title: "10 VCF 9 enhancements simplifying your Day-2 operations"
-    url: "https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/"
-    by: "VMware Cloud Foundation blog"
-  - title: "Accounts in VMware Cloud Foundation (9.1)"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html"
+    kind: broadcom
+  - title: "Recommendations for VCF certificate management (9.1 fleet management blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Recommendations for VCF password management (9.1 fleet management blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/vcf-password-management/recommendations-for-vcf-password-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.0 product support notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "VCF 9.0 product support notes: VCF Installer"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-installer.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "VCF 9.1 product support notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
   - title: "VCF Operations 9.1.1.0 release notes"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
     by: "Broadcom TechDocs"
     kind: broadcom
     date: 2026-11-05
+  - title: "VCF 9.1 general FAQs (Q65, importing existing infrastructure)"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "Accounts in VMware Cloud Foundation (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Managing passwords (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Using SDDC Manager to manage passwords (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/using-sddc-manager-to-manage-passwords.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Points to consider while setting up VCF SSO (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/points-to-consider-while-setting-up-vmware-cloud-foundation-sso.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Update DNS server configuration (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-external-infrastructure-services/update-dns-server-configuration.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Update NTP server configuration (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-external-infrastructure-services/update-ntp-server-configuration.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Commission ESX hosts (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/commission-hosts.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Add an SDDC cluster to a VCF domain (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/expand-a-workload-domain/add-a-cluster-to-a-workload-domain-using-the-sddc-manager-ui.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrading VCF 5.2 to 9.0: the top 10 questions answered"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/"
+    by: "VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-12-18
+  - title: "10 VCF 9 enhancements simplifying your Day-2 operations (Brandon Hahn)"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/"
+    by: "VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-09-18
+  - title: "Streamline administrative access with VCF single sign-on (Eric Gray)"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/19/streamline-administrative-access-with-vcf-single-sign-on/"
+    by: "VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-06-19
 ---
 
 <InShort>
-In 5.x, SDDC Manager was both the console and the engine. In 9.0 it keeps the engine role for core infrastructure: ESX, vCenter, NSX and workload domains. Most of its screens moved to VCF Operations, and some moved to vCenter. In 9.1 its UI is formally deprecated and the new SDDC lifecycle service drives it through a service account. The practical consequence is simple: you rarely log in to SDDC Manager, but it still has to be healthy, or core lifecycle stops.
+Keep SDDC Manager in the design and stop building on its console. In 9.1 lifecycle, workload domain and password work starts in VCF Operations, while SDDC Manager [still provides](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/vcf-management-appliances.html) core lifecycle for ESX, vCenter, HCX and NSX behind it. Its UI has been [deprecated since 9.0](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes.html), and its APIs are shrinking too, so move runbooks and scripts now. The appliance itself still needs planning, credentials and care.
 </InShort>
 
-<Compare rows={[
-  ["Role", "Console and engine. Bring-up hand-off, domains, lifecycle, certificates, passwords, backup, licensing.", "Engine for core infrastructure. In 9.1 it is called by SDDC lifecycle running on the services runtime."],
-  ["UI", "The primary admin UI. From 5.2.1 some tasks also appear in the vSphere Client.", "9.0: tasks surface in VCF Operations under Fleet Management. 9.1: the SDDC Manager UI is deprecated."],
-  ["Lifecycle scope", "Everything in the BOM, including Aria Suite Lifecycle in VCF-aware mode.", "ESX, vCenter, NSX and, in 9.1, HCX. Management components belong to fleet lifecycle."],
-  ["Passwords and certificates", "Managed from SDDC Manager for every component.", "Managed from VCF Operations. SDDC Manager's own password and certificate APIs are deprecated in favour of VCF Operations."],
-  ["Identity", "Part of the vCenter SSO domain of the management domain.", "Excluded from VCF SSO. Its UI takes local accounts only; its APIs accept SSO users."],
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to say that only the UI is deprecated, from 9.1, and that SDDC Manager is simply not in VCF SSO. The deprecation starts in 9.0 and also covers password, certificate and identity APIs, and while VCF SSO excludes SDDC Manager, its APIs accept SSO users. It also blamed a blank SDDC Manager page on an outage and lifecycle failures on out-of-band account changes, where <KB id={443680} /> describes a communication timeout and, on VCF, <KB id={450375} /> describes rotations deleting the account.
+</Callout>
+
+<Compare v5Label="VCF 5.2" rows={[
+  ["Role", "Console and engine: bring-up hand-off, domains, clusters, hosts, lifecycle, certificates, passwords, backup, DNS and NTP, licensing.", "Back end for core lifecycle and workload domains, driven from VCF Operations. The 9.1 components page lists it as a part of VCF Operations."],
+  ["UI", "The primary admin UI. From 5.2.1 some tasks also appear in the vSphere Client.", "In 9.0 tasks surface in VCF Operations under Fleet Management. Deprecated since 9.0, with removal due in a future major release. Some 9.1 task pages still name it as an alternative."],
+  ["Lifecycle scope", "Everything in the BOM, including Aria Suite Lifecycle in VCF-aware mode.", "ESX, vCenter, NSX and, in 9.1, HCX. Management components go through fleet lifecycle and SDDC lifecycle, which replace the 9.0 fleet management appliance in 9.1."],
+  ["Passwords and certificates", "Managed in SDDC Manager.", "Managed in VCF Operations. The SDDC Manager APIs for both are deprecated, and Rotate is still only in SDDC Manager."],
+  ["Identity", "Part of the vCenter SSO domain of the management domain.", "Excluded from VCF SSO. The UI takes local admin accounts only. The APIs accept VCF SSO users."],
 ]} />
 
-## What SDDC Manager still does
+## Why it stays in the design
 
-**Core lifecycle.** SDDC Manager plans and runs upgrades and patches for ESX, vCenter and NSX in its instance. In 9.1 it also handles HCX lifecycle, workload domain deployment and import, and stretched vSAN clusters. Its service accounts on vCenter, NSX and ESX are what make that possible. They are the `svc-sddc-manager-…` and `svc-vcf-…` accounts in the accounts table in TechDocs.
+The 9.1 components page calls SDDC Manager ["a part of VCF Operations"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/vcf-management-appliances.html) that supports four functions there: lifecycle for ESX, vCenter, HCX and NSX, workload domain deployment, import of vCenter instances as workload domains, and vSAN stretched cluster configuration. Plan one per instance. The [9.1 design requirements](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/sddc-manager-design.html) place it in the first availability zone of the management domain, on the VM management network, and justify that by saying creating workload domains and patching and upgrading depend on it. Its service accounts on vCenter, NSX and ESX, the `svc-sddc-manager-…` and `svc-vcf-…` entries in the [accounts table](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html), are what make the lifecycle work possible. Disk space, its services and its certificates still matter, and a failed SDDC Manager stops core upgrades. For what an outage takes down, use the [failure impact matrix](/vcf/library/architecture/failure-impact-matrix/).
 
-**Instance inventory.** VCF Operations reads the instance through the VCF adapter on a cloud proxy, which calls the SDDC Manager API. If SDDC Manager is down, the SDDC Manager page in VCF Operations goes blank and the adapter reports a collection failure (<KB id={443680} />).
+The 9.0 sources look contradictory until you separate screen from execution. The [product support notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes.html) say SDDC Manager's lifecycle capabilities moved to VCF Operations, and Brandon Hahn's [September 2025 list](https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/) says new workload domains deploy through VCF Operations, yet the [9.0 design page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/design/design-library/vcf-operations-design/sddc-manager-design.html) has SDDC Manager using binaries to deploy those domains and to patch and upgrade them. The console moved and the work stayed. That reading is an inference for 9.0, and the 9.1 components page states it outright.
 
-**Execution back end in 9.1.** The 9.1 SDDC lifecycle service holds an administrator account on SDDC Manager. It is created as `svc-vcf-sddc-lcm-SDDC_MANAGER-<uuid>` and rotated every 30 days. Lifecycle requests that start in VCF Operations pass through SDDC lifecycle and arrive at SDDC Manager as API calls. If that account is changed or deleted out of band, upgrades and inventory sync fail. Repeated failed logins can also lock the runtime nodes out of SDDC Manager (<KB id={450375} />).
+Two ties between VCF Operations and SDDC Manager matter here, and public KBs show both failing.
+
+**The service account.** In 9.1, lifecycle requests that start in VCF Operations pass through SDDC lifecycle, running on the services runtime, and arrive at SDDC Manager as API calls. The [accounts table](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html) gives SDDC lifecycle an administrator account on SDDC Manager, `svc-vcf-sddc-lcm-SDDC_MANAGER-<uuid>`, system managed, rotated every 30 days by default and expiring in 90. On VCF, multiple rotations, scheduled or on-demand, delete the SDDC lifecycle service accounts. Upgrades then fail at `post_upgrade_inventory_sync` or `vmsp_upgrade`, and repeated 401s can lock the runtime nodes out of SDDC Manager with `CLIENT_IP_BLOCKED`. The recovery is a pair of scripts run from a runtime control-plane node (<KB id={450375} />, 3 Nov 2026). When a management upgrade fails at either step, check this account first.
+
+**The VCF adapter.** VCF Operations reads the instance through the VCF adapter on a cloud proxy, which calls the SDDC Manager API. On 9.0.x, a communication timeout between the adapter and SDDC Manager services blanks the SDDC Manager page in VCF Operations, stops cloud proxy collection and marks the adapter Failed (<KB id={443680} />, 23 Jun 2026). On 9.1.1, a secondary instance running a newer version than VCF Operations [may not appear as a VCF adapter](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) until the versions match, so upgrade VCF Operations first.
 
 ## What moved
 
-<Diagram viewBox="0 0 820 300" label="Tasks that were in SDDC Manager in 5.x move to VCF Operations or vCenter in 9.x, while SDDC Manager keeps core lifecycle." caption="Where SDDC Manager's 5.x responsibilities live in 9.x.">
+<Diagram viewBox="0 0 820 300" label="Tasks that were in SDDC Manager in 5.2 move to VCF Operations or vCenter in 9.x, while SDDC Manager keeps core lifecycle." caption="Where SDDC Manager's 5.2 responsibilities live in 9.x.">
   <rect class="box v5" x="20" y="20" width="230" height="260" rx="8" />
-  <text class="t" x="36" y="46">SDDC Manager in 5.x</text>
+  <text class="t" x="36" y="46">SDDC Manager in 5.2</text>
   <text class="s" x="36" y="74">Workload domains</text>
   <text class="s" x="36" y="96">Hosts, network pools, clusters</text>
   <text class="s" x="36" y="118">Edge clusters</text>
@@ -67,11 +160,11 @@ In 5.x, SDDC Manager was both the console and the engine. In 9.0 it keeps the en
   <text class="s" x="36" y="184">Backup, DNS, NTP</text>
   <text class="s" x="36" y="206">Licensing</text>
   <text class="s" x="36" y="228">Core lifecycle</text>
-  <text class="s" x="36" y="250">Aria Suite Lifecycle</text>
+  <text class="s" x="36" y="250">Aria Suite deployment</text>
   <rect class="box accent" x="420" y="20" width="380" height="96" rx="8" />
   <text class="t" x="436" y="46">VCF Operations</text>
   <text class="s" x="436" y="70">Workload domains, certificates and CA, passwords,</text>
-  <text class="s" x="436" y="90">backup, DNS and NTP, licensing, fleet lifecycle</text>
+  <text class="s" x="436" y="90">backup, DNS and NTP, licensing, fleet and SDDC lifecycle</text>
   <rect class="box v9" x="420" y="130" width="380" height="70" rx="8" />
   <text class="t" x="436" y="156">vCenter</text>
   <text class="s" x="436" y="180">Hosts, network pools, clusters, edge clusters</text>
@@ -80,25 +173,40 @@ In 5.x, SDDC Manager was both the console and the engine. In 9.0 it keeps the en
   <text class="s" x="436" y="262">Core lifecycle for ESX, vCenter, NSX, HCX</text>
   <path class="wire accent" d="M250 110 C 330 110, 340 68, 418 68" marker-end="url(#arra)" />
   <path class="wire" d="M250 100 C 330 100, 340 165, 418 165" marker-end="url(#arr)" />
-  <path class="wire" d="M250 230 C 330 230, 340 247, 418 247" marker-end="url(#arr)" />
+  <path class="wire" d="M250 225 C 330 225, 340 247, 418 247" marker-end="url(#arr)" />
 </Diagram>
 
-The VCF blog's Day-2 comparison is the best single list of where each task went. The short version:
+[Hahn's list](https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/) is the best single account of where each task went in 9.0, and the 9.1 pages below update it for DNS and NTP.
 
-- **To VCF Operations:** workload domain deployment, backup configuration, DNS and NTP settings per instance, certificate authority configuration, certificate management (now with auto-renewal) and [password management](/vcf/library/day-2/passwords-service-accounts/), where Update runs while Rotate stays in SDDC Manager.
-- **To vCenter:** network pools, host commissioning and decommissioning, cluster creation and expansion, and NSX edge cluster deployment. For workload domains these need VCF SSO and vCenter linking in place first.
-- **To fleet lifecycle:** everything Aria Suite Lifecycle did for the management components. That is a separate appliance in 9.0 and a service in 9.1. See <a href="/vcf/library/architecture/aria-lifecycle-to-services-runtime/">From Aria Suite Lifecycle to the services runtime</a>.
+- **To VCF Operations:** workload domain deployment, backup configuration, certificate authority configuration, certificate management with auto-renewal, and [password management](/vcf/library/day-2/passwords-service-accounts/). Importing a vCenter as a workload domain [also starts here](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs). DNS and NTP moved in 9.0, and 9.1 changes the model: you create a named setting under Manage > Fleet management > Fleet settings and assign it to instances ([DNS](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-external-infrastructure-services/update-dns-server-configuration.html), [NTP](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-external-infrastructure-services/update-ntp-server-configuration.html)).
+- **To vCenter:** network pools, host commissioning and decommissioning, cluster creation and expansion, and NSX edge cluster deployment. The 9.1 tasks for [commissioning](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/commission-hosts.html) and [adding a cluster](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/expand-a-workload-domain/add-a-cluster-to-a-workload-domain-using-the-sddc-manager-ui.html) need access to the management domain vCenter, or VCF SSO with vCenter linking. Both pages still name the SDDC Manager UI as an alternative, which can help while SSO and linking aren't ready, but don't write it into a new runbook.
+- **To the software depot:** binaries. The [9.0 design page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/design/design-library/vcf-operations-design/sddc-manager-design.html) gives SDDC Manager connected, disconnected and manual modes for them. In 9.1 the depot [handles binaries for all VCF components](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html).
+- **To fleet lifecycle and SDDC lifecycle:** what Aria Suite Lifecycle did. VCF Installer and VCF Operations [replaced SDDC Manager's Aria deployment](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes.html) in 9.0, and the [9.1 mapping](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/vcf-management-appliances.html) splits the 9.0 fleet management appliance into those two components. <a href="/vcf/library/architecture/aria-lifecycle-to-services-runtime/">From Aria Suite Lifecycle to the services runtime</a> has the detail.
 
-## The password and certificate overlap in 9.0
+## What to do with scripts
 
-9.0 is a transition release, and the split is not perfectly clean. In 9.0, automatic rotation for the management components is not complete (<KB id={426872} />). SDDC Manager password management stays the authoritative source for core component accounts (<KB id={435599} />). In 9.1, VCF Operations owns more of it. From 9.1.1 even SDDC Manager's own `vcf`, `root` and `admin@local` passwords can be managed from the VCF Operations UI or API, where 9.1 still required changing `root` and `vcf` in the OS and `admin@local` through the SDDC Manager API ([accounts table](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html), [9.1.1.0 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html)).
+Anything that calls SDDC Manager's password, certificate or identity APIs is on deprecated ground from 9.0 ([password and certificate](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-installer.html), [identity](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes.html)), and `/v1/system/precheck` is already gone. [9.1 marks 21 more operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) as deprecated, mainly edge cluster operations, domain overlays, system DNS and NTP, and upgrade prechecks. Those notes don't name the 21, so diff your scripts against the "What's changed in SDDC Manager API" changelog they point to. Scripts that commission hosts or rotate passwords through old SDDC Manager API calls can still work in places, but they bypass the 9.x workflows and can leave VCF Operations out of step.
 
-<Callout type="warn" title="Don't hand service accounts to a PAM tool">
-TechDocs is explicit: VCF service accounts must not be rotated or managed by an external privileged access management tool. Rotation has to go through VCF Operations or SDDC Manager, or the components fall out of sync with each other.
+For certificates the 9.1 fleet management blueprint is blunt: ["Avoid using the SDDC Manager for certificate management"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html), with SDDC Manager's APIs kept only for backward compatibility during the transition.
+
+<Callout type="analysis" title="How far the deprecation reaches">
+The 9.1 passwords page goes further than the release notes: ["SDDC Manager will be deprecated in a future VCF release"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords.html). The notes name the UI and specific APIs, and the 9.1 components page still gives the appliance four functions. No removal date or replacement for those functions appears in the pages reviewed for this note <AsOf date="2026-11-07" />. So write no new dependency on SDDC Manager's interfaces, and keep sizing, protecting and upgrading the appliance as a required component.
 </Callout>
 
-## Pitfalls
+## Passwords: where SDDC Manager stays in the runbook
 
-- **Ignoring SDDC Manager because "it's deprecated".** Only the UI is deprecated. Disk space, its services and its certificates still matter, and a failed SDDC Manager stops core upgrades.
-- **Doing Day-2 tasks the old way.** Commissioning hosts or rotating passwords through old SDDC Manager API scripts can still work in places, but it bypasses the 9.x workflows and can leave VCF Operations out of step. Update automation to the 9.x paths.
-- **Looking for SDDC Manager in SSO.** It is not in VCF SSO. Keep its local admin credentials somewhere safe.
+VCF Operations is [the preferred method](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords.html) in 9.1, and its action is Update. Rotate, which auto-generates a password on server and client, is [only available in SDDC Manager](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/using-sddc-manager-to-manage-passwords.html), so a runbook that needs a generated value still lands there. The same blueprint also recommends [enabling SDDC Manager auto-rotation](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/vcf-password-management/recommendations-for-vcf-password-management.html) for inter-component accounts that only SDDC Manager can manage, at 30, 60 or 90 days, and alerting on credential retrieval from SDDC Manager through its API or CLI, which needs Log Management deployed. Turn on both.
+
+Two older KBs describe an earlier split. <KB id={435599} /> (VCF 9.x, 13 Apr 2026) calls SDDC Manager's password subsystem the authoritative source for account lifecycles, and the 9.1 passwords page, dated 5 Nov 2026, prefers VCF Operations, so on 9.1 follow the newer page. <KB id={426872} /> (9.0.x, 29 Jan 2026) shows the 9.0 limit: no Rotate on the VCF Operations Passwords page, and no configurable rotation for Fleet Management, VCF Operations, its logs and networks products, or VIDB. <KB id={435599} /> puts those same five outside automated rotation.
+
+SDDC Manager's own passwords changed in a point release. On 9.1 you change the `root` and `vcf` passwords in the OS and the `admin@local` password through its API. [From 9.1.1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html) all three can be managed from the VCF Operations UI or API, as [the release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) confirm, so update the runbook in the same change window as the upgrade.
+
+<Callout type="warn" title="Don't let a PAM tool change these accounts">
+Internal service accounts ["must not be rotated, changed, or managed by external Privileged Access Management (PAM) tools"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html), because changes outside VCF Operations or SDDC Manager workflows can break lifecycle and cause outages. The [password blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/vcf-password-management/recommendations-for-vcf-password-management.html) wants all VCF credentials in an enterprise vault when you use API or manual processes, and calls the vault the source of truth. Those fit together if the vault records what VCF generated and never drives the change. That's an inference, since Broadcom doesn't reconcile them.
+</Callout>
+
+## Identity: set up both paths
+
+[VCF SSO excludes SDDC Manager and ESX](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/points-to-consider-while-setting-up-vmware-cloud-foundation-sso.html), and after you configure it in the management domain vCenter the SDDC Manager UI accepts only local admin accounts such as `@vsphere.local` users. Keep those credentials where a break-glass process can reach them. The APIs do take SSO users. Some actions you start in the vSphere Client run on SDDC Manager behind the scenes, so when you configure SSO, grant Administrator in SDDC Manager to the same SSO group you use in vCenter, as Eric Gray's [June 2025 post](https://blogs.vmware.com/cloud-foundation/2025/06/19/streamline-administrative-access-with-vcf-single-sign-on/) advises.
+
+An upgrade from 5.2 needs SDDC Manager's API once more: the same considerations page requires that API to deactivate Enhanced Linked Mode on upgraded vCenter instances, and removing the link outside SDDC Manager blocks some workflows until you reconcile the drift through that API.

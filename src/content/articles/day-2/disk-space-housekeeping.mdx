@@ -1,66 +1,134 @@
 ---
 title: "Disk space housekeeping: vCenter partitions, SDDC Manager bundles and VCF Operations"
-description: "Four places can fill up: SDDC Manager bundles and database, vCenter's log and seat partitions, VCF Operations nodes and, in 9.1, the services runtime volumes. A full partition can fail an upgrade, so report the trend and use each location's documented clean-up."
+description: "Find which appliance is really short of space first. SDDC Manager's precheck can fail with free space, nfs-mount and root need different clean-ups, vCenter's log and seat partitions fill for different reasons, and the 9.1 services runtime has documented node clean-up (9.1.1), volume resize and log retention."
 category: day-2
 order: 8
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [439946, 447248, 410118, 434671, 318768, 417255]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [439946, 447248, 312173, 450178, 318268, 459572, 444900, 434671, 410118, 318768, 436449, 423663, 417255, 443784]
 sources:
-  - title: "VCF management services health and diagnostics (volume utilization)"
-    url: "https://knowledge.broadcom.com/external/article/417255/vcf-management-services-health-and-diagn.html"
-    by: "Broadcom KB"
-  - title: "Upgrading to VCF 9.1.x (prerequisites)"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+  - title: "High Availability Log Management Model (9.1 blueprint recommendations)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-with-multiple-sites-across-multiple-regions-blueprint/management-domain-design-selections%283%29/operations-layer%283%29/high-availability-logs-management-model%282%29.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Log Management Detailed Design"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Binary Management for VMware Cloud Foundation"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Download Tool Command Reference Information"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/what-is-the-vcf-download-tool-.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Management Services: Health and Diagnostics"
+    url: "https://knowledge.broadcom.com/external/article/417255"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "[9.1.1] VCF Management Services Node Resource Usage Approaching Capacity"
+    url: "https://knowledge.broadcom.com/external/article/443784"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "Quick Tip: No space left on device when upgrading VCF Operations using VCF Operations Fleet Manager to VCF 9.0.2"
+    url: "https://williamlam.com/2026/01/quick-tip-no-space-left-on-device-when-upgrading-vcf-operations-using-vcf-operations-fleet-manager-to-vcf-9-0-2.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-01-22
+  - title: "VCF 9.1: side-loading VCF binaries into VCF Installer and Fleet Depot Service for air-gapped environments"
+    url: "https://williamlam.com/2026/06/vcf-9-1-side-loading-vcf-binaries-into-vcf-installer-fleet-depot-service-for-air-gapped-environments.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-06-02
 ---
 
 <InShort>
-Four places can fill up: **SDDC Manager**, with old bundles and its database partition; **vCenter's** `/storage/log` and `/storage/seat`; the **VCF Operations** nodes; and, in 9.1, the **services runtime** volumes. SDDC Manager's precheck marks less than 1 GB free for its database or less than 10 GB in `/opt` as critical (<KB id={439946} />). Don't keep deleting files until it works. Each location has a documented clean-up and a reason it filled.
+Find out which appliance is really short of space before deleting anything. One SDDC Manager precheck can fail with plenty of free space, and the fix there is a service restart. Where the space is truly gone, each location has its own clean-up, listed below with its stated scope. On 9.1, this site would set a retention period on every log management partition, as Broadcom's HA log model recommends, because retention is one of the two factors in how much storage logs consume.
 </InShort>
 
-<Compare rows={[
-  ["Bundle store", "SDDC Manager kept every downloaded bundle until cleaned up", "The same on SDDC Manager, plus management component binaries in the 9.1 software depot"],
-  ["Clean-up tool", "Manual clean-up or KB scripts", "bundle_cleanup.py for SDDC Manager (<a href='https://knowledge.broadcom.com/external/article/447248' target='_blank' rel='noopener'>KB 447248</a>)"],
-  ["New storage to watch", "Not applicable", "Runtime persistent volumes, with warning thresholds on the VCF Operations dashboard"],
-]} />
-
-## SDDC Manager
-
-- **Thresholds.** The precheck flags `dbDataDirFreeSpaceGb` at 1 GB or less and `vmOptDirFreeSpaceGb` at 10 GB or less as critical (<KB id={439946} />).
-- **Old bundles** can fill these partitions. Use `bundle_cleanup.py` to remove superseded bundles safely (<KB id={447248} />). Don't delete bundle directories by hand, because the database still references them.
-- **When:** after every upgrade, and before downloading the next release.
-
-## vCenter
-
-- **`/storage/log` full from ESX syslog.** vCenter can end up receiving host syslog it was never sized for (<KB id={434671} />). Send host logs to the log platform instead, and clean up as the KB describes.
-- **`/storage/seat` full.** Events, tasks and statistics outgrow the partition, often from chatty integrations or long retention settings (<KB id={410118} />). Fix the retention, then follow the KB to reclaim space.
-- **Before every upgrade:** run the vCenter diagnostic tool, and check `df -h` on the appliance. The upgrade needs room on several partitions.
-
-## VCF Operations
-
-Analytics nodes need disk headroom for growth and for upgrades. Some features need extra disks on every node. The data retriever is one documented example (<KB id={318768} />). Watch the self-monitoring dashboards, and add disk before the cluster goes read-only.
-
-## 9.1 services runtime
-
-The management services dashboard shows volume utilisation with clear thresholds: up to 80% is good, 80 to 90% is warning, 90 to 95% is severe and over 95% is critical (<KB id={417255} />). Check Day-N services first, especially log management. Don't try to clean runtime volumes from the node shell. Use the documented scale and retention options.
-
-```bash
-# Quick read-only checks
-# SDDC Manager
-df -h /data /opt /var/log /nfs/vmware/vcf/nfs-mount 2>/dev/null
-# vCenter
-df -h /storage/log /storage/seat /storage/db /storage/core
-```
-
-<Callout type="field">
-Add a disk report to the monthly health check: one line per appliance and partition, with the percentage used. A trend line catches the slow fill-ups that cause failures in the middle of an upgrade.
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to present SDDC Manager's 1 GB and 10 GB check as a plain space limit, when <KB id={439946} /> describes that precheck failing with enough free space. It also said never to clean services runtime volumes from the node shell, but <KB id={443784} /> documents shell clean-up of node logs and images on 9.1.1, and it applied the 80, 90 and 95% bands to volumes alone. Unsupported claims about upgrade partition needs, a read-only cluster and bundle database references are gone.
 </Callout>
 
-## Pitfalls
+## Match the symptom to the location
 
-- **Deleting logs that are evidence.** If you are mid-incident, collect a support bundle before cleaning.
-- **Fixing the symptom, not the cause.** A `/storage/log` that filled from host syslog will fill again until the syslog target changes.
-- **Snapshots consuming datastore space** under the appliances. Check the datastore as well as the guest partitions.
+| Location | What you see | What filled it | Documented move | Stated scope |
+|---|---|---|---|---|
+| SDDC Manager, precheck only | "does not have enough disk space" while free space is fine | Nothing: a stale runtime cache | Restart services, delete nothing (<KB id={439946} />) | SDDC Manager 5.x, 9.x |
+| SDDC Manager `/nfs/vmware/vcf/nfs-mount` | "LCM Bundle folder disk space" precheck failure | Old or installed bundles, NSX backups | Snapshot, then remove bundles and backups (<KB id={447248} />, <KB id={318268} />) | VCF 5.2.x, 9.x |
+| SDDC Manager `/` | `Upgrade - THIRD_PARTY` fails with an RPM "disk I/O error" | Old log bundles, temporary archives, staged payloads | Remove or relocate, rerun (<KB id={459572} />) | VCF 9.x, SDDC 9.1 |
+| vCenter `/storage/log` | Full or out of inodes, services down, large `/storage/log/vmware/esx/` | ESX syslog sent to vCenter | Repoint hosts, then clear the folder (<KB id={434671} />) | No version listed |
+| vCenter `/storage/seat` | 100%, "No Healthy Upstream", database maintenance fails | Old task and event data | Purge or grow the disk (<KB id={410118} />) | Appliance 7.x, 8.x, 9.x |
+| VCF Operations `/storage/db` | Near 90% or above, `LowDiskSpaceException`, "data retrieve is not initialized yet" | Analytics data | Cluster offline, new disk on every analytics node (<KB id={318768} />) | 8.12.x, 9.0.x, 9.1.x |
+| Fleet Management `/data` | Binary download or precheck fails, "No space left on device" | Downloaded binaries | Remove binaries or extend storage (<KB id={423663} />, <KB id={436449} />) | 9.0, 9.0.1 |
+| Services runtime node | "VCF Management Services Node Resource Usage Approaching Capacity" | Service and audit logs, container images, undersized disk | Wait out running tasks, then clean up (<KB id={443784} />) | 9.1.1 |
+| Services runtime component volume | Components' Volume Utilization nearing capacity | Retained logs, metrics, binaries | Resize through the Lifecycle components action (<KB id={417255} />) | No release listed |
+
+```bash
+# Read-only. SDDC Manager:
+df -h / /nfs/vmware/vcf/nfs-mount
+# vCenter, including the inode exhaustion KB 434671 lists:
+df -h /storage/log /storage/seat; df -i /storage/log
+# VCF Operations analytics node:
+df -h /storage/db
+```
+
+## SDDC Manager: rule out the false alarm first
+
+The precheck's severity rule marks `dbDataDirFreeSpaceGb <= 1.0` (its database) and `vmOptDirFreeSpaceGb <= 10.0` (`/opt`) as critical, but the check can fail with no space problem at all. A stale cache in the application services leaves it with a null result, the log shows `SpelEvaluationException` against those two properties, and the VCF Diagnostic Tool reports no disk issue. The fix is `sddcmanager_restart_services.sh`, so delete nothing if `df` and the log match that pattern. The resolution text says reboot and mentions VxRail issues it never explains, but the step it documents is that script (<KB id={439946} />).
+
+When `nfs-mount` really is full, take a snapshot and remove bundles you no longer need (<KB id={447248} />). On 9.x, start in the SDDC Manager UI with Lifecycle Management > Binary Management > DELETE DOWNLOAD, and use `bundle_cleanup.py` if that fails. A removed bundle has to be downloaded again if an upgrade needs it, and its upgrade history goes with it (<KB id={312173} />). Broadcom's articles disagree on the script's syntax: <KB id={447248} /> passes the bundle ID as a bare argument and <KB id={450178} /> uses `--bundle_id`, so confirm which form your build accepts. None of these articles documents deleting bundle folders by hand, so stay with the UI or the script.
+
+Bundles aren't the only tenant. If SDDC Manager is the NSX backup target, the built-in clean-up fails on NSX-T backups and they accumulate under `nfs-mount/backup/`. Broadcom supplies `nsx_backup_cleaner.py` and recommends keeping backups on external storage, such as FTP (<KB id={318268} />).
+
+A full `/` is a separate partition with a misleading symptom: the error reads like RPM database corruption, and the cause is simply no room to write. The article names no safe paths and no free-space target, so confirm each file before removing it (<KB id={459572} />).
+
+On 9.1, the [software depot](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation.html) holds binaries and can serve a whole fleet or one instance. The VCF Download Tool can [clean obsolete binaries from it](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/what-is-the-vcf-download-tool-.html), and William Lam's [June post](https://williamlam.com/2026/06/vcf-9-1-side-loading-vcf-binaries-into-vcf-installer-fleet-depot-service-for-air-gapped-environments.html) names `vcf-download-tool depot binaries cleanup` for uploaded binaries. A stale binary that refuses to delete from VCF Operations, with a checksum mismatch on download, is a corrupt cache rather than a capacity problem and has its own script (<KB id={444900} />).
+
+## vCenter: stop the source before reclaiming
+
+ESX hosts that forward syslog to vCenter write into a collector meant for the appliance's own services, with no rotation or retention for those streams. It can happen by accident, when vCenter inherits the IP of a retired syslog server that hosts still target. Change `Syslog.global.logHost` on every host first, or the partition fills again, then clear `/storage/log/vmware/esx/` and start services (<KB id={434671} />). Clearing that folder has no undo, so during an open incident this site would take a support bundle first. The article asks for a dedicated collector or a blank setting. On 9.1 log management is one candidate, and [collection for vCenter and its ESX hosts is off by default](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html) until you enable it on the VCF adapter under Integrations.
+
+A full `/storage/seat` stops vCenter by design: vPostgres won't extend data files on low space, services can't record events, and vacuum, reindex and truncate fail because they need temporary room themselves. The article offers three routes (<KB id={410118} />):
+
+| Route | Cost | Snapshot |
+|---|---|---|
+| Move a table folder aside and truncate large tables | Removes that table data; the article doesn't list which tables | Required |
+| SQL script with `TaskMaxAgeInDays`, `EventMaxAgeInDays`, `StatMaxAgeInDays` | Deletes older history and restarts event IDs at 1; no default ages, so you choose them | Required |
+| Grow the virtual disk, then `autogrow.sh` | vCenter powered off; no data removed | None may be attached |
+
+Growing is the only route that keeps the history, so choose it when downtime is acceptable and the events matter. That preference is this site's, and the article lists growth last. Remove a purge's snapshot before growing the same disk.
+
+## VCF Operations: adding disk means an outage
+
+`/storage/db` grows by adding a new virtual disk to every analytics node, with the cluster offline, each node shut down and all nodes kept at equal capacity. Don't expand an existing disk, and don't exceed 2 TB per disk (<KB id={318768} />). Because the procedure needs the cluster offline, planning the change ahead of 90% lets you choose the window.
+
+An upgrade failure can also point at the wrong box. During a VCF Operations upgrade to 9.0.2, William Lam traced "No space left on device" to the [Fleet Manager appliance](https://williamlam.com/2026/01/quick-tip-no-space-left-on-device-when-upgrading-vcf-operations-using-vcf-operations-fleet-manager-to-vcf-9-0-2.html) while VCF Operations itself had room, and he fixed it with Extend Storage under Fleet Management settings. For binary downloads on 9.0, keep at least three times the binary's size free on `/data` (<KB id={423663} />).
+
+## 9.1 services runtime: node disk and component volumes are different problems
+
+The management services dashboard grades overall memory, node memory and disk together: up to 80% is good, 80 to 90% warning, 90 to 95% severe and over 95% critical (<KB id={417255} />). The article names no release, though [its paths match 9.1](/vcf/library/day-2/health-checks-sos/). Scaling the runtime adds CPU and memory, so don't count on it to cure disk. That's an inference from how the article describes the action.
+
+For a low-disk node on 9.1.1, check Build > Lifecycle > Tasks first. Usage from a running upgrade, patch or certificate task typically returns to normal within 30 to 60 minutes after it ends, so wait. If pressure continues, the article gives an ordered SSH clean-up of service logs, audit logs and unused container images, with no rollback described. If a node keeps coming back with no tasks running, this site would suspect another cause the article lists, more components than its disk sizing supports (<KB id={443784} />). Waiting too long has a cost: low node disk can fail depot downloads and lifecycle actions, stop log forwarding and affect SSO. A separate "Disk pressure" reading of 1 usually means logs aren't being processed quickly enough, so check storage latency and APD or PDL conditions before deleting (<KB id={417255} />).
+
+Log management is where retention drives capacity. Storage is ["a factor of the retention period and the number of log messages received"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html). With no period set the system manages retention itself, and even with one set, logs may be discarded earlier if disk or shards fall short. Broadcom's [HA log model](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-with-multiple-sites-across-multiple-regions-blueprint/management-domain-design-selections%283%29/operations-layer%283%29/high-availability-logs-management-model%282%29.html), in its multi-site, multi-region fleet blueprint, recommends a retention period on every partition with Archive enabled, an SFTP or S3 archive target, and a removal policy for the archive itself. This site's analysis is to follow it, because without a stated period a volume alert leaves you resizing with no target for how much history you need.
+
+Two 9.1.1 changes affect how you read older alerts <AsOf date="2026-11-07" />. Fluentd buffers could fill the logging disk until health checks failed and blocked platform operations, which [9.1.1.0 fixes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), so this site would treat a recurring fill on that disk on 9.1.0 as a reason to upgrade. The same release removed the Additional Storage Required metric because it could report a false shortfall on default log partitions, so this site wouldn't size from that metric on 9.1.0.
+
+<Callout type="analysis" title="Pick your own alert point">
+Apart from the precheck's critical numbers, the articles above for SDDC Manager and vCenter partitions give failure symptoms rather than a free-space target, so the warning line is yours to set. This site would alert at 80%, borrowing the services runtime's first band, and add one line per appliance and partition to the monthly health check. A slow fill then shows up as a trend, and the same report gives you a check to run before starting an upgrade.
+</Callout>
