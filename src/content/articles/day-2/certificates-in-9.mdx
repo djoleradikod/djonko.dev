@@ -219,7 +219,7 @@ for store in $(/usr/lib/vmware-vmafd/bin/vecs-cli store list | grep -v TRUSTED_R
 done
 ```
 
-Take a backup or a powered-off snapshot first. Linked vCenters are powered off together and each is snapshotted, and vCenter HA is removed before snapshots (<KB id={344201} />). Then use vCert (<KB id={385107} />, version 6.1.2 on 7 Nov 2026), option 1 to find what expired and option 6 to reset all certificates if several stores are affected, and restart services.
+Take a backup or a powered-off snapshot first. Linked vCenters are powered off together and each is snapshotted, and vCenter HA is removed before snapshots (<KB id={344201} />). Then use vCert (<KB id={385107} />, version 6.1.2 on 7 Nov 2026), which that KB says is intended for use at the direction of Broadcom Global Support: option 1 to find what expired and option 6 to reset all certificates if several stores are affected, and restart services.
 
 Across several component types, TechDocs points at `vcf-cert-tool` (<KB id={445742} />), which puts the vCert, CARR and certmgr repair workflows behind one tool. It's "intended to be used at the direction of Broadcom Support", so open a case first: it can leave a system inoperable, and it doesn't update trust relationships. Plan the re-trust walk afterwards.
 

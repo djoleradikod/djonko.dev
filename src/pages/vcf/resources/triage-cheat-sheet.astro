@@ -13,8 +13,8 @@ const playbook: [string, string, string][] = [
   ['Account locked, InvalidLogin, 403 in operationsmanager.log', 'sos --health-check (Failed to get details)', 'Unlocking first fails while a service still holds the old password. For the NSX service account: add SDDC Manager to the lockout-immune list, rotate it, verify, then rotate the rest (KB 449684).'],
   ['PKIX path building failed, certificate_unknown(46)', 'openssl s_client -connect <host>:443 </dev/null | openssl x509 -noout -issuer -enddate', 'Expired: replace. Unknown issuer: TLS inspection on the path, exempt it, or import the CA.'],
   ['Signed certificate rejected', 'openssl x509 -in cert.crt -pubkey -noout | sha256sum; openssl req -in csr.csr -pubkey -noout | sha256sum', 'Hashes differ: the certificate was signed from another CSR. Sign the current one.'],
-  ['"no healthy upstream" on vCenter', 'df -h; service-control --status --all; the VECS expiry loop', 'Free the full partition or replace the expired certificate, then start services. Rebooting alone ends in the same place.'],
-  ['VCFMS- precheck codes, 9.1 runtime tasks stuck', 'kubectl get pods -A | grep -vE \'Running|Completed\'', 'Fix pod health first. Restart a lifecycle service with lcm_service_support.sh, not kubectl delete.'],
+  ['"no healthy upstream" on vCenter', 'df -h; service-control --status --all; the VECS expiry loop', 'Free the full partition or replace the expired certificate, then start services. A reboot alone frees no partition and replaces no certificate.'],
+  ['VCFMS- precheck codes, 9.1 runtime tasks stuck', 'kubectl get pods -A | grep -vE \'Running|Completed\'', 'Fix pod health first. Restart a lifecycle service with lcm_service_support.sh, and delete pods only where a KB names them.'],
   ['Depot 403, "Bundle not found", download stalls', 'curl -I https://eapi.broadcom.com from a runtime node', 'Allow every runtime node, not only SDDC Manager. Check the token or activation code, and TLS inspection.'],
   ['NSX host preparation or TEP failures', 'vmkping ++netstack=vxlan -d -s 1572 -I vmk10 <edge-tep>', 'Fails with -d: MTU on the path is under 1600. Fix the network, then Resolve in NSX.'],
   ['VCF Operations slow, node offline, cluster not ready', 'curl -sk https://<node>/casa/cluster/status; df -h /storage/db /storage/log', 'One node must be MASTER. Add disk to every node, identically sized. Never revert to a snapshot.'],
@@ -93,7 +93,7 @@ const kb = (id: number) => kbInfo(id).url;
         <li><strong>VCF Operations:</strong> Control Panel &gt; Support Bundles.</li>
         <li><strong>Runtime down, fleet lifecycle unreachable:</strong> the standalone bundle script (<a href={kb(444466)} target="_blank" rel="noopener">KB 444466</a>).</li>
         <li><strong>UI problems:</strong> a browser HAR file.</li>
-        <li><strong>Always:</strong> the IDs from step 1, the UTC time, and every action taken since.</li>
+        <li><strong>Always:</strong> the IDs from step 1, the time with its UTC offset, and every action taken since.</li>
       </ul>
       <h2 class="rules-h">Rules</h2>
       <p class="rules">One operation at a time on a scope. Health before retry, retry before rebuild. Bundle before clean-up. Snapshot before any database change, and make database changes only when a KB for your exact build says to.</p>
@@ -102,20 +102,20 @@ const kb = (id: number) => kbInfo(id).url;
 
   <section class="cs">
     <h2>Services runtime toolkit (9.1, read-only)</h2>
-    <Code lang="bash" wrap code={`# Control-plane node IP: Build > Lifecycle > Components > VCF Services Runtime > Nodes
+    <Code lang="bash" wrap code={`# Control-plane node IP: Build > Lifecycle > VCF Management > Components > VCF Services Runtime > Nodes
 ssh vmware-system-user@<control-plane-node>
-sudo su -
+sudo -i
 export KUBECONFIG=/etc/kubernetes/admin.conf
 kubectl get nodes -o wide
 kubectl get pods -A | grep -vE 'Running|Completed'
-kubectl get events -n vcf-fleet-lcm --sort-by=.lastTimestamp | tail -30
-P=$(kubectl get pods -n vcf-fleet-lcm -l app=fleetbuild -o jsonpath='{.items[0].metadata.name}')
-kubectl logs $P -n vcf-fleet-lcm --tail=200
+kubectl get events -n vcf-fleet-lcm --sort-by=.metadata.creationTimestamp | tail -30
+kubectl get pods -n vcf-fleet-lcm   # copy a fleet build pod's name
+kubectl logs <pod> -n vcf-fleet-lcm --tail=200
 kubectl -n vcf-fleet-lcm exec vcf-fleet-lcm-db-0 -- patronictl list  # one leader, no lag
 
-# Changes. Stuck fleet or SDDC lifecycle task (KB 435569): report, then restart one service
-lcm_service_support.sh -t
-lcm_service_support.sh -r fleetbuild    # or fleetupgrade, sddcbuild, sddcupgrade`} />
+# Changes, on SDDC Manager. Stuck fleet or SDDC lifecycle task (KB 435569): report, then restart one service
+lcm_service_support.sh -u <admin_user> -s <runtime-fqdn> -t <task_id>
+lcm_service_support.sh -u <admin_user> -s <runtime-fqdn> -r fleetbuild    # or fleetupgrade, sddcbuild, sddcupgrade`} />
     <p class="small muted">Find <code>lcm_service_support.sh</code> and run it as <a href={kb(435569)} target="_blank" rel="noopener">KB 435569</a> describes for your build. Don't delete pods or <code>vcf-svc-*</code> VMs to restart them, unless a KB names them for your symptom, as <a href={kb(443718)} target="_blank" rel="noopener">KB 443718</a> does. More in <a href="/vcf/library/troubleshooting/services-runtime-kubectl/">the services runtime for VI admins</a>.</p>
   </section>
 

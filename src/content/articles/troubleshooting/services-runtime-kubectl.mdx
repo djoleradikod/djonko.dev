@@ -1,98 +1,167 @@
 ---
 title: "The 9.1 services runtime for VI admins: read-only kubectl commands and a namespace map"
-description: "In 9.1, fleet lifecycle, the depot, SDDC lifecycle and possibly the identity broker run as pods on a Kubernetes cluster called the services runtime. You don't need to be a Kubernetes engineer, but you do need a dozen read-only commands, a namespace map, and supported scripts for fixes."
+description: "In 9.1, fleet and SDDC lifecycle, the depot and the identity broker run as pods on the services runtime. Start at the Health and Diagnostics dashboard, read with kubectl from a control-plane node, and change the cluster only where a Broadcom KB names your symptom. Includes a namespace map and a symptom table."
 category: troubleshooting
 order: 3
-versions: ["9.1"]
+versions: ["9.1", "9.1.1"]
 level: Deep dive
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [450375, 455244, 453116, 445301, 445455, 435569, 440862, 444466, 443784]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [417255, 435569, 443718, 452176, 450375, 459346, 448618, 445301, 445455, 440862, 440874, 443784, 455244, 453116, 443584, 444456, 385749, 444466]
 sources:
-  - title: "Let's talk about VCF management services"
-    url: "https://www.why-did-it.fail/blog/2026-05-lets-talk-about-vcf-mgmt-svc/"
-    by: "why-did-it.fail"
-  - title: "Stuck fleet or SDDC lifecycle task in VCF 9.1"
+  - title: "Establish an SSH Connection to a VCF Services Runtime Instance"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/configuring-management-components/enable-ssh-access-to-the-vcf-services-runtime-cluster.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Fleet Management blueprint"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Recommendations for VCF password management"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/vcf-password-management/recommendations-for-vcf-password-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Fleet Manager LCM or SDDC Manager LCM Tasks appear to be stuck or hung"
     url: "https://knowledge.broadcom.com/external/article/435569"
     by: "Broadcom KB"
-  - title: "Kubernetes documentation: kubectl"
-    url: "https://kubernetes.io/docs/reference/kubectl/"
+    kind: broadcom
+  - title: "VCF 9.1 General FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "Let's talk about VCF management services"
+    url: "https://www.why-did-it.fail/blog/2026-05-lets-talk-about-vcf-mgmt-svc/"
+    by: "Dominik Textoris, why-did-it.fail"
+    kind: practitioner
+    date: 2026-06-10
+  - title: "VCF 9.1 deployment fails at Deploy and configure VCF management platform (forum thread)"
+    url: "https://community.broadcom.com/vmware-cloud-foundation/discussion/vcf-91-deployment-fails-at-deploy-and-configure-vcf-management-platform-the-request-to-configure-the-fleet-lifecycle-failed"
+    by: "Allan Solomon Mejia, Broadcom Community"
+    kind: practitioner
+    date: 2026-07-12
+  - title: "kubectl Quick Reference"
+    url: "https://kubernetes.io/docs/reference/kubectl/quick-reference/"
     by: "Kubernetes"
+    kind: reference
+  - title: "kubectl logs"
+    url: "https://kubernetes.io/docs/reference/kubectl/generated/kubectl_logs/"
+    by: "Kubernetes"
+    kind: reference
 ---
 
 <InShort>
-Start with the **management services dashboard** in VCF Operations. When it's not enough, SSH to a **control-plane node** as `vmware-system-user`, become root, and point `kubectl` at `/etc/kubernetes/admin.conf` (<KB id={450375} />). Four namespaces matter most: `vcf-fleet-lcm` (fleet build and upgrade), `vcf-sddc-lcm` (SDDC build and upgrade), `vcf-fleet-depot` (depot and downloads) and `vmsp-platform` (the runtime's own tasks). Read freely. Change things only through the KB scripts: `lcm_service_support.sh` for stuck lifecycle services (<KB id={435569} />), the service-account scripts for stale credentials, and the shutdown script for power events.
+Read with `kubectl` whenever the dashboard runs out, and change the cluster only when a Broadcom KB names your symptom. Start at the **Health and Diagnostics dashboard** in VCF Operations (<KB id={417255} />), then [SSH to a control-plane node](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/configuring-management-components/enable-ssh-access-to-the-vcf-services-runtime-cluster.html). Four namespaces matter most: `vcf-fleet-lcm`, `vcf-sddc-lcm`, `vcf-fleet-depot` and `vmsp-platform`. For a stuck task, the first move is `lcm_service_support.sh`, run from SDDC Manager rather than from the node (<KB id={435569} />).
 </InShort>
 
-<Compare rows={[
-  ["Where lifecycle runs", "SDDC Manager services (and Aria Suite Lifecycle)", "Pods on the services runtime, plus SDDC Manager for domain workflows"],
-  ["How to inspect", "Service logs on one appliance", "kubectl on a control-plane node, plus the VCF Operations dashboard"],
-  ["Supported restart", "Restart SDDC Manager services", "lcm_service_support.sh -r with the service name"],
-  ["Support bundle", "sos --sddc-manager-logs", "sos --vcf-mgmt-svcs-logs, or the standalone script if fleet lifecycle is down (<a href='https://knowledge.broadcom.com/external/article/444466' target='_blank' rel='noopener'>KB 444466</a>)"],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to say changes go only through KB scripts and listed deleting pods as a pitfall, but Broadcom's KBs also document pod and workflow deletion, a rollout restart and a database reinit for named symptoms. It also showed `lcm_service_support.sh` without its required `-u` and `-s`, credited a `sos` flag to KB 444466, said only "the fixed bundle", and gave `app=` label selectors, a `tasks` resource in `vmsp-platform` and a `/var/log/pods` path that couldn't be traced to the cited KBs. All of those are replaced below.
+</Callout>
+
+## Changing the runtime: match the symptom to a KB
+
+The node's kubeconfig gives [administrative access](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/configuring-management-components/enable-ssh-access-to-the-vcf-services-runtime-cluster.html), so the shell won't stop a wrong delete. Broadcom's [Fleet Management blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint.html) wants day-2 work done through API or automation, and Dominik Textoris's [June walkthrough](https://www.why-did-it.fail/blog/2026-05-lets-talk-about-vcf-mgmt-svc/) says a shell on this managed service ideally shouldn't be needed. These are changes Broadcom documents, each for its own symptom.
+
+| Symptom | Documented change | Limit |
+|---|---|---|
+| Fleet or SDDC lifecycle task makes no progress | `./lcm_service_support.sh -u <admin_user> -s <runtime-fqdn> -t <task_id>`. If it reports "not making progress", restart with `-r` and `fleetbuild`, `fleetupgrade`, `sddcbuild` or `sddcupgrade` (<KB id={435569} />) | Runs on SDDC Manager. Fleet tasks use the runtime hosting fleet lifecycle, SDDC tasks the runtime in the same VCF instance |
+| Upgrade stuck at "Perform Component Upgrade" for a long time | Read the workflow's logs, then `kubectl delete workflow -n vmsp-platform <workflow_name>` (<KB id={435569} />) | Confirm the component is healthy first |
+| Log management upgrade, 9.0.2 to 9.1, stuck on "Install VCF services runtime" | Delete the fleet and SDDC build and upgrade pods (<KB id={443718} />) | VCF Operations 9.1.0, with the 9.0.2 log VMs still running |
+| VCF Operations upgrade or patch stays "In Progress" after succeeding on all nodes | Snapshot, edit the cleanup fields in the `.results` file, and after about 10 minutes with no change delete the same four build and upgrade pods (<KB id={452176} />) | The pod step is the fallback |
+| "Step vmsp_upgrade failed" or `InvalidLogin` from SDDC lifecycle after a rotation | The `Reestablish...ServiceAccount.sh` scripts, then `kubectl rollout restart` on the two SDDC lifecycle deployments (<KB id={450375} />). For an expired vCenter account on a 9.1 to 9.1.1 upgrade, run that KB's script and retry from VCF Operations (<KB id={459346} />) | The vCenter script needs vCenter 9.1 or later |
+| Lifecycle tab shows `CERTIFICATE_VERIFY_FAILED` or `TLS_error` on 9.1 | `restart_vsp_services.sh` from SDDC Manager (<KB id={448618} />) | Can return up to 60 days later. Fixed in 9.1.1 |
+| Large "Lag in MB" on `vcf-fleet-lcm-db` after an outage | `patronictl reinit` from a healthy member, naming only the lagging one (<KB id={445455} />) | Check with `patronictl list` first |
+| After power-on, services at 0 replicas and nodes in "Ready,SchedulingDisabled" | Power on the control plane VMs, wait 5 minutes, power on the workers, wait 15 to 20 minutes, then `cluster-manual-recovery.sh` if nodes stay stuck (<KB id={440862} />) | Written for 9.1.0.x. [VCF Operations 9.1.1.0 lists automatic recovery as resolved](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) |
+| Planned shutdown of the cluster | `vcf_services_runtime_shutdown.sh`, dry run first (<KB id={440874} />) | Don't force power-off while it runs |
+| Node disk pressure: "VCF Management Services Node Resource Usage Approaching Capacity" alert | The clean-up in <KB id={443784} /> | 9.1.1. Not during a lifecycle task, because usage usually recovers 30 to 60 minutes after one ends |
+| Installer fails with "Failed to bootstrap VCF services runtime" and a `VSPHERE_TLS_THUMBPRINT` error in the bootstrap pod | Deploy with the 9.1.1 bundle instead of 9.1.0 (<KB id={455244} />) | Read the pod logs on the bootstrap VM to confirm the error |
+
+Pod deletion has only those two documented upgrade cases in this table. For a stuck fleet or SDDC lifecycle task with no row of its own, the script comes first (<KB id={435569} />).
+
+## What to leave alone
+
+The node VMs sit in vCenter like any others, but [don't move them to a different resource pool or folder](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html). That puts the runtime's configuration out of sync, later Day-N deployments and scale-out fail, and the 9.1.1 known issue's remedy after the fact is Broadcom Support <AsOf date="2026-11-07" />.
+
+Don't delete `vcf-svc-*` VMs to redeploy. Allan Solomon Mejia's [forum reply of 12 July 2026](https://community.broadcom.com/vmware-cloud-foundation/discussion/vcf-91-deployment-fails-at-deploy-and-configure-vcf-management-platform-the-request-to-configure-the-fleet-lifecycle-failed) warns they "may already be registered in the deployment database". That's a community post, so hold to it unless a KB names those VMs for your symptom or Support says otherwise.
+
+Inter-component account passwords and permissions [shouldn't be changed directly on VCF components](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/vcf-password-management/recommendations-for-vcf-password-management.html), the blueprint says, so treat <KB id={450375} /> as a recovery path rather than a routine.
+
+<Callout type="analysis" title="When no KB matches">
+This is this site's advice, and no Broadcom page states it. Open a case and attach pod states, events and logs from the commands below before changing anything. Touch a secret, a database member or a pod only when a KB names that object for your symptom, as <KB id={443584} /> and <KB id={444456} /> do for theirs. Those procedures are specific, and they don't say what the same action does elsewhere.
+</Callout>
 
 ## Getting in
 
 ```bash
-# Find a control-plane node IP: VCF Operations > Build > Lifecycle > Components >
-# VCF Services Runtime > Nodes. Then:
+# VCF Operations > Build > Lifecycle > VCF Management > Components tab >
+# VCF services runtime > Nodes: note a control plane node's IP. Then:
 ssh vmware-system-user@<control-plane-node>
-sudo su -
+sudo -i
 export KUBECONFIG=/etc/kubernetes/admin.conf
+kubectl get nodes -o wide   # must return the node list
 ```
+
+The steps are [Broadcom's](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/configuring-management-components/enable-ssh-access-to-the-vcf-services-runtime-cluster.html), and the SSH password is the one set at deployment. `lcm_service_support.sh` prompts for the admin password instead, and that one [may no longer match](https://knowledge.broadcom.com/external/article/435569) `vmware-system-user`'s, so if it's rejected, go to <KB id={444456} /> for `admin@vsp.local`.
 
 ## The namespace map
 
-| Namespace | What lives there | Pod label |
+| Namespace | What lives there | Names the KBs use |
 |---|---|---|
-| `vcf-fleet-lcm` | Fleet build and fleet upgrade services, and their database | `app=fleetbuild`, `app=fleetupgrade` |
-| `vcf-sddc-lcm` | SDDC build and SDDC upgrade services | `app=sddcbuild`, `app=sddcupgrade` |
-| `vcf-fleet-depot` | Depot and download services | `app=fleetdepot` |
-| `vmsp-platform` | The runtime's own install, stage and configure tasks | |
-| `vidb-external` | Identity broker, when it runs on the runtime | |
+| `vcf-fleet-lcm` | Fleet build and upgrade services, and their database | `vcf-fleet-build-service-fleetbuild-<hash>` (<KB id={453116} />), `vcf-fleet-lcm-db-0` to `-2` (<KB id={445455} />) |
+| `vcf-sddc-lcm` | SDDC build and upgrade services | `vcf-sddc-build-service-sddcbuild`, `vcf-sddc-upgrade-service-sddcupgrade` (<KB id={450375} />) |
+| `vcf-fleet-depot` | Depot and distribution services | `depot-service-<hash>`, `distribution-service-<hash>` (<KB id={453116} />) |
+| `vmsp-platform` | The runtime's workflows and platform objects | `power-off-marker` (<KB id={440862} />), `vsp-admin-secret` (<KB id={444456} />) |
+| `vidb-external` | Identity broker | `vidb-postgres-instance-0` (<KB id={443584} />) |
+| `salt-raas` | Salt RaaS | `raas-instance-cert` (<KB id={448618} />) |
+
+Pod names carry a hash, so copy the full name from `kubectl get pods -n <namespace>`, the way <KB id={443718} /> does. A VCF instance can have its own SDDC lifecycle component (<KB id={435569} />), so check you're on the runtime that owns the task before reading anything.
 
 ## Read-only commands worth knowing
 
 ```bash
-# Health snapshot
-kubectl get nodes -o wide
-kubectl get pods -A | grep -vE 'Running|Completed'
-kubectl get pods -A | grep -iE 'fleet|sddc|depot'
+# Pods not Running or Completed. Only the header line back means there are none (KB 440862)
+kubectl get pods -A | grep -v "Completed\|Running"
 
-# Runtime platform tasks
-kubectl get tasks -n vmsp-platform --no-headers | grep -E '^(install|stage|configure)-component'
-kubectl describe task <task> -n vmsp-platform
+# Lifecycle and depot pods (KB 453116)
+kubectl get pods -A | grep -iE "depot|lcm|fleet"
 
-# Recent events in a namespace
-kubectl get events -n vcf-fleet-lcm --sort-by=.lastTimestamp | tail -30
+# Runtime workflows (KB 435569, KB 459346)
+kubectl get workflows -A
+kubectl describe workflow -n vmsp-platform <workflow_name>
 
-# Logs of the fleet build service (swap namespace and label for the others)
-P=$(kubectl get pods -n vcf-fleet-lcm -l app=fleetbuild -o jsonpath='{.items[0].metadata.name}')
-kubectl logs $P -n vcf-fleet-lcm --tail=200
-kubectl describe pod $P -n vcf-fleet-lcm | grep -E 'Restart|Node:'
+# Service logs (KB 459346, KB 453116)
+kubectl logs vcf-sddc-build-service-sddcbuild-<hash> -n vcf-sddc-lcm
+kubectl logs -n vcf-fleet-depot depot-service-<hash> --all-containers
 
-# Fleet lifecycle database health: one leader, no lag
+# Fleet lifecycle database (KB 445301)
 kubectl -n vcf-fleet-lcm exec vcf-fleet-lcm-db-0 -- patronictl list
+
+# Power-on recovery isn't complete if this returns the marker (KB 440862)
+kubectl get configmap power-off-marker -n vmsp-platform
+
+# Standard Kubernetes, for any namespace
+kubectl get events -n vcf-fleet-lcm --sort-by=.metadata.creationTimestamp
+kubectl describe pod <pod> -n vcf-fleet-lcm
+kubectl logs -p <pod> -n vcf-fleet-lcm
 ```
 
-If a pod restarted, its previous logs are under `/var/log/pods/` on the node that hosted it. The database check comes from <KB id={445301} /> and <KB id={445455} />. Depot log reading comes from <KB id={453116} />.
+In `patronictl list`, look for a leader and no significant lag (<KB id={445301} />). That KB doesn't put a number on "significant", so compare members against the example in <KB id={445455} />, where the healthy standby shows zero. The last three commands come from the Kubernetes [quick reference](https://kubernetes.io/docs/reference/kubectl/quick-reference/) and [`kubectl logs`](https://kubernetes.io/docs/reference/kubectl/generated/kubectl_logs/) pages, so they're general Kubernetes rather than Broadcom procedure. `-p` returns the previous container's logs after a restart.
 
-## Supported changes
+## Support bundles
 
-| Situation | Supported action |
+| Situation | Bundle |
 |---|---|
-| Fleet or SDDC lifecycle task makes no progress | `lcm_service_support.sh -t <task>`, then `-r fleetbuild`, `fleetupgrade`, `sddcbuild` or `sddcupgrade` (<KB id={435569} />) |
-| `InvalidLogin` from SDDC lifecycle after a rotation | The `Reestablish...ServiceAccount.sh` scripts, then restart the two SDDC lifecycle deployments (<KB id={450375} />) |
-| Bootstrap fails on a vCenter thumbprint mismatch | Diagnose on the bootstrap VM, then use the fixed bundle (<KB id={455244} />) |
-| Services at zero replicas after a power event | Control plane first, then workers, then wait (<KB id={440862} />) |
-| Node disk pressure (9.1.1 alert) | The clean-up in <KB id={443784} />, after running tasks finish |
+| SDDC Manager and management services, 9.1.x | `/opt/vmware/sddc-support/sos --sddc-manager-logs --vcf-mgmt-svcs-logs --zip` on SDDC Manager (<KB id={385749} />) |
+| Fleet lifecycle UI or API can't generate one | The script attached to <KB id={444466} />, which prompts for the runtime FQDN, the admin password and a lookback in days, then prints a signed link that expires |
 
-<Callout type="field">
-Keep a "runtime read-only" snippet in the team wiki with exactly these commands. When a lifecycle task stalls at 2 a.m., the engineer on call can collect the pod states, events and logs in five minutes and attach them to the case, without changing anything.
-</Callout>
-
-## Pitfalls
-
-- **Deleting pods "to restart them".** Use the service script. Pods hold work in progress.
-- **Deleting `vcf-svc-*` VMs to redeploy.** The runtime has state. Retry instead.
-- **Editing secrets or the database by hand** outside a KB. It may work once and break the next upgrade.
+[Log Assist](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) sends bundles to Broadcom from inside the VCF Operations console, so it's an option only while that console is reachable.

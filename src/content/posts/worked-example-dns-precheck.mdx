@@ -25,7 +25,7 @@ The engineer copies three things into the ticket before opening anything else:
 
 - the precheck task ID from the task details,
 - the failed check and the object it ran against (`esx-07.rainpole.io`),
-- the time of failure: 14:32 local time, which is 13:32 UTC. SDDC Manager logs in UTC, so the UTC time is the one that matters for searching.
+- the time of failure: 14:32 local time, which is 13:32 UTC. SDDC Manager's `lcm` logs show a +0000 offset in Broadcom's excerpts, so the UTC time is the one to search on here. Check each file's offset.
 
 ## 2. Find the layer (1 minute)
 
