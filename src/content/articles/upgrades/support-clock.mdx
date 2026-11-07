@@ -101,13 +101,13 @@ sources:
 ---
 
 <InShort>
-Target 9.1.x. The current release is VCF 9.1.1.0, from 3 Sep 2026 <AsOf date="2026-11-06" />. Broadcom ends general support for 9.0 on 17 Sep 2027, which is 24 days before vSphere 8 and VCF 5.2.x on 11 Oct 2027, so stepping from 5.2 to 9.0 shortens your support. Broadcom gives 9.1.1 until August 2028. The 5.0 and 5.1 dates are unresolved, so plan those estates to the earlier one.
+Target 9.1.x. Broadcom ends general support for 9.0 on 17 Sep 2027, which is 24 days before vSphere 8 and VCF 5.2.x on 11 Oct 2027, so stepping from 5.2 to 9.0 shortens your support. Broadcom gives 9.1.1 until August 2028, and the current release is VCF 9.1.1.0, from 3 Sep 2026 <AsOf date="2026-11-06" />. The 5.0 and 5.1 dates are unresolved, so plan those estates to the earlier one, 1 Jun 2027.
 </InShort>
 
 | You run | General support ends | Days from 6 Nov 2026 | Move |
 |---|---|---|---|
-| VCF 5.0 or 5.1 | Unresolved: 1 Jun 2027 or 11 Oct 2027 | 207 or 339 | Two hops. Broadcom requires the management domain and all workload domains on 5.2.x before 9.1.x. Plan to June. |
-| VCF 5.2.x | 11 Oct 2027 | 339 | Go straight to 9.1.1 and skip 9.0. The guide allows skip-level from 5.2.x, and 5.2.4 can only land on 9.1.1 because 9.1.0 is older than it. |
+| VCF 5.0 or 5.1 | Unresolved: 1 Jun 2027 or 11 Oct 2027 | 207 or 339 | Two hops. Broadcom requires the management domain and all workload domains on 5.2.x before 9.1.x. Plan to June, the earlier date. |
+| VCF 5.2.x | 11 Oct 2027 | 339 | Go straight to 9.1.1 and skip 9.0. Skip-level is allowed from 5.2.x, and 5.2.4 can only land on 9.1.1 because 9.1.0 is older than it. |
 | VCF 9.0.x | 17 Sep 2027 | 315 | Move to 9.1.1. This deadline falls before the vSphere 8 one. |
 | VCF 9.1.x | August 2028 | About 645, counting to 12 Aug | Stay on 9.1.x and reread this page once the next release is named. |
 
@@ -143,9 +143,9 @@ Paths are from [Upgrading to VMware Cloud Foundation 9.1.x](https://techdocs.bro
   <text class="s" x="653.8" y="216" text-anchor="middle">1 Jul 2028</text>
 </Diagram>
 
-## The arithmetic
+## Broadcom's dates against its 27-month support model
 
-Broadcom's [13 Oct 2026 post](https://blogs.vmware.com/cloud-foundation/2026/10/13/customer-favorite-capabilities-accelerating-your-path-to-vcf-9-1-1/) gives 17 Sep 2027 for 9.0, 11 Oct 2027 for vSphere 8 and "the VCF 5.x stack", and "August 2028" for 9.1.1. That post argues for an upgrade Broadcom wants you to make, so check its dates against the [July 2025 support model](https://blogs.vmware.com/cloud-foundation/2025/07/16/vmware-cloud-foundation-9-ushers-in-new-support-model-and-release-cadence/), which expects 27 months for each initial minor release:
+General support ends 17 Sep 2027 for 9.0, 11 Oct 2027 for vSphere 8 and "the VCF 5.x stack", and "August 2028" for 9.1.1, according to Broadcom's [13 Oct 2026 post](https://blogs.vmware.com/cloud-foundation/2026/10/13/customer-favorite-capabilities-accelerating-your-path-to-vcf-9-1-1/). That post argues for an upgrade Broadcom wants you to make, so test its dates against the [July 2025 support model](https://blogs.vmware.com/cloud-foundation/2025/07/16/vmware-cloud-foundation-9-ushers-in-new-support-model-and-release-cadence/), which expects 27 months for each initial minor release. Counted from the 9.0 or 9.1.0 GA, the sum fits Broadcom's date. Counted from the 9.1.1 GA, it doesn't:
 
 | Sum | Result | Against Broadcom's statement |
 |---|---|---|
@@ -155,15 +155,15 @@ Broadcom's [13 Oct 2026 post](https://blogs.vmware.com/cloud-foundation/2026/10/
 | 17 Sep to 11 Oct 2027 | 24 days | "A few weeks earlier" |
 | 11 Oct 2027 to 12 Aug 2028 | 306 days | Derived |
 
-<Callout type="analysis" title="Inference from those sums">
-The third row suggests that a maintenance release doesn't restart the clock. On that reading, 9.1.1 inherits the date of 9.1.0, and waiting for a later 9.1.x gains no support time. Broadcom doesn't state this rule. The day 12 Aug 2028 is also this site's derivation, though the tracker shows it and KB 456708 gives Cloud Director 10.6.2 the same day.
+<Callout type="analysis" title="A maintenance release appears not to restart the clock">
+On the reading the third row suggests, 9.1.1 inherits the date of 9.1.0, and waiting for a later 9.1.x gains no support time. That's an inference from the sums, and Broadcom doesn't state the rule. The day 12 Aug 2028 is derived too, though the tracker shows it and KB 456708 gives Cloud Director 10.6.2 the same day.
 </Callout>
 
 ## What would change the answer
 
-- **The portal disagrees.** None of these dates has been checked against Broadcom's [Product Lifecycle portal](https://support.broadcom.com/web/ecx/productlifecycle), which refused automated requests on 6 Nov 2026. Confirm each date there before you commit a roadmap. To check a whole inventory, [William Lam's January 2026 PowerShell function](https://williamlam.com/2026/01/programmatically-interact-with-the-broadcom-product-lifecycle-portal.html) queries the portal, and it can filter to items ending within 6 or 12 months.
-- **The next release gets its own clock.** Broadcom [plans the next release](https://blogs.vmware.com/cloud-foundation/2026/11/04/broadcom-vcf-portfolio-updates/) for "sometime in Q1FY27" and doesn't name it. [StorageReview](https://www.storagereview.com/news/broadcom-vcf-portfolio-update-vsphere-express-live-recovery) reads that quarter as running to the start of February. If it is a new minor release and your migration hasn't started, compare it with 9.1.1 then. This page is due for review on 15 Feb 2027.
-- **You buy Extended Support.** The July 2025 post offers up to one year but doesn't say how it applies to each minor release, so ask Broadcom in writing. The EEA offer in the table below is separate and names only vSphere Standard 8 and Enterprise Plus 8.
+- **The portal disagrees.** Confirm each date in Broadcom's [Product Lifecycle portal](https://support.broadcom.com/web/ecx/productlifecycle) before you commit a roadmap. None has been checked against the portal, which refused automated requests on 6 Nov 2026. To check a whole inventory, [William Lam's January 2026 PowerShell function](https://williamlam.com/2026/01/programmatically-interact-with-the-broadcom-product-lifecycle-portal.html) queries the portal, and it can filter to items ending within 6 or 12 months.
+- **The next release gets its own clock.** If the release Broadcom [plans](https://blogs.vmware.com/cloud-foundation/2026/11/04/broadcom-vcf-portfolio-updates/) for "sometime in Q1FY27" is a new minor release and your migration hasn't started, compare it with 9.1.1 then. Broadcom doesn't name it yet, and that quarter runs to the start of February on [StorageReview's](https://www.storagereview.com/news/broadcom-vcf-portfolio-update-vsphere-express-live-recovery) reading. This page is due for review on 15 Feb 2027.
+- **You buy Extended Support.** The [July 2025 post](https://blogs.vmware.com/cloud-foundation/2025/07/16/vmware-cloud-foundation-9-ushers-in-new-support-model-and-release-cadence/) offers it for up to one year but doesn't say how that applies to each minor release, so ask Broadcom in writing. The EEA offer in the table below is separate and names only vSphere Standard 8 and Enterprise Plus 8.
 
 ## Releases
 
@@ -203,11 +203,11 @@ The third row suggests that a maintenance release doesn't restart the clock. On 
 | VCF 9.1 and 9.1.1 | August 2028 (day: 12 Aug) | Broadcom for the month; derived for the day; tracker shows the day | [13 Oct 2026 post](https://blogs.vmware.com/cloud-foundation/2026/10/13/customer-favorite-capabilities-accelerating-your-path-to-vcf-9-1-1/), [endoflife.date](https://endoflife.date/vmware-cloud-foundation) |
 | VCF 9.x line | Estimated 17 Jun 2031, plus up to a year if purchased | Broadcom estimate | [July 2025 post](https://blogs.vmware.com/cloud-foundation/2025/07/16/vmware-cloud-foundation-9-ushers-in-new-support-model-and-release-cadence/) |
 
-KB 456708 says that after these dates there is no technical support and there are no new patches, and that VVF for VDI environments follow a separate lifecycle.
+[KB 456708](https://knowledge.broadcom.com/external/article/456708/upcoming-end-of-service-for-vsphere-8-vs.html) says that once one of its dates passes there is no technical support and there are no new patches, and that VVF for VDI environments follow a separate lifecycle.
 
 ## VCF 5.0 and 5.1: the date is unresolved
 
-None of the Broadcom pages cited here gives a date that names 5.0 or 5.1 (checked 6 Nov 2026).
+Plan to 1 Jun 2027 until the portal or Broadcom support tells you otherwise in writing. The gap to 11 Oct 2027 is 132 days, which an October plan would overrun if June proves right, and none of the Broadcom pages cited here gives a date that names 5.0 or 5.1 (checked 6 Nov 2026).
 
 | Source | What it says | Basis |
 |---|---|---|
@@ -217,11 +217,11 @@ None of the Broadcom pages cited here gives a date that names 5.0 or 5.1 (checke
 | [endoflife.date](https://endoflife.date/vmware-cloud-foundation) | 1 Jun 2027 for both. For 5.1, four years from GA would be 7 Nov 2027, so the date doesn't follow from that release's own GA | Tracker |
 | [The Register](https://www.theregister.com/virtualization/2026/11/05/vmware-quietly-offers-european-users-extended-sales-and-support-for-low-end-vsphere/5307732), 5 Nov 2026 | "Cloud Foundation 5.x": 11 Oct 2027 | Press |
 
-The gap is 132 days, and this site's advice is to plan to 1 Jun 2027 until the portal or Broadcom support tells you otherwise in writing.
+October rests on loose Broadcom wording and a press report. June rests on a term Broadcom stated for 5.0 and on a tracker whose 5.1 date doesn't follow from that release's GA.
 
 ## Other conflicts between sources
 
-- **9.1.0 release date.** The [upgrade guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) says 11 May 2026. The 9.1.0 notes and KB 314608 say 12 May. This page uses 12 May, and the one-day difference doesn't change any deadline month.
-- **5.2.1.0 release date.** KB 314608 repeats 23 Jul 2024 from 5.2.0.0. The 5.2.1 notes say 9 Oct 2024 for the same build, 24307856. This page uses the notes. The forward-only upgrade rule compares release dates, so check a target against the VMware Interoperability Matrix, as the guide directs.
-- **A KB that still points at 9.0.** KB 422643 recommends "the latest release of VCF Operations 9.0". Read beside the 13 Oct post, that isn't a reason to choose 9.0 as your target.
-- **Tracker limits.** endoflife.date lists 5.2.3 as the latest 5.2, while Broadcom has 5.2.4. The [policy page it links](https://ftpdocs.broadcom.com/WebInterface/phpdocs/0/MSPSaccount/COMPAT/AllProdDates.HTML) is Broadcom's mainframe lifecycle page and has no VCF rows, so it can't back the tracker's dates. The tracker's 9.x dates match the sums above and add no separate evidence. The tracker also shows Technical Guidance for 5.0 and 5.1 to 1 Jun 2028. Broadcom's public pages don't confirm that phase (checked 6 Nov 2026), so don't plan on it.
+- **9.1.0 release date.** This page uses 12 May, from the 9.1.0 notes and KB 314608, while the [upgrade guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) says 11 May 2026. The one-day difference doesn't change any deadline month.
+- **5.2.1.0 release date.** This page uses 9 Oct 2024, which the 5.2.1 notes give for build 24307856. KB 314608 repeats 23 Jul 2024 from 5.2.0.0 for that build. The conflict can reach an upgrade plan: the forward-only upgrade rule compares release dates, so check a target against the VMware Interoperability Matrix, as the guide directs.
+- **A KB that still points at 9.0.** KB 422643 recommends "the latest release of VCF Operations 9.0". With 9.0 ending on 17 Sep 2027 in the 13 Oct post, that isn't a reason to choose 9.0 as your target.
+- **Tracker limits.** Don't plan on the Technical Guidance phase endoflife.date shows for 5.0 and 5.1, to 1 Jun 2028, because Broadcom's public pages don't confirm it (checked 6 Nov 2026). The [policy page it links](https://ftpdocs.broadcom.com/WebInterface/phpdocs/0/MSPSaccount/COMPAT/AllProdDates.HTML) is Broadcom's mainframe lifecycle page and has no VCF rows, so it can't back the tracker's dates, and the tracker's 9.x dates match the sums above and add no separate evidence. The tracker also lists 5.2.3 as the latest 5.2, while Broadcom has 5.2.4.
