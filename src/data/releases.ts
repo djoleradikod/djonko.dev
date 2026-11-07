@@ -29,7 +29,7 @@ export type SupportEnd = {
 };
 
 export const SUPPORT_ENDS: SupportEnd[] = [
-  { item: 'VCF 5.0 and 5.1', family: 'v5', date: '1 Jun 2027 or 11 Oct 2027', basis: 'Unresolved', end: '2027-06-01', unresolvedTo: '2027-10-11', anchor: 'vcf-50-and-51-published-as-unresolved' },
+  { item: 'VCF 5.0 and 5.1', family: 'v5', date: '1 Jun 2027 or 11 Oct 2027', basis: 'Unresolved', end: '2027-06-01', unresolvedTo: '2027-10-11', anchor: 'vcf-50-and-51-the-date-is-unresolved' },
   { item: 'VCF 9.0', family: 'v9', date: '17 Sep 2027', basis: 'Broadcom; derived sum agrees', end: '2027-09-17' },
   { item: 'VCF 5.2.x', family: 'v5', date: '11 Oct 2027', basis: 'Broadcom; tracker and press agree', end: '2027-10-11' },
   { item: 'vSphere 8', family: 'other', date: '11 Oct 2027', basis: 'Broadcom', end: '2027-10-11' },
@@ -40,5 +40,6 @@ export const SUPPORT_ENDS: SupportEnd[] = [
 /** The strings the note must still contain for this file to be current. */
 export const MUST_APPEAR_IN_NOTE = [
   CURRENT_RELEASE.name, CURRENT_RELEASE.date, NEXT_RELEASE.plan, '12 Aug 2028',
+  '## VCF 5.0 and 5.1: the date is unresolved', // the heading behind the anchor on the 5.0 and 5.1 row
   ...SUPPORT_ENDS.flatMap((r) => [r.item, r.date, r.basis]),
 ];

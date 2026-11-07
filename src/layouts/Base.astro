@@ -73,7 +73,7 @@ const links = [
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={title ?? SITE.name} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="theme-color" content={shell ? '#ffffff' : '#f6f7f9'} media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content={shell && page !== 'home' ? '#ffffff' : '#f6f7f9'} media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0b0e13" media="(prefers-color-scheme: dark)" />
     {robotsOff && <meta name="robots" content="noindex" />}
     {ld.map((o) => <script type="application/ld+json" set:html={JSON.stringify(o)} />)}
@@ -94,6 +94,12 @@ const links = [
           <button class="icon-btn theme-ic" id="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
             <Icon name="moon" size={16} class="moon" /><Icon name="sun" size={16} class="sun" />
           </button>
+          <details class="nav-menu">
+            <summary>Menu</summary>
+            <div class="nav-menu-panel">
+              {nav.map((n) => <a href={n.href} aria-current={path.startsWith(n.href) ? 'page' : undefined}>{n.label}</a>)}
+            </div>
+          </details>
         </nav>
       </div>
     </header>

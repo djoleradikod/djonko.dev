@@ -1,14 +1,16 @@
 ---
-// The VCF 9 model at a glance: fleet, instances, domains. The drawing on the blue sheet of the home page.
-// Same content as the diagram in the note "The VCF 9 mental model". Real text in CSS boxes rather than an
-// SVG, so it spans the width on a desktop, reflows on a phone and stays at reading size on both.
+// The VCF 9 model at a glance: fleet, instances, domains. Same content as the diagram in the note
+// "The VCF 9 mental model". Real text in CSS blocks rather than an SVG, so it reflows on a phone and stays
+// at reading size. In each instance the workload domains stack beside the management domain, so a domain
+// with only a name is a short block rather than an empty box.
 ---
 <figure class="fleet">
-  <div class="fleet-zone">
+  <figcaption>VCF 9 puts a fleet and instances above the domains you knew from 5.x. <a href="/vcf/library/architecture/vcf9-mental-model/">Read the note</a></figcaption>
+  <div class="fleet-draw">
     <span class="fleet-l">Fleet</span>
     <div class="fleet-top"><b>VCF Operations · VCF Automation</b><span>Console, licensing, identity and fleet lifecycle</span></div>
     <div class="fleet-insts">
-      <div class="fleet-inst i1">
+      <div class="fleet-inst">
         <span class="fleet-l">Instance 1</span>
         <div class="fleet-doms">
           <div class="fleet-dom m"><b>Management domain</b>SDDC Manager<br />vCenter · NSX<br />Services runtime</div>
@@ -25,5 +27,4 @@
       </div>
     </div>
   </div>
-  <figcaption>VCF 9 puts a fleet and instances above the domains you knew from 5.x. <a href="/vcf/library/architecture/vcf9-mental-model/">Read the note</a></figcaption>
 </figure>

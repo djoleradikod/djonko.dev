@@ -3,7 +3,7 @@ import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import SearchBox from '../../components/SearchBox.astro';
 import { CATEGORIES, categoryById } from '../../data/categories';
-import { DECISION_NOTES, summaryLine } from '../../data/decisions';
+import { changeSummary, DECISION_NOTES, latestChanges, summaryLine } from '../../data/decisions';
 import { AXIS, CURRENT_RELEASE, MUST_APPEAR_IN_NOTE, NEXT_RELEASE, SUPPORT_ENDS, SUPPORT_NOTE } from '../../data/releases';
 import { SITE } from '../../data/site';
 import { KB_INDEX } from '../../data/kb';
@@ -37,14 +37,7 @@ const at = (iso: string) => ((Date.parse(iso) - t0) / (t1 - t0)) * 100;
 const pct = (n: number) => `${n.toFixed(2)}%`;
 const ticks = AXIS.ticks.map((t) => ({ ...t, left: pct(at(t.iso)) }));
 
-// Recently changed: the notes with an `updated` date, newest first. Notes first published that day lead a tie.
-const changed = items
-  .filter((a) => a.data.updated)
-  .sort((a, b) => +b.data.updated! - +a.data.updated! || +b.data.pubDate - +a.data.pubDate || a.data.title.localeCompare(b.data.title));
-const lastDay = changed[0]?.data.updated;
-const sameDay = changed.filter((a) => +a.data.updated! === +lastDay!);
-const isNew = (a: (typeof changed)[number]) => +a.data.pubDate >= +a.data.updated!;
-const newCount = sameDay.filter(isNew).length;
+const { changed, lastDay, sameDayCount, newCount, isNew } = latestChanges(items);
 const recent = changed.slice(0, 8);
 
 const decisions = DECISION_NOTES.map(note);
@@ -61,7 +54,7 @@ const reference = [
     <div class="wrap hub-top">
       <div>
         <h1>Field notes for running VMware Cloud Foundation 5.x and 9.x</h1>
-        <p class="note-lede">Notes on how VCF is built, upgraded, licensed, operated and fixed. Where 5.x and 9.x differ they say how, and each one links the KBs and sources behind it.</p>
+        <p class="note-lede">Notes on how VCF is built, upgraded, licensed, operated and fixed. Where 5.x and 9.x differ they say how, and each one links the sources behind it.</p>
         <SearchBox />
       </div>
       <nav class="hub-start" aria-labelledby="start-h">
@@ -145,7 +138,7 @@ const reference = [
     <section class="wrap hub-sec" aria-labelledby="new-h">
       <div class="hub-rail">
         <h2 id="new-h">Recently changed</h2>
-        {lastDay && <p>{sameDay.length} {sameDay.length === 1 ? 'note' : 'notes'} changed on {fmt(lastDay)}{newCount > 0 && `, ${newCount} of them new`}.</p>}
+        {lastDay && <p>{changeSummary(sameDayCount, newCount, fmt(lastDay))}</p>}
       </div>
       <ol class="hub-rows rows-new">
         {recent.map((a, i) => {

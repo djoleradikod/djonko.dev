@@ -1,35 +1,32 @@
 ---
-import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import FleetModel from '../components/home/FleetModel.astro';
+import SupportClock from '../components/home/SupportClock.astro';
 import { SITE } from '../data/site';
 import { CATEGORIES } from '../data/categories';
+import { SUPPORT_NOTE } from '../data/releases';
 import { KB_INDEX } from '../data/kb';
 import { TOOLS } from '../data/tools';
 import { allArticles, urlOf } from '../lib/articles';
 import { allPosts, allProjects, postUrl, fmtDate } from '../lib/posts';
 import { readingPaths } from '../lib/paths';
 import { personLd } from '../lib/schema';
-import triageSheet from '../assets/home/triage-sheet.png';
 
 const notes = await allArticles();
 const posts = await allPosts();
 const projects = await allProjects();
 const paths = await readingPaths();
+// Posts and notes together, newest change first. Anything first published that day leads a tie, as the newest work.
 const latest = [
-  ...posts.map((p) => ({ title: p.data.title, date: p.data.updated ?? p.data.pubDate, href: postUrl(p), kind: 'Blog' })),
-  ...notes.map((a) => ({ title: a.data.title, date: a.data.updated ?? a.data.pubDate, href: urlOf(a), kind: 'VCF note' })),
-].sort((a, b) => +b.date - +a.date).slice(0, 6);
+  ...posts.map((p) => ({ title: p.data.title, date: p.data.updated ?? p.data.pubDate, pub: p.data.pubDate, href: postUrl(p), kind: 'Blog' })),
+  ...notes.map((a) => ({ title: a.data.title, date: a.data.updated ?? a.data.pubDate, pub: a.data.pubDate, href: urlOf(a), kind: 'VCF note' })),
+].sort((a, b) => +b.date - +a.date || +b.pub - +a.pub || a.title.localeCompare(b.title)).slice(0, 6);
 
 const perArea = CATEGORIES.map((c) => ({ ...c, n: notes.filter((a) => a.data.category === c.id).length }));
-// Four rows from the comparison table in the note "The VCF 9 mental model", shown as a sample of a note.
-const peek: [string, string, string][] = [
-  ['Top-level unit', 'One SDDC Manager and its domains.', 'The fleet: one VCF Operations and one VCF Automation over one or more instances.'],
-  ['Where you start', 'The SDDC Manager UI.', 'VCF Operations, with SDDC Manager underneath it.'],
-  ['Identity', 'vCenter SSO per domain, and vIDM for Aria.', 'VCF Identity Broker, scoped to the fleet, several instances or one.'],
-  ['Upgrade order', 'SDDC Manager first, then each domain.', 'VCF Operations and the fleet first, then each instance.'],
-];
+
+const clock = notes.find((a) => a.id === SUPPORT_NOTE);
+if (!clock) throw new Error(`The home page names "${SUPPORT_NOTE}", which is not a published note.`);
 const makers = [
   { label: 'Broadcom', n: TOOLS.filter((t) => t.maker === 'broadcom').length },
   { label: 'Flings', n: TOOLS.filter((t) => t.maker === 'fling').length },
@@ -50,33 +47,45 @@ const ld = [
 ---
 <Base jsonLd={ld} shell page="home">
   <section class="wrap home-lead" id="content-start" tabindex="-1">
-    <p class="home-who">{SITE.author}, {SITE.role}</p>
-    <h1>I help teams design, upgrade and run VMware Cloud Foundation.</h1>
-    <div class="home-lead-row">
+    <div>
+      <p class="home-who">{SITE.author}, {SITE.role}</p>
+      <h1>I help teams design, upgrade and run VMware Cloud Foundation.</h1>
+      {SITE.photo && <img class="home-photo" src={SITE.photo} alt={`Photo of ${SITE.author}`} width="72" height="72" />}
+    </div>
+    <div>
       <p class="home-lede">Architecture reviews, 5.x to 9.x upgrades, day-2 operations and hard escalations, written down so your team can run VCF itself.</p>
       <div class="actions">
         <a class="btn primary" href="/vcf/">Read the VCF notes <Icon name="arrow-right" size={16} /></a>
         <a class="btn" href="/about/">How I work</a>
       </div>
     </div>
-    {SITE.photo && <img class="home-photo" src={SITE.photo} alt={`Photo of ${SITE.author}`} width="72" height="72" />}
   </section>
 
-  <div class="sheet">
-    <div class="wrap">
-      <FleetModel />
-      <section aria-label="The site in numbers">
-        <dl class="sheet-figs">
-          <div><dt>Field notes</dt><dd class="fig-n">{notes.length}</dd><dd class="fig-d">on building, upgrading, licensing and running VCF</dd></div>
-          <div><dt>Reading paths</dt><dd class="fig-n">{paths.length}</dd><dd class="fig-d">notes in order for one job, from upgrade to on-call</dd></div>
-          <div><dt>Broadcom KBs indexed</dt><dd class="fig-n">{KB_INDEX.length}</dd><dd class="fig-d">with a one-line topic and the notes that cite them</dd></div>
-          <div><dt>Tools catalogued</dt><dd class="fig-n">{TOOLS.length}</dd><dd class="fig-d">for planning, upgrading, diagnosing and automating VCF 9</dd></div>
-        </dl>
-      </section>
+  <SupportClock note={clock} />
+
+  <section class="wrap home-sec lx" aria-labelledby="lx-h">
+    <div class="lx-head">
+      <h2 class="home-h2" id="lx-h"><a href="/vcf/">{SITE.vcfName}</a></h2>
+      <p>{notes.length} notes in {CATEGORIES.length} areas. Each one links the sources behind it, and where 5.x and 9.x differ it says how.</p>
     </div>
+    <nav aria-label="Library">
+      <ul class="lx-areas">
+        {perArea.map((c) => <li><a href={`/vcf/library/${c.id}/`}>{c.short}<span>{c.n}<span class="sr-only"> notes</span></span></a></li>)}
+      </ul>
+      <ul class="lx-more">
+        <li><a href="/vcf/library/">Library<span>{notes.length}</span></a></li>
+        <li><a href="/vcf/paths/">Reading paths<span>{paths.length}</span></a></li>
+        <li><a href="/vcf/tools/">Tools for VCF 9.x<span>{TOOLS.length}</span></a></li>
+        <li><a href="/vcf/resources/kb-index/">KB index<span>{KB_INDEX.length}</span></a></li>
+      </ul>
+    </nav>
+  </section>
+
+  <div class="home-plate">
+    <div class="wrap"><FleetModel /></div>
   </div>
 
-  <section class="wrap home-sec home-rail">
+  <section class="wrap home-sec">
     <h2 class="home-h2">What I do</h2>
     <div class="do-list">
       {focus.map((f) => (
@@ -90,21 +99,7 @@ const ld = [
 
   <section class="wrap home-sec">
     <h2 class="home-h2">Selected work</h2>
-    <a class="ex ex-pair" href="/vcf/">
-      <div>
-        <h3>{SITE.vcfName}</h3>
-        <p>{notes.length} notes in {CATEGORIES.length} areas. Each one links the KBs behind it and credits its sources, and says where 5.x and 9.x differ.</p>
-        <ul class="ex-areas" aria-label="Areas">{perArea.map((c) => <li>{c.short}<span class="num">{c.n}</span></li>)}</ul>
-      </div>
-      <div class="compare" aria-hidden="true">
-        <div class="cap"><span>What changed from 5.x</span><span class="muted">from the fleet model note</span></div>
-        <table>
-          <thead><tr><td></td><th class="v5">VCF 5.x</th><th class="v9">VCF 9.x</th></tr></thead>
-          <tbody>{peek.map(([t, a, b]) => <tr><th>{t}</th><td class="v5" data-label="VCF 5.x">{a}</td><td class="v9" data-label="VCF 9.x">{b}</td></tr>)}</tbody>
-        </table>
-      </div>
-    </a>
-    <a class="ex ex-pair" href="/talks/">
+    <a class="ex-plate" href="/talks/">
       <div>
         <h3>A five-part VCF 9 workshop series</h3>
         <span class="ex-go">Delivered to engineers and to customers <Icon name="arrow-right" size={15} /></span>
@@ -112,12 +107,9 @@ const ld = [
       <ol class="ex-modules" role="list">{modules.map((m) => <li>{m}</li>)}</ol>
     </a>
     <div class="ex-three">
-      <a class="ex-col ex-sheet" href="/vcf/resources/triage-cheat-sheet/">
-        <div>
-          <h3>VCF 9.x triage cheat sheet</h3>
-          <p>Eight checks in order, each with a command, what good looks like and what to do when it is not.</p>
-        </div>
-        <Image src={triageSheet} alt="First page of the triage cheat sheet: eight numbered checks, each with a command and the expected result." widths={[280, 560]} sizes="(max-width: 820px) 60vw, 280px" />
+      <a class="ex-col" href="/vcf/resources/triage-cheat-sheet/">
+        <h3>VCF 9.x triage cheat sheet</h3>
+        <p>Eight checks in order, each with a command, what good looks like and what to do when it is not.</p>
       </a>
       <a class="ex-col" href="/vcf/tools/">
         <h3>Tools for VCF 9.x</h3>
@@ -136,14 +128,14 @@ const ld = [
     </div>
   </section>
 
-  <section class="wrap home-sec home-rail">
-    <div>
+  <section class="wrap home-sec">
+    <div class="home-new-head">
       <h2 class="home-h2">Latest writing</h2>
       <a class="hub-all" href="/blog/">All posts <Icon name="arrow-right" size={14} /></a>
     </div>
     <ol class="hub-rows rows-new">
       {latest.map((i) => (
-        <li><a href={i.href}><time class="num" datetime={i.date.toISOString()}>{fmtDate(i.date)}</time><span class="t">{i.title}</span><span class="k">{i.kind}</span></a></li>
+        <li><a href={i.href}><time class="num" datetime={i.date.toISOString().slice(0, 10)}>{fmtDate(i.date)}</time><span class="t">{i.title}</span><span class="k">{i.kind}</span></a></li>
       ))}
     </ol>
   </section>
