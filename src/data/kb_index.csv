@@ -26,7 +26,6 @@ kb,topic,decks,url
 368313,Uppercase vCenter instanceUuid blocks License Server auth,Mind the licensing clock,https://knowledge.broadcom.com/external/article/368313
 376813,NSX Manager log locations,Follow the signposts,https://knowledge.broadcom.com/external/article/376813
 381709,vCenter service to log file map,Follow the signposts,https://knowledge.broadcom.com/external/article/381709
-382440,"SRM/VR ""URI is not absolute"" after vCenter update",How it all connects,https://knowledge.broadcom.com/external/article/382440
 385107,vCert tool,Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/385107
 385749,SoS utility options,Follow the signposts,https://knowledge.broadcom.com/external/article/385749
 386023,NSX cluster not STABLE,Follow the signposts,https://knowledge.broadcom.com/external/article/386023
@@ -88,7 +87,6 @@ kb,topic,decks,url
 425271,Certificate expiry fetch fails with Avi,How it all connects; Follow the signposts,https://knowledge.broadcom.com/external/article/425271
 426042,Cloud proxy offline every 4-8 hours: DNS,Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/426042
 426389,NSX extension already registered: MOB cleanup,How it all connects,https://knowledge.broadcom.com/external/article/426389
-426469,"Live Recovery plugin ""no healthy upstream"": certificate on a short name",How it all connects,https://knowledge.broadcom.com/external/article/426469/vlsr-plugin-is-not-accessible-from-vcent.html
 426872,9.0: certificate rotation not automated for some components,Meet the fleet,https://knowledge.broadcom.com/external/article/426872
 426913,Unsupported local plugins; MOB cleanup,How it all connects,https://knowledge.broadcom.com/external/article/426913
 427228,VCF Operations plugin does not upgrade with Ops,How it all connects,https://knowledge.broadcom.com/external/article/427228
@@ -173,7 +171,6 @@ kb,topic,decks,url
 440910,NSX VIP certificate SAN: resource validations time out,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/440910
 441097,SDDC Manager upgrade failed while VCF Ops says success,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/441097
 441205,Lifecycle page spins forever: browser cache,How it all connects,https://knowledge.broadcom.com/external/article/441205
-441246,vmsp_upgrade_vcfa reports failure after a timeout,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/441246
 441251,License Server OVA via Host Client: not configured,Mind the licensing clock,https://knowledge.broadcom.com/external/article/441251
 441315,NSX API and VIP certificates expired,Meet the fleet; Follow the signposts,https://knowledge.broadcom.com/external/article/441315
 441333,Remove a failed Day-N component (cleanup_component.py),"Upgrading to VCF 9.1, the right way round; Follow the signposts",https://knowledge.broadcom.com/external/article/441333
@@ -230,7 +227,6 @@ kb,topic,decks,url
 444283,ESX remediation blocked by vSAN health alarms,"Upgrading to VCF 9.1, the right way round; Follow the signposts",https://knowledge.broadcom.com/external/article/444283
 444324,ESX: corrupt vLCM depot metadata,"Upgrading to VCF 9.1, the right way round",https://knowledge.broadcom.com/external/article/444324
 444349,vCenters not licensed by these licenses: Site ID,Mind the licensing clock,https://knowledge.broadcom.com/external/article/444349
-444431,VCF Operations install fails on an incorrect NTP server (9.1),Meet the fleet,https://knowledge.broadcom.com/external/article/444431/install-vcf-operations-and-vcf-cloud-pro.html
 444466,Collect logs when Fleet lifecycle itself is down,"Upgrading to VCF 9.1, the right way round; How it all connects; Follow the signposts",https://knowledge.broadcom.com/external/article/444466
 444718,9.1 inventory sync location,How it all connects,https://knowledge.broadcom.com/external/article/444718
 444734,Identity broker on a non-management network,Meet the fleet,https://knowledge.broadcom.com/external/article/444734
