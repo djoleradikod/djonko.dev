@@ -1,7 +1,7 @@
 ---
 // Field Notes: the count and the kept line as the section's heading, then the note set open at full width. Its latency bounds,
-// drawn large and to scale, are the section's peak; the decision table follows at reading size and its sources run on as a
-// footnote. The bounds and table cells are read from the note at build time, and the build fails if they have gone. The ruler's
+// drawn large and to scale, are the section's peak; the decision table follows at reading size and its sources are listed under
+// it, one to a line. The bounds and table cells are read from the note at build time, and the build fails if they have gone. The ruler's
 // labels and caption are written in LatencyRuler, which checks them against the note's wording.
 import type { allArticles } from '../../lib/articles';
 import { urlOf } from '../../lib/articles';
@@ -31,13 +31,15 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 
   <NoteSheet note={note} header={['#', 'Question']} rowHead={1} rows={5} class="sheet-q">
     <LatencyRuler slot="figure" note={note} />
     <div slot="foot" class="fn-src">
-      <h4 class="fn-h" id="fn-src">Sources</h4>{' '}
-      <ol class="fn-strip" role="list" aria-labelledby="fn-src">
-        {shown.map((s) => (
-          <li><a href={s.url} rel="noopener"><span class="t">{s.title}</span>, <span class="m">{[s.by, s.date && fmt(s.date)].filter(Boolean).join(', ')}</span></a></li>
-        ))}
-      </ol>{' '}
-      <a class="fn-more" href={`${urlOf(note)}#note-sources`}>All {note.data.sources.length} in the note</a>
+      <h4 class="fn-h" id="fn-src">Sources</h4>
+      <div>
+        <ol class="fn-strip" role="list" aria-labelledby="fn-src">
+          {shown.map((s) => (
+            <li><a href={s.url} rel="noopener"><span class="t">{s.title}</span>, <span class="m">{[s.by, s.date && fmt(s.date)].filter(Boolean).join(', ')}</span></a></li>
+          ))}
+        </ol>
+        <a class="fn-more" href={`${urlOf(note)}#note-sources`}>All {note.data.sources.length} in the note</a>
+      </div>
     </div>
   </NoteSheet>
 </section>

@@ -3,9 +3,9 @@
 
 /* ------------------------------------------------------------------------------------------------
    Home. Ink on paper. The fold is the support clock, with its label and plot columns. Below it the page is paced like a
-   sequence of screens: full width on the page's own left and right edges, one dominant thing at a time (the latency ruler
-   first, the fleet drawing second), and air, not rules, at every section seam. The paper changes tone once, under the fleet
-   drawing, and nowhere else.
+   sequence of screens: one dominant thing at a time (the latency ruler first, the fleet drawing second), and air, not rules, at
+   every section seam. The surface changes once: the ruler is set in reverse, edge to edge, its paper the page's ink and its ink
+   the page's paper, in both themes. Nothing else on the page is toned.
 
    Emphasis is the clock's language and nothing else: rule weight, heavy bar against thin bar, scale, and one red pencil for
    what is unresolved, which appears nowhere else. Hatching means unresolved and stays in the clock. Everything drawn is a
@@ -15,39 +15,53 @@
      1px ink       the clock's axis and column line, the ruler's axis, a table's header and closing rules, the index's heads
      1px --dw-grid hairlines inside a section
      24 / 10 / 4 / 1px  the fleet drawing's fleet, instances, management domains and workload domains
+     32 / 12px     the ruler's two thresholds and its four other bounds
 
-   One type scale, on these tokens, and nothing off it. Ranks: a section opener is --t-head, a note's title --t-feature, and an
-   index's head a small label. The ruler's numerals are the one thing below the fold larger than the headline.
+   Left edges. Three, held down the page, and all of them collapse to the first below 1080px:
+     the page edge  headings, labels, the ruler's zero, every first column
+     --name         the clock's plot, its takeaway and foot; the decision table's questions; the ruler's paths and caption; the
+                    sources; the titles in Latest writing
+     the midline    every second column, on --gut: the table's answers, the ruler's consequences, the index's third column, the
+                    second instance, What I do, Selected work
+   Numbered lists hang their words on --hang. The bars, poles and the clock's source line sit where the scale puts them.
+
+   One type scale, on these tokens, and nothing off it. Ranks: a section opener is --t-head, well under the headline, a note's
+   title --t-feature, and an index's head a small label. The ruler's numerals are the one thing below the fold larger than the
+   headline, and its other bounds sit between those numerals and reading size.
      --t-num     144  the ruler's two thresholds
      --t-display  72  the headline and the closing line
-     --t-head     48  section openers: one size, one weight
+     --t-head     40  section openers: one size, one weight; the ruler's other bounds
      --t-title    28  the cheat sheet's numerals
-     --t-feature  28  the featured note's title, the fleet's name
+     --t-feature  26  the featured note's title, the fleet's name
      --t-sub      24  other titles, the clock's takeaway, what lies past a threshold
-     --t-lead     20  the lede, row names on the clock, the decision table's questions
-     --t-body     18  reading text, links, the index's rows
-     --t-note     16  index heads, tables, steps, dates and quiet lines
-     --t-meta     14  source metadata, the clock's foot, the ruler's paths
+     --t-lead     20  the lede, row names on the clock, the decision table's questions, the ruler's other consequences
+     --t-body     18  reading text, links, the index's rows, the ruler's paths
+     --t-note     16  index heads, tables, steps, dates, and the page's three notes (below)
      --t-small    13  axis labels and the clock's dates on a phone
+   The three notes are 16px, never smaller, and each has one job. The clock's foot is status: release facts in ink, their labels
+   and its provenance in the second ink. The ruler's caption is the caveat on the drawing, so it is in full ink. The sources are
+   evidence, so each one has its own line, its title in ink and its author and date in the second ink.
+
    Every gap is a multiple of 4px. --sec is the air between sections, --near the shorter air before the index, which
-   belongs to the note above it, --band the padding inside the toned surface, and --head the air under a section heading.
+   belongs to the note above it, --band the padding inside the reversed surface, and --head the air under a section heading.
    ------------------------------------------------------------------------------------------------ */
-.page-home { --shell: 1320px; --t-display: clamp(1.75rem, 8.2vw, 3.75rem); --t-num: min(10vw, 9rem); --t-head: max(2.125rem, calc(var(--t-display) * 0.66)); --t-feature: 1.75rem; --t-title: max(1.5rem, calc(var(--t-display) * 0.39)); --t-sub: 1.5rem; --t-lead: 1.25rem; --t-body: 1.125rem; --t-note: 1rem; --t-meta: 0.875rem; --t-small: 0.8125rem; --sec: 160px; --near: 96px; --band: 120px; --head: 72px; --name: 11rem; --row: 42px; }
+.page-home { --shell: 1320px; --t-display: clamp(1.875rem, 9vw, 3.75rem); --t-num: min(10vw, 9rem); --t-head: max(2rem, calc(var(--t-display) / 1.8)); --t-feature: 1.625rem; --t-title: max(1.5rem, calc(var(--t-display) * 0.39)); --t-sub: 1.5rem; --t-lead: 1.25rem; --t-body: 1.125rem; --t-note: 1rem; --t-small: 0.8125rem; --sec: 160px; --near: 96px; --band: 96px; --head: 72px; --name: 11rem; --gut: 40px; --hang: 48px; --row: 40px; }
 .page-home.docs { --bg: var(--home-bg); }
-/* Below the fold the only colours are ink and the red pencil, so links and focus go to ink here. */
-.page-home main { --ink-2: #646d79; --tone: #eef0f4; --accent: var(--ink); --accent-ink: var(--ink); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .page-home main { --ink-2: #97a1ad; --tone: #151a22; } }
-:root[data-theme="dark"] .page-home main { --ink-2: #97a1ad; --tone: #151a22; }
-@media (min-width: 901px) { .page-home { --t-display: min(5vw, 4.5rem); } }
+/* Below the fold the only colours are ink and the red pencil, so links and focus go to ink here. The --inv tokens are the reversed
+   surface: the page's ink as paper, the page's paper as ink. Forced colours and print reset them at the foot of this file. */
+.page-home main { --ink-2: #646d79; --inv-bg: var(--dw-ink); --inv-ink: var(--home-bg); --inv-ink-2: #aab3bf; --accent: var(--ink); --accent-ink: var(--ink); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .page-home main { --ink-2: #97a1ad; --inv-ink-2: #4e5764; } }
+:root[data-theme="dark"] .page-home main { --ink-2: #97a1ad; --inv-ink-2: #4e5764; }
+@media (min-width: 901px) { .page-home { --t-display: clamp(3.25rem, 5vw, 4.5rem); } }
 /* Below the width where the clock's plot fits, the clock folds. */
-@media (max-width: 1080px) { .page-home { --name: 0px; --sec: 128px; --near: 80px; --band: 96px; --head: 56px; --t-sub: 1.25rem; } }
-@media (max-width: 640px) { .page-home { --t-num: clamp(3.5rem, 17vw, 4.25rem); --t-head: 1.75rem; --t-feature: 1.25rem; --t-title: 1.3125rem; --t-sub: 1.125rem; --t-lead: 1.125rem; --t-body: 1rem; --sec: 96px; --near: 64px; --band: 64px; --head: 32px; } }
+@media (max-width: 1080px) { .page-home { --name: 0px; --sec: 128px; --near: 80px; --band: 80px; --head: 56px; --t-feature: 1.5rem; --t-sub: 1.25rem; } }
+@media (max-width: 640px) { .page-home { --t-num: clamp(3.5rem, 17vw, 4.25rem); --t-head: 1.5rem; --t-feature: 1.25rem; --t-title: 1.3125rem; --t-sub: 1.125rem; --t-lead: 1.125rem; --t-body: 1rem; --sec: 96px; --near: 64px; --band: 56px; --head: 32px; --hang: 32px; } }
 
 /* A section below the fold: air above it and nothing else at the seam. An optional kicker, as the hero has, then one heading. */
 .home-sec { padding-top: var(--sec); }
 .home-kick { margin: 0 0 12px; font-size: var(--t-note); line-height: 1.5; color: var(--ink-2); }
 .home-kick a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-.home-h { margin: 0; max-width: 24em; font-size: var(--t-head); line-height: 1.12; letter-spacing: -0.022em; font-weight: 500; color: var(--ink); text-wrap: pretty; }
+.home-h { margin: 0; max-width: 28em; font-size: var(--t-head); line-height: 1.12; letter-spacing: -0.022em; font-weight: 500; color: var(--ink); text-wrap: pretty; }
 .home-hrow { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 16px 40px; }
 
 /* The page's one kind of link out of a section: reading size, ink, an arrow, on a 2px rule. */
@@ -116,16 +130,17 @@
 .sc-b a { position: absolute; top: 50%; left: var(--end); width: calc(var(--to) - var(--end)); display: flex; justify-content: center; transform: translateY(-50%); text-decoration: none; pointer-events: auto; }
 .sc-flag { padding-inline: 8px; background: var(--bg); font-size: var(--t-note); line-height: 24px; font-weight: 500; white-space: nowrap; color: var(--dw-red-ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 /* Under the plot, on the bars' left edge: the takeaway at a title's size, the chart's payoff, with its instruction in weight.
-   Then one quiet block at one size: the release facts on the same edge, the source lines starting on the first labelled tick. */
+   Then the foot, which is status: the release facts on the same edge in ink, and where the dates come from starting on the first
+   labelled tick. */
 .sc-lead, .sc-facts { margin-left: var(--name); }
 .sc-lead { min-width: 0; margin-block: 0; padding-top: 20px; font-size: var(--t-sub); line-height: 32px; font-weight: 400; letter-spacing: -0.014em; color: var(--ink); text-wrap: pretty; }
 .sc-lead b { font-weight: 600; }
-.sc-facts { display: grid; grid-template-columns: calc((100% - var(--tail)) * var(--c)) minmax(0, 1fr); padding-top: 16px; font-size: var(--t-meta); line-height: 20px; color: var(--ink-2); }
+.sc-facts { display: grid; grid-template-columns: calc((100% - var(--tail)) * var(--c)) minmax(0, 1fr); padding-top: 16px; font-size: var(--t-note); line-height: 24px; color: var(--ink-2); }
 .sc-rel { margin: 0; padding-right: 16px; }
 .sc-rel > div { display: flex; flex-wrap: wrap; gap: 0 8px; }
 .sc-rel dd { margin: 0; color: var(--ink); font-variant-numeric: tabular-nums; }
 .sc-cap { margin: 0; }
-.sc-cap a { color: inherit; }
+.sc-cap a { color: var(--ink); }
 .sc-cap span { display: block; }
 @media (min-width: 1081px) and (max-height: 820px) { .home-lead { padding-top: 24px; } .sc { --row: 38px; padding-top: 32px; } }
 /* Below the width where the plot fits, the clock is recomposed: a ruler on top, then each row is its name and date on one
@@ -177,16 +192,18 @@
    section's peak, its table at reading size. Open type on horizontal rules, flush to both page edges, every cell on the first
    baseline. */
 .sheet-q { margin-top: var(--head); }
-.sheet-run { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 24px; margin: 0 0 12px; font-size: var(--t-meta); line-height: 1.5; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.sheet-run { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 24px; margin: 0 0 12px; font-size: var(--t-note); line-height: 1.5; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .sheet-path { display: flex; flex-wrap: wrap; gap: 0 16px; }
 .sheet-path span:first-child { color: var(--ink); }
 .sheet-q h3 { font-size: var(--t-feature); line-height: 1.2; letter-spacing: -0.016em; font-weight: 500; }
 .sheet-q .sheet-sum { margin-top: 8px; max-width: 52rem; font-size: var(--t-body); line-height: 1.5; }
 
-/* The latency ruler: the second chart, in the clock's language at a larger scale. A pole stands at each threshold from its
-   numeral through the axis to the end of its heavy bar. What each threshold bounds sits right after the bar, as a date does on
-   the clock. The other bounds are thin bars on the same scale. --a and --b are the thresholds' places on the scale. */
-.rl { --rl-h: 32px; --rl-gap: 12px; margin: 72px 0 0; }
+/* The latency ruler: the second chart, in the clock's language at a larger scale, and the page's one change of surface. It is set
+   in reverse, edge to edge, by redefining the page's tokens here, so every rule below it stays in those tokens. The shadow paints
+   the surface out to the window's edges and adds no scrollable width; clip-path holds it to the figure's own height.
+   A pole stands at each threshold from its numeral through the axis to the end of its heavy bar. What each threshold bounds sits
+   right after the bar, as a date does on the clock. --a and --b are the thresholds' places on the scale. */
+.rl { --bg: var(--inv-bg); --ink: var(--inv-ink); --ink-2: var(--inv-ink-2); --dw-ink: var(--inv-ink); --accent: var(--inv-ink); --accent-ink: var(--inv-ink); --rl-h: 32px; --rl-gap: 12px; margin: var(--head) 0 0; padding-block: var(--band); color: var(--ink); background: var(--bg); box-shadow: 0 0 0 100vmax var(--bg); clip-path: inset(0 -100vmax); }
 .rl-plot, .rl-in { position: relative; }
 .rl-flags { display: grid; grid-template-columns: var(--a) calc(var(--b) - var(--a)) minmax(0, 1fr); align-items: start; }
 .rl-title { grid-column: 1; grid-row: 1; margin: 0; padding-right: 16px; font-size: var(--t-note); line-height: 24px; font-weight: 600; color: var(--ink); }
@@ -207,26 +224,36 @@
 .rl-row { position: relative; display: flex; align-items: center; min-height: 72px; padding-left: calc(var(--at) + 16px); }
 .rl-r1 { padding-right: calc(100% - var(--b) + 16px); }
 .rl-bar { position: absolute; left: 0; top: 50%; width: var(--at); height: 0; margin-top: calc(var(--rl-h) / -2); border-top: var(--rl-h) solid var(--dw-ink); }
-.rl-txt { margin: 0; font-size: var(--t-note); line-height: 24px; color: var(--ink); }
+.rl-txt { margin: 0; font-size: var(--t-body); line-height: 28px; color: var(--ink); }
 .rl-txt b { font-weight: 600; }
 .rl-v { color: var(--ink); font-variant-numeric: tabular-nums; }
-.rl-path { display: block; font-size: var(--t-meta); line-height: 20px; color: var(--ink-2); }
-.rl-minor { list-style: none; margin: 24px 0 0; padding: 0; font-size: var(--t-meta); line-height: 20px; color: var(--ink-2); }
-.rl-minor li { margin: 16px 0 0; }
-.rl-mname { margin: 0; }
-.rl-mline { position: relative; margin: 0; }
-.rl-mline i { position: absolute; left: 0; top: 7px; width: var(--at); height: 0; border-top: 6px solid var(--ink-2); }
-.rl-mline i::after { content: ""; position: absolute; right: -1px; top: -13px; height: 20px; border-left: 2px solid var(--dw-ink); }
-.rl-mline span { display: block; padding-top: 20px; color: var(--ink); }
-.rl-cap { max-width: 60rem; margin-top: 32px; font-size: var(--t-meta); line-height: 20px; color: var(--ink-2); }
+.rl-path { display: block; font-size: var(--t-note); line-height: 24px; color: var(--ink-2); }
+/* The middle tier: the four other bounds on the same scale, between the numerals and reading size. Each is a 12px bar with its
+   stop, then, under the bar, one row on the page's three edges: the bound, the path, what lies past it. */
+.rl-minor { list-style: none; margin: 56px 0 0; padding: 0; }
+.rl-minor li { display: grid; grid-template-columns: var(--name) calc(50% + var(--gut) / 2 - var(--name)) minmax(0, 1fr); align-items: baseline; margin: 40px 0 0; }
+.rl-minor li:first-child { margin-top: 0; }
+.rl-mbar { grid-column: 1 / -1; position: relative; display: block; justify-self: start; width: var(--at); height: 0; margin: 6px 0 16px; border-top: 12px solid var(--ink-2); }
+.rl-mbar::after { content: ""; position: absolute; right: -1px; top: -18px; height: 24px; border-left: 2px solid var(--dw-ink); }
+.rl-mv, .rl-mpath, .rl-mthen { margin: 0; }
+.rl-mv { font-size: var(--t-head); line-height: 1; font-weight: 400; letter-spacing: -0.03em; white-space: nowrap; color: var(--ink); font-variant-numeric: tabular-nums; }
+.rl-mv small { font-size: var(--t-body); font-weight: 400; letter-spacing: 0; color: var(--ink-2); }
+.rl-mpath { padding-right: 32px; font-size: var(--t-body); line-height: 28px; color: var(--ink-2); }
+.rl-mthen { font-size: var(--t-lead); line-height: 28px; font-weight: 500; letter-spacing: -0.012em; color: var(--ink); }
+/* The caption is the drawing's caveat, so it is set to be read: full ink, on the second edge, at a reading measure. */
+.rl-cap { max-width: 44rem; margin: 56px 0 0 var(--name); font-size: var(--t-note); line-height: 24px; color: var(--ink); }
 .rl-cap a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 /* No room beside the long bars: each row's words go under its bar, on the paper, and the poles pass behind them. */
 @media (max-width: 1080px) {
-  .rl { --rl-h: 20px; margin-top: 56px; }
+  .rl { --rl-h: 20px; }
   .rl-then { font-size: var(--t-lead); }
   .rl-row, .rl-r1 { display: block; min-height: 0; padding: 12px 0 0; }
   .rl-bar { position: static; display: block; margin: 0; }
   .rl-txt { position: relative; z-index: 1; padding: 8px 0 4px; background: var(--bg); }
+  .rl-minor li { display: block; }
+  .rl-mv { margin-bottom: 8px; }
+  .rl-mpath { padding: 0; }
+  .rl-mthen { margin-top: 4px; }
 }
 /* A phone: the numerals stack, 300 standing left of its pole and 100 right of its own, so each keeps its size. The title row and
    the first flag's row have set heights, so the first pole can start under them. */
@@ -243,19 +270,22 @@
   .rl-p2 { top: var(--rl-t); }
 }
 
-.sheet-q .sheet-t { margin: 72px 0 0; font-size: var(--t-lead); line-height: 1.35; }
-.sheet-q .sheet-t :is(th, td) { padding: 20px 32px 20px 0; vertical-align: baseline; }
-.sheet-q .sheet-t :is(th, td):last-child { padding-right: 0; }
-.sheet-q .sheet-t thead th { padding-block: 0 12px; font-size: var(--t-meta); line-height: 1.5; font-weight: 500; color: var(--ink-2); vertical-align: bottom; }
-.sheet-q thead th:nth-child(1) { width: 44px; }
-.sheet-q thead th:nth-child(2) { width: 42%; }
-.sheet-q thead th:nth-child(3) { width: 22%; }
-.sheet-q .sheet-t :is(th, td):first-child { padding-right: 0; }
+.sheet-q .sheet-t { margin: var(--head) 0 0; font-size: var(--t-lead); line-height: 1.35; }
 .sheet-q td:first-child { font-size: var(--t-note); font-variant-numeric: tabular-nums; color: var(--ink-2); }
 .sheet-q .sheet-t tbody th { font-size: inherit; line-height: inherit; letter-spacing: -0.012em; font-weight: 400; color: var(--ink); }
+/* Each row is a grid, as it already is on a phone, so its columns can sit on the page's edges: the number on the page edge, the
+   question on --name, the answer on the midline. The answer's column stays narrow; what it rules out takes the rest. */
+@media (min-width: 761px) {
+  .sheet-q .sheet-t, .sheet-q thead, .sheet-q tbody { display: block; width: 100%; }
+  .sheet-q tr { --q: max(var(--name), var(--hang)); display: grid; grid-template-columns: var(--q) calc(50% + var(--gut) / 2 - var(--q)) 19% minmax(0, 1fr); align-items: baseline; border-bottom: 1px solid var(--dw-grid); }
+  .sheet-q thead tr { border-bottom-color: var(--dw-ink); }
+  .sheet-q tbody tr:last-child { border-bottom-color: var(--dw-ink); }
+  .sheet-q .sheet-t :is(th, td) { display: block; min-width: 0; padding: 20px 32px 20px 0; border: 0; }
+  .sheet-q .sheet-t :is(th, td):first-child, .sheet-q .sheet-t :is(th, td):last-child { padding-right: 0; }
+  .sheet-q .sheet-t thead th { padding-block: 0 12px; font-size: var(--t-note); line-height: 1.5; font-weight: 500; color: var(--ink-2); }
+}
 /* The question and what it rules out read first. The answer is plain text between them, and only a threshold gets more. A closing
    rule ends the table as its header began it. */
-.sheet-q .sheet-t tbody tr:last-child :is(th, td) { border-bottom-color: var(--dw-ink); }
 .sheet-q td:nth-child(3) { font-size: var(--t-body); line-height: 1.4; font-weight: 400; color: var(--ink-2); }
 .sheet-q td:nth-child(4) { font-size: var(--t-body); line-height: 1.4; color: var(--ink); }
 .sheet-q td.lim { font-weight: 500; color: var(--ink); }
@@ -263,7 +293,6 @@
 .sheet-q td.open { color: var(--dw-red-ink); }
 /* Too narrow for four columns: each row stacks, and each answer says which column it came from. */
 @media (max-width: 760px) {
-  .sheet-q .sheet-t { margin-top: 56px; }
   .sheet-q .sheet-t, .sheet-q tbody { display: block; width: 100%; }
   .sheet-q thead { display: none; }
   .sheet-q tbody tr { display: grid; grid-template-columns: 32px minmax(0, 1fr); align-items: baseline; padding-block: 20px; border-bottom: 1px solid var(--dw-grid); }
@@ -274,20 +303,24 @@
   .sheet-q td[data-h]::before { content: attr(data-h) ": "; font-size: var(--t-note); font-weight: 400; letter-spacing: 0; color: var(--ink-2); }
   .sheet-q tbody tr:last-child { border-bottom-color: var(--dw-ink); }
 }
-/* The sources: a footnote to the table, one running paragraph at the small size, with every link kept. */
-.fn-src { max-width: 60rem; margin-top: 20px; font-size: var(--t-meta); line-height: 1.6; color: var(--ink-2); }
-.fn-h { display: inline; margin: 0; font-size: inherit; line-height: inherit; letter-spacing: 0; font-weight: 500; color: var(--ink); }
-.fn-strip, .fn-strip li { display: inline; margin: 0; padding: 0; list-style: none; }
-.fn-strip li::after { content: "; "; }
-.fn-strip li:last-child::after { content: ". "; }
+/* The sources are the note's evidence, so each has its own line: its title in ink, its author and date in the second ink. Their
+   label hangs in the page's label column and the list sits on the second edge, as the clock's rows do. */
+.fn-src { margin-top: 24px; font-size: var(--t-note); line-height: 24px; color: var(--ink-2); }
+.fn-h { margin: 0 0 8px; font-size: inherit; line-height: inherit; letter-spacing: 0; font-weight: 600; color: var(--ink); }
+.fn-strip, .fn-strip li { margin: 0; padding: 0; list-style: none; }
+.fn-strip li + li { margin-top: 4px; }
 .fn-strip a { color: inherit; text-decoration: none; }
-.fn-strip .t { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.fn-strip .t { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 .fn-strip a:hover { color: var(--ink); }
-.fn-more { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.fn-more { display: inline-block; margin-top: 8px; color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+@media (min-width: 1081px) {
+  .fn-src { display: grid; grid-template-columns: var(--name) minmax(0, 1fr); }
+  .fn-h { margin: 0; }
+}
 
 /* The cheat sheet's steps: large numerals, and commands on a rule, with no tint. */
 .tri { display: grid; gap: 32px; counter-reset: tri; list-style: none; margin: 32px 0 0; padding: 0; }
-.tri li { position: relative; counter-increment: tri; margin: 0; padding-left: 48px; font-size: var(--t-note); line-height: 1.5; color: var(--ink-2); }
+.tri li { position: relative; counter-increment: tri; margin: 0; padding-left: var(--hang); font-size: var(--t-note); line-height: 1.5; color: var(--ink-2); }
 .tri li::before { content: counter(tri); position: absolute; left: 0; top: 0; font-size: var(--t-title); line-height: 28px; font-weight: 400; letter-spacing: -0.024em; color: var(--ink); font-variant-numeric: tabular-nums; }
 .tri-t { margin: 0; font-size: var(--t-lead); line-height: 28px; font-weight: 500; color: var(--ink); }
 .tri-w { margin: 0; }
@@ -302,7 +335,6 @@
 .sheet-tools tbody tr:not(:first-child) th { font-weight: 400; }
 @media (max-width: 640px) {
   .sheet-tools :is(th, td):nth-child(2) { display: none; }
-  .tri li { padding-left: 32px; }
 }
 
 /* Library and Reference, one index on a four-column grid: three columns of areas, one of reference items. Their heads are small
@@ -313,10 +345,10 @@
 .ix-h a { color: inherit; text-decoration: none; }
 .ix-h a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 .ix .ix-head .ix-c { font-size: var(--t-note); color: var(--ink-2); }
-.ix { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 40px; }
+.ix { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--gut); }
 .ix-lib { grid-column: span 3; min-width: 0; }
 .ix-ref { min-width: 0; }
-.ix-rows { columns: 3; column-gap: 40px; list-style: none; margin: 0; padding: 0; }
+.ix-rows { columns: 3; column-gap: var(--gut); list-style: none; margin: 0; padding: 0; }
 .ix-ref .ix-rows { columns: 1; }
 .ix-rows li { break-inside: avoid; margin: 0; border-bottom: 1px solid var(--dw-grid); }
 .ix-rows a { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding-block: 12px; font-size: var(--t-body); line-height: 1.4; color: var(--ink); text-decoration: none; }
@@ -332,16 +364,11 @@
 }
 @media (max-width: 760px) { .ix-rows, .ix-ref .ix-rows { columns: 1; } }
 
-/* The page's one change of surface: the paper goes a tone darker behind the fleet drawing, edge to edge. The shadow paints the
-   tone out to the window's edges and adds no scrollable width; clip-path holds it to the section's own height. It falls back to
-   Canvas in forced colours and to no fill in print, both below. */
-.home-sec.fm { margin-top: var(--sec); padding-block: var(--band); background: var(--tone); box-shadow: 0 0 0 100vmax var(--tone); clip-path: inset(0 -100vmax); }
-
 /* The fleet model, drawn as the clock is: bars, poles and open type, no boxes. Width shows what holds what. The fleet is a bar
    across the page, each instance a medium bar under it, each domain a rule under that, heavier for management. A pole hangs from
    each bar down the left edge of what it holds and carries that thing's words beside it, like the ruler's flags. --fm-n sets the
    instance name's row, which each domain's pole crosses to reach its instance's bar. */
-.fm-fig { --fm-gap: 40px; --fm-dom-gap: 16px; --fm-n: 72px; --fm-pad: 16px; margin: var(--head) 0 0; }
+.fm-fig { --fm-gap: var(--gut); --fm-dom-gap: 16px; --fm-n: 72px; --fm-pad: 16px; margin: var(--head) 0 0; }
 .fm-fleet { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--fm-gap); border-top: 24px solid var(--dw-ink); }
 .fm-fleet > div { min-width: 0; padding: 16px var(--fm-pad) 40px; border-left: 2px solid var(--dw-ink); }
 .fm-fleet b, .fm-fleet span { display: block; }
@@ -358,7 +385,7 @@
 .fm-dom b { display: block; margin-bottom: 8px; font-size: var(--t-body); line-height: 24px; font-weight: 500; letter-spacing: -0.008em; color: var(--ink); }
 .fm-dom span { display: block; }
 .fm-more { margin: 56px 0 0; line-height: 1; }
-@media (max-width: 1240px) { .fm-fig { --fm-gap: 32px; --fm-dom-gap: 12px; } }
+@media (max-width: 1240px) { .fm-fig { --fm-dom-gap: 12px; } }
 /* Instances stack: the fleet's pole becomes a spine down the left, and each instance hangs from it, indented. */
 @media (max-width: 1120px) {
   .fm-fleet { grid-template-columns: minmax(0, 1fr); }
@@ -378,18 +405,19 @@
 }
 
 /* What I do: four open blocks with air between them and no rules. */
-.do-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 64px 96px; margin-top: var(--head); }
+.do-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 64px var(--gut); margin-top: var(--head); }
 .do-list a { display: block; min-width: 0; color: inherit; text-decoration: none; }
 .do-list h3 { margin: 0; font-size: var(--t-sub); line-height: 1.25; letter-spacing: -0.016em; font-weight: 500; color: var(--ink); text-wrap: pretty; }
 .do-list a:hover h3 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-.do-list p { margin: 12px 0 0; max-width: 34em; font-size: var(--t-body); line-height: 1.5; color: var(--ink-2); }
+.do-list p { margin: 12px 0 0; max-width: 30em; font-size: var(--t-body); line-height: 1.5; color: var(--ink-2); }
 @media (max-width: 760px) { .do-list { grid-template-columns: minmax(0, 1fr); gap: 40px; } }
 
 /* The work: two real pages side by side, then the workshops and the open tools, on air. */
-.ex-arts, .ex-more { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 64px 96px; }
+.ex-arts, .ex-more { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 64px var(--gut); }
 .ex-arts { margin-top: var(--head); }
 .ex-more { margin-top: 96px; }
 .ex-arts > *, .ex-more > * { min-width: 0; }
+@media (min-width: 1081px) { .ex-arts > :first-child, .ex-more > :first-child { padding-right: 40px; } }
 .ex-series h3, .ex-col h3 { margin: 0; font-size: var(--t-sub); line-height: 1.25; letter-spacing: -0.016em; font-weight: 500; color: var(--ink); }
 .ex-series:hover h3, .ex-col:hover h3 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 .ex-col p { margin: 8px 0 0; font-size: var(--t-body); line-height: 1.5; color: var(--ink-2); }
@@ -398,7 +426,7 @@
 .ex-series { counter-reset: mod; }
 .ex-go { display: block; margin-top: 8px; font-size: var(--t-body); line-height: 1.5; color: var(--ink-2); }
 .ex-modules { display: grid; gap: 8px; list-style: none; margin: 24px 0 0; padding: 0; }
-.ex-modules li { display: grid; grid-template-columns: 32px minmax(0, 1fr); align-items: baseline; counter-increment: mod; margin: 0; font-size: var(--t-lead); line-height: 1.3; letter-spacing: -0.012em; font-weight: 400; color: var(--ink); }
+.ex-modules li { display: grid; grid-template-columns: var(--hang) minmax(0, 1fr); align-items: baseline; counter-increment: mod; margin: 0; font-size: var(--t-lead); line-height: 1.3; letter-spacing: -0.012em; font-weight: 400; color: var(--ink); }
 .ex-modules li::before { content: counter(mod); font-size: var(--t-note); font-weight: 400; letter-spacing: 0; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .ex-ticks { list-style: none; margin: 16px 0 0; padding: 0; }
 .ex-ticks li { margin: 0; font-size: var(--t-body); line-height: 1.5; color: var(--ink); }
@@ -413,6 +441,8 @@
 .page-home .hub-rows a:hover .t { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 .page-home .hub-rows time, .page-home .hub-rows .k { font-size: var(--t-note); color: var(--ink-2); }
 .page-home .rows-new a { grid-template-columns: 10.5rem minmax(0, 1fr) auto; }
+/* Each title sits on --name: the date's column is that edge less the rows' 20px column gap. */
+@media (min-width: 1081px) { .page-home .rows-new a { grid-template-columns: calc(var(--name) - 20px) minmax(0, 1fr) auto; } }
 
 .home-close { padding-bottom: var(--sec); }
 /* The close is said at the headline's size and weight, so the page ends in the voice it began in. */
@@ -436,12 +466,12 @@
 @media (forced-colors: active) {
   .page-home.docs { --bg: Canvas; }
   .sc-dt, .sc-flag, .sc-n { forced-color-adjust: auto; }
-  :root:root:root .page-home main { --tone: Canvas; }
-  .home-sec.fm { box-shadow: none; clip-path: none; }
+  :root:root:root .page-home main { --inv-bg: Canvas; --inv-ink: CanvasText; --inv-ink-2: CanvasText; }
+  .rl { box-shadow: none; clip-path: none; }
 }
 
 @media print {
-  :root .page-home main, :root[data-theme="dark"] .page-home main, :root:not([data-theme="light"]) .page-home main { --ink-2: #333; --tone: transparent; }
-  .home-sec.fm { background: none; box-shadow: none; clip-path: none; padding-block: 0; }
+  :root .page-home main, :root[data-theme="dark"] .page-home main, :root:not([data-theme="light"]) .page-home main { --ink-2: #333; --inv-bg: transparent; --inv-ink: #111; --inv-ink-2: #333; }
+  .rl { padding-block: 0; background: none; box-shadow: none; clip-path: none; }
   .rl-txt { background: #fff; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
