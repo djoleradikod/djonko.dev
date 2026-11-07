@@ -3,6 +3,7 @@
 // <Download file="/downloads/vcf-health/Get-VcfHealth.ps1" title="..." description="..." source />
 // <Download file="pdf/triage-handout.pdf" title="..." />   (large files from the media origin)
 import { Code } from 'astro:components';
+import { tokenClasses } from '../lib/token-classes.mjs';
 import { fileInfo } from '../lib/files';
 interface Props { file: string; title?: string; description?: string; source?: boolean; open?: boolean; version?: string; license?: string }
 const { file, title, description, source = false, open = false, version, license } = Astro.props;
@@ -33,7 +34,7 @@ const f = fileInfo(file, source);
   {source && f.text && (
     <details class="dl-src" open={open}>
       <summary>View source</summary>
-      <Code code={f.text} lang={f.lang as any} themes={{ light: 'github-light-high-contrast', dark: 'github-dark-high-contrast' }} wrap={false} />
+      <Code code={f.text} lang={f.lang as any} themes={{ light: 'github-light-high-contrast', dark: 'github-dark-high-contrast' }} transformers={[tokenClasses]} wrap={false} />
     </details>
   )}
 </div>

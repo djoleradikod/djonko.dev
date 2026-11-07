@@ -4,6 +4,7 @@ import sitemap from '@astrojs/sitemap';
 import { createReadStream, existsSync, statSync } from 'node:fs';
 import { join, normalize, extname } from 'node:path';
 import remarkMermaid from './src/lib/remark-mermaid.mjs';
+import { tokenClasses } from './src/lib/token-classes.mjs';
 import rehypeTableWrap from './src/lib/rehype-table-wrap.mjs';
 
 // Pages that should not appear in the sitemap.
@@ -47,6 +48,9 @@ export default defineConfig({
     remarkPlugins: [remarkMermaid],
     rehypePlugins: [rehypeTableWrap],
     syntaxHighlight: { type: 'shiki', excludeLangs: ['mermaid'] },
-    shikiConfig: { themes: { light: 'github-light-high-contrast', dark: 'github-dark-high-contrast' } },
+    shikiConfig: {
+      themes: { light: 'github-light-high-contrast', dark: 'github-dark-high-contrast' },
+      transformers: [tokenClasses],
+    },
   },
 });

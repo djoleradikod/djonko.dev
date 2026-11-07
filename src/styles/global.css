@@ -345,6 +345,13 @@ figcaption .credit { color: var(--ink-3); }
 /* Code blocks: a bar with the language, drawn by the block itself so it needs no script and nothing
    moves when the copy button arrives. The bar stays put while the code scrolls sideways under it. */
 .code-wrap { position: relative; }
+.astro-code .c1 { color: #032563; --shiki-dark: #ADDCFF; }
+.astro-code .c2 { color: #0E1116; --shiki-dark: #F0F3F6; }
+.astro-code .c3 { color: #A0111F; --shiki-dark: #FF9492; }
+.astro-code .c4 { color: #023B95; --shiki-dark: #91CBFF; }
+.astro-code .c5 { color: #702C00; --shiki-dark: #FFB757; }
+.astro-code .c6 { color: #66707B; --shiki-dark: #BDC4CC; }
+.astro-code .c7 { color: #622CBC; --shiki-dark: #DBB7FF; }
 pre.astro-code { margin: 0 0 1.25rem; padding: 0; font-size: 0.8125rem; line-height: 1.6; font-feature-settings: normal; scrollbar-width: thin; scrollbar-color: var(--line-2) transparent; }
 .dl-src pre.astro-code { margin: 0; }
 pre.astro-code > code { display: block; width: max-content; min-width: 100%; padding: 12px 14px 14px; }
