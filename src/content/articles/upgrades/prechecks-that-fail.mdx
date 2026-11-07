@@ -1,77 +1,226 @@
 ---
-title: "Upgrade prechecks that can fail, and how to clear them before the window"
-description: "Check these before the upgrade window: DNS, an expired password, a certificate SAN, a cloud proxy or a VM setting someone changed by hand. Each maps to a public KB, and they are grouped so they can be checked in one sitting."
+title: "VCF 9.1 upgrade failures by stage: what is documented, how to spot it early, what clears it"
+description: "Broadcom's KBs for a VCF 9.1 upgrade, sorted by upgrade step with symptom, early check and fix. Check root passwords, the VCF Operations database and moved VMs first, because six KBs end in a snapshot revert or a Support-led rollback. A map of what is published, not of how often anything happens."
 category: upgrades
 order: 3
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [445418, 442719, 440459, 441858, 440910, 443106, 442290, 449148, 450561, 456790, 441813, 440901, 443988, 449075, 454898, 409353]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [320343, 385107, 409353, 419010, 419814, 440200, 440282, 440407, 440459, 440471, 440630, 440901, 440910, 441285, 441526, 441813, 441858, 441974, 442134, 442290, 442400, 442588, 442719, 442766, 443106, 443763, 443874, 443988, 444283, 444724, 445132, 445418, 446929, 447079, 447770, 448058, 448384, 448583, 448617, 448668, 448726, 448933, 449075, 449148, 449659, 450131, 450225, 450243, 450366, 450430, 450561, 452077, 452677, 453417, 453793, 454602, 454898, 455088, 456790, 457342, 458395]
 sources:
-  - title: "Upgrade to VCF Operations 9.1"
+  - title: "Upgrading to VMware Cloud Foundation 9.1.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrade VCF Operations to 9.1"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/install-a-software-update.html"
     by: "Broadcom TechDocs"
-  - title: "Modernizing infrastructure: VCF 9.0.x to 9.1 upgrade guide"
-    url: "https://blogs.vmware.com/cloud-foundation/2026/07/28/modernizing-infrastructure-vmware-cloud-foundation-9-0-x-to-9-1-upgrade-guide/"
-    by: "VMware Cloud Foundation blog"
-  - title: "Before you upgrade to VCF 9.1: what you need to have ready"
-    url: "https://www.wwt.com/blog/before-you-upgrade-to-vcf-91-what-you-need-to-have-ready"
-    by: "WWT"
-  - title: "VCF Automation 9.0 to 9.1 upgrade: precheck and execution stages"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "KB 440630: Upgrade Sequence and Related Issues for VCF and vSphere Foundation 9.1"
+    url: "https://knowledge.broadcom.com/external/article/440630"
+    by: "Broadcom KB"
+    kind: broadcom
+    date: 2026-08-27
+  - title: "KB 450430: Upgrading VMware Cloud Foundation from 9.0.2 to 9.1 sequence and execution guide"
+    url: "https://knowledge.broadcom.com/external/article/450430"
+    by: "Broadcom KB"
+    kind: broadcom
+    date: 2026-09-14
+  - title: "KB 454898: Performing Health-Checks for VCF 9.1 Upgrade Readiness"
+    url: "https://knowledge.broadcom.com/external/article/454898"
+    by: "Broadcom KB"
+    kind: broadcom
+    date: 2026-11-03
+  - title: "VCF Automation 9.0 to 9.1 upgrade precheck and execution stages"
     url: "https://blogs.vmware.com/cloud-foundation/2026/07/27/modernizing-infrastructure-a-deep-dive-into-the-vmware-cloud-foundation-automation-9-0-to-9-1-upgrade-precheck-and-execution-stages/"
-    by: "VMware Cloud Foundation blog"
+    by: "Mohammed Aakhil, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-07-27
+  - title: "Quick Tip: NSX Edge fails DNS pre-check as part of VCF 9.0.2 upgrade"
+    url: "https://williamlam.com/2026/01/quick-tip-nsx-edge-fails-dns-pre-check-as-part-of-vcf-9-0-2-upgrade.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-01-23
+  - title: "Quick Tip: No space left on device when upgrading VCF Operations using Fleet Manager to VCF 9.0.2"
+    url: "https://williamlam.com/2026/01/quick-tip-no-space-left-on-device-when-upgrading-vcf-operations-using-vcf-operations-fleet-manager-to-vcf-9-0-2.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-01-22
+  - title: "The VCF 9.1 Upgrade Masterclass: Operations and Licensing, Part 1"
+    url: "https://tarsiomoraes.com/the-vcf-9-1-upgrade-masterclass-operations-licensing-part-1/"
+    by: "Tarsio Moraes"
+    kind: practitioner
+    date: 2026-06-01
+  - title: "The VCF 9.1 Upgrade Masterclass: Operations (pointer to Moraes)"
+    url: "https://vcdx181.com/2026/06/06/the-vcf-9-1-upgrade-masterclass-operations/"
+    by: "Marc Huppert"
+    kind: practitioner
+    date: 2026-06-06
 ---
 
 <InShort>
-Run the checks below a week before the window, then again the day before. Each one maps to a public KB where the failure is documented. In 5.x most of these failures surfaced in one place, the SDDC Manager precheck. In 9.x they are spread across VCF Operations, fleet lifecycle, SDDC lifecycle and the per-domain prechecks, and some only appear part way through a workflow. That makes a pre-window checklist more valuable than ever.
+**Spend your pre-window session on the failures whose published fix is going backwards.** Six KBs make a snapshot revert or a support-led rollback the main way out, so check root passwords, the VCF Operations database, the daily sync time and any VM moved by hand before step 1. Then work through the stage tables below. They map what Broadcom and named practitioners have published as of 7 Nov 2026. None of it was reproduced here, and the number of articles on a stage says nothing about how often it fails <AsOf date="2026-11-07" />.
 </InShort>
 
-<Compare rows={[
-  ["Where prechecks run", "SDDC Manager upgrade precheck, plus the Aria Suite Lifecycle checks", "VCF Operations admin UI (PAK), Build > Lifecycle for management components, per-domain Upgrades tab, VCFA staged prechecks"],
-  ["What blocks", "Mostly errors in one report", "Errors block. Some VCF Ops pre-validation warnings do not block but predict later failures."],
-  ["New categories", "Not applicable", "IP pools and CIDRs, FQDN SANs, cloud proxy registration, runtime health, backup schedules"],
-]} />
-
-## Names and time
-
-- **Forward and reverse DNS for every new FQDN, in lowercase.** This covers VCF Operations nodes and the load balancer, the services runtime, fleet and instance FQDNs, the License Server, the identity broker and VCF Automation. A capital letter or a missing PTR record can cause "node unreachable" during management services deployment.
-- **NTP agreement on every node.** Clock drift shows up as token errors such as `IAM_401_INVALID_TOKEN` and as upgrades that hang part way (<KB id={409353} />). Check the VCF Operations nodes, SDDC Manager, the vCenters and the NSX Managers against the same source.
-
-## Passwords and accounts
-
-- **Root passwords on every VCF Operations node** must not be expired. An expired one fails the upgrade with `expired password for user root` in `/var/log/auth.log` (<KB id={445418} />, <KB id={442719} />).
-- **The 9.0 fleet appliance root password** is needed during the VCF Operations upgrade. After that, the appliance must stay powered off (<KB id={449075} />).
-- **VCF Automation `vmware-system-user`** must be valid and identical on every node, or the precheck decides the source is not a VCF Automation 9.x product (<KB id={443988} />).
-- **The SFTP backup user** must be in `user@domain` form. A backslash breaks the fleet lifecycle backup step (<KB id={450561} />).
-- **No failed password rotation tasks.** A stuck rotation can hold a domain lock and block the vCenter switchover hours into the window (<KB id={449148} />).
-
-## Certificates
-
-- **VCF Operations:** SANs include every node FQDN and the load balancer.
-- **Operations for networks:** SANs include every platform and collector FQDN **and IP address**. Otherwise "Import VCF Operations in Fleet Lifecycle" fails (<KB id={440459} />, <KB id={441858} />).
-- **NSX VIP:** the SAN covers every manager FQDN and IP address, or the NSX planning precheck times out (<KB id={440910} />).
-- **Nothing close to expiry.** Replace certificates that are within the upgrade's window, before the upgrade.
-
-## Platform settings someone changed by hand
-
-- **vCenter appliance VM hardware above version 17** fails a post-install stage (<KB id={442290} />).
-- **NetFlow on VDS uplink port groups** is unsupported in 9.1. Upgrade Operations for networks first so it removes the setting (<KB id={441813} />).
-- **The default NSX distributed load balancer** must be attached to a group (<KB id={440901} />).
-- **Baseline-managed clusters** must be converted to vLCM images.
-
-## Collection, backups and health
-
-- **Cloud proxy:** in 9.1 every VCF instance adapter must use the unified cloud proxy, not a local collector, or the instance registration validation fails (<KB id={443106} />).
-- **Backup schedules:** 15-minute incremental backups queue the VCF Automation prechecks behind backup tasks. Move to about every four hours for the duration of the upgrade (<KB id={456790} />).
-- **Health:** run the readiness set from <KB id={454898} />. That means the SoS health check on SDDC Manager, the diagnostic tool on each vCenter, the services runtime health check, and the service account sync check.
-
-<Callout type="field" title="Make it a script, not a meeting">
-Every item above can be checked from a jump host with read-only credentials: `dig` for forward and reverse records, `openssl s_client` for SANs and expiry, `chage -l` over SSH for password age, and the SoS health check. A short script run the day before turns this list into evidence for the change board. See <a href="/vcf/library/labs/scripted-health-checks/">Scripted health checks</a>.
+<Callout type="note" title="Corrected on 7 November 2026">
+This note said KB 409353 ties clock drift to hung upgrades, but that KB ties clock drift to an SSO login failure on 9.0 and doesn't mention upgrades, so it's gone. It also said the default NSX distributed load balancer must be attached to a group. <KB id={440901} /> gives an error only for the "ALL" path, and other configurations get a warning you can acknowledge.
 </Callout>
 
-## Pitfalls
+## What to do with the map
 
-- **Treating warnings as noise.** The VCF Operations pre-validation warnings about SANs, break-glass accounts and networks don't block the upgrade, but they predict the next failure.
-- **Running prechecks once.** Passwords expire and certificates near expiry between the planning session and the window. Run the checks again the day before.
-- **Fixing in production during the window.** If a check fails on the day, decide on the spot whether to fix it inside the window or reschedule. Write that decision rule into the plan.
+Run the session a week before the window, and again the day before, because passwords and certificates age in between. Take the snapshots described in [Rollback checkpoints](/vcf/library/upgrades/rollback-checkpoints/) before step 1, since these are the articles that need them:
+
+| What failed | Way out the article gives | KB |
+|---|---|---|
+| Expired root password on a VCF Operations node | Revert or restore, set the password, restart | <KB id={445418} />, <KB id={442719} /> |
+| Orphaned rows in the VCF Operations database | Revert all nodes, run the KB's script, reapply. No snapshot means Support | <KB id={440200} /> |
+| Daily inventory sync overlapping the upgrade | Revert VCF Operations and LCM to 9.0.x, restart | <KB id={452077} /> |
+| A node rebooting during the assessment precheck | Revert, or edit the pack history by hand if you took no snapshot | <KB id={452677} /> |
+| VCF Automation VMs moved to another datastore | Support-led rollback to 9.0 | <KB id={448384} /> |
+
+Read together, the stated causes point to three habits that head off several rows at once:
+
+- **Leave VMs where VCF put them, or list every move.** Moves between datastores or folders sit behind <KB id={446929} />, <KB id={448384} /> and scenario 5 of <KB id={441285} />. The first needs Support to edit the SDDC Manager database, so a move discovered late can cost you the window.
+- **Power off the 9.0 fleet appliance and keep its DNS record.** Left on, it causes 401 errors in later prechecks (<KB id={449075} />). With the record deleted, the VCF Automation precheck can't confirm the address is unused and fails (<KB id={443874} />).
+- **Replace certificates through SDDC Manager.** A certificate changed directly on NSX Manager leaves SDDC Manager distrusting it (<KB id={442766} />).
+
+[The route chooser](/vcf/library/upgrades/upgrade-route-chooser/) sends you to 9.1.1, which may close some of these, but the articles won't always tell you: <KB id={450225} /> names 9.1.0 in its Environment line, while <KB id={444283} /> says only "VMware Cloud Foundation 9.x". Read each article's Environment line against your source and target before acting on it. Several fixes edit a database or a pod, so take the snapshot or backup the article asks for first.
+
+## Certificate SANs: use the strictest rule
+
+Four Broadcom pages set the requirement, and they differ. Build one SAN list per component now, because a failure here surfaces at step 7 or later, well after the first changes.
+
+| Component | SAN must hold | Source |
+|---|---|---|
+| VCF Operations | Each node's FQDN, IP address and shortname, from the KB, plus the load balancer or VIP FQDN, from the upgrade page. The page asks only for FQDNs, and the KB doesn't mention the VIP, so the list needs both | <KB id={453793} />, [TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/install-a-software-update.html), 5 Nov 2026 |
+| VCF Operations for networks | FQDN as a DNS entry and IP as an IP Address entry. An IP listed as a DNS entry also fails | <KB id={440459} /> |
+| NSX Manager VIP | Every required FQDN and IP address | <KB id={440910} /> |
+
+## The stage tables
+
+Steps follow [Broadcom's order](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) from 9.0 (updated 5 Nov 2026). From 5.2, NSX and everything after it sit one step lower, and a KB titled for the 9.0 path, such as <KB id={441285} />, may not apply. <KB id={440630} /> lists a few related issues and links out, and these tables go further. Quoted text is the source's. A cell starting "Suggested" is reasoning from the stated cause, not a published check, and it hasn't been run. An empty cell means the source gives no early check and its cause doesn't suggest one. Dates are each page's last modification.
+
+### Step 1: VCF Operations and cloud proxies
+
+| Symptom | Spot it before the window | What clears it | Source |
+|---|---|---|---|
+| Upgrade fails or times out, "VMware Cloud Foundation Operations is not available", and `/var/log/auth.log` has "expired password for user root" | Suggested: read password age on every node with `chage -l root` | Revert or restore, set a new root password at the vSphere console, wait up to 24 hours for credentials to resync, restart | <KB id={445418} />, 23 Jun 2026; <KB id={442719} />, 5 Jun 2026 |
+| "9 of 14 - Applied Operating System Update", then "run master postgres db upgrade" | Suggested: run the KB's orphan-row query on the primary node. Any row returned matches | Revert all nodes and keep the snapshots, run the KB's script, reapply the update | <KB id={440200} />, 22 May 2026 |
+| Aria Operations 8.18.7 source: "cluster failures during the update process" | Read the appliance version | Go straight to 9.1.1.0 or later, as the [route chooser](/vcf/library/upgrades/upgrade-route-chooser/) says | <KB id={455088} />, 28 Sep 2026 |
+| 9.1 is in the dropdown, but "no binaries are displayed for any category" | Expected while VCF Operations is on 9.0 | Install the 9.1 PAK manually, then SDDC Manager, then the depot. [Tarsio Moraes's walkthrough](https://tarsiomoraes.com/the-vcf-9-1-upgrade-masterclass-operations-licensing-part-1/) (1 Jun 2026, [signposted by Marc Huppert](https://vcdx181.com/2026/06/06/the-vcf-9-1-upgrade-masterclass-operations/) on 6 Jun) covers the depot download and the PAK, and leaves SDDC Manager to part two | <KB id={440282} />, 14 May 2026 |
+| "Failed to create VCF cloud account. Management Domain details is null." | Check the plan has VCF Operations ahead of SDDC Manager and vCenter | Upgrade VCF Operations with the PAK, then edit the integration | <KB id={440407} />, 29 Jul 2026 |
+| "404 Not Found on GET request" at Stage Precheck Binaries, with an offline depot on IIS | Suggested: download a .pak, .sig and .ova from the depot by URL | Add an `application/octet-stream` MIME type in IIS. The KB's cause names .pak and .sig, while its steps name .sig and show .ova, so map all three | <KB id={447079} />, 28 Jul 2026 |
+| Precheck shows "raw, unresolved resource-bundle keys" for management pack compatibility | | Read the APUAT HTML report from the same run | [VCF Operations 9.1.1.0 notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), 5 Nov 2026 |
+| 9.0.2 hop only, driven from Fleet Manager: "No space left on device" although VCF Operations has room, because the check reads Fleet Manager's own partition | `df -h` on Fleet Manager | William Lam extended the volume with Extend Storage and revalidated. His own environment, with no KB behind it | [Lam](https://williamlam.com/2026/01/quick-tip-no-space-left-on-device-when-upgrading-vcf-operations-using-vcf-operations-fleet-manager-to-vcf-9-0-2.html), 22 Jan 2026 |
+
+Have the fleet appliance root password to hand from 9.0.x, because the [inventory transfer asks for it](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/install-a-software-update.html). Snapshot every node and proxy: <KB id={450430} /> says primary nodes, and [Rollback checkpoints](/vcf/library/upgrades/rollback-checkpoints/) explains why the wider set is the one to use.
+
+### Steps 6 and 7: SDDC Manager, management services, license server
+
+<KB id={450430} /> asks for a dedicated IP block using lowercase FQDNs, at least a /28 with /27 recommended, and all nine sub-components in the depot. Get those ready before this step.
+
+| Symptom | Spot it before the window | What clears it | Source |
+|---|---|---|---|
+| SDDC Manager precheck fails on vSAN when you use external storage | Expected on external storage | Validate the storage, then override it | <KB id={450430} />, 14 Sep 2026 |
+| "Validation failed with resultStatus FAILED", code `BROWNFIELD_VCF_INSTANCE_CLOUD_PROXY_REGISTRATION_VALIDATION.error` | Administration > Integrations: every VCF adapter, workload domain and vCenter uses a healthy Unified Cloud Proxy | Repoint the collector, sync inventory, retry | <KB id={443106} />, 8 Oct 2026 |
+| `BROWNFIELD_VCF_OPS_NODE_CERTIFICATE_VALIDATION.error`, "Unable to reach VCF Operations node" | The KB's `openssl` check on port 443 of each node | Replace the certificate per KB 320343, retry. Stale records go through <KB id={441858} /> | <KB id={453793} />, 8 Sep 2026 |
+| "doesn't match any of the subject alternative names", or "Unable to register components with VCF Operations." on a legacy Operations for networks | `rotate_vrni_certs.sh verify` on the platform node | Rotate with the same script, then Option 2 of the <KB id={441858} /> script. Covers 9.1.0 and 9.1.1; fresh 9.1.0 deployments aren't affected | <KB id={440459} />, 4 Nov 2026 |
+| "Failed to discover component of type 'VCFA'", or the banner "Some components are blocked from being upgraded to 9.1" | | KB script by task status. On Fleet lifecycle 9.1.1.x or later, the Add Component workflow instead. A failed task can't retry until the bad data is removed | <KB id={441858} />, 24 Sep 2026 |
+| "Couldn't get component" and "Unable to register component" at Deploy VCF Management Components | Find the daily sync time in `/var/log/vrlcm/vmware_vrlcm.log` and start at least 10 minutes after it | Revert to 9.0.x and restart clear of the sync | <KB id={452077} />, 21 Aug 2026 |
+| Bootstrap VM "powers off and is deleted" three times, then the task fails. DNS is across a physical router | Suggested: if the DNS server is on another subnet, plan to clear the router's ARP entry for the bootstrap IP | Delete the VM, clear the stale ARP entry, deploy again | <KB id={447770} />, 18 Jul 2026 |
+| `java.lang.StringIndexOutOfBoundsException` at the bootstrap task, after components moved datastore | Suggested: list every component moved since deployment and ask Support about them first | Support edits the SDDC Manager database | <KB id={446929} />, 30 Jul 2026 |
+| "URL Connectivity Check Precheck. Status: FAILED", `VCFMS-PRECHECK-URL-001` | A record for SDDC Manager exists, and the proxy is set for management services if you need one | Fix, then Retry | <KB id={450131} />, 29 Jul 2026 |
+| Failed deploy task, and the Install button keeps spinning on retry | | Snapshot SDDC Manager, clear the KB's database rows, restart `commonsvcs`, delete orphaned VMs | <KB id={445132} />, 22 Jun 2026 |
+| License server console: "only a black screen" | Appliance in 172.16.0.0/12, or a gateway route to 172.17.0.0/16 | Deploy a new license server at 9.1.0.0200 or later | <KB id={441526} />, 31 Jul 2026 |
+
+### Steps 8 and 9: Identity Broker and VCF Automation
+
+The VCF Automation prechecks run in five groups, from connectivity to application, per [Mohammed Aakhil's post](https://blogs.vmware.com/cloud-foundation/2026/07/27/modernizing-infrastructure-a-deep-dive-into-the-vmware-cloud-foundation-automation-9-0-to-9-1-upgrade-precheck-and-execution-stages/) (27 Jul 2026), which lists what to confirm beforehand: node readiness, DNS for allocated IPs and those IPs being unused. <KB id={441285} /> also offers a fallback: skip Identity Broker to finish the upgrade, and it stays on 9.0.x without the 9.1 features.
+
+| Symptom | Spot it before the window | What clears it | Source |
+|---|---|---|---|
+| Identity Broker: "Errors occurred during running prechecks" | Compare its network with the management services runtime network | Redeploy to a supported network and datastore, the route chooser's Identity Broker blocker | <KB id={441285} />, 30 Jun 2026 |
+| "Step vmsp_upgrade_vidb failed" at Power Off Source Cluster | Check for hand-moved VMs and leftovers of an earlier broker | KB 442400 for moved VMs, KB 444724 for leftover records | <KB id={441285} />, 30 Jun 2026 |
+| "The source system is not a VCF Automation (VCFA) 9.x product" | Suggested: log in to each node as `vmware-system-user` | Reset the password on every node (KB 419010), rerun | <KB id={443988} />, 25 Jun 2026 |
+| Prechecks "fail due to a certificate chain validation failure" | `tls.crt` of `vmsp-tls` in `istio-ingress` holds leaf, intermediate and root | Patch the secret with the full chain | <KB id={441974} />, 29 May 2026 |
+| `VCFMS-HEALTH-002` with "no such host" on the powered-off Fleet Manager name | That name resolves, and its IP doesn't answer ping | Recreate the record, on an unused IP if the old one is taken | <KB id={443874} />, 10 Jun 2026 |
+| `VCFMS-HEALTH-002` with "logging-operator-fluentd" | `logging-operator-fluentd` pods show 2/2 Ready | Purge buffers and delete the pod. This discards unsent logs. Broadcom plans to remove the check | <KB id={449659} />, 7 Sep 2026 |
+| "Target VSP cluster IP pool CIDR is required" | Have a contiguous /29, or apply the bundles in the fix | Fleet Lifecycle and SDDC Lifecycle to 9.1.0.0400, then Services Runtime to 9.1.0.0200, then enter IPs one by one | <KB id={448617} />, 6 Aug 2026 |
+| "Step vmsp_run_vcfa_prechecks failed", task queued behind backups | Is the incremental backup set to every 15 minutes? | Move it to every 4 hours, retry | <KB id={456790} />, 29 Sep 2026 |
+| "Ready for upgrade pre checks failed" on single-node VCF Automation | `kubectl -n vmsp-platform get pods`: more than 300 `cluster-info-dump` pods, or `OutOfPods` | Back up, then KB 450243 | <KB id={450225} />, 18 Aug 2026 |
+| "Step vmsp_upgrade_vcfa failed" at Power Off Source Cluster | Compare the datastore in `vmsp-platform` with the VMs' location in vCenter | Support-led rollback to 9.0, move the VMs back, retry | <KB id={448384} />, 16 Jul 2026 |
+
+### Steps 11 and 12: Operations for networks and for logs
+
+| Symptom | Spot it before the window | What clears it | Source |
+|---|---|---|---|
+| Operations for networks, XL brick: "system.health.status.check" | Warning under Settings > Infrastructure and Support | Add a 1 TB disk, wait 10 to 15 minutes, rerun | <KB id={454602} />, 13 Sep 2026 |
+| Logs 9.0 to Log Management 9.1: "500 INTERNAL_SERVER_ERROR" on Run Prechecks | Expected. This path has no standalone precheck | Don't click Run Prechecks. After saving the configuration, click UPGRADE | <KB id={442588} />, 4 Jun 2026 |
+
+### Steps 15 and 16: NSX
+
+"Resource validations timed out" has three separate published causes at the same planning phase, so read the log before you fix anything.
+
+| Symptom | Spot it before the window | What clears it | Source |
+|---|---|---|---|
+| "Resource validations timed out", and `lcm-debug.log` has "Failed to load NSX Cluster from the Inventory" | Inspect the VIP certificate's SANs | Fix the SANs per KB 419814, rerun | <KB id={440910} />, 5 Aug 2026 |
+| Same message, and `domainmanager.log` has "Unable to construct a valid chain" | Domain's Certificates tab: NSX Manager shows Healthy | Review and trust the certificate in SDDC Manager, retry | <KB id={442766} />, 3 Jun 2026 |
+| "Resource validation timeout" from 9.1.x, with `NsxClusterRetrievalException` | `curl` the KB's inventory call on SDDC Manager: status "ACTIVATING" matches | Snapshot SDDC Manager, set the status to ACTIVE with the KB's PUT, retry | <KB id={457342} />, 28 Sep 2026 |
+| "Check for federation upgrade compatibility" | Plan Global Managers first | Upgrade Global Managers, then Local Managers | <KB id={443763} />, 12 Jun 2026 |
+| Distributed load balancer ERROR: "Default distributed load balancer instance is not supported" | Read its connectivity path: "ALL" is the ERROR case | Bind it to a specific group. A WARNING can be acknowledged, though a group with segment ports loses traffic briefly during the ESX upgrade | <KB id={440901} />, 21 Sep 2026 |
+
+### Step 17: vCenter
+
+| Symptom | Spot it before the window | What clears it | Source |
+|---|---|---|---|
+| "Some uplink distributed portgroup(s) on the source vCenter Server have NetFlow enabled" | Check uplink portgroups, and confirm Operations for networks comes first | Upgrade Operations for networks first, or clear "Enable NetFlow (IPFIX) on this vCenter" on the adapter. The [runbook diff](/vcf/library/day-2/runbook-diff-91/) covers the lines to change | <KB id={441813} />, 11 Oct 2026 |
+| "vCenter backup should not be located on SDDC Manager" | VAMI Backup: the target isn't SDDC Manager's IP, FQDN or storage | External target, Backup Now, rerun | <KB id={448668} />, 17 Jul 2026 |
+| Eight errors at once, from root password to NTP, with "Unable to authorize user" in the log | The KB's session `curl` calls with both accounts, and whether ELM was already broken | Reset the STS certificate (KB 385107). For broken ELM, roll back or open a case | <KB id={448583} />, 17 Aug 2026 |
+| "vCenter upgrade failed at the VCENTER_UPGRADE_PREPARATION stage" | Source VAMI proxy settings | Add the target to NO_PROXY, or fix the rules. In-place is the KB's last resort, which the [rollback note](/vcf/library/upgrades/rollback-checkpoints/) limits to the 9.0.x path | <KB id={442134} />, 26 Jun 2026 |
+| `VCENTER_SWITCHOVER` stays `INPROGRESS`, "Resource is already locked by OPERATIONS_MANAGER service" | The KB's read-only `select * from lock` on SDDC Manager | Snapshot SDDC Manager, delete the lock row. The NSX credential failure behind it isn't addressed | <KB id={449148} />, 31 Jul 2026 |
+| Fails at "VCENTER UPGRADE POST INSTALL VM HARDWARE UPGRADE" | Suggested: read the vCenter VM's hardware version. Above 17 matches | Set `virtualHW.version` back to 17 per the KB, retry | <KB id={442290} />, 30 Aug 2026 |
+| After the upgrade: "One or more vCenter instances are not connected to a license server" | Confirm step 7 finished before vCenter | Upgrade VCF Operations, deploy management services and the license server, register | <KB id={440471} />, 31 Aug 2026 |
+
+### Steps 21 and 22: ESX and NSX Edge
+
+| Symptom | Spot it before the window | What clears it | Source |
+|---|---|---|---|
+| "There are no images available that match the required target version" | Suggested: confirm the image and vendor add-ons are in the Image Library | Configure the image, then start from the VCF Instance view | <KB id={448058} />, 21 Jul 2026 |
+| ESXi upgrade fails at REMEDIATE on active vSAN health alarms | NTP, and suggested: review NVMe and SCSI controller health | Silence those alarms and retry, upgrade stubborn hosts by hand, rerun configure, and repair the hardware afterwards | <KB id={444283} />, 15 Jun 2026 |
+| `Health Check for <ESXi host FQDN> failed` | `VMware_MPS-SVM-<version>` VMs are powered on | Power on the VM and rerun | <KB id={448726} />, 18 Jul 2026 |
+| "The current vCenter is not licensed by a license server" | License Servers tab: "Not Registered" | Delete and redeploy the license server, connect it, rerun | <KB id={453417} />, 24 Aug 2026 |
+| "An error occurred during the upload of the upgrade bundle", task "Upload Required Bundles to vCenter" | | Check vCenter services, then acknowledge and continue, as the bundle is already there | <KB id={448933} />, 19 Oct 2026 |
+| Stuck at PostCheck for hours. vCenter shows the hosts upgraded | | `systemctl restart lcm` on SDDC Manager | <KB id={450366} />, 7 Aug 2026 |
+| 9.0.2: "DNS is not configured on edge", on Edges from Simplified Edge Deployment | `get name-servers` and `get search-domains` on each Edge | Lam set both with the matching `set` commands and tested a lookup | [Lam](https://williamlam.com/2026/01/quick-tip-nsx-edge-fails-dns-pre-check-as-part-of-vcf-9-0-2-upgrade.html), 23 Jan 2026 |
+
+Silencing a health alarm is the KB's route through <KB id={444283} />, but it carries a hardware fault into the upgrade. Clear NVMe and SCSI controller faults before the window instead, so you never have to choose that during it. The KB doesn't state this, but it follows from its instruction to repair the hardware afterwards. Lam's Edge check is written for 9.0.2 only. Run it anyway on a 9.1 path, because it takes two read-only commands per Edge.
+
+### Patching 9.1.0.x to 9.1.1
+
+The [9.1.1 notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html) (5 Nov 2026) set the frame: "DO NOT use the Upgrade All button" until the dependencies are met, fleet lifecycle goes first, VCF Operations runs alone, and VCF Operations and license servers go before ESX. The last two rows below share one message, so check the cause before reverting.
+
+| Symptom | Spot it before the window | What clears it | Source |
+|---|---|---|---|
+| `VCFMS-PRECHECK-VIDB-VMSP-VERSION-001`, though the runtime may already be at the right version | "Last lifecycle metadata sync time" isn't old or N/A | Sync under VCF Management, then Retry | <KB id={458395} />, 7 Oct 2026 |
+| "Backup workflow failed for component: vcf-fleet-lcm" | SFTP backup username has no backslash | Change to `user@domain`, rerun | <KB id={450561} />, 28 Sep 2026 |
+| `ops_precheck` 401, with repeated `DELETE /casa/authorize` from the fleet appliance's address | The 9.0 fleet appliance is powered off | Power it off, rerun | <KB id={449075} />, 21 Jul 2026 |
+| `ops_precheck`, Reference Code 70BACE6F, 401, after an analytics node rebooted during the run | Suggested: avoid node reboots during prechecks | Collect a support bundle and revert. With no snapshot, edit the pack history as the KB shows | <KB id={452677} />, 22 Oct 2026 |
+
+## Before you close the session
+
+Run Broadcom's readiness set from <KB id={454898} /> (3 Nov 2026): the SoS health check on SDDC Manager, the diagnostic tool on each vCenter, and the runtime health and service account check from 9.0 on. Build the ordered plan in the Upgrade Planner, as the [route chooser](/vcf/library/upgrades/upgrade-route-chooser/) describes, and keep the checks you can script in [Scripted health checks](/vcf/library/labs/scripted-health-checks/). Put each revert decision and its deadline in [Go or no-go](/vcf/library/leadership/go-no-go-and-rollback/) rather than deciding during the window.

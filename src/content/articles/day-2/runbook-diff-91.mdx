@@ -1,0 +1,114 @@
+---
+title: "Runbook diff for 9.1: what to change on the day you upgrade"
+description: "The runbook lines VCF 9.1 makes false, old against new, ordered by the upgrade step that breaks them. VCF Operations lines flip first. Syslog and vCLS lines flip one vCenter at a time, so keep both versions until the last workload domain is done. Export anything on a Network Share first."
+category: day-2
+order: 11
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
+level: Practitioner
+pubDate: 2026-11-07
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [454002, 459831, 390551, 433089, 443088, 316514, 435599]
+sources:
+  - title: "VCF 9.1 product support notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrading VMware Cloud Foundation, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Managing passwords for VCF components, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Compliance assessment and reporting using Security Posture Management, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/security-and-compliance/security-posture-management/compliance-assessment-and-reporting-using-security-posture-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Authentication Sources, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/-configuring-administration-settings/managing-user-access-control/authentication-sources-overview.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "OAuth token support for API and CLI access, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/administration-sdks-cli-and-tools/about-vmware-cloud-foundation-development/oauth-token-support-for-api-and-cli-access.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1 general FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+---
+
+<InShort>
+**Edit in three batches, because the lines go false at different steps.** In [Broadcom's upgrade order](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) VCF Operations is step 1, Log Management step 12, and vCenter step 17 from 9.0 or step 16 from 5.2. Workload domains can follow "at any time", so port 514 and vCLS lines stay true for some vCenters and false for others: keep both versions until the last one moves. Two jobs come before step 1: export from any Network Share plugin, because the upgrade deletes its data, and move every script off vCenter credentials.
+</InShort>
+
+The [deprecation radar](/vcf/library/architecture/deprecation-radar/) holds the full list by who has to act. This page holds only the lines to edit. Broadcom's [support notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) (5 Nov 2026) sort by product, which doesn't tell you when each line turns false <AsOf date="2026-11-07" />.
+
+<Callout type="analysis" title="What is sourced here and what isn't">
+New wording and quoted effects come from the linked pages. Old lines are constructed examples, so match them to your own. Where a source states no consequence, "If nobody edits it" is this site's inference. Every "Confirm" check is this site's suggestion and hasn't been run here, so try it outside production first.
+</Callout>
+
+## Batch 1: the VCF Operations upgrade
+
+| Old line | New line | If nobody edits it | Confirm | Source |
+|---|---|---|---|---|
+| Pick your vCenter on the VCF Operations login screen. Scripts authenticate with vCenter credentials | Sign in through a listed source: SSO SAML, VMware Identity Manager, Open LDAP, or Active Directory or other. Scripts use a non-vCenter account or an Identity Broker API token | The vCenter list "is no longer available" and vCenter API credentials are "no longer supported", so those operators and scripts can't get in | Before the step, sign in and run each script through the new source. After it, the list should be gone | [Notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html), [sources](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/-configuring-administration-settings/managing-user-access-control/authentication-sources-overview.html), [tokens](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/administration-sdks-cli-and-tools/about-vmware-cloud-foundation-development/oauth-token-support-for-api-and-cli-access.html), 5 Nov 2026 |
+| Activate the compliance benchmark and pull the report from Compliance | "Compliance feature is now deprecated and replaced by Security Posture Management". Enable a benchmark by selecting a policy, schedule it in Global Settings, export CSV or a control-level report | Audit steps point at a deprecated feature. Operators need a role with the Security Posture Management permissions: Assess and Remediate, Assess Only, or View | Assess one policy, count results marked Unknown, and produce your auditor's export. Export old results before step 1: the page doesn't say they carry over (checked 7 Nov 2026) | [Notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html), [SPM page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/security-and-compliance/security-posture-management/compliance-assessment-and-reporting-using-security-posture-management.html), 5 Nov 2026 |
+| Reports are copied to the network share | Deliver reports with the Standard Email plugin | The plugin, "its configurations, and related data are automatically removed" during the upgrade. | Export first. Afterwards, send one report and open the attachment | [Notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html), 5 Nov 2026 |
+| Import the vendor's logs content pack | Convert third-party content packs into management packs | "You will not be able to use" content packs in VCF Operations | Import a converted pack outside production and check it populates | [Notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html), 5 Nov 2026 |
+| Rotate passwords in SDDC Manager | Rotate in VCF Operations, "the preferred method". Keep SDDC Manager for local or application accounts only if your estate requires it | It still works, but the SDDC Manager UI "will be removed in a future release" | Check that the account's last password update date moved in VCF Operations | [Passwords](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords.html), [guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html), 5 Nov 2026 |
+| Set expiry on each component | Assign a password policy to the fleet, the management components or an instance | A policy with an N-day expiry expires, on the spot, any password last updated N+1 or more days ago | Read last update dates first, and update stale passwords before applying it | [Passwords](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords.html), 5 Nov 2026 |
+
+From 9.0, the [upgrade guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) says that after VCF Operations reaches 9.1.x you can't manage certificates and passwords for VCF Automation, Identity Broker, VCF Operations for logs or VCF Operations for networks until each of those reaches 9.1. Those are steps 8 to 12, so rotate them just before step 1 if the upgrade will run for days.
+
+[Passwords and service accounts](/vcf/library/day-2/passwords-service-accounts/) has the rest.
+
+## Batch 2: the log stack
+
+| Old line | New line | If nobody edits it | Confirm | Source |
+|---|---|---|---|---|
+| Point senders at the log platform on 514 | Forward syslog over TLS on 1514. Broadcom names turning off the `SSL Syslog` setting as the other option, and recommends TLS | "Connectivity verified" on 514, yet logs don't appear. This is by design | Find a test message in the Log view. A port test passes here and proves nothing | <KB id={454002} />, checked 7 Nov 2026 |
+| Reset the logs admin password in its own menu | Use the VCF management services workflows, and the break-glass UI if VCF Operations is unreachable | The standalone password and SSO menus are gone, as expected | Run one password update from VCF Operations, and test break-glass once | <KB id={443088} />, checked 7 Nov 2026 |
+| Install the logs agent on any supported host | Check for OpenSSL 3 or higher first: agent 9.1.0 no longer bundles it | The agent "fails to function" | Check each agent host's version, then find its logs | [Notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html), 5 Nov 2026 |
+| HCX upgrade ends when the manager is done | On 9.1.1.0 or later, redeploy or update the data plane appliances as well | They "stop sending logs to the syslog server" | Find a recent line from each appliance at the collector | [9.1.1.0 notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), 5 Nov 2026 |
+
+<KB id={459831} /> lists vCenter and ESX 9.0.x under VCF Operations 9.1 Log Management, with hosts raising `esx.problem.vmsyslogd.remote.failure` and errors that can grow the vCenter database. Watch for that event until the hosts move. The KB's interim options are disabling ESX logging from VCF Operations or switching to TCP over SSL. [Moving from Aria Operations for Logs](/vcf/library/upgrades/aria-logs-to-log-management/) covers the move itself.
+
+## Batch 3: each vCenter
+
+| Old line | New line | If nobody edits it | Confirm | Source |
+|---|---|---|---|---|
+| Hosts and appliances send syslog to vCenter on 514. Scripted CLI installs set `syslog.ext.port` | "Starting with vCenter 9.1", port 514 (UDP/TCP) is blocked: use 1514 with TLS, and `syslog.ext.tls.port` in scripts | Transfers on 514 "are no longer supported", and a sender may have no certificate handling | Search templates for the old option. Run `openssl s_client -connect vcenter.example.com:1514` from a sender; the KB, written for vCenter 6 to 8, expects the same certificate as 443. Then find a sent message | [Notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html), 5 Nov 2026; <KB id={390551} />, checked 7 Nov 2026 |
+| vCenter forwarding is set once and left alone | Record targets before each vCenter upgrade, then re-enable collection on the Log Management configure collection page or re-enter them | "The syslog targets are deleted" when vCenter reaches 9.1, so forwarding stops | Compare targets with your record, then find a new vCenter message at the collector | <KB id={433089} />, checked 7 Nov 2026 |
+| Check vCLS VMs before maintenance, and use Retreat Mode if they misbehave | Delete both steps once this vCenter is on 9.1. This is inference from the deactivation: the notes name neither step | Checks hunt for a service that is "deactivated by default and you cannot re-activate the capability". Remaining APIs and configurations are unsupported | Look for vCLS VMs in each upgraded cluster: the notes don't say what happens to existing ones. Drain one host in a non-critical cluster and watch DRS move its VMs | [Notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html), 5 Nov 2026; <KB id={316514} />, checked 7 Nov 2026 |
+| Enable IPFIX on uplink port groups or LACP ports | Remove it before the upgrade, and find another flow source for uplinks | "vCenter upgrade is blocked" | Review each distributed switch before the window | [Notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html), 5 Nov 2026 |
+| `PUT /api/appliance/local-accounts/global-policy` applies to new users | It now changes existing users too. Exempt a user with `PATCH /api/appliance/local-accounts/{username}` | A scheduled configuration job rewrites expiry on accounts it used to leave alone | Read one existing account's settings before and after a run outside production | [Notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html), 5 Nov 2026 |
+
+Broadcom's 514 sentence covers traffic "to vCenter", as the radar notes. KB 433089 concerns traffic leaving vCenter, so test both directions.
+
+<Callout type="analysis" title="This site's reading: fork the syslog and vCLS lines">
+Write these lines with a condition, such as "vCenter below 9.1: 514. vCenter 9.1: 1514 with TLS". A single edit on upgrade day would be wrong for every vCenter still waiting. Delete the fork when the last one moves.
+</Callout>
+
+## Where the sources disagree
+
+**Who owns passwords.** <KB id={435599} /> covers "VCF 9.x", shows no update date and calls SDDC Manager's Password Management "the authoritative source for account lifecycles". The 9.1 [passwords page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords.html), dated 5 November 2026, prefers VCF Operations. On 9.1, follow the dated page.
+
+**Whether DRS needs vCLS.** <KB id={316514} /> lists only vCenter 7.0.x and 8.0.x and still warns that DRS "will not function" in Retreat Mode, while its note says vCLS can be disabled from vSphere 9.0 without affecting DRS or HA. The Installer section of the 9.1 notes agrees on decoupling, then says vCLS "will be deprecated in a future release". Plan on the vCenter section, as the radar does.
+
+**The FAQ.** Q41 of the [9.1 FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) (4 Nov 2026) introduces Security Posture Management and calls 9.1 "upcoming". It doesn't mention syslog, vCLS or the login change.

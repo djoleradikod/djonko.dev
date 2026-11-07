@@ -1,6 +1,6 @@
 ---
 title: "NVMe memory tiering: when it pays, when to buy hosts instead, and how far to trust the savings"
-description: "Tier when memory runs out before CPU and active memory stays at or below 50% of DRAM with a host or site already failed. A constructed example saves 3 of 8 hosts at 25% active and none above 51%. The one vendor figure with itemised prices is 35% on memory, 20% on the server."
+description: "Tier when memory runs out before CPU and active memory stays at or below 50% of DRAM with a host or site already failed. A constructed example saves 3 of 8 hosts with 25% of consumed memory active, none above 51%. The one vendor figure with itemised prices is 35% on memory, 20% on the server."
 category: value
 order: 5
 versions: ["9.0", "9.1", "9.1.1"]
@@ -87,24 +87,24 @@ sources:
 ---
 
 <InShort>
-**Go** when memory runs out before CPU, peak active memory stays at or below 50% of host DRAM with a host or site already failed, and the cluster runs 9.1.1 on a percentage or failover-host HA policy. **Buy hosts** otherwise. In the constructed example below, tiering removes 3 of 8 hosts at 25% active memory, 1 at 50%, none above 51%, and costs an extra host at 60%. Read vendor savings of 40 to 45% as ceilings. The one figure with itemised prices, commissioned by Intel, is 35% on memory and 20% on the whole server.
+**Go** when memory runs out before CPU, peak active memory stays at or below 50% of host DRAM with a host or site already failed, and the cluster runs 9.1.1 on a percentage or failover-host HA policy. **Buy hosts** otherwise. In the constructed example below, tiering removes 3 of 8 hosts when active memory is 25% of consumed memory, 1 at 50%, none above 51%, and costs an extra host at 60%. Read vendor savings of 40 to 45% as ceilings. The one figure with itemised prices, commissioned by Intel, is 35% on memory and 20% on the whole server.
 </InShort>
 
 For how tiering works, read Duncan Epping's [FAQ on Yellow Bricks](https://www.yellow-bricks.com/2026/07/16/memory-tiering-considerations-and-frequently-asked-questions/) (16 July 2026). It covers the mechanism, large pages, RAID-1 and per-VM settings.
 
-## The decision tree
+## The checks, in order
 
-Work down in order. The first row you fail decides the answer.
+Work down in order, because row 4 feeds row 3. Rows 1 and 2 can end the case; the rest send you to a fix.
 
 | Test | Threshold and source | If it fails |
 |---|---|---|
 | 1. Does memory bind before CPU? | Hosts needed for memory on DRAM alone must exceed hosts needed for CPU. [Lenovo](https://lenovopress.lenovo.com/lp2518.pdf) says keep host CPU below 75%. The [9.1 performance guide](https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices) says only "enough CPU headroom". | Stop. No hosts come out. |
-| 2. Will hosts reach 80% of DRAM? | Pages move only from about 80% DRAM consumed (<KB id={449016} />). Epping: the threshold can't be changed. | The tier idles. Buy it only as failover capacity. |
-| 3. Peak active memory at or below 50% of DRAM, per surviving host? | Performance guide: 50% ideally, some workloads hold until about 75%. | Add hosts or buy DRAM. Use 50 to 75% only after testing your workload. |
-| 4. Which VMs won't tier? | High latency sensitivity, "Reserve all guest memory", `sched.mem.enableTiering` FALSE (<KB id={448305} />, written for 9.0). FT and passthrough (Epping). | Count them in full against DRAM, then redo row 3. |
-| 5. Does the device qualify? | At least DRAM size ([TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management/memory-tiering-over-nvme/memory-tiering-considerations-and-best-practices.html)). 3 DWPD, 100,000 writes per second, read latency ideally below 200 µs (performance guide). 4 TB partition limit (Epping, [Morera](https://blogs.vmware.com/cloud-foundation/2025/12/02/nvme-memory-tiering-design-and-sizing-on-vmware-cloud-foundation-9-part-3/)). | Change it. By arithmetic, 4 TB stops 1:1 above 4 TB of DRAM and 1:4 above 1 TB. |
+| 2. Will hosts reach 80% of DRAM? | Pages move only from about 80% DRAM consumed (<KB id={449016} />), and the threshold can't be changed (Epping). | The tier idles. Buy it only as failover capacity. |
+| 3. Peak active memory at or below 50% of DRAM, per surviving host? | 50% ideally, though some workloads hold until about 75% (performance guide). | Add hosts or buy DRAM. Use 50 to 75% only after testing your workload. |
+| 4. Counted the VMs that won't tier? | High latency sensitivity, "Reserve all guest memory", `sched.mem.enableTiering` FALSE (<KB id={448305} />, written for 9.0). FT and passthrough (Epping). | Count them in full against DRAM, then redo row 3. |
+| 5. Does the device qualify? | At least DRAM size ([TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management/memory-tiering-over-nvme/memory-tiering-considerations-and-best-practices.html)). 3 DWPD, 100,000 writes per second, read latency ideally below 200 µs (performance guide). 4 TB partition limit (Epping, [Morera](https://blogs.vmware.com/cloud-foundation/2025/12/02/nvme-memory-tiering-design-and-sizing-on-vmware-cloud-foundation-9-part-3/)). | Change the device. The 4 TB limit stops 1:1 above 4 TB of DRAM and 1:4 above 1 TB. |
 | 6. Is HA tier-aware? | 9.1.1, percentage or dedicated failover hosts policy, DRS on. | On 9.1 or earlier, check DRAM by hand. On slot policy, switch. |
-| 7. Stretched? | Normal-running active memory at or below 25% of DRAM (arithmetic below). | Add hosts per site or stay on DRAM. |
+| 7. If stretched, is normal running low enough? | Normal-running active memory at or below 25% of DRAM (worked below). | Add hosts per site or stay on DRAM. |
 
 Measure rows 1 and 3 with [MTAT](https://blogs.vmware.com/cloud-foundation/2026/07/31/meet-mtat-your-zero-friction-path-to-memory-tiering-in-vmware-cloud-foundation-9-0/) on its 30-day lookback, at statistics level 2, so month-end runs are included. Morera's post doesn't mention host failure or stretched clusters, so divide active memory by surviving hosts yourself.
 
@@ -114,9 +114,11 @@ This example is constructed, so replace each number with your own.
 
 - **Hosts:** 32 cores, 1,024 GB of DRAM, 1:1, so 2,048 GB presented.
 - **Workload:** 6,000 GB consumed, 80 cores of CPU demand, all VMs tier.
-- **Limits:** fill to 90% of presented memory, one spare host, 512 GB active per surviving host.
+- **Limits:** fill to 90% of presented memory, one spare host, 512 GB active per surviving host (the 50% limit).
 
 On DRAM alone, 6,000 ÷ 921.6 = 6.51, so 7 + 1 = **8 hosts, 256 cores**. Tiered, memory asks for 6,000 ÷ 1,843.2 = 3.26, so 4 + 1 = 5 hosts. Active memory sets its own floor: active GB ÷ 512, rounded up, plus 1. The higher floor wins.
+
+Active share means share of the 6,000 GB consumed. Bracketed figures are shares of one host's DRAM, the 50% limit's base, and every row clears that limit because the active floor adds hosts.
 
 | Active share | Active GB | Active floor | Tiered hosts | Active per host, one failed | Hosts saved | Cores saved |
 |---|---|---|---|---|---|---|
@@ -125,43 +127,43 @@ On DRAM alone, 6,000 ÷ 921.6 = 6.51, so 7 + 1 = **8 hosts, 256 cores**. Tiered,
 | 50% | 3,000 | 6 + 1 = 7 | 7 | 500 GB (49%) | 1 | 32 |
 | 60% | 3,600 | 8 + 1 = 9 | 9 | 450 GB (44%) | **−1** | **−32** |
 
-The saving ends at 3,072 GB active (6 × 512), or 51%. Past 3,584 GB (7 × 512, 60%), tiering costs a host. CPU can end it sooner: at a 75% ceiling each surviving host gives 24 cores, so demand above 144 cores needs 8 hosts anyway. The 25% row adds five NVMe devices, ten if mirrored, and on VCF drops the [vSAN entitlement](/vcf/library/value/vsan-entitlement/) from 256 to 160 TiB, at 1 TiB per core (<KB id={313548} />).
+The saving ends at 3,072 GB active (6 × 512), or 51% of consumed. Past 3,584 GB (7 × 512, 60%), tiering costs a host. CPU can end it sooner: at a 75% ceiling each surviving host gives 24 cores, so demand above 144 cores needs 8 hosts anyway.
 
-Now suppose active memory turns out higher than measured and you've kept the 5-host design. At 40% active, hosts run 480 GB (47%) and pass, then reach 600 GB (59%) with one failed. At 60%, they run 720 GB (70%), then 900 GB (88%), past the 75% the performance guide mentions.
+Count two things against the 25% row's saving: five NVMe devices, ten if mirrored, and on VCF a [vSAN entitlement](/vcf/library/value/vsan-entitlement/) that falls from 256 to 160 TiB, 96 TiB less, at 1 TiB per core (<KB id={313548} />).
+
+Now suppose active memory turns out higher than measured and you've kept the 5-host design. At 40% active, hosts run 480 GB (47%) and pass, then reach 600 GB (59%) with one failed, over the 50% limit. At 60%, they run 720 GB (70%), then 900 GB (88%), past the 75% the performance guide mentions.
 
 <Callout type="analysis" title="The failure is slowness, and HA won't report it">
-The [percentage policy page](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control/cluster-resources-percentage-admission-control.html) sums each VM's reservation plus overhead, uses 0 MB where no reservation is set, and asks only overhead of a tiered VM in DRAM. It doesn't list active memory as an input. Inferring from those rules, both cases can restart every VM on green status, then run slowly while the cluster is already degraded.
+HA's [percentage policy](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control/cluster-resources-percentage-admission-control.html) sums each VM's reservation plus overhead, uses 0 MB where no reservation is set, and asks only overhead of a tiered VM in DRAM. That page doesn't list active memory as an input. The inference from those rules is that both cases can restart every VM on green status, then run slowly while the cluster is already degraded.
 </Callout>
 
 ## What 9.1.1 changes for HA
 
-Broadcom [documents](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control/memory-tiering-and-ha-admission-control.html) the old behaviour. Through 9.1, HA treated DRAM and NVMe as one pool, so restarts could fail for lack of DRAM while status stayed green, which it calls a "silent failure".
+Through 9.1, HA treated DRAM and NVMe as one pool, so restarts could fail for lack of DRAM while status stayed green, which [Broadcom's page](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control/memory-tiering-and-ha-admission-control.html) calls a "silent failure".
 
-From 9.1.1, a VM is admitted only if total memory and DRAM both pass. [In auto mode](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control/cluster-resources-percentage-admission-control.html), the DRAM reservation is the DRAM of the n largest hosts. In manual mode, your percentage applies to each pool. A non-tiered VM needs reservation plus overhead in DRAM. Broadcom says not to use the slot policy with tiering. [Epping adds](https://www.yellow-bricks.com/2026/09/22/memory-tiering-aware-vsphere-ha-admission-control-in-vcf-vsphere-9-1-1/) two limits the TechDocs page doesn't state: the logic needs DRS on, and "does not work when vCenter is unavailable and the SPE is used". He doesn't expand SPE.
+From 9.1.1, a VM is admitted only if total memory and DRAM both pass, and a non-tiered VM needs reservation plus overhead in DRAM. [In auto mode](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control/cluster-resources-percentage-admission-control.html), the DRAM reservation is the DRAM of the n largest hosts. In manual mode, your percentage applies to each pool. Stay off the slot policy, which Broadcom says not to use with tiering. Two limits come from [Epping](https://www.yellow-bricks.com/2026/09/22/memory-tiering-aware-vsphere-ha-admission-control-in-vcf-vsphere-9-1-1/) and aren't on the TechDocs page: the logic needs DRS on, and it "does not work when vCenter is unavailable and the SPE is used" (his abbreviation, unexplained).
 
-<Callout type="analysis" title="Design consequences (this site's reasoning)">
-**Re-run capacity after the upgrade.** Non-tiered VMs each need reservation plus overhead in DRAM, and that check is new, so a cluster green on 9.1 may refuse power-ons on 9.1.1.
+<Callout type="analysis" title="Design consequences">
+Re-run capacity after the upgrade, because the non-tiered DRAM check is new, so a cluster green on 9.1 may refuse power-ons on 9.1.1.
 
-**Test the violation check.** The page says HA raises a configuration issue when "actual DRAM utilization" drops available DRAM below the reservation, and that the FailoverResource violation check runs every 5 minutes. It doesn't define that term. In the 5-host example, auto mode reserves 20% of DRAM, and tiering begins with 20% free. If the term means consumed memory, a working tiered cluster sits on that line. Check on a non-production cluster.
+A healthy cluster may also trip the violation check. In the 5-host example, auto mode reserves 20% of DRAM, and tiering begins with 20% free. HA raises a configuration issue when "actual DRAM utilization", a term the TechDocs page doesn't define, drops available DRAM below the reservation, and the FailoverResource violation check runs every 5 minutes. If the term means consumed memory, a working tiered cluster sits on that line. Check on a non-production cluster.
 </Callout>
 
-## Stretched clusters: the gap
+## Stretched clusters: size for site loss yourself
 
-Epping's FAQ takes the question from someone who typically runs a stretched cluster at or below 50% consumed. The answer reads, "Currently memory tiering does not take that scenario into consideration." <AsOf date="2026-11-06" />
+Tiering makes no allowance for a stretched cluster typically run at or below 50% consumed: "Currently memory tiering does not take that scenario into consideration," Epping's FAQ says <AsOf date="2026-11-06" />.
 
-<Callout type="analysis" title="Constructed, same workload, no spare host per site">
-Each site must carry everything: 4 tiered hosts per site (6,000 ÷ 1,843.2), so 8 against 14 on DRAM.
+<Callout type="analysis" title="Site loss doubles active memory per host">
+Constructed again, same workload, no spare host per site. Each site must carry everything: 4 tiered hosts per site (6,000 ÷ 1,843.2), so 8 against 14 on DRAM.
 
-In normal running each host holds 750 GB, 73% of DRAM, so the tier stays empty.
+Failover doubles active memory per host, so 50% of DRAM after failure means 25% before it. At 40% active share, normal running shows 300 GB (29%) and passes an assessment, then site loss gives 600 GB (59%). Five hosts per site fixes it at 480 GB (47%), 10 hosts against 14.
 
-With a site lost, each host holds 1,500 GB. The tier takes its first pages during the outage, so include that state in failover tests.
-
-Failover also doubles active memory per host, so 50% after failure means 25% before it. At 40% active share, normal running shows 300 GB (29%) and passes an assessment, then site loss gives 600 GB (59%). Five hosts per site fixes it at 480 GB (47%), 10 hosts against 14.
+In normal running each host holds 750 GB, 73% of DRAM, so the tier stays empty. With a site lost, each holds 1,500 GB and the tier takes its first pages during the outage, so include that state in failover tests.
 </Callout>
 
 ## How far to believe the percentages
 
-These are the claims on record, <AsOf date="2026-11-06" />.
+Five figures are on record, <AsOf date="2026-11-06" />, and the highest comes from a company selling the servers.
 
 | Figure | Who, when | Measures | Assumptions shown | Interest |
 |---|---|---|---|---|
@@ -171,17 +173,14 @@ These are the claims on record, <AsOf date="2026-11-06" />.
 | Up to 45% acquisition cost | [Lenovo brief](https://lenovopress.lenovo.com/lp2518.pdf), 28 Aug 2026 | Same VM capacity against all-DRAM | "Lenovo and VMware benchmark testing", no prices behind the 45% | Sells the servers |
 | 35% lower memory cost | [Principled Technologies](https://www.principledtechnologies.com/Intel/Xeon-6-VMware-Cloud-Foundation-9-1-memory-tiering-0826/), Aug 2026 | One Dell R770: 512 GB + NVMe against 1 TB DRAM | Dell.com prices, 8 June 2026 | **Commissioned by Intel** |
 
-Only the last row itemises its prices, and its [price tables](https://www.principledtechnologies.com/Intel/Xeon-6-VMware-Cloud-Foundation-9-1-memory-tiering-science-0826.pdf) hold: $68,539.64 against $106,077.28 is 35.4% lower. From the same tables:
+Only the last row itemises its prices, and its [price tables](https://www.principledtechnologies.com/Intel/Xeon-6-VMware-Cloud-Foundation-9-1-memory-tiering-science-0826.pdf) hold: $68,539.64 against $106,077.28 is 35.4% lower. The same tables put the whole server at $156,189.96 against $196,121.99, 20.4% lower, for 85% of the 1 TB throughput at 12 VMs.
 
-- **Whole server:** $156,189.96 against $196,121.99 is 20.4% lower (this site's arithmetic).
-- **Performance:** 85% of the 1 TB throughput at 12 VMs.
-- **Licences:** one host on each side, so no licence saving is included. That comes only when hosts go away, as the worked example counts.
-- **Drive:** listed as "3.84 TB RI" with no DWPD stated. Confirm it meets the 3 DWPD guidance before reusing its price.
+Licences are one host on each side, so no licence saving is included. That comes only when hosts go away, as the worked example counts. The drive is listed as "3.84 TB RI" with no DWPD stated, so confirm it meets the 3 DWPD guidance before reusing its price.
 
 Lenovo's brief conflicts with itself. Its outcomes list claims "more than 90 percent performance retention" at double density, and its results table shows 80 to 90% of DRAM-only throughput for SQL Server and 76 to 82% for MongoDB. Its one dollar example, credited to VMware, is about $205,000 against $318,000. It calls that "close to 40 percent"; the arithmetic gives 35.5%.
 
 None of the five figures above comes from an independent study. Enter your own quotes in MTAT, which Morera says covers chassis and memory media only, then add licensed cores from your host count.
 
-## If the answer is go
+## Device failure and health
 
-Without RAID-1, Epping compares device loss to a DIMM failure with an HA restart. He says RAID-1 also works in software from 9.1, and a mirrored pair means a second device per host. William Lam's [note](https://williamlam.com/2026/09/quick-tip-improved-nvme-tiering-device-health-monitoring-in-vcf-9-1.html) (22 September 2026) covers the health report and suggests planning replacement when Available Spare reaches 10%.
+Without RAID-1, losing the device is like a DIMM failure with an HA restart, Epping says. RAID-1 also works in software from 9.1, he says, but a mirrored pair means a second device per host. Plan replacement when Available Spare reaches 10%, William Lam suggests in his [note](https://williamlam.com/2026/09/quick-tip-improved-nvme-tiering-device-health-monitoring-in-vcf-9-1.html) on the health report (22 September 2026).

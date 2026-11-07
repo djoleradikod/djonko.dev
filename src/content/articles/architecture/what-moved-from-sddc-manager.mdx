@@ -37,7 +37,7 @@ In 5.x, SDDC Manager was both the console and the engine. In 9.0 it keeps the en
   ["UI", "The primary admin UI. From 5.2.1 some tasks also appear in the vSphere Client.", "9.0: tasks surface in VCF Operations under Fleet Management. 9.1: the SDDC Manager UI is deprecated."],
   ["Lifecycle scope", "Everything in the BOM, including Aria Suite Lifecycle in VCF-aware mode.", "ESX, vCenter, NSX and, in 9.1, HCX. Management components belong to fleet lifecycle."],
   ["Passwords and certificates", "Managed from SDDC Manager for every component.", "Managed from VCF Operations. SDDC Manager's own password and certificate APIs are deprecated in favour of VCF Operations."],
-  ["Identity", "Part of the vCenter SSO domain of the management domain.", "Excluded from VCF SSO. It keeps local accounts only."],
+  ["Identity", "Part of the vCenter SSO domain of the management domain.", "Excluded from VCF SSO. Its UI takes local accounts only; its APIs accept SSO users."],
 ]} />
 
 ## What SDDC Manager still does

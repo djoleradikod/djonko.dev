@@ -1,94 +1,177 @@
 ---
-title: "Identity in VCF 9: from vIDM and vCenter SSO to the VCF Identity Broker"
-description: "5.x had two identity stories, vCenter SSO for infrastructure and Workspace ONE Access for Aria. VCF 9 replaces both with one broker and one sign-on, and the scope you choose for it sets your blast radius."
+title: "VCF Identity Broker in 9.1: which mode, how many brokers, what switching costs"
+description: "Run instance mode in production on VCF 9.1: Broadcom scopes embedded to labs and proofs of concept, and the vIDM migration only targets instance. Keep one broker per fleet unless an outage or a realm must stop at an instance. Embedded to instance is a documented migration; going back deletes SSO."
 category: architecture
 order: 5
-versions: ["5.x", "9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [409610, 437258, 444003, 444734, 432503, 420836, 444757]
+updated: 2026-11-07
+reviewed: 2026-11-07
+kbs: [444734, 440630, 444003, 457245, 454567, 455402]
 sources:
-  - title: "Deployment models for VCF SSO (9.0)"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/what-is/deployment-models-for-sso.html"
-    by: "Broadcom TechDocs"
-  - title: "Authentication design for VCF (9.1)"
+  - title: "Authentication Design for VCF (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/auth-design-vcf.html"
     by: "Broadcom TechDocs"
-  - title: "vIDM vs vIDB: understanding the VCF identity shift"
-    url: "https://www.wwt.com/blog/vidm-vs-vidb-understanding-the-vcf-identity-shift"
-    by: "WWT"
-  - title: "Group and link your vCenter Servers to simplify workload management"
-    url: "https://blogs.vmware.com/cloud-foundation/2025/06/19/group-and-link-your-vcenter-servers-to-simplify-workload-management/"
-    by: "VMware Cloud Foundation blog"
-  - title: "VCF 5.2 release notes (Entra ID federation)"
-    url: "https://docs.vmware.com/en/VMware-Cloud-Foundation/5.2/rn/vmware-cloud-foundation-52-release-notes/index.html"
-    by: "VMware"
+    kind: broadcom
+  - title: "Embedded Identity Broker Model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-instance-models/embedded-vidb.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Instance Identity Broker Model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-instance-models/external-vidb.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VCF Single Sign-On Detailed Design (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VCF Fleet-Wide Single Sign-On Model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models/vcf-fleet-wide-sso-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Cross VCF Instance Single Sign-On Model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models/one-sso-deployment-per-vcf-estate.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Single VCF Instance Single Sign-On Model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models/single-single-sign-on-deployment-per-vcf-instance.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Considerations and Prerequisites for VCF Single Sign-On (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/points-to-consider-while-setting-up-vmware-cloud-foundation-sso.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Change the Deployment Mode in VCF Single Sign-On (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/managing-vmware-cloud-foundation-operations-sso/how-to-change-the-deployment-mode-in-vcf-sso.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Migration of Identity Broker Embedded to Identity Broker Instance (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/managing-vmware-cloud-foundation-operations-sso/migration-of-vcf-identity-broker-embedded-to-vcf-identity-broker-appliance.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Delete a VCF Single Sign-On Configuration (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/managing-vmware-cloud-foundation-operations-sso/reset-vmware-cloud-foundation-sso.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Modify VCF Instances in an Existing VCF Single Sign-On Configuration (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/join-change-and-remove-vcf-instances-from-an-existing-vcf-single-sign-on-configuration/modify-vcf-instances-that.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Deploy Identity Broker as a Day-N Operation (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manual-adding-vcf-components-post-deployment/deploy-vcf-identity-broker-as-a-day-n-operation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VCF Management Services Models (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-management-services-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VCF Management Network Models (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/fleet-level-component-backing-networking-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Redeploy VCF Identity Broker 9.0.x to a Supported Network and Datastore for Upgrade to 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-identity-broker-on-the-management-network.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Upgrading to VMware Cloud Foundation 9.1.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Upgrade Identity Broker to 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-vcf-identity-broker.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Migrating VMware Identity Manager to Identity Broker (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/migrating-vmware-identity-manager-to-vcf-identity-broker.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Migrate VCF Automation Authentication from VMware Identity Manager to VCF Identity Broker (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/phase-3-import-and-upgrade-aria-automation-8-to-vcf-automation-9/migrate-vcf-automation-single-sign-on-configuration-from-vmware-identity-manager-to-vcf-identity-broker.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Deployment Modes for VCF SSO (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/what-is/deployment-models-for-sso.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Multiple VCF SSO identity providers for a VCF fleet?"
+    url: "https://williamlam.com/2025/10/multiple-vcf-sso-identity-providers-for-vmware-cloud-foundation-vcf-fleet.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2025-10-09
+  - title: "VCF 9.1: updated method to reset Identity Broker from previously managed VCF Operations"
+    url: "https://williamlam.com/2026/05/vcf-9-1-reset-identity-broker-from-previously-managed-vcf-operations-for-vcf-single-sign-on-sso.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-05-17
 ---
 
 <InShort>
-In 5.x, infrastructure users signed in through vCenter SSO. That could be one `vsphere.local` domain in Enhanced Linked Mode, plus isolated domains where needed. Aria products used Workspace ONE Access (vIDM). VCF 9 introduces the **VCF Identity Broker**, which federates to your identity provider and gives vCenter, NSX, VCF Operations and VCF Automation a single sign-on. SDDC Manager is the exception: it is not part of VCF SSO. There is **no migration from vIDM**, so the broker is always a new deployment. Choose its mode and scope deliberately, because the broker is a single point of failure for authentication within its scope.
+Run **instance mode** for anything in production. Broadcom's 9.1 design library scopes embedded to labs and proofs of concept, the first instance broker arrives with the install or upgrade anyway, and the vIDM migration only targets instance. Start with **one broker for the fleet**. Add one only when a sign-on outage or an identity realm has to stop at an instance. Embedded to instance is a documented migration in VCF Operations, while instance to embedded deletes your SSO configuration. On 9.0 with an appliance broker, get it onto the same network and datastore as management services before you upgrade VCF Operations.
 </InShort>
 
-<Compare rows={[
-  ["Infrastructure sign-on", "vCenter SSO (vsphere.local), Enhanced Linked Mode, and isolated SSO domains per workload domain where needed", "VCF SSO through the Identity Broker. Enhanced Linked Mode is deprecated for new use, and vCenter linking in VCF Operations replaces it."],
-  ["Management product sign-on", "Workspace ONE Access (vIDM), deployed by Aria Suite Lifecycle", "The same broker. vIDM is not carried forward."],
-  ["Identity providers", "AD over LDAP, and federation with ADFS, Okta and, from 5.2, Entra ID", "AD and LDAP, OIDC or SAML providers. Generic OIDC added in 9.1."],
-  ["SDDC Manager", "Part of the management SSO domain", "Excluded from VCF SSO, with local accounts only"],
-  ["Upgrade path", "Not applicable", "None from vIDM. Deploy the broker new, then reconfigure consumers such as VCF Automation (<a href='https://knowledge.broadcom.com/external/article/409610' target='_blank' rel='noopener'>KB 409610</a>)."],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to say there is no migration from vIDM and that moving from embedded to an external broker requires an SSO reset. Both are out of date for 9.1: Broadcom documents a scripted vIDM migration and [an embedded-to-instance migration](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/managing-vmware-cloud-foundation-operations-sso/migration-of-vcf-identity-broker-embedded-to-vcf-identity-broker-appliance.html) that it says "ensures no data loss". It also said SDDC Manager is local accounts only. [That holds for its UI](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/points-to-consider-while-setting-up-vmware-cloud-foundation-sso.html); its APIs accept SSO users.
+</Callout>
 
-## Modes
+## The questions, in order
 
-**9.0**
-- **Embedded:** runs inside the management domain vCenter and is protected by vSphere HA. It is simple, but it fails with that vCenter. Recommended for a single instance.
-- **Appliance:** a three-node cluster deployed by fleet management. It tolerates the loss of one node and serves up to five VCF instances. Recommended for multiple instances, or when some components cannot reach the management vCenter.
+**1. Is this a lab or a proof of concept?** If so, embedded is what it's for: one node inside the management vCenter, no deployment, restored with vCenter. Otherwise choose instance and stop weighing the mode. [Broadcom's embedded page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-instance-models/embedded-vidb.html) says it is "intended for" those uses and warns that vCenter maintenance also hits authentication, and [the instance page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-instance-models/external-vidb.html) recommends instance for production (<AsOf date="2026-11-07" />).
 
-**9.1**
-- **Embedded:** still available. TechDocs describes it as having limited scale and availability.
-- **Instance mode:** runs as a multi-node service on the VCF services runtime, and is the recommended model for production. A 9.0 appliance is migrated into instance mode during the 9.1 upgrade. If the appliance sat on a non-management network, the move is a disruptive backup-and-restore transition that needs a window (<KB id={444734} />).
+<Callout type="analysis" title="Broadcom's pages don't line up">
+The [9.0 page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/what-is/deployment-models-for-sso.html) steered a single instance to embedded. The [9.1 SSO models page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models.html) still says both broker models are supported under every SSO model, and no 9.1 page calls embedded in production unsupported. This note follows the stricter design pages. Embedded also saves little, because the instance page says the first broker is deployed automatically in the first management domain.
+</Callout>
 
-## Scope is the real design decision
+**2. Is vIDM in the picture?** The [migration](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/migrating-vmware-identity-manager-to-vcf-identity-broker.html) lists "Instance only" as the supported target, which ends the argument. The one thing that favours embedded is small: Okta, Entra or Ping already set up in vCenter is [retained on embedded and redone on instance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/points-to-consider-while-setting-up-vmware-cloud-foundation-sso.html). Users and groups are provisioned again in both modes.
 
-VCF SSO can be **fleet-wide**, **cross-instance** or **single-instance**. A broker covers everything in its scope, so the scope is also the blast radius when it fails:
+**3. Are management services highly available?** An instance broker is only as resilient as what it runs on. Broadcom's [Simple model](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-management-services-models.html) has one control plane node, is aimed at testing, and needs a redeploy and restore if that node is lost. This note's reading: a production broker belongs on the High Availability model, so settle that first.
 
-<Diagram viewBox="0 0 820 220" label="Three SSO scopes: fleet-wide covers every instance with one broker; cross-instance groups some instances; single-instance gives each instance its own broker." caption="Wider scope means fewer brokers to run and a larger blast radius.">
-  <text class="lbl" x="20" y="24">Fleet-wide</text>
-  <rect class="box accent" x="20" y="34" width="240" height="40" rx="6" /><text class="t" x="34" y="59">One broker</text>
-  <rect class="box" x="20" y="90" width="72" height="44" rx="6" /><text class="s" x="30" y="117">Inst. 1</text>
-  <rect class="box" x="104" y="90" width="72" height="44" rx="6" /><text class="s" x="114" y="117">Inst. 2</text>
-  <rect class="box" x="188" y="90" width="72" height="44" rx="6" /><text class="s" x="198" y="117">Inst. 3</text>
-  <text class="lbl" x="290" y="24">Cross-instance</text>
-  <rect class="box accent" x="290" y="34" width="156" height="40" rx="6" /><text class="t" x="304" y="59">Broker A</text>
-  <rect class="box accent" x="458" y="34" width="72" height="40" rx="6" /><text class="t" x="468" y="59">B</text>
-  <rect class="box" x="290" y="90" width="72" height="44" rx="6" /><text class="s" x="300" y="117">Inst. 1</text>
-  <rect class="box" x="374" y="90" width="72" height="44" rx="6" /><text class="s" x="384" y="117">Inst. 2</text>
-  <rect class="box" x="458" y="90" width="72" height="44" rx="6" /><text class="s" x="468" y="117">Inst. 3</text>
-  <text class="lbl" x="560" y="24">Single-instance</text>
-  <rect class="box accent" x="560" y="34" width="72" height="40" rx="6" /><text class="t" x="570" y="59">A</text>
-  <rect class="box accent" x="644" y="34" width="72" height="40" rx="6" /><text class="t" x="654" y="59">B</text>
-  <rect class="box accent" x="728" y="34" width="72" height="40" rx="6" /><text class="t" x="738" y="59">C</text>
-  <rect class="box" x="560" y="90" width="72" height="44" rx="6" /><text class="s" x="570" y="117">Inst. 1</text>
-  <rect class="box" x="644" y="90" width="72" height="44" rx="6" /><text class="s" x="654" y="117">Inst. 2</text>
-  <rect class="box" x="728" y="90" width="72" height="44" rx="6" /><text class="s" x="738" y="117">Inst. 3</text>
-  <text class="s" x="20" y="170">Simplest to run.</text>
-  <text class="s" x="20" y="188">One outage affects all.</text>
-  <text class="s" x="290" y="170">Group by site or by</text>
-  <text class="s" x="290" y="188">operator team.</text>
-  <text class="s" x="560" y="170">Smallest blast radius,</text>
-  <text class="s" x="560" y="188">most brokers to run.</text>
-</Diagram>
+**4. More than one instance?** If not, you are done: one broker.
 
-Changing from embedded to an external model later requires a reset of VCF SSO. Settle the scope in the design, not after go-live.
+**5. Must sign-on survive the loss of one instance?** If an outage across the fleet is acceptable, take fleet-wide. It has the smallest footprint and one realm. Local accounts and the emergency API client [keep working during a broker outage](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models/single-single-sign-on-deployment-per-vcf-instance.html), so keep those credentials vaulted and tested. If a second site has to keep signing in while the first is down, add a broker there.
 
-## How it is configured
+**6. Must instances use different identity providers?** William Lam [laid this out on 9 October 2025](https://williamlam.com/2025/10/multiple-vcf-sso-identity-providers-for-vmware-cloud-foundation-vcf-fleet.html) for 9.0: SSO is configured per instance, so one fleet can hold several providers. His cheap route, embedded per instance, doesn't carry over to production on 9.1 given question 1, and each added instance broker is a day-N deployment that [needs more worker nodes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-management-services-models.html). The limit is the console: VCF Operations and VCF Automation ["can connect to only one"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models/one-sso-deployment-per-vcf-estate.html) broker. This note's reading: separate vCenter and NSX sign-on fits in a fleet, because [each instance's components share one broker](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models.html), while separate console sign-on means [a second fleet](/vcf/library/architecture/one-fleet-or-several/). That note also has the latency bounds for a broker.
 
-SSO is configured in VCF Operations under Fleet Management, Identity and Access. It needs at least one licensed instance with a management domain vCenter. The page depends on the management domain's cloud proxy and fails to load if that proxy is offline (<KB id={437258} />). VCF Operations stores the broker's registration and mode. If the stored mode is wrong, for example after an upgrade, the broker shows as unavailable (<KB id={444003} />).
+| SSO model | Brokers | An outage hits | Moving between instances | Restoring the broker |
+|---|---|---|---|---|
+| [Fleet-wide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models/vcf-fleet-wide-sso-model.html) | One per fleet, on the primary instance | The fleet | No new login | Losing the primary means restoring that instance |
+| [Cross-instance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models/one-sso-deployment-per-vcf-estate.html) | One per set of instances | That set | No new login within a set | To another instance in the same realm is supported |
+| [Single-instance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models/single-single-sign-on-deployment-per-vcf-instance.html) | One per instance | One instance | Credentials again | Across realms is not supported |
 
-## Pitfalls
+All three models are written for one fleet: [the cross-instance page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models/one-sso-deployment-per-vcf-estate.html) has each broker serve instances "in the same VCF fleet", and none of these pages describes a broker spanning fleets. That page also says each broker is "managed separately" for tasks such as backup and restore. Broadcom [prefers scaling up](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-instance-models/external-vidb.html) over adding a broker when one large broker meets your security, resilience and performance standards.
 
-- **Planning a vIDM upgrade.** There isn't one. Plan a new broker deployment and a cut-over for every consumer, especially VCF Automation.
-- **Putting the embedded broker in front of a multi-instance fleet.** It works, but the management vCenter becomes the sign-on for everything.
-- **Certificates with IP SANs.** The broker certificate must not carry an IP SAN in the 9.1 transition (<KB id={444734} />).
-- **Losing SDDC Manager credentials.** Because SDDC Manager is outside VCF SSO, its local admin credentials are your only way in. Keep them in your vault.
-- **Expecting VVF to have a broker.** vSphere Foundation without management services does not include one. Its components manage their identity providers separately.
+## What switching costs
+
+| Change | Documented? | What it costs |
+|---|---|---|
+| Embedded to instance | Yes: [guided migration in VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/managing-vmware-cloud-foundation-operations-sso/migration-of-vcf-identity-broker-embedded-to-vcf-identity-broker-appliance.html), source at 9.1 | Needs a target instance broker already deployed, and an SFTP account you delete afterwards. Provider changes and provisioning are suspended meanwhile, with no duration given. You update the external provider's settings by hand, then HCX, log management, VCF Operations for networks and API-client scripts. No rollback is described once confirmed |
+| Instance to embedded | Yes: [delete SSO](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/managing-vmware-cloud-foundation-operations-sso/how-to-change-the-deployment-mode-in-vcf-sso.html), then reconfigure | [Cannot be reverted](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/managing-vmware-cloud-foundation-operations-sso/reset-vmware-cloud-foundation-sso.html). Removes the provider configuration, provisioned users and groups and component configuration. [Users are re-added to components](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-instance-models/external-vidb.html) |
+| Instance onto a different broker | [Change VCF SSO action](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/join-change-and-remove-vcf-instances-from-an-existing-vcf-single-sign-on-configuration/modify-vcf-instances-that.html) lets you pick the broker | Components carry over. Role assignments scoped to that instance are removed, so record them first and reassign. No downtime figure is given |
+| Adding a broker | [Day-N deployment](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manual-adding-vcf-components-post-deployment/deploy-vcf-identity-broker-as-a-day-n-operation.html) | In another instance, [more worker nodes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-management-services-models.html), and an FQDN with its own address |
+| Restoring into another realm | Stated as unsupported | Plan DR inside one realm |
+| Rebuilding VCF Operations | Not in the pages cited here (checked 7 Nov 2026) | Lam's [17 May 2026 post](https://williamlam.com/2026/05/vcf-9-1-reset-identity-broker-from-previously-managed-vcf-operations-for-vcf-single-sign-on-sso.html) shows brokers still bound to the old instance blocking a new SSO setup. His script follows a process he says he learned from Engineering, and the post doesn't say Broadcom supports it. Ask Broadcom first |
+
+## The 9.1 network and datastore rule
+
+This binds a 9.0 **appliance** broker, because 9.1 moves it into VCF management services. [Broadcom's rule](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-identity-broker-on-the-management-network.html): broker and management services "must be deployed on the same network and on the same datastore". The target is the VCF management network or a custom VLAN-backed network, since management services can't sit on an NSX overlay. An embedded broker is exempt: it [upgrades with vCenter](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-vcf-identity-broker.html).
+
+- **Compliant:** use the dedicated upgrade, and check the broker can reach your provider from its new home. <KB id={440630} /> says no downtime is required on the management network.
+- **Not compliant, VCF Operations still on 9.0:** run the redeploy procedure first. Back up, power off, delete the component (the first attempt fails, then retry with Skip task set to True), repoint DNS if the network changes, deploy at the same build with the same FQDN and certificate, restore. It needs a maintenance window, and configured permissions aren't affected.
+- **Not compliant, VCF Operations already on 9.1:** the broker upgrade fails and <KB id={444734} /> takes over. Choose its backup-and-restore method, where the scripts run for up to 15 and then 5 to 30 minutes and downtime starts when the VMs power off. Its other method rebuilds every IAM setting by hand.
+
+The certificate's SAN must hold only the FQDN in both procedures, which agrees with [the trust model](/vcf/library/architecture/trust-model/). <KB id={440630} /> still tells non-management-network brokers to contact Support, while the two procedures above document the fix. Two checks afterwards: in 9.1.1 the runtime must be on 9.1.1 before the broker's pre-check passes (<KB id={457245} />), and VCF Operations can mislabel a migrated broker as embedded after a 9.0.2 upgrade (<KB id={444003} />).
+
+For a new 9.1 build there's nothing to place separately. The first broker [installs with VCF management services on the services runtime nodes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/points-to-consider-while-setting-up-vmware-cloud-foundation-sso.html), and the [network model](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/fleet-level-component-backing-networking-models.html) requires a distributed port group for those services.
+
+## What happens to vIDM
+
+It has no upgrade, but 9.1 adds a way out (<AsOf date="2026-11-07" />). From 5.2 the broker is [deployed with management services during the upgrade](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html), and vIDM keeps serving VCF Automation until you move it, so Broadcom says to preserve Aria Suite Lifecycle 8.x for vIDM's day-N work. The way out has two parts:
+
+- **[The script](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/migrating-vmware-identity-manager-to-vcf-identity-broker.html)** needs vIDM 3.3.7 GA and moves users and groups, then updates VCF Operations, the VCF Automation provider organization and NSX. It leaves behind provider configuration, OAuth clients and previous roles. Tenant organizations, NSX Global Manager, vIDM local accounts and multifactor authentication with Active Directory are unsupported, so check those first. It doesn't remove vIDM from the components, and the page doesn't state whether the run is disruptive.
+- **[VCF Automation's own procedure](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/phase-3-import-and-upgrade-aria-automation-8-to-vcf-automation-9/migrate-vcf-automation-single-sign-on-configuration-from-vmware-identity-manager-to-vcf-identity-broker.html)** covers Provider Management and the Organization for VM Apps, configured separately. Remove the vIDM configuration only after every user and group has signed in through the new provider.
+
+NSX may not wait for you: <KB id={454567} /> says NSX 9.1.0 requires the broker and loops on the old vIDM login, and <KB id={455402} /> describes a redirect loop during a partial upgrade. Keep NSX local admin credentials to hand. Sequencing is in [the vIDM note](/vcf/library/upgrades/vidm-to-identity-broker/).
+
+## Outside SSO in any mode
+
+[Broadcom's considerations page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/points-to-consider-while-setting-up-vmware-cloud-foundation-sso.html) says SDDC Manager's UI takes only local admin accounts, though its APIs accept SSO users. ESX is excluded too. Enhanced Linked Mode must be off on participating vCenters, and vCenter can't join SSO later until it is.

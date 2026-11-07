@@ -1,73 +1,228 @@
 ---
-title: "Consolidated and standard architecture, then and now"
-description: "The 5.x choice between consolidated and standard architecture still exists in spirit. In 9.x it sits alongside a second choice: Simple or HA for each management component. Here is how to size the smallest footprint you can defend."
+title: "Consolidated or standard in VCF 9.1: minimum hosts, and whether VCF Automation is required"
+description: "VCF 9.1 needs 3 hosts on vSAN or 2 on NFS or FC for Simple, and 4 for HA. Consolidated fits one small site in a single cluster; separate lifecycle or production uptime takes standard. VCF Automation can be skipped at install and added later. VCF Operations is required."
 category: architecture
 order: 6
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [397782]
+updated: 2026-11-07
+reviewed: 2026-11-07
+kbs: [441816, 392993, 440630]
 sources:
+  - title: "Single-Rack vSphere Cluster Model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/cluster-models/single-instance-single-availability-zone.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Supported and Not Supported Configurations (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/converging-your-existing-vsphere-infrastructure-to-a-vcf-or-vvf-platform-/supported-and-not-supported-configurations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "NFS Storage Model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/storage-models-9-x/nfs-storage.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Deploy a New VCF Fleet or a New VCF Instance (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/deploy-a-new-vcf-fleet-or-a-new-vcf-instance.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Deploying VCF Automation as a Day-N Operation (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manual-adding-vcf-components-post-deployment/install-vcf-automation-as-a-day-n-operation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Management Domain Security (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vdefend-lateral-security/vcf-management-domain-security.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Fleet in a Single Site with Minimal Footprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-with-minimal-footprint-blueprint.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Minimum Requirements for VCF Fleet in a Single Site with Minimal Footprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-with-minimal-footprint-blueprint/minimaltemo.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Fleet in a Single Site with Minimal Footprint (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/design/blueprints/vcf-fleet-basic-management-design.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "VCF Fleet in a Single Site (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Management Services Models (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-management-services-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Automation Deployment Models (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-automation-deployment-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrading Cloud Foundation (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware Cloud Foundation 9.1 general FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
   - title: "Clarifying minimum required ESX hosts for VCF deployments"
     url: "https://williamlam.com/2026/06/clarifying-minimum-required-esx-hosts-for-vcf-deployments.html"
     by: "William Lam"
+    kind: practitioner
+    date: 2026-06-18
   - title: "Flexible combinations with VCF fleet deployment models"
     url: "https://williamlam.com/2025/10/flexible-combinations-with-vcf-fleet-deployment-models.html"
     by: "William Lam"
+    kind: practitioner
+    date: 2025-10-27
+  - title: "VCF Installer deploying VVF components with VCF entitlements"
+    url: "https://williamlam.com/2026/03/vcf-installer-deploying-vvf-components-with-vcf-entitlements.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-03-17
+  - title: "VCF 9.1.1: single ESX host for VCF fleet, workload domain or cluster"
+    url: "https://williamlam.com/2026/09/vcf-9-1-1-single-esx-host-for-vcf-fleet-vcf-workload-domain-or-vcf-cluster.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-09-30
   - title: "Upgrading VCF 5.2 to 9.0: the top 10 questions answered"
     url: "https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/"
-    by: "VMware Cloud Foundation blog"
+    by: "Jonathan McDonald, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-12-18
   - title: "VCF 9.0 deployment pathways"
     url: "https://blogs.vmware.com/cloud-foundation/2025/07/03/vcf-9-0-deployment-pathways/"
-    by: "VMware Cloud Foundation blog"
-  - title: "Fleet deployment models (VCF 9.1)"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-operations-deployment-models.html"
+    by: "Andrew Firth, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-07-03
+  - title: "Upgrading to VMware Cloud Foundation 9.0"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/deployment/upgrading-cloud-foundation.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "VCF 9.1.1 Planning and Preparation Workbook"
+    url: "https://techdocs.broadcom.com/content/dam/broadcom/techdocs/us/en/assets/vmware-cis/vcf/vcf-9.1.1-planning-and-preparation-workbook.xlsx"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "vSphere Cluster Design for VMware Cloud Foundation (5.2)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/vcf-design-5-2/vsphere-design-for-vmware-cloud-foundation/vcf-vsphere-cluster-design.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VMware Cloud Foundation 5.2 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/vcf-release-notes/vmware-cloud-foundation-52-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2024-07-23
 ---
 
 <InShort>
-In 5.x, **consolidated** meant running workloads in the management domain, separated by resource pools. **Standard** meant a dedicated management domain plus workload domains. Both patterns still exist in 9.x. The bigger footprint decision now is the deployment model of each management component, Simple or HA, because that decides how many hosts the management cluster needs. The short rule: with NSX in HA, plan for four hosts. With NSX Simple, three hosts on vSAN or two on external storage is the documented floor.
+**Hosts:** Simple needs 3 on vSAN or 2 on NFS or FC. High Availability needs 4 on either (<a href="https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/cluster-models/single-instance-single-availability-zone.html">Broadcom, 5 Nov 2026</a>).
+
+**The choice:** build standard with HA management on four hosts if the estate has uptime targets, audits or separate lifecycle needs. Choose consolidated only for one small site that accepts lower availability, and buy four hosts even then, because three is the floor with no spare host for maintenance.
+
+**VCF Automation:** optional at deployment. The Installer can skip it and you can add one per fleet later. VCF Operations is required.
 </InShort>
 
+<Callout type="note" title="Corrected on 7 November 2026">
+This note said Broadcom recommends four hosts for a new consolidated deployment, three for converged vSAN and two with external storage. Three and two are supported minimums, and Broadcom's 9.1 design pages apply them to new Simple clusters too. It also said HA moves VCF Operations to Medium, but the 9.1.1 HA-Small profile uses two Small nodes.
+</Callout>
+
+## The rule
+
+| Principal storage | Model | Default management cluster | Other clusters | CPU and memory reserved |
+|---|---|---|---|---|
+| vSAN | Simple | 3 | 3 | 33% |
+| vSAN | High Availability | 4 | 4 | 25% |
+| NFS or FC | Simple | 2 | 2 | 50% |
+| NFS or FC | High Availability | 4 | 4 | 25% |
+
+That is Broadcom's [Single-Rack vSphere Cluster Model](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/cluster-models/single-instance-single-availability-zone.html) <AsOf date="2026-11-07" />. Cite it in a greenfield design. The [Supported and Not Supported Configurations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/converging-your-existing-vsphere-infrastructure-to-a-vcf-or-vvf-platform-/supported-and-not-supported-configurations.html) page, the one the [FAQ's Q67](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) points to, gives the same numbers for new deployments of VCF Operations, VCF Automation and NSX Manager: "Minimum 3 ESX hosts with vSAN Storage or minimum 2 ESX hosts with external storage" for Simple, "minimum 4 ESX hosts" for HA. But it sits in the convergence chapter, so a reviewer can read it as covering only converged estates.
+
+William Lam's [18 June 2026 post](https://williamlam.com/2026/06/clarifying-minimum-required-esx-hosts-for-vcf-deployments.html) is the best account of where four comes from, and it adds what the tables leave out. NSX Manager is the primary driver, because its three HA nodes sit on separate hosts by anti-affinity. Keep NSX Simple and you can run VCF Operations and VCF Automation in HA on as few as three or even two hosts, depending on principal storage, if the compute is there. Lam [confirms that every combination is supported](https://williamlam.com/2025/10/flexible-combinations-with-vcf-fleet-deployment-models.html), but this split isn't in the cluster model page, so record the source in your design. To build it, choose Simple in the Installer and scale out as a Day-N task, or set each component in the JSON method.
+
+Two older sources still get quoted against this table:
+
+- **VMware's 9.0 blogs.** [Firth, July 2025](https://blogs.vmware.com/cloud-foundation/2025/07/03/vcf-9-0-deployment-pathways/) says new deployments require four hosts and that 3 or 2 apply to converging. [McDonald, December 2025](https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/) calls four a recommendation for a new consolidated design. Use the 5 November table for 9.1.
+- **<KB id={392993} />.** It lists 9.0 and 9.1, yet says the management domain is "strictly locked to vSAN storage" at Cloud Builder bring-up. That matches the [5.2 design table](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/vcf-design-5-2/vsphere-design-for-vmware-cloud-foundation/vcf-vsphere-cluster-design.html), which marks NFS and FC not supported, and it conflicts with the 9.1 table. Treat it as 5.x text and answer a reviewer who quotes it with the cluster model page.
+
+Below two hosts, the rule doesn't move. Lam's [single-host builds](https://williamlam.com/2026/09/vcf-9-1-1-single-esx-host-for-vcf-fleet-vcf-workload-domain-or-vcf-cluster.html) are lab workarounds. The [FAQ's Q73](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) allows 1, 2, or 3 or more hosts per site for VCF Edge, which has its own design guide and doesn't change the core rule.
+
+## Choosing the model
+
+| Your situation | Build | Minimum hosts | What it costs you |
+|---|---|---|---|
+| Uptime targets, audits or a production SLA | Standard, HA ([blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint.html)) | 4 management + 4 workload = 8 | Most hardware, least shared risk |
+| Separate lifecycle or tenancy, but a small budget | Standard, Simple | vSAN 3 + 3 = 6. NFS or FC 2 + 2 = 4 | Management restores from backup after a control plane loss |
+| One small site, lower availability accepted | Consolidated ([minimal footprint blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-with-minimal-footprint-blueprint.html)) | 3 on vSAN, 2 on NFS or FC. Buy 4 | Management and workloads share one cluster and its maintenance windows |
+
+HA is [Broadcom's recommendation for production](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/deploy-a-new-vcf-fleet-or-a-new-vcf-instance.html). What should decide a small design is in the [management services models](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-management-services-models.html): Simple is aimed at testing and proof of concept, and losing its single control plane node means redeploying the cluster and restoring from backup. If the fleet can't wait for that restore, Simple is the wrong model at any host count. The [minimal footprint blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-with-minimal-footprint-blueprint.html) sets the same expectation for its Simple NSX Manager model, which addresses "a minimal infrastructure footprint, lower scale, and lower availability requirements".
+
+Four hosts is the better floor for consolidated because Broadcom's own advice points there. Four is [recommended on converged vSAN for redundancy](https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/), and the [NFS model](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/storage-models-9-x/nfs-storage.html) says to "start with four". The same page limits two hosts to a basic install of the default management cluster and warns the CPU commitment ratio reaches 2:1 when one host is down. Four also lets you move NSX to HA later without adding a host.
+
+Self-service can push a consolidated design over to standard: VCF Automation's All Apps organization [needs a second cluster](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/design/blueprints/vcf-fleet-basic-management-design.html) on the 9.0 blueprint; the 9.1 page doesn't repeat that, so confirm it before you plan one cluster with Automation.
+
+Sharing a cluster also calls for resource pools. [5.2 required them](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/vcf-design-5-2/vsphere-design-for-vmware-cloud-foundation/vcf-vsphere-cluster-design.html) in a consolidated workload domain, to control resource use by management and customer workloads. The 9.1 blueprint doesn't mention them, so keep them and budget for tuning them.
+
+Each extra instance is a separate question, which [One fleet or several](/vcf/library/architecture/one-fleet-or-several/) answers.
+
+## What a host has to carry
+
+The host count is the lesser constraint, because the failure rule sets the memory. Take [Broadcom's first-instance profiles](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-with-minimal-footprint-blueprint/minimaltemo.html) and divide by the hosts left after one fails. This example is constructed, so it counts appliances only, before ESX overhead, vSAN and workloads.
+
+| Profile | Allocated vCPU, memory | Hosts | Memory per host, one host down |
+|---|---|---|---|
+| Simple | 76, 251 GB | 2 | 251 GB |
+| Simple | 76, 251 GB | 3 | 126 GB |
+| HA-Small | 106, 335 GB | 4 | 112 GB |
+| HA-Medium | 184, 656 GB | 4 | 219 GB |
+| HA-Large | 298, 949 GB | 4 | 316 GB |
+
+So HA-Small on four hosts asks less of each host than Simple on three, and much less than Simple on two. On a two-host design, every host must hold the whole management stack, and any consolidated workload has to fit beside it.
+
+Read HA-Small closely. It keeps three NSX Managers but lists two Small VCF Operations nodes and one Medium VCF Automation, while the [Automation models page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-automation-deployment-models.html) makes the HA model a "Three node cluster" for medium or large sizes, and says resizing a Simple node to Medium or Large "automatically scales the deployment out to 3 nodes". Broadcom's pages conflict, so confirm Automation's node count in the Installer before you commit to HA-Small. Lam's [October 2025 mapping](https://williamlam.com/2025/10/flexible-combinations-with-vcf-fleet-deployment-models.html) of Simple to HA, with VCF Operations on Medium, describes the larger profiles.
+
+## Is VCF Automation mandatory?
+
+No, as of 5 November 2026. "Mandatory" has been used for three different things, and the sources below stop conflicting once you separate them.
+
+| Source and date | What it says | What it settles |
+|---|---|---|
+| [FAQ Q53](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs), 4 Nov 2026 | A fleet is one or more instances "together with an instance of VCF Operations and VCF Automation" | What a fleet is. The same FAQ's Q38 uses "required" for VCF Operations only |
+| [Deploy page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/deploy-a-new-vcf-fleet-or-a-new-vcf-instance.html), 5 Nov 2026, and <KB id={441816} /> | "VCF Installer allows you to skip VCF Automation during the initial deployment" | Day 0. This is the deployment rule |
+| [Day-N page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manual-adding-vcf-components-post-deployment/install-vcf-automation-as-a-day-n-operation.html), 5 Nov 2026 | Add it later through fleet lifecycle; one instance per fleet | Later, and the limit |
+| [Management domain security](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vdefend-lateral-security/vcf-management-domain-security.html), 5 Nov 2026 | "VCF Automation (optional)" | Design status |
+| [9.1 upgrade page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html), 5 Nov 2026 | It "can be deployed as a Day-N operation after the upgrade" | Upgrades with no Automation yet |
+| [Comments on Lam's post](https://williamlam.com/2026/03/vcf-installer-deploying-vvf-components-with-vcf-entitlements.html), Mar and Apr 2026 | A reader quotes the 9.0 upgrade page calling VCF Automation mandatory. Lam replies on 2 April that the product team added docs making it "optional during Day 0 and certainly Day N" | Why old notes disagree |
+
+The [9.0 upgrade page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/deployment/upgrading-cloud-foundation.html) now says only that mandatory management components exist on version 9, without naming Automation (updated 2 Nov 2026). Three limits apply:
+
+- **VCF Operations is different.** [Q38](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) makes it required per fleet, and from 9.1.1 it [must be in the first instance's management domain](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/deploy-a-new-vcf-fleet-or-a-new-vcf-instance.html). <KB id={440630} /> calls the management services layer mandatory for VCF and optional for vSphere Foundation.
+- **An existing Aria Automation can't be ignored.** Lam says deferring has "no impact from LCM nor support standpoint" on a greenfield build, but existing Aria Automation must be [imported or upgraded](https://williamlam.com/2026/03/vcf-installer-deploying-vvf-components-with-vcf-entitlements.html).
+- **Skipping changes consumption.** The [9.1 minimal footprint blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-with-minimal-footprint-blueprint.html) lists direct vCenter consumption beside self-service through Automation, and that route still covers VKS, Data Services and AI Services. Without Automation the [9.0 blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/design/blueprints/vcf-fleet-basic-management-design.html) puts workloads on VLAN-backed networks, or NSX segments with an edge cluster.
+
+Broadcom's sizing profiles count Automation, so skipping it on the Simple profile takes the total to 52 vCPU and 155 GB (76 minus 24, 251 minus 96, using Small Automation from the [9.1.1 workbook](https://techdocs.broadcom.com/content/dam/broadcom/techdocs/us/en/assets/vmware-cis/vcf/vcf-9.1.1-planning-and-preparation-workbook.xlsx)), as [Sizing a VCF 9 lab](/vcf/library/labs/sizing-a-vcf-9-lab/) works out. If you expect to add it within the hardware's life, keep the capacity free. That note's advice to leave it out of a first lab build stands.
+
+## Then and now
+
 <Compare rows={[
-  ["Consolidated", "Workloads share the management domain, separated by resource pools. Typical minimum was four vSAN hosts.", "Still possible. Broadcom recommends four hosts for a new consolidated deployment, three for converged vSAN and two with external storage."],
-  ["Standard", "A management domain plus one or more VI workload domains", "The same, inside a VCF instance. Additional instances can join the same fleet."],
-  ["Management footprint", "SDDC Manager, vCenter, NSX (three managers), plus optional Aria", "SDDC Manager, vCenter, NSX, VCF Operations, fleet management or the services runtime, cloud proxy, and VCF Automation as Day-0 or Day-N"],
-  ["Availability knob", "Mostly fixed. NSX was always a three-node cluster.", "Simple or HA for VCF Operations, VCF Automation and NSX, chosen per component through the JSON method"],
-  ["Principal storage for management", "vSAN. 5.2 added VMFS on FC and NFS v3 for converted management domains.", "vSAN, or VMFS on FC and NFS v3 for greenfield management domains"],
+  ["Consolidated", "Workloads share the management domain, with resource pools. Four vSAN hosts minimum.", "Still possible as a single cluster. 3 on vSAN or 2 on NFS or FC for Simple, 4 for HA."],
+  ["Standard", "A management domain plus one or more VI workload domains.", "The same, inside a VCF instance. Further instances can join the fleet."],
+  ["Management footprint", "SDDC Manager, vCenter, three NSX Managers, optional Aria.", "SDDC Manager, vCenter, NSX, VCF Operations, the services runtime, cloud proxy, license server, optional VCF Automation."],
+  ["Availability", "NSX was always three nodes.", "Simple or HA per component. The Installer UI offers all-Simple or all-HA; mixes use JSON or Day-N scale-out."],
+  ["Management principal storage", "vSAN at bring-up. <a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/vcf-release-notes/vmware-cloud-foundation-52-release-notes.html'>5.2 added VMFS on FC and NFS v3</a> for converted domains.", "vSAN, NFS v3 or FC for new management domains. NFS 4.1 is supplemental only."],
 ]} />
-
-## Where the host count comes from
-
-The number that drives the minimum is NSX Manager. In HA it is three nodes with anti-affinity, so you need at least three hosts to place them and a fourth to stay compliant during maintenance or a failure. That is why the HA minimum is four hosts, whatever the storage. NSX Simple, a single manager supported since 9.0, removes that constraint. That is how the documented three-host vSAN and two-host external storage minimums become possible (William Lam explains the reasoning in detail).
-
-VCF Operations and VCF Automation also change size with the model. In HA, VCF Operations moves to the Medium size with primary, replica and data nodes and a load balancer FQDN, and VCF Automation needs more addresses in its pool. Size the management cluster from the sizing guides (<KB id={397782} />), not from the minimum host count.
-
-## Choosing a pattern
-
-<Diagram viewBox="0 0 820 260" label="Decision flow: production needs HA management components and four or more management hosts. Small sites or labs can use Simple models with three vSAN hosts or two hosts on external storage. Consolidated suits small estates; standard suits separate lifecycle or tenancy needs." caption="A starting point for the conversation, not a substitute for the sizing guides.">
-  <rect class="box accent" x="20" y="20" width="220" height="56" rx="8" /><text class="t" x="36" y="44">Production?</text><text class="s" x="36" y="64">Uptime targets, audits</text>
-  <rect class="box v9" x="300" y="20" width="240" height="56" rx="8" /><text class="t" x="316" y="44">HA for Ops, NSX, VCFA</text><text class="s" x="316" y="64">4+ management hosts</text>
-  <rect class="box" x="300" y="110" width="240" height="56" rx="8" /><text class="t" x="316" y="134">Simple models</text><text class="s" x="316" y="154">3 vSAN or 2 external hosts</text>
-  <rect class="box" x="590" y="20" width="210" height="56" rx="8" /><text class="t" x="606" y="44">Separate lifecycle?</text><text class="s" x="606" y="64">Tenancy, compliance</text>
-  <rect class="box v9" x="590" y="110" width="210" height="56" rx="8" /><text class="t" x="606" y="134">Standard</text><text class="s" x="606" y="154">Workload domains</text>
-  <rect class="box" x="590" y="190" width="210" height="56" rx="8" /><text class="t" x="606" y="214">Consolidated</text><text class="s" x="606" y="234">Resource pools</text>
-  <path class="wire accent" d="M240 48 L298 48" marker-end="url(#arra)" /><text class="s" x="250" y="40">yes</text>
-  <path class="wire" d="M130 76 L130 138 L298 138" marker-end="url(#arr)" /><text class="s" x="140" y="128">lab, edge</text>
-  <path class="wire" d="M540 48 L588 48" marker-end="url(#arr)" />
-  <path class="wire" d="M695 76 L695 108" marker-end="url(#arr)" /><text class="s" x="702" y="96">yes</text>
-  <path class="wire" d="M790 76 L810 76 L810 218 L802 218" marker-end="url(#arr)" /><text class="s" x="760" y="186">no</text>
-</Diagram>
-
-**Consolidated** suits small estates where the management overhead of a separate domain would dominate. Its cost is that management and workloads share failure domains and maintenance windows.
-
-**Standard** suits anything with separate lifecycle, compliance or tenancy needs. Each workload domain has its own vCenter and can be upgraded on its own schedule within the support matrix.
-
-**More than one instance** makes sense for separate sites or regions, or when you want a hard lifecycle boundary. Separating business units alone is not a reason for one.
-
-## Pitfalls
-
-- **Quoting the floor as the design.** Two or three hosts is a minimum for the platform to install, not a recommendation for production.
-- **Forgetting the 9.x management additions.** The 5.x management cluster did not carry VCF Operations, fleet management, a cloud proxy or, in 9.1, a services runtime with a dozen or more addresses. Re-size the management cluster during upgrade planning.
-- **Mixing models without writing it down.** Per-component Simple or HA choices are supported, but they are invisible after the fact. Record them in the design so the next engineer knows why NSX is a single node.

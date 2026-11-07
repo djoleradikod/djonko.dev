@@ -6,6 +6,7 @@ order: 2
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
+updated: 2026-11-07
 kbs: [440630, 390634, 440282, 457245, 449075]
 sources:
   - title: "VCF 9.1.1 release notes: getting to 9.1.1"
@@ -28,7 +29,7 @@ The rule is that **whatever manages a component is upgraded before the component
 
 <Compare rows={[
   ["Who orchestrates", "SDDC Manager", "VCF Operations, through fleet lifecycle and SDDC lifecycle in 9.1"],
-  ["First step", "SDDC Manager (then Aria Suite Lifecycle, if VCF-aware)", "Aria Suite Lifecycle 8.18 Patch 2 if present, then VCF Operations"],
+  ["First step", "SDDC Manager (then Aria Suite Lifecycle, if VCF-aware)", "VCF Operations. On a 9.0 target, patch Aria Suite Lifecycle to 8.18 Patch 2 first if you have it."],
   ["Core order", "NSX, then vCenter, then ESX", "The same, with HCX first and edges and NSX finalize after ESX. 9.1 offers sequential or optimized (RDU) vCenter plans."],
   ["New in the middle", "Nothing", "9.1: deploy management services, the License Server and the depot after SDDC Manager"],
   ["Patching", "Async patch tool, built into SDDC Manager from 5.2", "Express Patches per component. Fleet lifecycle first, and no parallel VCF Operations patching."],
@@ -36,10 +37,12 @@ The rule is that **whatever manages a component is upgraded before the component
 
 ## The 9.1 sequence, and the reason for each step
 
-The published sequence (<KB id={440630} />) reads as a list. Here is the reasoning behind each position:
+The sequence is a table in [Broadcom's upgrade guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) (updated 5 Nov 2026), listing components "in the order that you must upgrade each component". <KB id={440630} /> says the sequence is mandatory and sends you to that guide. On a 9.0 source one step can come first: a broker appliance on an NSX overlay segment outside the VCF management network has to be redeployed before VCF Operations, as [the Identity Broker note](/vcf/library/architecture/identity-broker/) explains.
+
+The table doesn't give reasons, so these are this site's:
 
 1. **VCF Operations first.** It holds the lifecycle UI and the licence file, and on a 9.0 source it receives the fleet appliance's inventory during its own upgrade. The 9.1 binaries do not even appear in VCF Operations 9.0 until it is upgraded (<KB id={440282} />).
-2. **vSphere Replication and Avi.** These are compatibility gates. Avi must already be supported by the SDDC Manager you are about to install.
+2. **vSphere Replication, Live Site Recovery, vSAN Data Protection and Avi.** These are compatibility gates. Avi must already be supported by the SDDC Manager you are about to install.
 3. **SDDC Manager.** This is the engine that will deploy the management services and later upgrade the core.
 4. **Management services, License Server and software depot (9.1).** Fleet lifecycle and SDDC lifecycle must exist before they can upgrade anything. Configure the depot before any further component upgrades.
 5. **Identity broker, then VCF Automation, then the rest of the management components** (Orchestrator, Operations for networks, log management). These are clients of the runtime and of SSO.
@@ -69,7 +72,7 @@ Within 9.1, patches arrive per component as Express Patches. The release notes s
 Express Patches are cumulative, so you can skip intermediate ones. If an Express Patch contains fleet lifecycle, apply that one first.
 
 <Callout type="warn" title="The 9.0 fleet appliance after the upgrade">
-Once VCF Operations is upgraded from 9.0, the fleet management appliance is decommissioned and powered off. Its inventory is kept until the management services are deployed. Powering it back on causes authentication failures later in the upgrade (<KB id={449075} />). Delete it once the management services are in place.
+Once VCF Operations is upgraded from 9.0, the fleet management appliance is decommissioned and powered off. Its inventory is kept until the management services are deployed. Powering it back on causes authentication failures later in the upgrade (<KB id={449075} />). Keep it powered off, and delete it once the environment is on 9.1 (<KB id={440630} />).
 </Callout>
 
 ## Pitfalls

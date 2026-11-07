@@ -124,7 +124,7 @@ Choose by the failure, then by how many VMs must be back inside the RTO.
 - **Building lost, sites within 5 ms:** stretched cluster, in the core licence.
 - **Region lost:** core replication if people can start the required VMs inside the RTO. If they can't, Site Recovery Manager, sold per protected VM today.
 - **Ransomware:** core immutable snapshots keep a restore point. Proving that point clean, in isolation, takes the Live Recovery add-on.
-- **Native DR:** planned for the next release, estimated Q1FY27, with no RPO or RTO published. Design without it. <AsOf date="2026-11-07" />
+- **Native DR:** planned for the next release, estimated Q1FY27, with no RPO or RTO published. Design without it <AsOf date="2026-11-07" />.
 </InShort>
 
 This isn't purchasing or legal advice, and your order document decides what you hold.
@@ -142,13 +142,13 @@ The [entitlement matrix](/vcf/library/value/using-what-vcf-includes/) sets these
 
 ## Minutes or hours
 
-The documents cited here give no workload RTO for any of these (checked 7 Nov 2026). The stretched guide comes nearest: an object spanning both sites takes about 5 to 7 seconds to be declared degraded or absent, then vSphere HA restarts the VMs. Broadcom's one stated RTO belongs to the [fleet recovery design](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-disaster-recovery/design-elements-for-vcf-disaster-recovery.html): 4 hours or less for VCF Operations and VCF Operations for networks, with a 15-minute RPO on the management VM policies.
+None of these options has a published workload RTO in the documents cited here (checked 7 Nov 2026). Stretched comes nearest: an object spanning both sites takes about 5 to 7 seconds to be declared degraded or absent, then vSphere HA restarts the VMs, the [guide](https://www.vmware.com/docs/vsan-stretched-cluster-guide) says. Broadcom's one stated RTO covers management components: 4 hours or less for VCF Operations and VCF Operations for networks, with a 15-minute RPO on the management VM policies, in the [fleet recovery design](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-disaster-recovery/design-elements-for-vcf-disaster-recovery.html).
 
-<Callout type="analysis" title="This site's reading of RTO">
+<Callout type="analysis" title="How to read RTO across these options">
 Stretched is the only option here where nobody has to decide to fail over, so only it can honestly carry an RTO in minutes, and only inside 5 ms. Every replica needs a person to declare the disaster, and that decision time counts against the RTO. For minutes across a region, look to replication inside the application.
 </Callout>
 
-Distance is stretched's first limit: the [guide](https://www.vmware.com/docs/vsan-stretched-cluster-guide) says rooms or a campus aren't dispersed enough "to account for natural disaster scenarios". A site and witness failing together is the second. The guide sends that case to Global Support through 9.1, while [Epping's November 2025 post](https://www.yellow-bricks.com/2025/11/10/what-do-i-do-after-a-vsan-stretched-cluster-site-takeover/) describes site takeover for it. As in [the stretched or fault domains note](/vcf/library/architecture/stretched-or-fault-domains/), count it as an outage until Broadcom confirms your scenario in writing.
+Two limits sit on that stretched RTO. One is distance: rooms or a campus aren't dispersed enough "to account for natural disaster scenarios", the [guide](https://www.vmware.com/docs/vsan-stretched-cluster-guide) says. The other is a site and witness failing together. The guide sends that case to Global Support through 9.1, while [Epping's November 2025 post](https://www.yellow-bricks.com/2025/11/10/what-do-i-do-after-a-vsan-stretched-cluster-site-takeover/) describes site takeover for it, so count it as an outage until Broadcom confirms your scenario in writing, as in [the stretched or fault domains note](/vcf/library/architecture/stretched-or-fault-domains/).
 
 ## The sum that decides whether you need orchestration
 
@@ -157,45 +157,47 @@ Assumptions: 3 operators in parallel, 4 minutes per VM for start, network check 
 
 The limit is operators × RTO minutes ÷ minutes per VM: 3 × 240 ÷ 4 = **180 VMs**.
 
-- 120 VMs in the 4-hour tier: 120 × 4 ÷ 3 = 160 minutes. Core replication passes.
-- 300 VMs in the 4-hour tier: 300 × 4 ÷ 3 = 400 minutes, or 6.7 hours. It misses.
+- 120 VMs in the 4-hour tier: 120 × 4 ÷ 3 = 160 minutes, inside the 240, so core replication passes.
+- 300 VMs in the 4-hour tier: 300 × 4 ÷ 3 = 400 minutes, or 6.7 hours, past the 240, so core replication misses.
 
-The second case leaves two choices: protect those 300 under Site Recovery Manager, or shrink the tier. Licences count [protected VMs only](https://knowledge.broadcom.com/external/article/369487), powered off or not, so VMs outside the tier stay off the count.
+The second case leaves two choices: protect those 300 under Site Recovery Manager, or shrink the tier to 180. Licences count [protected VMs only](https://knowledge.broadcom.com/external/article/369487), powered off or not, so VMs outside the tier stay off the count.
 </Callout>
 
 ## What the next release is said to bring
 
-Broadcom's 4 Nov post says "Disaster recovery is a new native feature in VCF and VMware vSphere Foundation (VVF)", planned for "the next release currently estimated to become GA sometime in Q1FY27". It promises orchestration "across thousands of workloads" after power outages, natural disasters, hardware failures and human error. The feature has no product name, the release no number, and neither an RPO nor an RTO. [StorageReview](https://www.storagereview.com/news/broadcom-vcf-portfolio-update-vsphere-express-live-recovery) reads the quarter as running to the start of February; the [portfolio note](/vcf/library/licensing/november-2026-portfolio/) sets out the competing readings.
+Native DR can't be designed against yet. The [4 Nov post](https://blogs.vmware.com/cloud-foundation/2026/11/04/broadcom-vcf-portfolio-updates/) gives the feature no product name, the release no number, and neither an RPO nor an RTO. Its words are "Disaster recovery is a new native feature in VCF and VMware vSphere Foundation (VVF)", planned for "the next release currently estimated to become GA sometime in Q1FY27". It promises orchestration "across thousands of workloads" after power outages, natural disasters, hardware failures and human error. The quarter itself is read differently: [StorageReview](https://www.storagereview.com/news/broadcom-vcf-portfolio-update-vsphere-express-live-recovery) has it running to the start of February, and the [portfolio note](/vcf/library/licensing/november-2026-portfolio/) sets out the competing readings.
 
-Others run ahead of that post. [Network World](https://www.networkworld.com/article/4244653/broadcom-expands-vmware-cloud-foundation-with-ai-security-and-recovery-capabilities.html) lists the planned item as "Site Recovery Manager". [The Register](https://www.theregister.com/virtualization/2026/11/04/vmware-returns-to-low-end-server-virtualization-with-vsphere-express/5307466) writes that VMware has added disaster recovery to VVF and VCF, previously sold as an add-on. FC p6, titled 9.1.1, already marks a Disaster Recovery row for all three editions. It stays planned here until release notes say otherwise.
+Three sources run ahead of that post, and the status here stays planned until release notes say otherwise. FC p6, titled 9.1.1, is Broadcom's own and already marks a Disaster Recovery row for all three editions. [Network World](https://www.networkworld.com/article/4244653/broadcom-expands-vmware-cloud-foundation-with-ai-security-and-recovery-capabilities.html) lists the planned item as "Site Recovery Manager". [The Register](https://www.theregister.com/virtualization/2026/11/04/vmware-returns-to-low-end-server-virtualization-with-vsphere-express/5307466) writes that VMware has added disaster recovery to VVF and VCF, previously sold as an add-on.
 
-<Callout type="analysis" title="This site's inference">
+<Callout type="analysis" title="What this may mean">
 Together these suggest Site Recovery Manager style orchestration moving into the core licence. Broadcom hasn't said so, or said what happens to existing VCF-SRM terms, so ask before signing one that runs past that release. Ransomware is missing from the post's list of events, so don't assume native DR replaces Live Recovery.
 </Callout>
 
 ## Ransomware needs its own design
 
-This site infers from how they work that a stretched mirror copies encrypted writes to both sites at once and a short-RPO replica follows within minutes, so a recovery point from before the attack has to exist elsewhere. Core VCF covers that part: FAQ Q81 says local snapshots can be immutable, and FC p7 marks immutable local and remote snapshots for all three editions.
+A stretched mirror copies encrypted writes to both sites at once and a short-RPO replica follows within minutes, so a recovery point from before the attack has to exist elsewhere. That's an inference from how the two work. Core VCF can hold that point: local snapshots can be immutable (FAQ Q81), and FC p7 marks immutable local and remote snapshots for all three editions.
 
-The add-on buys the proof. John Nicholson (VMware, 28 Oct): "[Immutability preserves a restore point; it does not establish that the contents are clean](https://blogs.vmware.com/cloud-foundation/2026/10/28/not-about-backups-its-about-restores/)". FAQ Q79 keeps cyber recovery workflows with EDR, including the Carbon Black entitlement for the clean room, out of core. Q87 says CrowdStrike is bring-your-own licence. The [release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/protection-and-recovery/9-1/release-notes/protection-and-recovery-91-release-notes.html) add vDefend push-button isolation, and FC footnote 15 ties vSAN cyber recovery clusters to Live Recovery.
+Proving the point clean is what the add-on buys. "[Immutability preserves a restore point; it does not establish that the contents are clean](https://blogs.vmware.com/cloud-foundation/2026/10/28/not-about-backups-its-about-restores/)", John Nicholson of VMware wrote on 28 Oct. Cyber recovery workflows with EDR, including the Carbon Black entitlement for the clean room, sit outside core (FAQ Q79), and CrowdStrike is bring-your-own licence (Q87). Two more items: vSAN cyber recovery clusters are tied to Live Recovery (FC footnote 15), and the [release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/protection-and-recovery/9-1/release-notes/protection-and-recovery-91-release-notes.html) add vDefend push-button isolation.
 
-Two questions for Broadcom. The [9.1 blueprint](https://techdocs.broadcom.com/jp/ja/vmware-cis/vcf/vcf-9-0-and-later/9-1/vcf-ransomware-recovery.html) (30 Oct) calls the clean room orchestrator "a cloud component" yet allows an offline key, so which functions work air-gapped? It also describes the protected platform as VCF or VVF and the recovery platform as VCF, while FC p17 gives Live Recovery no VVF mark, so what may a VVF estate buy?
+Ask Broadcom which functions work air-gapped: the [9.1 blueprint](https://techdocs.broadcom.com/jp/ja/vmware-cis/vcf/vcf-9-0-and-later/9-1/vcf-ransomware-recovery.html) (30 Oct) calls the clean room orchestrator "a cloud component" yet allows an offline key. Ask also what a VVF estate may buy, since the blueprint describes the protected platform as VCF or VVF and the recovery platform as VCF, while FC p17 gives Live Recovery no VVF mark.
 
 Advanced Cyber Compliance holders keep it until term end, then have "the option to purchase" Live Recovery and Compliance and Configuration Management (FAQ Q86).
 
 ## Where Broadcom's documents disagree
 
-- **RPO below 5 minutes.** FAQ Q78 (4 Nov) puts RPOs "as low as one minute" in core. <KB id={428834} />, scoped to 9.0.x and undated, says below 5 minutes needs Advanced Cyber Compliance. The [9.0 help](https://techdocs.broadcom.com/us/en/vmware-cis/live-recovery/vsphere-replication/9-0/vr-help-plug-in-9-0/replicating-virtual-machines/configure-a-replication.html) (30 Jul) ties the 1-minute range on Enhanced replication to that subscription or Site Recovery Manager. <KB id={437266} /> shows the feature tied to the licence key as recently as Protection and Recovery 9.1.0.0, where a provisioning fault disabled it for those subscribers.
+<Callout type="analysis" title="What to do about it">
+Plan on the FAQ, the newest word on core rights, and get it in writing. Size to a 5-minute RPO until your own key offers 1 minute. This site reads the names below as Protection and Recovery the software and Live Recovery a paid entitlement on it, which no Broadcom page states.
+</Callout>
+
+- **RPO below 5 minutes.** FAQ Q78 (4 Nov) puts RPOs "as low as one minute" in core. <KB id={428834} />, scoped to 9.0.x and undated, says below 5 minutes needs Advanced Cyber Compliance. The [9.0 help](https://techdocs.broadcom.com/us/en/vmware-cis/live-recovery/vsphere-replication/9-0/vr-help-plug-in-9-0/replicating-virtual-machines/configure-a-replication.html) (30 Jul) ties the 1-minute range on Enhanced replication to that subscription or Site Recovery Manager. The feature was tied to the licence key as recently as Protection and Recovery 9.1.0.0, where a provisioning fault disabled it for those subscribers (<KB id={437266} />).
 - **vSAN remote replication.** FAQ Q35 and Q78 say core. KB 428834 says Advanced Cyber Compliance, and [Koehler's 14 May post](https://blogs.vmware.com/cloud-foundation/2026/05/14/vmware-vsan-protection-and-recovery-enhancements-for-vcf-9-1/) routes replication through Site Recovery Manager or that add-on.
 - **Two names.** The 9.1 release notes say Live Recovery "has been renamed" Protection and Recovery. The 4 Nov post sells Live Recovery as "a new software offering". The [BOM](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vmware-cloud-foundation-9-1-1-0-bill-of-material.html) marks Protection and Recovery as add-on for VCF and yes for VVF and Express, yet FAQ Q80 requires that appliance for operational recovery in core.
 
-<Callout type="analysis" title="What to do about it">
-This site reads Protection and Recovery as the software and Live Recovery as a paid entitlement on it, which no Broadcom page states. The FAQ is the newest word on core rights, so plan on it and get it in writing. Size to a 5-minute RPO until your own key offers 1 minute.
-</Callout>
+## The management plane needs its own recovery plan
 
-## Don't forget the management plane
+Stretching a workload domain cluster has a price in the management domain: its default cluster has to be stretched first ([TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/stretching-clusters.html)). The run book has an open licensing question. The design rows of the [fleet blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-disaster-recovery.html) (5 Nov) rely on an "automated run book" and never mention licensing, so ask whether your entitlement covers that recovery plan.
 
-The [fleet blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-disaster-recovery.html) (5 Nov) recovers each piece differently, and workload plans depend on it. VCF Operations and VCF Operations for networks replicate or restore from backup, and both need IP mobility. VCF Automation is a new instance restored from backup. Cloud proxies aren't replicated. The design rows turn quiescing off, so replicas are crash-consistent, and put all management components in one cluster. They rely on an "automated run book" and never mention licensing, so ask whether your entitlement covers that recovery plan. Stretching has its own price: [TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/stretching-clusters.html) requires the default management domain cluster to be stretched before a workload domain cluster can be.
+Workload plans depend on how that blueprint recovers each piece, and each differs. VCF Operations and VCF Operations for networks replicate or restore from backup, and both need IP mobility. VCF Automation is a new instance restored from backup. Cloud proxies aren't replicated. The design rows turn quiescing off, so replicas are crash-consistent, and put all management components in one cluster.
 
 ## What would change this
 

@@ -1,52 +1,226 @@
 ---
-title: "Avi, HCX and Live Recovery alongside VCF 9: where each one plugs in"
-description: "Add-on products integrate with VCF at different points: Avi through SDDC Manager and NSX, HCX through vCenter and its own management pack, Live Recovery through vCenter plugins. Each has its own licensing model and its own position in the upgrade order."
+title: "Add-ons beside VCF 9.1: entitlement, licensing route, integration point and dates for Avi, HCX, Live Recovery, vDefend, DSM and Tanzu"
+description: "Only HCX comes with a VCF subscription; the other five are bought separately and take four licensing routes. Avi and vDefend share License Hub. DSM's route is unstated since 4 Nov 2026. The one hard product date is 30 May 2027. Broadcom's documents split on vDefend and Tanzu for VVF."
 category: integrations
 order: 10
-versions: ["5.x", "9.0", "9.1"]
-level: Overview
+versions: ["9.1", "9.1.1"]
+level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [442998, 437447, 454432, 417767, 426469, 382440, 321631, 440630]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [439411, 438228, 428834, 446503, 450105, 450437, 449276, 391770, 446224, 440630]
 sources:
-  - title: "Licensing in VMware Cloud Foundation 9.0 (products still on keys)"
-    url: "https://blogs.vmware.com/cloud-foundation/2025/06/24/licensing-in-vmware-cloud-foundation-9-0/"
+  - title: "VCF 9.1.1 and vSphere Foundation 9.1.1: Feature Comparison & Upgrade Paths"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-feature-comparison-and-upgrade-paths"
+    by: "VMware by Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "VCF 9.1 Frequently Asked Questions"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "VMware by Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "Advanced Services"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vcf-advanced-services.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Bill of Materials 9.1.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vmware-cloud-foundation-9-1-1-0-bill-of-material.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1 Product Support Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Broadcom Updates VMware Portfolio to Protect and Accelerate Private AI Cloud Deployments"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/11/04/broadcom-vcf-portfolio-updates/"
     by: "VMware Cloud Foundation blog"
-  - title: "Avi Load Balancer Controller is not reachable"
-    url: "https://knowledge.broadcom.com/external/article/442998/avi-load-balancer-controller-is-not-reac.html"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "NSX Load Balancer to VMware Avi Load Balancer Migration (KB 439411)"
+    url: "https://knowledge.broadcom.com/external/article/439411"
     by: "Broadcom KB"
+    kind: broadcom
+  - title: "License Management for Avi Load Balancer (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/avi-load-balancer/avi-load-balancer-vmware-cloud-foundation/9-1/build-and-deploy-avi-91/license-management-for-avi-load-balancer.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-10-01
+  - title: "Avi Load Balancer Model, VCF 9.1 design library"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-load-balancing-detailed-design/avi-load-balancer-detailed-design.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "License Hub 2.0 for VMware vDefend and Avi Load Balancer Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/vdefend/license-hub/2-0/release-notes/license-hub-20-for-vmware-vdefend-and-avi-load-balancer-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-10-29
+  - title: "VMware vDefend 9.1 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/vdefend/vdefend-firewall/9-1/release-notes/vmware-vdefend-91-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-10-13
+  - title: "Migrating License Hub 5.1.2 to 2.0 (KB 450105)"
+    url: "https://knowledge.broadcom.com/external/article/450105"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "This feature is not supported with the current applied license in NSX 9.1 (KB 446503)"
+    url: "https://knowledge.broadcom.com/external/article/446503"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "The security license is not applied on NSX (KB 438228)"
+    url: "https://knowledge.broadcom.com/external/article/438228"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "About Licensing, VCF Operations HCX user guide for VCF 9.1.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/workload-mobility/vmware-hcx-user-guide-vcf-9-0/preparing-for-hcx-installations/hcx-activation-and-licensing/about-hcx-licensing.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9 Operations HCX deployment, part 1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/06/26/vcf-9-operations-hcx-deployment-part-1/"
+    by: "Cassio Homem, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-06-26
+  - title: "VMware HCX Compatibility and Upgrade Requirements for VCF 9.1 (KB 450437)"
+    url: "https://knowledge.broadcom.com/external/article/450437/vmware-hcx-compatibility-and-upgrade-req.html"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "HCX 9.x Supportability on VMware Cloud on AWS (KB 449276)"
+    url: "https://knowledge.broadcom.com/external/article/449276/hcx-9x-supportability-on-vmware-cloud-on.html"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "Purchasing a Subscription for VMware Live Recovery (KB 428834)"
+    url: "https://knowledge.broadcom.com/external/article/428834"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "Protection and Recovery 9.1 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/protection-and-recovery/9-1/release-notes/protection-and-recovery-91-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-05-12
+  - title: "VMware Data Services Manager 9.1 guide (PDF), alerts"
+    url: "https://techdocs.broadcom.com/content/dam/broadcom/techdocs/us/en/pdf/vmware/dsm/vmwdsm/vmware-data-services-manager-9-1.pdf"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-25
+  - title: "Announcing VMware Data Services Manager 9.1.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/09/15/announcing-vmware-data-services-manager-9-1-1/"
+    by: "Sue Ulintz, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-09-15
+  - title: "Announcing VMware Data Services Manager 9.1.1"
+    url: "https://cormachogan.com/2026/09/04/announcing-vmware-data-services-manager-9-1-1/"
+    by: "Cormac Hogan"
+    kind: practitioner
+    date: 2026-09-04
+  - title: "Broadcom Strengthens Spring Security and Adds Coverage of Java, Python, and Node.js Ecosystems with TrueSource (press release, MFN copy)"
+    url: "https://mfn.se/all/a/broadcom/broadcom-strengthens-spring-security-and-adds-coverage-of-java-python-and-node-js-ecosystems-with-truesource-e37fa20b"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-08-31
+  - title: "Tanzu Platform 11.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/tanzu-platform/11-0/about-tnz-platform/release_notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-06
+  - title: "Manage license keys (Tanzu Hub 11.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/tanzu-hub/11-0/tnz-hub/foundations-manage-license-keys.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-10-22
+  - title: "Tanzu Platform for Cloud Foundry License Keys (KB 391770)"
+    url: "https://knowledge.broadcom.com/external/article/391770/tanzu-platform-for-cloud-foundry-license.html"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "Incompatibility between TKGi and VCF 9.1 / NSX 9.1 (KB 446224)"
+    url: "https://knowledge.broadcom.com/external/article/446224/incompatibility-between-tanzu-kubernetes.html"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "Upgrade Sequence and Related Issues for VMware Cloud Foundation and vSphere Foundation 9.1 (KB 440630)"
+    url: "https://knowledge.broadcom.com/external/article/440630"
+    by: "Broadcom KB"
+    kind: broadcom
 ---
 
 <InShort>
-**Avi Load Balancer** is deployed from SDDC Manager and integrated with NSX. It still uses license keys, it sits early in the 9.0 to 9.1 upgrade order, and its passwords are managed through SDDC Manager (use **Remediate**, not Update, when only the stored value is stale) (<KB id={442998} />). **HCX** registers with vCenter, has its own vSphere Client plugin, and needed the 9.1.1 management pack for monitoring (<KB id={437447} />, <KB id={454432} />). **Live Recovery** (Site Recovery and vSphere Replication) registers plugins in vCenter, needs FQDN-based certificates, and sits near the start of the upgrade order (<KB id={426469} />). Plan each as its own integration, with its own owner.
+HCX is the only one of the six that a VCF subscription includes. The other five are separate purchases on four routes (<AsOf date="2026-11-07" />):
+
+- **Signed file through License Hub:** Avi and vDefend, sharing one appliance. Build it before NSX reaches 9.1.
+- **By order line:** Live Recovery.
+- **Key in Tanzu Hub:** Tanzu Platform's Elastic Application Runtime, from 10.2. Nothing names a route for 11.0's Apps on VKS, so ask.
+- **Unstated since 4 Nov:** DSM. Get it in writing before designing on it.
+
+The one hard product date is 30 May 2027, for NSX Load Balancer use under Avi licences. Keep vDefend and Tanzu out of a VVF design for now, because Broadcom's documents split on both.
 </InShort>
 
-<Compare rows={[
-  ["Avi", "Optional, deployed separately or via NSX", "Deployed from SDDC Manager. Still on license keys. Upgraded early in the 9.1 order."],
-  ["HCX", "Registered with vCenter, licensed separately", "Included with VCF licensing. Monitoring needs the 9.1.1 HCX management pack."],
-  ["Live Recovery", "Site Recovery Manager and vSphere Replication", "Live Recovery, partly SaaS. Upgraded early in the 9.1 order."],
-]} />
-
-## Where they sit in the 9.0 to 9.1 order
-
-The official order puts **VCF Operations first, then vSphere Replication, then Avi**, before SDDC Manager and the management services (<KB id={440630} />). HCX is upgraded with the core of each domain, before NSX and vCenter. Check each product's interoperability for the target release before planning the window.
-
-## Typical integration failures
-
-| Product | Symptom | Pointer |
-|---|---|---|
-| Avi | "Avi Load Balancer Controller is not reachable" in NSX after a certificate replacement | Reboot controllers until the cluster is stable, then remediate passwords (<KB id={442998} />) |
-| HCX | Plugin shows "no healthy upstream" | Connectivity or authentication between HCX Manager and vCenter (<KB id={321631} />) |
-| Live Recovery | Plugin "no healthy upstream" or "526 Invalid SSL Certificate" | Certificates generated with a short name. Regenerate with the FQDN (<KB id={426469} />) |
-| Live Recovery | Plugin undeploys after about 30 minutes | A stale cached plugin package (<KB id={417767} />) |
-| Site Recovery and Replication | "no healthy upstream" after a vCenter update | Reconfigure the appliances with FQDNs (<KB id={382440} />) |
-
-<Callout type="field">
-For each add-on, write a one-line integration contract: what it registers in vCenter, what it needs from NSX or SDDC Manager, which licence it uses, and where it sits in the upgrade order. Without it, an upgrade plan can leave a gap at the add-ons.
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to say Avi deploys from SDDC Manager, that Avi, vDefend, Tanzu Platform and DSM all keep keys, and that Live Recovery is partly SaaS, resting on a June 2025 post. VCF Operations now deploys Avi, Avi and vDefend have moved to signed files, and Live Recovery has an on-premises offering. KB 440630 sends readers to the upgrade guides for the full sequence, so it can't carry the upgrade order it was cited for; use [the upgrade order note](/vcf/library/upgrades/upgrade-order-changed/).
 </Callout>
 
-## Pitfalls
+This isn't purchasing or legal advice, and your order document decides what you hold.
 
-- **Assuming add-ons inherit the VCF license file.** Avi, vDefend, Tanzu Platform and Data Services Manager still use keys.
-- **Upgrading the core before replication or Avi** in the 9.1 path.
-- **Short-name certificates** on recovery appliances.
+## The map
+
+Short references: [FC](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-feature-comparison-and-upgrade-paths) is the Feature Comparison and [FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) the general FAQ, both 4 Nov 2026. [AS](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vcf-advanced-services.html) is the Advanced Services page and [BOM](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vmware-cloud-foundation-9-1-1-0-bill-of-material.html) the 9.1.1 bill of materials, both 5 Nov. KBs show no date of their own; all were checked on 7 Nov 2026.
+
+| Product | Status | Entitlement since 4 Nov | Licensing route | Plugs in at | Dates |
+|---|---|---|---|---|---|
+| **Avi** | Shipping. Release 32.1.1 is "Avi 9.1" | Add-on for VVF, Edge, VCF. FC p17. AS: VCF, VVF | Signed file: Support Portal, Avi Cloud Console, License Hub ([1 Oct](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/avi-load-balancer/avi-load-balancer-vmware-cloud-foundation/9-1/build-and-deploy-avi-91/license-management-for-avi-load-balancer.html)) | VCF Operations deploys Controllers to the management domain; registered as an NSX endpoint ([5 Nov](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-load-balancing-detailed-design/avi-load-balancer-detailed-design.html)) | 30 May 2027, NSX LB bridge (<KB id={439411} />, FC note 12). 90 days to convert after upgrading to 32.1.1 |
+| **HCX** | Shipping, 9.1.1.0. BOM | Core in VCF. FAQ Q2, Q15. VVF: dash in BOM | None to buy. Inherits the VCF licence from vCenter 9.0 or later ([5 Nov](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/workload-mobility/vmware-hcx-user-guide-vcf-9-0/preparing-for-hcx-installations/hcx-activation-and-licensing/about-hcx-licensing.html)) | VCF Operations, Build, Lifecycle, per domain. OVF on a site outside VCF ([26 Jun](https://blogs.vmware.com/cloud-foundation/2026/06/26/vcf-9-operations-hcx-deployment-part-1/)) | Before vCenter 9.1 (<KB id={450437} />). PhotonOS appliances deprecated, no removal date ([5 Nov](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html)) |
+| **Live Recovery** | Catalog entry "added today" ([4 Nov](https://blogs.vmware.com/cloud-foundation/2026/11/04/broadcom-vcf-portfolio-updates/)) | Add-on for Edge, VCF: on-premises cyber recovery, or cloud cyber and disaster recovery to VMC on AWS. FC p17. AS: VCF | By order line. Per protected VM, offline key available (<KB id={428834} />, scoped to 9.0.x) | Protection and Recovery appliance, surfaced in VCF Operations. FAQ Q80, Q83 | ACC holders: end of term. FAQ Q86. Native DR planned for Q1FY27 (4 Nov) |
+| **vDefend** | Shipping, 9.1. [Notes](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/vdefend/vdefend-firewall/9-1/release-notes/vmware-vdefend-91-release-notes.html) first issued 12 May, updated 13 Oct | Add-on for Edge, VCF. VVF split: FC p17 yes, AS no | Signed file through License Hub, 25-character keys upgraded first ([29 Oct](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/vdefend/license-hub/2-0/release-notes/license-hub-20-for-vmware-vdefend-and-avi-load-balancer-release-notes.html)) | NSX Manager: distributed and gateway firewall, IDS/IPS. VCF Automation for self-service (13 Oct) | Hub 2.0 released 5 Aug. Usage report every 180 days (29 Oct) |
+| **DSM** | Shipping, 9.1.1.0. BOM. In TrueSource since 4 Nov. FAQ Q84 | Add-on for Edge, VCF, as TrueSource Data Services. FC p17. VVF: dash in BOM | Not stated since 4 Nov. The [9.1 guide](https://techdocs.broadcom.com/content/dam/broadcom/techdocs/us/en/pdf/vmware/dsm/vmwdsm/vmware-data-services-manager-9-1.pdf) (25 Sep) alerts on the vCenter primary licence | VCF Automation and VCF Operations; not in the VCF installer. FAQ Q85. Operator on the Supervisor ([4 Sep](https://cormachogan.com/2026/09/04/announcing-vmware-data-services-manager-9-1-1/)) | 4 Nov 2026. No renewal terms published |
+| **Tanzu Platform** | 11.0.0 shipped 20 Oct ([6 Nov](https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/tanzu-platform/11-0/about-tnz-platform/release_notes.html)) | Add-on for Edge, VCF. FC p17-18. VVF split: AS yes, FC no | Elastic Application Runtime 10.2 and later: key in Tanzu Hub; earlier releases took none ([22 Oct](https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/tanzu-hub/11-0/tnz-hub/foundations-manage-license-keys.html), <KB id={391770} />). Apps on VKS: not named | vSphere, VCF Automation or Supervisor foundations for Apps on VKS; Tanzu Hub installer as OVA or on Kubernetes (6 Nov) | TKGi support ends October 2027 (<KB id={446224} />) |
+
+"Since 4 Nov" records what the catalogue now says. No source requires a running estate to change on that day, per [the portfolio note](/vcf/library/licensing/november-2026-portfolio/). For the other editions and for Express, use [the entitlement matrix](/vcf/library/value/using-what-vcf-includes/).
+
+## Where sources split a name
+
+Use the catalogue name in the design, with your order line beside it.
+
+| Catalogue name (FC, 4 Nov) | Also appears as | Why it matters |
+|---|---|---|
+| VMware Avi Load Balancer | "AVI Load Balancer" (FAQ Q15). Release 32.1.1, documented as 9.1 | Compatibility checks need 32.x |
+| VCF Operations HCX (BOM; no FC row) | HCX (FAQ) | 4.x appliances are "HCX" too, and that branch can fail against vCenter 9.1 |
+| VMware Live Recovery (On-Premises Cyber Recovery), and VMware Live Recovery Cloud | Protection and Recovery, which the [9.1 notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/protection-and-recovery/9-1/release-notes/protection-and-recovery-91-release-notes.html) call the renamed product; Advanced Cyber Compliance, its earlier sales vehicle (<KB id={428834} />, FAQ Q86) | The BOM's "add-on" mark doesn't settle what core includes |
+| VMware vDefend Firewall with ATP | vDefend Firewall (FAQ Q15), VMware vDefend (AS) | Check which firewall line you hold |
+| TrueSource Data Services | VMware Data Services Manager (AS), Data Services (BOM), DSM among pre-bundled services (FC p10) | Three placements for one product |
+| VMware Tanzu Platform (for Agents), (for Apps) | VMware Tanzu Platform (AS). vSphere Kubernetes Service is a separate, core component (FAQ Q2) | "Tanzu" on an old diagram may mean VKS or TKGi |
+
+## License Hub comes before the NSX upgrade
+
+Once NSX is on 9.1 with no hub, adding or changing a distributed firewall policy fails with "This feature is not supported with the current applied license", until a hub is deployed and synchronised (<KB id={446503} />). So the hub goes into the plan ahead of NSX. Avi has more slack: upgrading to 32.1.1 opens a 90-day window to convert, and Controllers already on the Avi Cloud Console aren't affected.
+
+Plan one appliance for both products. It needs 6 vCPU, 12 GB RAM and 256 GB disk and takes up to 120 endpoints. Version 2.0 is the newer one despite the number, and 5.1.2 has no in-place upgrade: <KB id={450105} /> is an export, uninstall and import. vDefend's 13 Oct notes still name 5.1.2, while the [29 Oct hub notes](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/vdefend/license-hub/2-0/release-notes/license-hub-20-for-vmware-vdefend-and-avi-load-balancer-release-notes.html) require 2.0, so follow the later page.
+
+A disconnected site gains a second manual duty, because the hub reports every 180 days on its own schedule beside the [VCF licence cycle](/vcf/library/licensing/180-day-cycle/).
+
+## Avi must be ready before Supervisor
+
+Activate a Supervisor without Avi integration in place and it [defaults to the NSX load balancer](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-load-balancing-detailed-design/avi-load-balancer-detailed-design.html). Count Controller clusters by NSX Manager, since one cluster maps to one manager and that manager can serve several workload domains. Who has to act by 30 May 2027, and the Service Unit arithmetic, are in [the NSX Load Balancer note](/vcf/library/integrations/nsx-lb-to-avi/).
+
+## vDefend on VVF
+
+Keep it out of a VVF design until Broadcom confirms the mark in writing. FC p17 marks VVF, but AS doesn't, and the NSX alarm in <KB id={438228} /> accepts a vDefend key only alongside a valid VCF key. [Security tiers](/vcf/library/architecture/security-tiers/) covers when you need it at all.
+
+## HCX: included, but it sets the order
+
+HCX and every Service Mesh appliance go to 9.1 or newer before vCenter does, because older 4.x appliances can crash the new vCenter gateway service (<KB id={450437} />). A pairing with VMware Cloud on AWS stops the upgrade: HCX 9.x isn't supported there, with no timeline. <KB id={450437} /> only holds vCenter below 9.1, but <KB id={449276} /> says not to move a connected environment to VCF 9.x at all, so follow the stricter one for now.
+
+A VVF site gets evaluation mode only: 90 days and 20 migrations per migration type, then Restricted Mode, unless its pair holds a valid licence ([HCX guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/workload-mobility/vmware-hcx-user-guide-vcf-9-0/preparing-for-hcx-installations/hcx-activation-and-licensing/about-hcx-licensing.html), 5 Nov).
+
+## Live Recovery
+
+This is the line for proving a restore point clean. Core already covers vSphere Replication and vSAN replication (FAQ Q78-79), and [the recovery note](/vcf/library/integrations/dr-and-cyber-recovery-choice/) decides between those, Site Recovery Manager and planned native DR, including where the sources conflict on RPO.
+
+## DSM and Tanzu: what to get in writing
+
+Since 9.1.1 DSM is ["a native VCF Service"](https://blogs.vmware.com/cloud-foundation/2026/09/15/announcing-vmware-data-services-manager-9-1-1/) you can [start from VCF Automation](https://cormachogan.com/2026/09/04/announcing-vmware-data-services-manager-9-1-1/), which rolls out the provider appliance and the Consumption Operator on the Supervisor; Hogan notes standalone remains a deployment model. Its engines are PostgreSQL, MySQL and SQL Server. The [31 Aug TrueSource release](https://mfn.se/all/a/broadcom/broadcom-strengthens-spring-security-and-adds-coverage-of-java-python-and-node-js-ecosystems-with-truesource-e37fa20b) describes Data Services as PostgreSQL, RabbitMQ, MySQL and Valkey, offers "tiered site licensing options" across TrueSource, and doesn't name DSM. So ask three things before renewal: the metric, whether SQL Server stays covered, and whether a DSM deployment still needs a VCF primary licence on vCenter, as the 25 Sep guide's alerts require. [The portfolio note](/vcf/library/licensing/november-2026-portfolio/) has the rest.
+
+For Tanzu Platform, ask how 11.0's Apps on VKS is licensed. The key rule on the Tanzu Hub 11.0 page (22 Oct) names only Elastic Application Runtime 10.2 and later, and the 11.0 release notes (6 Nov) leave licensing out. A TKGi estate has a harder problem: TKGi 1.2x is "entirely incompatible" with VCF 9.1 and NSX 9.1, with no in-place conversion to VKS (<KB id={446224} />). So workloads move first.

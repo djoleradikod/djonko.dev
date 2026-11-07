@@ -1,0 +1,246 @@
+---
+title: "Choosing a VCF 9.1 patch route: Express Patch, live patch, Quick Patch or a maintenance release"
+description: "Express Patch and maintenance release name what you install; live patch and Quick Patch name how it lands. Decide per build. Two of four ESX builds on 9.1 needed no reboot, and no vCenter notes page says Quick Patch yes, so hold a window until the build says otherwise."
+category: day-2
+order: 11
+versions: ["9.1", "9.1.1"]
+level: Practitioner
+pubDate: 2026-11-07
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [410435, 419942, 442180, 456672, 342576, 433822]
+sources:
+  - title: "Patch Releases 9.1.1.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-1-x.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Patch Releases 9.1.0.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-0-x.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1 What's New"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "ESX 9.1.1.0100 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-1-x/vsphere/esx/esx-9-1-1-0100-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "ESX 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/esx-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "ESX 9.1.0.0200 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-0-x/vsphere/esx/esx-9-1-0-0200-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "ESX 9.1.0.0100 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-0-x/vsphere/esx/esx-9-1-0-0100-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "vCenter 9.1.1.0100 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-1-x/vsphere/vcenter/vcenter-9-1-1-0100-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "vCenter 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcenter-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "vCenter 9.1.0.0300 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-0-x/vsphere/vcenter/vcenter-9-1-0-0300-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "vCenter 9.1.0.0200 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-0-x/vsphere/vcenter/vcenter-9-1-0-0200-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "vCenter 9.1.0.0100 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-0-x/vsphere/vcenter/vcenter-9-1-0-0100-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "KB 410435: Unified VCF Product Releases & Versioning"
+    url: "https://knowledge.broadcom.com/external/article/410435/unified-vcf-product-releases-versioning.html"
+    by: "Broadcom"
+    kind: broadcom
+  - title: "KB 419942: Prerequisites for Enabling vSphere Lifecycle Manager Live Patching for ESXi Hosts"
+    url: "https://knowledge.broadcom.com/external/article/419942/prerequisites-for-enabling-vsphere-lifec.html"
+    by: "Broadcom"
+    kind: broadcom
+  - title: "KB 442180: vSAN Compute Cluster Live Patch Pre-check Fails during Upgrade from 9.1 to 9.1.0.0100"
+    url: "https://knowledge.broadcom.com/external/article/442180"
+    by: "Broadcom"
+    kind: broadcom
+  - title: "KB 456672: Transitioning cluster from using baselines to vSphere Lifecycle Manager Images"
+    url: "https://knowledge.broadcom.com/external/article/456672"
+    by: "Broadcom"
+    kind: broadcom
+  - title: "KB 342576: Snapshot Creation in VMware Aria Operations"
+    url: "https://knowledge.broadcom.com/external/article/342576"
+    by: "Broadcom"
+    kind: broadcom
+  - title: "KB 433822: Virtual machine snapshots are not supported on NSX Manager and Edge nodes"
+    url: "https://knowledge.broadcom.com/external/article/433822"
+    by: "Broadcom"
+    kind: broadcom
+  - title: "VCF 9.1 - Understanding VCF Express Patches"
+    url: "https://williamlam.com/2026/07/vcf-9-1-understanding-vcf-express-patches.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-07-08
+  - title: "VCF 9.1 - July Express Patch is more than Security Fixes"
+    url: "https://williamlam.com/2026/07/vcf-9-1-july-express-patch-is-more-than-security-fixes.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-07-15
+  - title: "Quick Tip: Selective ESX Host Patching in VCF 9.1"
+    url: "https://williamlam.com/2026/08/quick-tip-selective-esx-host-patching-in-vcf-9-1.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-08-10
+  - title: "Major enhancements to VCF 9.1 Upgrade Planner tool"
+    url: "https://williamlam.com/2026/10/major-enhancements-to-vcf-9-1-upgrade-planner-tool.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-10-22
+  - title: "Rapid Patching of VMware vCenter in VMware Cloud Foundation 9.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/12/vcenter-quick-patch/"
+    by: "VCF blog, Féidhlim O'Leary"
+    kind: broadcom
+    date: 2026-05-12
+  - title: "What's New with vSphere 9.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/12/whats-new-with-vsphere-9-1/"
+    by: "VCF blog, Féidhlim O'Leary"
+    kind: broadcom
+    date: 2026-05-12
+  - title: "Modernizing the Private Cloud: Why VCF 9.1 Lifecycle Management is a Game Changer"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/28/modernizing-the-private-cloud-why-vcf-9-1-lifecycle-management-is-a-game-changer/"
+    by: "VCF blog, Brandon Hahn"
+    kind: broadcom
+    date: 2026-05-28
+  - title: "Installing Express Patches with VMware Cloud Foundation 9.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/06/29/installing-express-patches-with-vmware-cloud-foundation-9-1/"
+    by: "VCF blog, Jonathan McDonald"
+    kind: broadcom
+    date: 2026-06-29
+  - title: "Faster Security Patching with Fewer Disruptions in VCF 9.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/06/30/security-patching-in-vcf-9/"
+    by: "VCF blog, Adam Hawley and Luca Camarda"
+    kind: broadcom
+    date: 2026-06-30
+  - title: "Navigating the AI threat era: upgrading to VCF 9.1 and applying Express Patches"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/10/01/navigating-the-ai-threat-era-upgrading-to-vmware-cloud-foundation-9-1-and-applying-express-patches/"
+    by: "VCF blog, Jonathan McDonald"
+    kind: broadcom
+    date: 2026-10-01
+  - title: "Upgrade to VCF 9.1 and Express Patching Webinar: Top 10 Questions Answered"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/10/08/upgrade-to-vmware-cloud-foundation-9-1-and-express-patching-webinar-top-10-questions-answered/"
+    by: "VCF blog, Jonathan McDonald"
+    kind: broadcom
+    date: 2026-10-08
+  - title: "Customer Favorite Capabilities: Accelerating Your Path to VCF 9.1.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/10/13/customer-favorite-capabilities-accelerating-your-path-to-vcf-9-1-1/"
+    by: "VCF blog, Brandon Hahn"
+    kind: broadcom
+    date: 2026-10-13
+  - title: "Live Patch gets even better in vSphere with VMware Cloud Foundation 9.0"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/07/15/live-patch-gets-even-better-in-vsphere-with-vmware-cloud-foundation-9-0/"
+    by: "VCF blog, Féidhlim O'Leary"
+    kind: broadcom
+    date: 2025-07-15
+  - title: "Patch Quicker with VMware vSphere Live Patch"
+    url: "https://blogs.vmware.com/cloud-foundation/2024/07/11/vmware-vsphere-live-patch/"
+    by: "VCF blog, Féidhlim O'Leary"
+    kind: broadcom
+    date: 2024-07-11
+---
+
+<InShort>
+Express Patch and maintenance release name what you install. Live patch and Quick Patch name how an ESX or vCenter build lands, and each build decides that for itself. So read the build's release notes before you size the window. Two of the four ESX builds below needed no reboot. No vCenter notes page says Quick Patch yes, so keep a vCenter window until the patch details in the product show otherwise <AsOf date="2026-11-07" />.
+</InShort>
+
+## Walk it from your change and your window
+
+| Your situation | Do this | What it costs |
+|---|---|---|
+| Moving from 9.1.0.x to 9.1.1 | Maintenance release, in the [documented dependency order](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes.html). Fleet lifecycle first, and no Upgrade All until the dependencies are met. | ESX 9.1.1.0 reboots and moves VMs. vCenter 9.1.1.0 has no Quick Patch. |
+| ESX Express Patch, Live Patchable Yes, no spare capacity or no window | Turn on Enforce Live Patch, so a host that needs a reboot is blocked and doesn't evacuate. | Partial maintenance mode. VMs that can't fast-suspend-resume stay on your list. |
+| ESX Express Patch, Live Patchable No | Plan it as a rolling maintenance. If the window is short, use Custom Selection and split the cluster across windows. | Evacuation and reboot. Pinned VMs power off. |
+| vCenter patch | Book a window unless the patch details show the Quick Patch icon, services and downtime. | Under a minute if Quick Patch applies, and up to an hour or more if not, by O'Leary's figures. |
+| Management or SDDC Manager Express Patch | Fleet lifecycle first if it's in the set, then depot and runtime, then the rest. | No VM impact, by Hawley and Camarda's claim. A vendor claim, so read the notes. |
+
+Read [William Lam's 8 July post](https://williamlam.com/2026/07/vcf-9-1-understanding-vcf-express-patches.html) for what an Express Patch is and where Sync and Change Target Version sit, his [15 July post](https://williamlam.com/2026/07/vcf-9-1-july-express-patch-is-more-than-security-fixes.html) for one set's contents, and his [10 August tip](https://williamlam.com/2026/08/quick-tip-selective-esx-host-patching-in-vcf-9-1.html) for host selection. Lam works for Broadcom. The 8 July post never mentions live patch, Quick Patch or restarts and leaves applicability to the release notes, so the table above is the decision it doesn't make.
+
+## What each one covers and costs
+
+| | Express Patch | ESX live patch | vCenter quick patch | Maintenance release |
+|---|---|---|---|---|
+| **Covers** | One component per build, numbered x.x.x.01xx to 99xx (<KB id={410435} />). Cumulative, per Lam. | Eligible ESX builds, including vmkernel, user-space daemons and NSX components. | Eligible vCenter builds. Replaces only the RPMs and binaries that changed. | Bug fixes and security. About quarterly in the first support phase (<KB id={410435} />). |
+| **Doesn't cover** | Components with no build that month. | Major updates and driver changes, per McDonald. DPU hosts (<KB id={419942} />). | Version transitions, which go to Reduced Downtime Upgrade. | |
+| **Restarts or moves** | Set by the component. | No reboot or evacuation. hostd may restart, with a brief vCenter disconnect. vmx patches can trigger fast-suspend-resume. | The patch details list services and estimated downtime. No opt-in. | Read each component. ESX 9.1.1.0 needs a reboot and VM migration or shutdown. |
+| **Needs** | VCF 9.1 ([McDonald, 29 June](https://blogs.vmware.com/cloud-foundation/2026/06/29/installing-express-patches-with-vmware-cloud-foundation-9-1/)). | vLCM UI or API, not esxcli. No parallel remediation. TPM hosts from 9.1. | Described for VCF 9.1, with no stated minimum. | 9.1.0.x as the source for 9.1.1. |
+| **Afterwards** | A per-component build in VCF Operations. | The compliance scan lists VMs that can't fast-suspend-resume, and they need migrating or power cycling. | No source describes a separate state. Check the build. | Same record. Support stays August 2028. |
+
+Live patch sources: [O'Leary, July 2025](https://blogs.vmware.com/cloud-foundation/2025/07/15/live-patch-gets-even-better-in-vsphere-with-vmware-cloud-foundation-9-0/) and [May 2026](https://blogs.vmware.com/cloud-foundation/2026/05/12/whats-new-with-vsphere-9-1/); [McDonald, 8 Oct 2026](https://blogs.vmware.com/cloud-foundation/2026/10/08/upgrade-to-vmware-cloud-foundation-9-1-and-express-patching-webinar-top-10-questions-answered/). Quick Patch: [O'Leary, 12 May 2026](https://blogs.vmware.com/cloud-foundation/2026/05/12/vcenter-quick-patch/).
+
+Check three live patch limits first. Partial maintenance mode [blocks new VMs and vMotion](https://blogs.vmware.com/cloud-foundation/2024/07/11/vmware-vsphere-live-patch/) on the host (2024 wording), so DRS can't relieve a hot host mid-cycle. VMs that can't fast-suspend-resume were, in July 2025, Fault Tolerance, DirectPath I/O, vSphere Pods and shared-disk clustering; the May 2026 post lists live patch for newly supported DirectPath devices, so trust your scan over either list. vSAN compute clusters hit a pre-check failure on 9.1.0.0100 (<KB id={442180} />), and a baseline-to-image transition on 9.1.1 needs live patch off first (<KB id={456672} />).
+
+## The per-build flag, checked
+
+From each build's release notes (checked 7 Nov 2026).
+
+| ESX build | Date | Category | Live Patchable | Host reboot | VM migration or shutdown |
+|---|---|---|---|---|---|
+| [9.1.0.0100](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-0-x/vsphere/esx/esx-9-1-0-0100-release-notes.html) | 5 Jun 2026 | Security | Yes | No | No |
+| [9.1.0.0200](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-0-x/vsphere/esx/esx-9-1-0-0200-release-notes.html) | 13 Jul 2026 | Security | **No** | Yes | Yes |
+| [9.1.1.0](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/esx-9-1-1-0-release-notes.html) | 3 Sep 2026 | Bugfix and Security | **No** | Yes | Yes |
+| [9.1.1.0100](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-1-x/vsphere/esx/esx-9-1-1-0100-release-notes.html) | 12 Oct 2026 | Security | Yes | No | No |
+
+vCenter's Quick Patch field reads No on [9.1.0.0300](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-0-x/vsphere/vcenter/vcenter-9-1-0-0300-release-notes.html) (29 Jul 2026, a build that resolves one CVE) and [9.1.1.0](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcenter-9-1-1-0-release-notes.html) (3 Sep 2026). It's absent on [9.1.0.0100](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-0-x/vsphere/vcenter/vcenter-9-1-0-0100-release-notes.html), [9.1.0.0200](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-0-x/vsphere/vcenter/vcenter-9-1-0-0200-release-notes.html) and [9.1.1.0100](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-1-x/vsphere/vcenter/vcenter-9-1-1-0100-release-notes.html).
+
+<Callout type="analysis" title="This site's reading">
+"Security" doesn't predict "no reboot": 9.1.0.0200 is security only and still reboots. An absent field means look in the product, since O'Leary says the notes and the product flag compatible patches. TechDocs' "up to 80%" of patches is a ceiling that Hahn called "a bold target" in May; two of four builds is reason enough not to plan on it. The notes don't say what a live-patchable build assumes about the starting build, so check the impact vLCM reports for your hosts.
+</Callout>
+
+## Where the sources disagree
+
+- **Names.** Lam, McDonald and <KB id={410435} /> say Express Patch; the TechDocs patch pages say "Patch Releases" and never use the term. TechDocs writes "Live Patching for ESX" and a "Quick Patch" field, O'Leary "ESX live patch" and "vCenter quick patch". Lam's "EP2" is a set whose parts carry different suffixes (ESX 0200, SDDC Manager 0400), so a suffix doesn't identify a set.
+- **Express Patch scope.** McDonald says [CVEs and bug fixes](https://blogs.vmware.com/cloud-foundation/2026/10/01/navigating-the-ai-threat-era-upgrading-to-vmware-cloud-foundation-9-1-and-applying-express-patches/). Lam's July post also shows new installer IP options, so expect management patches to change behaviour.
+- **Quick Patch scope.** O'Leary: "security patches". [Hawley and Camarda](https://blogs.vmware.com/cloud-foundation/2026/06/30/security-patching-in-vcf-9/): "security and minor fixes". [Hahn](https://blogs.vmware.com/cloud-foundation/2026/05/28/modernizing-the-private-cloud-why-vcf-9-1-lifecycle-management-is-a-game-changer/) ties it to "the frequency of security patches". O'Leary's example of a fit is 9.1.0 to 9.1.1, yet the 9.1.1.0 notes say No. Use the build's field.
+- **How Quick Patch runs.** O'Leary describes VAMI or CLI. The vCenter notes say that in VCF "you apply this patch by using VCF Operations".
+- **"Any order".** Lam's 8 July post allows any order, Fleet Lifecycle first if included. A week later he puts the depot service before the VCFMS runtime, and the 9.1.1 notes say a depot patch blocks other patching until it finishes.
+
+## How to track it, and what it doesn't change
+
+Record a component and build pair per target. Sync, under Build > Lifecycle > VCF Management > Upgrade in VCF Operations, refreshes what's on offer (Lam). Custom Selection leaves a cluster's builds mixed until you finish, and Lam doesn't describe how compliance reports that, so log the excluded hosts and a return date. For a change board, [Lam's Upgrade Planner](https://williamlam.com/2026/10/major-enhancements-to-vcf-9-1-upgrade-planner-tool.html) (22 Oct) exports plans as text or Markdown.
+
+A patch doesn't move your support date: 9.1.1 [runs to August 2028](https://blogs.vmware.com/cloud-foundation/2026/10/13/customer-favorite-capabilities-accelerating-your-path-to-vcf-9-1-1/), and [the support clock](/vcf/library/upgrades/support-clock/) explains why later 9.1.x releases appear to gain nothing. [The rollback table](/vcf/library/upgrades/rollback-checkpoints/) still applies. ESX is forward only there, and the Broadcom pages cited here describe no way to undo a live patch (checked 7 Nov 2026). NSX gets file backup, [never VM snapshots](https://knowledge.broadcom.com/external/article/433822). VCF Operations snapshots [hurt performance past 72 hours](https://knowledge.broadcom.com/external/article/342576), so each monthly patch needs its own.
+
+Cumulative builds make skipping a month cheap. Broadcom [argues against deferring](https://blogs.vmware.com/cloud-foundation/2026/10/01/navigating-the-ai-threat-era-upgrading-to-vmware-cloud-foundation-9-1-and-applying-express-patches/), which suits a vendor promoting its cadence. This site's advice: take any build whose CVE touches you, and otherwise hold a reboot-required ESX build one cycle, because the next may be live-patchable. Lam warns in a [10 July comment on his 8 July post](https://williamlam.com/2026/07/vcf-9-1-understanding-vcf-express-patches.html) that an Express Patch taken before a major upgrade can raise back-in-time issues, depending on when you take it, so run the planner first once a next release is named.
+
+## A constructed example
+
+Nothing here is measured. **Assumptions:** one 12-host cluster, patched serially; a 4-hour window (240 minutes); 35 minutes per host to evacuate and reboot; 6 minutes per host to live patch; two hosts carry pinned VMs that can't fast-suspend-resume.
+
+- **Build says Yes.** 12 × 6 = 72 minutes, with Enforce on so nothing evacuates by surprise. The pinned VMs go on a list for power cycling at their owners' next outage.
+- **Build says No.** 12 × 35 = 420 minutes, which misses the window. Six hosts fit (6 × 35 = 210; seven would be 245). Custom Selection takes six non-pinned hosts in window one, leaving builds mixed until window two takes the last six, with the pinned VMs powered off. Write the mixed state into the record.
+
+## Published 9.1.1 patch releases
+
+As [TechDocs lists them](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/patch-releases-9-1-1-x.html), page updated 5 Nov 2026, read on 7 Nov 2026. Reread it before acting. Components with no entry are omitted.
+
+| Date | Component and build |
+|---|---|
+| 21 Sep 2026 | VCF Automation 9.1.1.0100.25757808; Fleet lifecycle 9.1.1.0100.25761871; SDDC lifecycle 9.1.1.0100.25761870; Migration service engine 9.1.1.0100.25757808 |
+| 12 Oct 2026 | VCF Installer/SDDC Manager 9.1.1.0200.25801071; ESX 9.1.1.0100.25782009; vCenter 9.1.1.0100.25784172; vSAN ESA Witness 9.1.1.0100.25784021; vSAN OSA Witness 9.1.1.0100.25783993; NSX 9.1.1.0100.25762940; VCF Operations 9.1.1.0100.25795063; VCF Operations for networks 9.1.1.0100.25774578; VCF Operations HCX 9.1.1.0100.25768312; VCF Operations orchestrator 9.1.1.0100.25795101; VCF Automation 9.1.1.0200.25801570; Supervisor 9.1.1.0100.25784172; Fleet lifecycle 9.1.1.0200.25801070; Identity broker 9.1.1.0100.25796677; Log management 9.1.1.0100.25795095; Real-time metrics 9.1.1.0100.25801571; Salt RaaS 9.1.1.0100.25795075; Salt master 9.1.1.0100.25795075; SDDC lifecycle 9.1.1.0200.25801981; Software depot 9.1.1.0200.25801072; Telemetry 9.1.1.0100.25741214; VCF services runtime 9.1.1.0100.25801571; VCF download tool 9.1.1.0200.25801073; Migration service engine 9.1.1.0200.25801570; VMware Data Services Manager 9.1.1.0100.25777183 |
+| 26 Oct 2026 | vSAN File Services 9.1.1.0200.25846901 |

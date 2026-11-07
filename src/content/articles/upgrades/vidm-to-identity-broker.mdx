@@ -6,55 +6,77 @@ order: 7
 versions: ["5.x", "9.0", "9.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
+updated: 2026-11-07
+reviewed: 2026-11-07
 kbs: [409610, 390634, 444734, 444003, 457245, 437258]
 sources:
+  - title: "Migrating VMware Identity Manager to Identity Broker (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/migrating-vmware-identity-manager-to-vcf-identity-broker.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Migrate VCF Automation Authentication from VMware Identity Manager to VCF Identity Broker (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/phase-3-import-and-upgrade-aria-automation-8-to-vcf-automation-9/migrate-vcf-automation-single-sign-on-configuration-from-vmware-identity-manager-to-vcf-identity-broker.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Upgrading to VMware Cloud Foundation 9.1.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
   - title: "Update sequence for VCF 9.0 and compatible VMware products"
     url: "https://knowledge.broadcom.com/external/article/390634/update-sequence-for-vcf-90-and-compatibl.html"
     by: "Broadcom KB"
   - title: "Upgrading VCF 5.2 to 9.0: the top 10 questions answered (vIDM to VIDB)"
     url: "https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/"
     by: "VMware Cloud Foundation blog"
-  - title: "vIDM vs vIDB: understanding the VCF identity shift"
-    url: "https://www.wwt.com/blog/vidm-vs-vidb-understanding-the-vcf-identity-shift"
-    by: "WWT"
   - title: "Authentication design for VCF (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/auth-design-vcf.html"
     by: "Broadcom TechDocs"
+  - title: "Considerations and Prerequisites for VCF Single Sign-On (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/points-to-consider-while-setting-up-vmware-cloud-foundation-sso.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Upgrade Identity Broker to 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-vcf-identity-broker.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
 ---
 
 <InShort>
-Workspace ONE Access (vIDM) 3.3.x has no in-place upgrade to 9.x. It stays managed by Aria Suite Lifecycle 8.x for as long as you keep it. The VCF Identity Broker is deployed new, and only after VCF Operations, SDDC Manager and the management domain vCenter are on 9.x (<KB id={390634} />). Every consumer of vIDM, above all VCF Automation, then has to be pointed at the broker. Plan it as an identity cut-over with users, groups, roles and a test list, and give it its own change.
+Workspace ONE Access (vIDM) 3.3.x has no in-place upgrade to 9.x. It stays managed by Aria Suite Lifecycle 8.x for as long as you keep it (<KB id={390634} />). The VCF Identity Broker is always a new component: on 9.0 you install it after VCF Operations, SDDC Manager and the management domain vCenter are on 9.0 (<KB id={390634} />), and in an upgrade to 9.1 it is deployed with VCF management services. Every consumer of vIDM, above all VCF Automation, then has to be pointed at the broker, and 9.1 gives you a script for part of that. Plan it as an identity cut-over with users, groups, roles and a test list, and give it its own change.
 </InShort>
 
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to say the only route is to deploy new and reconfigure consumers. On 9.0 a new greenfield deployment is still required (<KB id={409610} />, and [Jonathan McDonald's FAQ](https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/) of 18 December 2025). In 9.1 Broadcom documents [a scripted migration](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/migrating-vmware-identity-manager-to-vcf-identity-broker.html) from vIDM 3.3.7 GA to an instance-mode broker, and [a procedure for VCF Automation authentication](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/phase-3-import-and-upgrade-aria-automation-8-to-vcf-automation-9/migrate-vcf-automation-single-sign-on-configuration-from-vmware-identity-manager-to-vcf-identity-broker.html). The script doesn't carry provider configuration, OAuth clients or previous roles.
+</Callout>
+
 <Compare rows={[
-  ["Product", "Workspace ONE Access 3.3.x, deployed by Aria Suite Lifecycle", "VCF Identity Broker: embedded in vCenter, a 9.0 appliance or 9.1 instance mode on the runtime"],
-  ["Who uses it", "Aria Automation, Aria Operations and other Aria products", "vCenter, NSX, VCF Operations and VCF Automation through VCF SSO (not SDDC Manager)"],
-  ["Upgrade path", "Not applicable", "None. Deploy new and reconfigure consumers (<a href='https://knowledge.broadcom.com/external/article/409610' target='_blank' rel='noopener'>KB 409610</a>)."],
-  ["When", "Not applicable", "After VCF Operations, SDDC Manager and the management vCenter are on 9.x"],
+  ["Product", "Workspace ONE Access 3.3.x, managed by Aria Suite Lifecycle 8.x", "VCF Identity Broker: embedded in vCenter, a 9.0 appliance or 9.1 instance mode on the runtime"],
+  ["Who uses it", "VCF Automation after an upgrade from Aria Automation 8.x, plus VCF Operations and NSX where configured for it", "vCenter, NSX, VCF Operations and VCF Automation through VCF SSO (<a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/points-to-consider-while-setting-up-vmware-cloud-foundation-sso.html' target='_blank' rel='noopener'>not SDDC Manager or ESX</a>)"],
+  ["Upgrade path", "Not applicable", "No upgrade. 9.0: new greenfield deployment (<a href='https://knowledge.broadcom.com/external/article/409610' target='_blank' rel='noopener'>KB 409610</a>). 9.1: <a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/migrating-vmware-identity-manager-to-vcf-identity-broker.html' target='_blank' rel='noopener'>migration script</a> to an instance-mode broker."],
+  ["When", "Not applicable", "9.0: after VCF Operations, SDDC Manager and the management vCenter are on 9.0. 9.1: <a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html' target='_blank' rel='noopener'>with VCF management services</a> during the upgrade, then migrate after it."],
 ]} />
 
-## A sequence that works
+## A suggested sequence
 
 1. **Inventory what uses vIDM.** List the products, directories, groups, role mappings and any third-party applications federated through it. Check whether vIDM fronts more than VMware products.
-2. **Decide mode and scope.** Embedded, appliance (9.0) or instance mode (9.1), and fleet-wide, cross-instance or single-instance SSO. See <a href="/vcf/library/architecture/identity-broker/">Identity in VCF 9</a>.
+2. **Decide mode and scope.** Embedded, appliance (9.0) or instance mode (9.1), and fleet-wide, cross-instance or single-instance SSO. The 9.1 migration only targets instance mode. See <a href="/vcf/library/architecture/identity-broker/">Identity Broker in 9.1</a>.
 3. **Prepare the identity provider side.** Create the directory connection or OIDC or SAML application, and the groups that will map to VCF roles.
-4. **Deploy and configure VCF SSO** from VCF Operations, Fleet Management, Identity and Access. The page needs a working management domain cloud proxy (<KB id={437258} />).
+4. **Deploy and configure VCF SSO** from VCF Operations, Fleet Management, Identity and Access. The page can fail to load when the management domain's cloud proxy is offline (<KB id={437258} />).
 5. **Cut over consumers one at a time.** vCenter and NSX first, then VCF Operations, then VCF Automation, testing a named user's login and authorisation at each step.
 6. **Keep vIDM running** until the last consumer is moved and tested. Then retire it, along with Aria Suite Lifecycle if nothing else needs it.
 
 ## If you are on 9.0 already
 
-A 9.0 appliance-mode broker is migrated into 9.1 instance mode during the upgrade, and its old VMs are powered down. If it sits on a non-management network, the migration is a disruptive backup-and-restore that needs its own window, and its certificate must not carry an IP SAN (<KB id={444734} />). In 9.1.1, the services runtime hosting the broker must be patched before the broker itself (<KB id={457245} />).
+A 9.0 appliance-mode broker [transitions](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-vcf-identity-broker.html) to 9.1 instance mode during the upgrade, and you can remove the old appliance once your management components are on 9.1. If it sits on a network or datastore different from management services, the migration is a disruptive backup-and-restore that needs its own window, and its certificate must not carry an IP SAN (<KB id={444734} />). In 9.1.1, the services runtime hosting the broker must be patched before the broker itself (<KB id={457245} />).
 
 After any transition, check that VCF Operations has recorded the broker in the right mode. A stale "embedded" record makes the broker appear unavailable (<KB id={444003} />).
 
-<Callout type="field">
-Test authorisation as well as authentication in a cut-over: users can sign in but see nothing if group-to-role mappings didn't carry over. Write the role mapping table first, and test with a non-admin account from each role.
+<Callout type="analysis" title="Test roles as well as sign-in">
+[The 9.1 script](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/migrating-vmware-identity-manager-to-vcf-identity-broker.html) doesn't carry previous VCF Automation roles, and <KB id={444734} /> has you verify role assignments after a restore, so a working sign-in doesn't show that anyone has the right access. This is inference from those pages. Write the role mapping table first, and test with a non-admin account from each role.
 </Callout>
 
 ## Pitfalls
 
-- **Promising "single sign-on everywhere".** SDDC Manager stays on local accounts.
+- **Promising "single sign-on everywhere".** [SDDC Manager's UI](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/points-to-consider-while-setting-up-vmware-cloud-foundation-sso.html) stays on local accounts.
 - **Retiring vIDM too early.** Anything still federated through it breaks when it goes.
 - **Putting the broker in the platform upgrade window.** It has different stakeholders, such as identity and security teams, and different tests. Give it its own change.
