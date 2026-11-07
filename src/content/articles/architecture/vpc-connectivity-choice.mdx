@@ -1,0 +1,163 @@
+---
+title: "VPC connectivity on VCF 9.1: centralized, distributed VLAN or VLAN-backed without TEPs"
+description: "New design with TEP-capable hosts: distributed VLAN. Centralized if you need BGP, transit gateway VPN or edges already run. VLAN-backed only when hosts can't carry TEPs, on a greenfield Supervisor with VKS 3.8: no private subnets, no SNAT, and Private AI Services isn't on its blueprint."
+category: architecture
+order: 13
+versions: ["9.0", "9.1", "9.1.1"]
+level: Practitioner
+pubDate: 2026-11-07
+updated: 2026-11-07
+reviewed: 2026-11-07
+sources:
+  - title: "VCF 9.1.1: Simplified VKS using VLAN-Backed VPCs without NSX TEPs"
+    url: "https://williamlam.com/2026/09/vcf-9-1-1-simplified-vsphere-kubernetes-service-vks-using-vlan-backed-vpcs-without-nsx-tunnel-endpoints-teps.html"
+    by: "William Lam, Broadcom"
+    kind: practitioner
+    date: 2026-09-15
+  - title: "Centralized Connectivity Model (VCF 9.1 design library)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/workload-connectivity-designs/centralized-connectivity-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Distributed VLAN Connectivity Model (VCF 9.1 design library)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/workload-connectivity-designs/distributed-vlan-connectivity-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VLAN Backed VPC Connectivity Model (VCF 9.1 design library)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/workload-connectivity-designs/vlan-backed-vpc-connectivity-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Supervisor Architecture with VCF Networking with VPC"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsphere-supervisor-installation-and-configuration/supervisor-networking-with-virtual-private-clouds/supervisor-architecture-with-vpc-networking.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Requirements for Supervisor Deployment with VPC Networking"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsphere-supervisor-installation-and-configuration/supervisor-networking-with-virtual-private-clouds/nsx-vpc-workflow-for-supervisor/requirements-for-supervisor-deployment-with-nsx-vpc.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware vSphere Kubernetes Service 3.8 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-service-administration-and-development/9-1/release-notes/vks-release-notes/vmware-tanzu-kubernetes-grid-service-38-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "NSX 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/nsx-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "What's New in NSX, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-nsx.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Transit Gateways (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/advanced-network-management/virtual-private-cloud-in-nsx/transit-gateways.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configure VLAN-backed VPC Subnets (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/advanced-network-management/virtual-private-cloud-in-nsx/create-a-vlan-backed-vpc-subnets.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Import an Existing vCenter to Create a Workload Domain (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/import-an-existing-vcenter-to-create-a-workload-domain.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Create a Transit Gateway in VCF Automation"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/organization-management/adding-and-managing-virtual-private-clouds/create-a-transit-gateway-in-vcf-automation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Virtual Network Appliance Cluster Models"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/nsx-virtual-network-appliance-cluster-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Distributed VXLAN Connectivity Model for Version 9.1.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/workload-connectivity-designs/distributed-vxlan-connectivity-model-9-1-1.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Private AI Services Consumption Blueprint"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/application-modernization/private-ai-services-blueprint(1).html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VPC centralized network connectivity with guided edge deployment"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/25/vpc-centralized-network-connectivity-with-guided-edge-deployment/"
+    by: "VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-06-25
+---
+
+<InShort>
+**Take distributed VLAN for a new design whose hosts can carry TEPs.** Choose centralized when you need BGP with the fabric, IPSec VPN on the transit gateway, or edges you already run. VLAN-backed without TEPs is the fallback for hosts that can't meet the TEP network and MTU requirement. It needs a greenfield Supervisor, and VKS 3.8 if you run VKS, and it gives up private subnets and SNAT. This is a reading of Broadcom's documents and William Lam's post, current on <AsOf date="2026-11-07" />.
+</InShort>
+
+Lam's [15 September walk-through](https://williamlam.com/2026/09/vcf-9-1-1-simplified-vsphere-kubernetes-service-vks-using-vlan-backed-vpcs-without-nsx-tunnel-endpoints-teps.html) is the page to read for building VLAN-backed: the fleet JSON, the wizard order, the error strings. Lam works for Broadcom and shows a lab path. His table lists what each model has. It leaves out who should pick which, what greenfield-only costs and how fast each model spends routable addresses, and it predates VKS 3.8. Load balancer entitlement sits in [NSX in VCF 9](/vcf/library/architecture/nsx-in-9/).
+
+## Side by side
+
+| | Centralized | Distributed VLAN | VLAN-backed without TEPs |
+|---|---|---|---|
+| **First version** | 9.0.0 in Lam's table. The 9.1 design page names none. | Lam: possible at 9.0.0, VCF Automation from 9.1.0. [What's New 9.1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-nsx.html) adds Supervisor and VCF Automation; a [June 2025 VMware blog](https://blogs.vmware.com/cloud-foundation/2025/06/25/vpc-centralized-network-connectivity-with-guided-edge-deployment/) required centralized for both. The design page gates only DHCP relay (9.1.1). | "Introduced in version 9.1.1" ([design page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/workload-connectivity-designs/vlan-backed-vpc-connectivity-model.html)). See the conflicts below. |
+| **Fabric** | Peering to the Tier-0, BGP in Lam's table | External VLAN on the VDS and pNICs carrying host TEPs, gateway reachable from every host | External VLAN on the VDS prepared for NSX, gateway reachable from every host |
+| **Host TEPs** | Yes, and edge TEPs | Yes. East-west uses GENEVE. | None. East-west is left to the fabric. |
+| **Minimum MTU** (Lam's table) | 1700 | 1700 | 1500 |
+| **Edge dependency** | [At least two edge nodes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/workload-connectivity-designs/centralized-connectivity-model.html). Inline, per Lam. | [No edges](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/workload-connectivity-designs/distributed-vlan-connectivity-model.html). VNA for stateful services, not inline. | No edges. VNA required for Supervisor, and with Avi to give Service Engines DHCP. |
+| **Services** | NAT, NSX Edge LB or Avi, BGP, IPSec VPN on the transit gateway | Auto-SNAT and custom NAT on the VNA, private subnets only. VNA LB or Avi. DHCP relay on public subnets from 9.1.1. VPN not mentioned. | Public and L2-only subnets. SNAT not supported. VNA LB or Avi. The design page doesn't cover DHCP relay or VPN. |
+| **Supervisor** | Active/Standby transit gateway, N-S Services and Auto-SNAT | Private-TGW block, N-S Services and Auto-SNAT, so a VNA cluster | [Public subnets only](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsphere-supervisor-installation-and-configuration/supervisor-networking-with-virtual-private-clouds/supervisor-architecture-with-vpc-networking.html). Deselect default outbound SNAT, name a shared subnet per namespace, keep the region all VLAN-backed. Greenfield only in 9.1.1. |
+| **VKS** | No gate stated | No gate stated. Needs load balancing. | [3.8 or later](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-service-administration-and-development/9-1/release-notes/vks-release-notes/vmware-tanzu-kubernetes-grid-service-38-release-notes.html) (22 Oct 2026). 3.7.1 and earlier aren't supported. |
+| **Rules out** | Running without edges; Active/Active transit gateway under Supervisor | [Multi-rack Layer 3 clusters when a VNA is needed](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/nsx-virtual-network-appliance-cluster-models.html) | Private subnets, NAT, existing Supervisors. [Private AI Services](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/application-modernization/private-ai-services-blueprint(1).html) isn't on its compatible list. |
+
+The distributed VLAN page says an Avi-only design needs no VNA and no N-S Services. That sentence can't cover Supervisor, because the same page requires N-S Services and Auto-SNAT for it, and N-S Services require a VNA. Size a VNA cluster for any Supervisor on this model. Distributed VXLAN needs an EVPN fabric and is [a separate design](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/workload-connectivity-designs/distributed-vxlan-connectivity-model-9-1-1.html), left out here.
+
+## The questions, in this order
+
+1. **Do you need private subnets, NAT or Private AI Services?** If yes, VLAN-backed is out.
+2. **Does an existing Supervisor or VCF Automation have to use this network?** In 9.1.1 the VLAN-backed model "supports only greenfield deployments" of both, so an existing one rules it out. So does a VKS version you can't move to 3.8.
+3. **Can the fabric extend an external VLAN to every host in the span?** If not, both VLAN models are out. Broadcom's pages point you to another model, which here means centralized, or distributed VXLAN on an EVPN fabric. The VNA page's Layer 3 exclusion names distributed VLAN. Applying it to VLAN-backed, which also uses a VNA and an external VLAN, is this site's inference.
+4. **Do you need BGP, IPSec VPN on the transit gateway, or a dedicated Tier-0 or VRF per tenant?** Then centralized. What's New 9.1 documents VPC VPN on the centralized transit gateway, and the distributed design pages don't mention VPN. A project can hold both gateway types.
+5. **Can hosts carry TEPs at the MTU in the table?** If yes, take distributed VLAN. You keep private subnets and overlay east-west traffic without edges. If no, VLAN-backed is the option left.
+6. **Are you importing a vCenter?** Decide before you run it. From 9.1.1 the [import workflow](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/import-an-existing-vcenter-to-create-a-workload-domain.html) "attempts to configure the cluster for VLAN-backed VPC". TEP-based overlay takes the SDDC Manager API and `BrownfieldOverlaySpec`.
+
+<Callout type="analysis" title="Why distributed VLAN is the default here">
+It has the fewest things to give up. VLAN-backed saves the TEP VLAN and the larger MTU, and pays with private subnets, NAT and the addressing shown in the example below. A network team that can provide 1700 MTU gets little from that trade. [NSX in VCF 9](/vcf/library/architecture/nsx-in-9/) also takes distributed VLAN for a new design that prefers no edges. What would change it: Broadcom adding Private AI Services and an upgrade path to VLAN-backed, or your VPN need moving off the transit gateway.
+</Callout>
+
+## Constructed example: how fast each model spends a /24
+
+Every number here is invented for the arithmetic. Assumptions:
+
+- One /24 as the external block. Removing network, broadcast and gateway leaves 253. Excluding 10 for physical devices leaves 243.
+- Each VKS cluster has 3 control plane nodes, 5 workers and 1 rolling-update spare, plus 3 load balancer VIPs.
+- Each cluster sits in its own namespace VPC. On distributed VLAN, nodes use private subnets and each VPC takes 1 SNAT address.
+- Supervisor and its services take 6 VIPs. The VNA takes nothing from this block, and subnet rounding is ignored.
+
+| | VLAN-backed | Distributed VLAN |
+|---|---|---|
+| Addresses per cluster | 9 nodes + 3 VIPs = 12 | 3 VIPs + 1 SNAT = 4 |
+| 8 clusters plus Supervisor | 96 + 6 = 102 | 32 + 6 = 38 |
+| Clusters that fit | (243 − 6) / 12 = 19.75, so 19 | (243 − 6) / 4 = 59.25, so 59 |
+
+The gap comes from node addresses, which Lam says come from the External IP Block on VLAN-backed. Broadcom's VLAN-backed design page allows up to five CIDRs. Lam's error text says a block must match a distributed VLAN gateway network. This site reads a second block as a second gateway network, so ask for that VLAN before cluster 20.
+
+## Where the sources disagree
+
+- **VKS 3.7 and earlier.** Lam's post deploys a cluster on VKS 3.7 or earlier through Custom Configuration, overriding the node network to a public subnet. Broadcom's Supervisor page says "you cannot configure" the model for VKS workloads on 3.7.1 or earlier. Treat the override as a lab path and use 3.8. The 3.8 notes say VKS "now fully supports" the model. They don't say whether Default Configuration now picks the public subnet, as Lam predicted, so test that.
+- **Private AI Services.** Lam said on 15 September it can't run on VLAN-backed, with a fix due in a later VKS release. The 3.8 notes don't mention it, and the blueprint dated 5 November still lists only centralized and distributed VLAN. Plan on no.
+- **Greenfield against import default.** The NSX notes call VLAN-backed "the default model during a VCF import", while the Supervisor page limits it to greenfield Supervisor and VCF Automation. Neither defines greenfield. They fit if it refers to the Supervisor alone, which is this site's reading. Confirm with Broadcom before importing for Supervisor.
+- **9.1 or 9.1.1.** The design page, NSX notes and Lam say 9.1.1. The [subnet procedure](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/advanced-network-management/virtual-private-cloud-in-nsx/create-a-vlan-backed-vpc-subnets.html) says "Starting with VCF 9.1". Plan on 9.1.1.
+- **Which connection type.** The [VCF Automation page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/organization-management/adding-and-managing-virtual-private-clouds/create-a-transit-gateway-in-vcf-automation.html) says VLAN-backed regions use distributed VXLAN "exclusively", against its own table and the design page, which say distributed VLAN. That sentence looks like the error.
+- **TEP MTU.** The [Supervisor requirements page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsphere-supervisor-installation-and-configuration/supervisor-networking-with-virtual-private-clouds/nsx-vpc-workflow-for-supervisor/requirements-for-supervisor-deployment-with-nsx-vpc.html) says greater than 1600 and marks the ESX TEP network "Optional for VLAN VPC". Lam's table says 1700, and 1500 without TEPs. Build to 1700 where TEPs exist. The VLAN-backed design page gives no MTU, so 1500 rests on Lam.
+
+## What you can change later
+
+[A VPC can move](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/advanced-network-management/virtual-private-cloud-in-nsx/transit-gateways.html) to another transit gateway through its connectivity profile, but one gateway can't mix centralized and distributed connections. What's New 9.1 allows adding TEPs after a domain is created or imported, and the import table marks TEP-less clusters as able to take dedicated TEPs through the API.
+
+None of Broadcom's Supervisor architecture, import or NSX 9.1.1 pages describes moving a running VLAN-backed Supervisor to TEPs, or the reverse (checked 7 Nov 2026). Treat that choice as fixed for the life of the Supervisor.

@@ -1,0 +1,197 @@
+---
+title: "One fleet or several: the questions that decide it"
+description: "Build one fleet unless a site sits beyond 300 ms of VCF Operations, or a group must be kept out of the shared console. Beyond 100 ms from SDDC Manager, add an instance. Decide early: a 9.1 instance has no supported move to another 9.1 fleet. A second fleet costs 110 vCPU more than a second instance at HA Medium."
+category: architecture
+order: 15
+versions: ["9.1", "9.1.1"]
+level: Practitioner
+pubDate: 2026-11-07
+updated: 2026-11-07
+reviewed: 2026-11-07
+kbs: [397782]
+sources:
+  - title: "VCF 9.1: updated VCF design blueprints and VCF fleet latency diagrams"
+    url: "https://williamlam.com/2026/05/vcf-9-1-updated-vcf-design-blueprints-vcf-fleet-latency-diagrams-for-vcf-architects.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-05-12
+  - title: "VCF 9.0 fleet latency diagram"
+    url: "https://williamlam.com/2025/12/vcf-9-0-fleet-latency-diagram.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2025-12-11
+  - title: "How many VCF instances can a VCF fleet support?"
+    url: "https://williamlam.com/2025/10/how-many-vmware-cloud-foundation-vcf-instances-can-a-vcf-fleet-support.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2025-10-03
+  - title: "VCF 9.1: VCF instance and fleet consolidation and relocation"
+    url: "https://williamlam.com/2026/07/vcf-9-1-vcf-instance-fleet-consolidation-relocation.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-08-01
+  - title: "VCF Fleet Deployment Models (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-operations-deployment-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Fleet Sizing Models (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-fleet-sizing-models-9-x.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "License Server Overview (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-server-overview.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Add a License to VCF Operations and License Server (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/add-a-license-to-vcf-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1 licensing: programmatic, centralized and built to scale"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/18/vcf-9-1-licensing-programmatic-centralized-and-built-to-scale/"
+    by: "Sehjung Hah and Andrew Firth, VMware"
+    kind: broadcom
+    date: 2026-05-18
+  - title: "Single VCF Instance Single Sign-On Model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models/single-single-sign-on-deployment-per-vcf-instance.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Fleet-Wide Single Sign-On Model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models/vcf-fleet-wide-sso-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Cross VCF Instance Single Sign-On Model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models/one-sso-deployment-per-vcf-estate.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Change the Deployment Mode in VCF Single Sign-On (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/managing-vmware-cloud-foundation-operations-sso/how-to-change-the-deployment-mode-in-vcf-sso.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF management services models (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-management-services-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1 General FAQs (Q53)"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "#116: A VMware Cloud Foundation constructs primer featuring Gary Blake"
+    url: "https://www.yellow-bricks.com/2026/04/13/116-a-vmware-cloud-foundation-constructs-primer-featuring-gary-blake/"
+    by: "Duncan Epping"
+    kind: practitioner
+    date: 2026-04-13
+---
+
+<InShort>
+Start with one fleet and add instances before fleets. **A second fleet** is justified when a site sits beyond 300 ms of VCF Operations and VCF Automation, or when a group's staff must have their own console and sign-on. **A second instance** is justified when a site sits beyond 100 ms of SDDC Manager, when you need Broadcom's DR design, or when you want a separate SSO realm or lifecycle boundary inside the fleet. Licensing rarely forces either, and a business unit alone forces neither. William Lam reports no supported way to move a 9.1 instance to another 9.1 fleet (<AsOf date="2026-11-07" />).
+</InShort>
+
+The terms are in <a href="/vcf/library/architecture/vcf9-mental-model/">the VCF 9 mental model</a>. Ask these in order, because each can end the discussion.
+
+| # | Question | Answer that decides it | What it rules out |
+|---|---|---|---|
+| 1 | How far is each site from VCF Operations and from SDDC Manager? | Beyond 300 ms or beyond 100 ms | Sharing that fleet, or sharing that instance |
+| 2 | Must the console sign-on differ between groups? | Yes | One fleet |
+| 3 | Does the contract split capacity? | Rarely decisive | A license server or license shared across fleets |
+| 4 | Must an auditor, regulator or buyer see separate management? | Yes | One fleet |
+| 5 | Will one VCF Operations carry the load? | Only at very large scale | Nothing fixed: no instance count limit is published |
+
+## 1. Latency
+
+These bounds are from the fleet latency diagram, Ver 2.0, labelled for VCF 9.1, published by William Lam on 12 May 2026. It lives on Broadcom's ports site, so check there for revisions; the post doesn't mention 9.1.1. The third column is this site's reading.
+
+| Path | Upper bound (9.1) | If you can't meet it |
+|---|---|---|
+| VCF Operations and VCF Automation to an instance's vCenter and NSX Manager | ≤300 ms | Second fleet |
+| Identity broker to VCF Operations, VCF Automation, vCenter and NSX Manager | ≤300 ms | Run a broker in that instance, drawn as optional |
+| License server to vCenter | ≤300 ms | Local license server, which Broadcom documents for this case |
+| SDDC Manager to vCenter, including workload domain vCenters | ≤100 ms | Second instance |
+| NSX Manager to NSX Edge and to ESX | ≤150 ms | That NSX Manager can't serve the site |
+| Collector to vCenter, NSX Manager and SDDC Manager | ≤50 ms | Local collector |
+
+It also gives ≤150 ms for long-distance vMotion and Enhanced Linked Mode between vCenters.
+
+Lam's post on the 9.0 diagram (11 December 2025) calls these upper bounds and warns that transfers and the UI slow as latency rises. It also has a remote workload domain keep its ≤50 ms with a local collector while staying within ≤300 ms of VCF Operations. So a site at 80 ms needs a collector and can still be a workload domain.
+
+<Callout type="analysis" title="Two readings to settle before you measure">
+The diagram doesn't say whether its figures are round trip or one way, so design to round trip, the stricter reading. A reader asked Lam under the 9.0 post whether additional instances can sit within 300 ms of the first, and no reply appears there (checked 7 Nov 2026). The 9.1 diagram draws those paths at ≤300 ms, so this note takes that as the limit and infers a second fleet beyond it.
+</Callout>
+
+## 2. Identity
+
+Every SSO model Broadcom documents stops at the fleet. In the fleet-wide model each fleet has a single broker, and the cross-instance model serves instances "in the same VCF fleet". So two fleets mean two realms and two brokers, and Broadcom says each fleet's broker is "managed separately" for tasks such as backup and restore.
+
+The single-instance model limits a realm and an outage to one instance, but it doesn't separate the console: VCF Operations and VCF Automation "can connect to only one of identity broker instances". A group that needs its own sign-on to vCenter and NSX can stay in the fleet. A group that needs its own sign-on to VCF Operations can't.
+
+<a href="/vcf/library/architecture/identity-broker/">Identity in VCF 9</a> covers modes and blast radius.
+
+## 3. Licensing
+
+Licensing is mostly a consequence of the fleet count. Broadcom states you "cannot share a license server between fleets" and "cannot add one license to more than one license servers". A second fleet therefore means a second license server and its own license, split from your capacity.
+
+It rarely justifies a fleet on its own. From 9.1 one vCenter can take licenses from several Site IDs (VMware, 18 May 2026), and Broadcom documents extra license servers inside a fleet for administrative division or weak links. A contract that demands separate administration can still force a fleet; a second Site ID alone doesn't. This isn't purchasing advice, so check your contract.
+
+## 4. Non-technical separation
+
+Lam says availability or "other non-technical requirements" may require multiple fleets, without listing them. TechDocs' one example is a fleet each for AMER, EMEA and APAC, with a warning about overhead. Broadcom's 4 November FAQ (Q53) says a fleet can "span across multiple regions", so geography alone doesn't call for it.
+
+<Callout type="analysis" title="The test this note would apply">
+Ask who may see the other group's inventory, metrics and logs. If the answer is nobody, including platform administrators, build a second fleet. Do the same for a business likely to be sold: with no supported instance move, it is easier to hand over if it never shared a fleet. An organisation chart doesn't pass. <a href="/vcf/library/architecture/vcf9-mental-model/">The VCF 9 mental model</a> points business units to workload domains.
+</Callout>
+
+## 5. No fixed instance limit
+
+Lam reported on 3 October 2025, for 9.0, that there's no fixed number of instances per fleet: it depends on objects, metrics, latency and bandwidth. Broadcom's 9.1 sizing page states no maximum either.
+
+His Extra Large figure is 1M objects and 126M metrics on 16 nodes. Broadcom's 9.0 sizing article, <KB id={397782} />, agrees on the totals (1,056,000 and 126,000,000) but lists 12 nodes as the cluster maximum. Size from the KB and confirm 9.1 values, which it doesn't cover.
+
+## What a second fleet costs
+
+Broadcom's 9.1 sizing templates price the choice. The initial-instance template includes VCF Operations, VCF Automation and a license server; the template for an instance joining an existing fleet omits all three. A second fleet starts from its own initial instance, so it takes the first template and a second instance takes the other.
+
+| Template | vCPU | RAM | Disk |
+|---|---|---|---|
+| Initial instance, HA Medium | 184 | 656 GB | 11,445 GB |
+| Additional instance, HA Medium | 74 | 244 GB | 5,813 GB |
+| **Difference** | **110** | **412 GB** | **5,632 GB** |
+
+## What you can't change later
+
+| Change | Status |
+|---|---|
+| 5.x or 9.0.x instance into a 9.1 fleet | Supported per Lam, before that instance goes to 9.1. Historical Aria Operations data doesn't move |
+| 9.1 instance into another 9.1 fleet | Lam, 14 July 2026, updated 1 August: "no supported method". Product management is evaluating it, with no commitment |
+| Merging fleets | Not described in the pages cited here (checked 7 Nov 2026). Plan as if unavailable |
+| Fleet services off the first instance | TechDocs places them there and describes no move. Choose the site as if permanent |
+| Broker mode | Changeable. The 9.1 procedure starts with deleting the SSO configuration, and a separate embedded-to-instance migration exists |
+
+If you're upgrading several 5.x or 9.0.x instances, settle the fleet map before any of them reaches 9.1.
+
+## Example 1: three sites, one company (constructed)
+
+**Assumptions:** VCF Operations in Dublin. Round trips of 25 ms to Frankfurt and 180 ms to Singapore. One operations team, identity provider and contract, no separation demanded, HA Medium.
+
+- Singapore: 180 is within 300, so it stays in the fleet. 180 is over 100, so it needs its own instance.
+- Frankfurt: 25 is within 50, 100 and 150, so it can be a workload domain of the Dublin instance.
+
+**Result:** one fleet, two instances, 184 + 74 = 258 vCPU of management templates. If Frankfurt becomes the DR target, TechDocs' DR design gives it an instance: three instances, 332 vCPU. If Singapore's regulator demands a separate console, it becomes two fleets.
+
+## Example 2: a regulated subsidiary on one campus (constructed)
+
+**Assumptions:** two companies 2 ms apart. The subsidiary's regulator requires separate administrators and no shared console, and it has its own identity provider. A sale within three years is possible. HA Medium.
+
+Latency allows one fleet. Identity doesn't, since one VCF Operations connects to one broker, and the regulator settles it.
+
+**Result:** two fleets, at 368 vCPU, 1,312 GB and 22,890 GB against 258 vCPU, 900 GB and 17,258 GB for one fleet and two instances. Add a second license server and a split license. If the regulator accepts role-based separation in a shared console, a second instance with single-instance SSO saves the 110 vCPU, but that instance can't later move fleets.
+
+Duncan Epping's podcast episode #116 with Gary Blake (13 April 2026) is billed as a primer on these constructs. Its show notes define nothing but do link the latency diagram. The next choice down is <a href="/vcf/library/architecture/stretched-or-fault-domains/">stretched or fault domains</a>.

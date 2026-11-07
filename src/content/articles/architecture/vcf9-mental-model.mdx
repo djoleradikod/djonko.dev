@@ -100,7 +100,7 @@ When a 9.x ticket or design question is vague, the first thing to settle is whic
 
 ## Design questions to settle early
 
-- **How many fleets?** Start with one. A second fleet makes sense for hard separation, such as sovereignty, a separate operator team or a separate licence entitlement. A second site alone is not a reason for one.
+- **How many fleets?** Start with one. A second fleet makes sense for hard separation, such as sovereignty, a separate operator team or a contract that demands separately administered licences. A second site alone is not a reason for one. [One fleet or several](/vcf/library/architecture/one-fleet-or-several/) gives the deciding questions.
 - **How many instances?** An instance is a failure and lifecycle boundary with its own SDDC Manager. Separate sites or regions can justify a second instance. For separate business units, consider a workload domain instead.
 - **Where will the first instance live?** It carries the fleet services, so put it on the most resilient site you have.
 - **What identity scope?** Fleet-wide SSO is the simplest. Cross-instance or single-instance scopes limit the blast radius but add brokers to run. See <a href="/vcf/library/architecture/identity-broker/">Identity in VCF 9</a>.
