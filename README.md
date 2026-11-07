@@ -26,12 +26,13 @@ npm ci
 npm run dev             # http://localhost:4321 (drafts visible, ./media served at /media)
 npm run build           # build + search index + share images + privacy scan + link check
 npm run audit           # browser audit: accessibility, CSP/console errors, broken images, page weight
+npm run gate            # everything a change has to pass before it merges, on a clean copy
 npm run sync:projects   # refresh tool facts from GitHub releases
 npm run pdfs            # re-print site PDFs (then build again)
 ```
 
 Settings (name, links, photo, media origin, analytics): `src/data/site.ts`.
-Deploying: `deploy/README.md`. CI: `.github/workflows/site.yml`.
+Deploying and the checks before a merge: `deploy/README.md`.
 
 ## Rules the build enforces
 

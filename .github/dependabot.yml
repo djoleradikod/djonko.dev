@@ -1,5 +1,5 @@
-# Weekly dependency updates as pull requests. Each PR runs the full build and audit in CI,
-# and Cloudflare Pages builds a protected preview of it, before anything reaches main.
+# Weekly dependency updates as pull requests. Nothing checks them automatically: run
+# `npm run gate` on the branch before merging one.
 version: 2
 updates:
   - package-ecosystem: npm
@@ -19,6 +19,3 @@ updates:
         patterns: ['astro', '@astrojs/*']
       build-tools:
         patterns: ['pagefind', 'sharp', 'satori', '@resvg/*', 'mermaid', '@fontsource/*', 'axe-core']
-  - package-ecosystem: github-actions
-    directory: /
-    schedule: { interval: monthly }

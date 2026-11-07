@@ -3,7 +3,7 @@
 #
 #   DEPLOY_HOST=deploy@203.0.113.10 deploy/hetzner/deploy.sh             build and deploy
 #   DEPLOY_HOST=... deploy/hetzner/deploy.sh --media                      also sync ./media to /media
-#   DEPLOY_HOST=... deploy/hetzner/deploy.sh --skip-build                 deploy an existing dist/ (used by CI)
+#   DEPLOY_HOST=... deploy/hetzner/deploy.sh --skip-build                 deploy an existing dist/
 #
 # Each release is a full copy under releases/<time>-<commit>; unchanged files are hard-linked to the previous
 # release, so uploads are small. `current` flips to the new release in one rename. The last KEEP releases stay

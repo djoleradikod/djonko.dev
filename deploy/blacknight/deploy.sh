@@ -2,7 +2,7 @@
 # Publish the site to Blacknight (cPanel) web hosting over SFTP or FTPS, using lftp.
 #
 #   BN_HOST=ftp.example.ie BN_USER=cpaneluser BN_PASS='...' BN_DIR=public_html deploy/blacknight/deploy.sh
-#   ... deploy/blacknight/deploy.sh --skip-build      upload an existing dist/ (used by CI)
+#   ... deploy/blacknight/deploy.sh --skip-build      upload an existing dist/
 #
 # BN_PROTO=sftp (default) or ftps. BN_DIR is the folder the domain points at: public_html for the main
 # domain of the hosting account, or the folder cPanel created for an addon domain or subdomain.
