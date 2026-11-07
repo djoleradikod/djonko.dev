@@ -1,51 +1,90 @@
 ---
 title: "Building team knowledge: a KB index, signposts and the habit of writing it down"
-description: "Write a problem down where the next person will look, so the team solves it once. Keep a small, curated index of the KBs that matter, mapped to symptoms, with signposts at the top of runbooks and one entry added or updated for each resolved ticket."
+description: "Keep a short index from symptom or error string to KB, with a version on every line, and add or update one line per closed ticket. Put signposts at the top of runbooks. On VCF 9.1, Broadcom's Troubleshooting Blueprint recommends Workbench for all incidents of significance, so keep that evidence in its sessions."
 category: leadership
 order: 9
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Overview
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: []
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [444986, 443166, 443216, 448518]
 sources:
+  - title: "Troubleshooting Concepts, VCF Troubleshooting Blueprint (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
   - title: "Diátaxis: a systematic approach to technical documentation"
     url: "https://diataxis.fr/"
     by: "Daniele Procida"
+    kind: reference
+  - title: "Diátaxis: Reference"
+    url: "https://diataxis.fr/reference/"
+    by: "Daniele Procida"
+    kind: reference
+  - title: "Diátaxis: Colophon"
+    url: "https://diataxis.fr/colophon/"
+    by: "Daniele Procida"
+    kind: reference
 ---
 
 <InShort>
-Keep a **curated KB index**: each entry is a KB number, a one-line topic in your own words, the version it applies to, and the symptom that should lead someone to it. The [KB index](/vcf/resources/kb-index/) on this site is an example, built while preparing the talk series. Add **signposts**: short "if you see X, go to Y" tables at the top of runbooks and notes. And build the **habit**: every solved ticket ends with one line added somewhere the next person will find it.
+Keep a short index that takes someone from a symptom or exact error string to the right KB, with the version on every line, and have whoever closes a ticket add or update one line. Put signposts at the top of runbooks that point into it. On VCF 9.1, add Workbench sessions, since [Broadcom's Troubleshooting Blueprint recommends Workbench for "all incidents of significance"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html). This note treats the session as the record of one incident and the index as the way back to the fix.
 </InShort>
 
-<Compare v5Label="Large wiki" v9Label="Curated index" title="What gets used" rows={[
-  ["Size", "Hundreds of pages", "A few hundred lines"],
-  ["Entry point", "Search, if it works", "Symptom or error string"],
-  ["Upkeep", "Nobody owns it", "Updated as tickets close"],
-  ["Trust", "Low: old pages mixed with new", "Versions on every line"],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+The example table used to scope <KB id={444986} /> to 9.x, but its environment is VCF 9.0 and SDDC Manager 9.0. It also summarised <KB id={443166} /> as "allow all runtime nodes". That KB names the Fleet components, and the runtime IP pool comes from <KB id={443216} />.
+</Callout>
 
-## What a good index entry looks like
+## Where each thing gets written
+
+<Callout type="analysis" title="How the four places divide the work">
+Workbench is part of VCF Operations. A session [holds text notes and saved charts, can be shared so a colleague can take over, and keeps its history](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html) for post-incident review and for comparing against new, similar incidents. The blueprint is written for VCF 9.1, and the table below is this site's division of labour, not Broadcom's.
+
+| What you have | Write it in | Why there |
+|---|---|---|
+| Evidence from a live incident | A Workbench session | It sits beside the saved charts, and a colleague can pick it up |
+| A symptom with a known public fix | One index line | The next person arrives holding the error string |
+| A procedure repeated on your own estate | A [runbook](/vcf/library/leadership/runbooks-that-get-used/) | Steps need an owner and a tested order |
+| Why the platform behaves as it does | A note or a [post-incident review](/vcf/library/leadership/post-incident-reviews/) | It's read for understanding, away from the incident |
+</Callout>
+
+The concepts page doesn't say how long Workbench keeps a session <AsOf date="2026-11-07" />, so don't make the session your only record. Add the index line when the ticket closes. Broadcom describes problem management as work generally done after resolution that ["works to reduce the likelihood of a recurrence"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html), and this note treats one line per ticket as the smallest version of that a team can sustain.
+
+## What a good entry looks like
 
 | KB | Topic in your words | Versions | Symptom that leads here |
 |---|---|---|---|
-| 444986 | Cancel a credential task holding a lock | 9.x | "Resource is already locked by OPERATIONS_MANAGER" |
-| 443166 | Depot 403: allow all runtime nodes | 9.1 | 403 from the depot after moving to 9.1 |
-| 448518 | 180-day rolling licence window | 9.x | Expiry date months before the contract ends |
+| <KB id={444986} /> | Cancel the failed credential task, after an offline snapshot of SDDC Manager | 9.0 | `Resource is already locked by OPERATIONS_MANAGER service` |
+| <KB id={443166} /> | Downloads moved to the Fleet components, so allow those through the firewall or proxy | 9.1 | `Depot returned authentication/authorization failure. Expected HTTP status 200 but received 403` |
+| <KB id={443216} /> | Depot now uses the VCF Services Runtime IP Pool: allow the Broadcom URLs, then restart the depot service | 9.1.0 | Validation passes, but the Software Depot stays "Disconnected" |
+| <KB id={448518} /> | Usage reports refresh a rolling 180-day licence file | 9.x | `The due date for submitting your usage report is on [Date].` |
 
-## Habits that keep it alive
+The versions column protects the reader most. <KB id={444986} /> is scoped to 9.0, so anyone on 9.1 who sees the same lock error should look for a KB scoped to their release, or open a case, before running its `DELETE /v1/credentials/tasks/{id}`. Scope also moves inside a release line: <KB id={443166} /> adds `vcf.packages.broadcom.com` to its allow-list for 9.1.1 and later, so re-read the entries at each upgrade.
 
-- **Close with a line.** Every resolved ticket adds or updates one entry.
-- **Version everything.** An entry without a version is a trap after the next upgrade.
-- **Prune quarterly.** Remove entries for versions you no longer run.
-- **Own it.** One person reviews additions, so the language stays consistent.
+The symptom column stops two similar KBs collapsing into one line. <KB id={443166} /> and <KB id={443216} /> are both allow-list problems on 9.1, but one shows a 403 and the other shows a disconnected depot. Their remedies differ as well: the second needs the Software Depot service stopped and started, and the first has a follow-up check that the registered name is all lowercase.
 
-<Callout type="field">
-When onboarding a new engineer, give them the index and three past tickets to solve with it. It teaches the platform and tests the index at the same time.
-</Callout>
+Exact error text matters on licensing too. <KB id={448518} /> calls the due-date warning in the table above expected behaviour, because a multi-year contract still needs usage reported every 180 days, so the entry sends a reader to the [reporting cycle](/vcf/library/licensing/180-day-cycle/) instead of a renewal conversation. Licensing lines point to Broadcom's text and aren't legal or purchasing advice.
 
-## Pitfalls
+## Signposts
 
-- **Copying KB text** into the index. Link it, and write the topic in your own words.
-- **Details not meant for customers** in a shared index. Keep a separate private layer if you need one.
-- **Indexing everything.** If it hasn't helped twice, it probably doesn't belong.
+A signpost is a short "if you see X, go to Y" table at the top of a runbook or note. A depot runbook could open with two lines: the depot's 403 authorization failure goes to <KB id={443166} />, and validation passing with a disconnected depot goes to <KB id={443216} />. That spares the reader the runbook when a KB already answers the question. The [KB index](/vcf/resources/kb-index/) on this site is a larger index, with topic and theme columns instead of versions and symptoms: each number links to the KB, and the last column lists the notes that cite it, so a KB number from a support case leads to the background as well as the fix.
+
+## Keeping it alive
+
+[Daniele Procida's](https://diataxis.fr/colophon/) [Diátaxis](https://diataxis.fr/) framework separates reference from how-to guides and explanation, and an index belongs with reference: ["One hardly reads reference material; one consults it."](https://diataxis.fr/reference/) His line that reference "is useful when it is consistent" is the reason for fixed columns and one reviewer. His rule that its structure should mirror the product doesn't fit here, because the reader holds an error string and doesn't yet know which component owns it.
+
+| Decision | Choose | Reason |
+|---|---|---|
+| Size | A few hundred lines, with a link to each KB | Short enough to consult during an incident, not read |
+| Entry point | Symptom or error string | A wiki search helps less if you don't yet know the term |
+| Who adds | Whoever resolves the ticket adds or updates one entry | The detail is freshest at closure |
+| Who reviews | One person | The language stays consistent |
+| Versions | On every line | An entry without one is a trap after the next upgrade |
+| Pruning | Quarterly: remove versions you no longer run, and question anything that hasn't helped twice | Old lines can cost trust in the new ones |
+
+Link each KB and write the topic in your own words, because copied text can go stale when the KB changes. Keep details not meant for customers out of a shared index, in a separate private layer if you need one.
+
+For onboarding, give a new engineer the index and three past tickets to solve with it. It teaches the platform and tests the index at the same time, and any ticket the index can't solve shows you the missing line.

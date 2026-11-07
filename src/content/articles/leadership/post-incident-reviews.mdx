@@ -1,56 +1,136 @@
 ---
 title: "Post-incident reviews for platform teams: timeline, causes, and one improvement that sticks"
-description: "A good review explains what happened without blame, finds the conditions that allowed it, and commits to a small number of changes that get done. For platform teams, prefer an action that becomes a check in the health report."
+description: "Set review criteria in advance, keep the evidence in Workbench, accept a cause only once tested, and end on a check that can see the failure. On 9.1, sos --health-check leaves out management services, VCF Automation and VCF Operations, so it can't be that check for them."
 category: leadership
 order: 6
-versions: ["5.x", "9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: []
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [436398, 446310, 417255, 448518, 449796, 443851]
 sources:
   - title: "Postmortem culture: learning from failure"
     url: "https://sre.google/sre-book/postmortem-culture/"
-    by: "Google SRE book"
+    by: "John Lunney and Sue Lueder, Google SRE book"
+    kind: reference
+  - title: "VCF Troubleshooting Blueprint: Troubleshooting Concepts"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Troubleshooting VMware Cloud Foundation or vSphere Foundation Deployments (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Monitoring and Alerting Blueprint: Alerts"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/monitoring-and-alerting-guide/alerts.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "New AI and Kubernetes Private Cloud Operations Capabilities in VCF 9.1.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/09/03/new-ai-and-kubernetes-private-cloud-operations-capabilities-in-vmware-cloud-foundation-9-1-1/"
+    by: "Sehjung Hah, VMware blog"
+    kind: broadcom
+    date: 2026-09-03
+  - title: "VCF 9.1 Frequently Asked Questions"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "ESXi root account is shown as \"Disconnected\" status on Password Management on SDDC Manager"
+    url: "https://knowledge.broadcom.com/external/article/436398"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "Remediating Component Passwords in VCF 9.x Fleet Management"
+    url: "https://knowledge.broadcom.com/external/article/446310"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "VCF Management Services: Health and Diagnostics"
+    url: "https://knowledge.broadcom.com/external/article/417255"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "\"The due date for submitting your usage report\" warning in VCF Operations 9.x"
+    url: "https://knowledge.broadcom.com/external/article/448518/the-due-date-for-submitting-your-usage-r.html"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "SDDC Manager app health is affected with SDDC Manager Backup Job is in Failed State alert"
+    url: "https://knowledge.broadcom.com/external/article/449796"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "Completed scheduled backups data does not appear in the VCF Fleet Lifecycle UI"
+    url: "https://knowledge.broadcom.com/external/article/443851"
+    by: "Broadcom KB"
+    kind: broadcom
 ---
 
 <InShort>
-Run the review within a few days, while memories and logs are fresh. Build a **timeline** from evidence: logs, tickets, chat. Separate the **trigger** (what happened) from the **conditions** (why it could happen, and why it wasn't caught sooner). Keep it **blameless**: people acted reasonably on what they knew, so ask what they knew. End with **two or three actions**, each with an owner and a date, and prefer actions that become **automatic checks** over actions that rely on memory.
+Agree in advance which incidents get a review, and count a monitoring failure as one however short the outage was. Keep the evidence in Workbench during the incident, record a cause as confirmed only after it has been tested, and finish on a few owned actions, preferably one that becomes an automatic check. On VCF, make sure that check can see the failure: on 9.1, `sos --health-check` [leaves out management services, VCF Automation and VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html), so a green run says nothing about them.
 </InShort>
 
-<Compare v5Label="Weak review" v9Label="Useful review" title="The difference" rows={[
-  ["Cause", "Human error", "The conditions that made the error easy and invisible"],
-  ["Actions", "Ten, vague, unowned", "Two or three, owned, dated, checked"],
-  ["Output", "A document nobody reads", "A changed runbook, a new health check, a KB entry"],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to offer a plain weekly `sos --health-check` as the platform's check, without its exclusions or `--domain-name ALL`, and its other checks carried no source or release. It also read as if Google's chapter set the few-day window, the timeline and the limit of two or three actions; those are this site's advice, and the note now says so.
+</Callout>
 
-## A structure
+## End on a check that can see the failure
 
-1. **Summary**: impact, duration, one-line cause.
+The question that closes a review is which check would have told the team a week earlier. A review that answers "add it to the weekly SoS run" may have closed nothing, because [health checks don't include management services, VCF Automation or VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html) on 9.1. SoS operations also default to the MANAGEMENT domain. The page doesn't spell that out for `--health-check`, so reading a plain run as management-only is an inference, but passing `--domain-name ALL` removes the question ([the SoS note](/vcf/library/day-2/health-checks-sos/) has the detail).
+
+Where VCF Operations raises an alert, a [notification rule](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/monitoring-and-alerting-guide/alerts.html) beats a line in a report, since a weekly report can be almost a week late. Use [the weekly report](/vcf/library/labs/scripted-health-checks/) for what has no alert. Apart from the `df -h` trend, the signals below are Broadcom's; the pairing with each condition, and the routing, are this site's.
+
+| Condition the review found | Check to add | Scope and limit |
+|---|---|---|
+| Management service failed while SoS stayed green | [Health and Diagnostics dashboard](https://knowledge.broadcom.com/external/article/417255) | The KB names no release, but its paths match 9.1. Disk and memory bands run from Warning at 80% to Critical over 95%. It's read by eye, so give someone the job |
+| Certificate expired unnoticed | [Expiry alarms in VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), on a notification rule | 9.1.1, including certificates VCF Operations doesn't manage. Before 9.1.1, use [`--certificate-health`](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html), which turns yellow at 1 to 30 days |
+| Password changed outside VCF | Fleet Management > Passwords, [filtered to disconnected accounts](https://knowledge.broadcom.com/external/article/446310) | 9.x. On SDDC Manager 9.0, SoS also shows `Failed to get details` for the ESXi root account (<KB id={436398} />). TechDocs describes `--password-health` as an expiry check, so don't count on it for this |
+| Backup silently failing | The VCF Operations alert [SDDC Manager Backup Job is in Failed State](https://knowledge.broadcom.com/external/article/449796) | 9.1. It fires when a scheduled backup hasn't run for more than a day. Management services need the [Restore view](https://knowledge.broadcom.com/external/article/443851) under Backup & Restore, because scheduled runs aren't surfaced in the standard Lifecycle tasks UI |
+| Licensing deadline missed | [The usage report due date](https://knowledge.broadcom.com/external/article/448518/the-due-date-for-submitting-your-usage-r.html) in licence management, and [licensing alerts](https://blogs.vmware.com/cloud-foundation/2026/09/03/new-ai-and-kubernetes-private-cloud-operations-capabilities-in-vmware-cloud-foundation-9-1-1/) on 9.1.1 | The rolling licence file needs usage reported every 180 days. A 30-day margin is this site's starting value, and none of this is licensing or purchasing advice |
+| Partition filled slowly | `df -h` trend per appliance, as in [disk housekeeping](/vcf/library/day-2/disk-space-housekeeping/) | An 80% line is this site's starting value, so tune it. On 9.1.0, a [full services runtime logging disk blocks platform operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), which 9.1.1.0 fixes |
+
+This site's advice is to prove a new check by making it fail once, in a lab, before closing the action. A check that has never gone red may be reading the wrong thing.
+
+## Which incidents get a review
+
+Set the criteria before the next incident. John Lunney and Sue Lueder's [chapter in the Google SRE book](https://sre.google/sre-book/postmortem-culture/) lists user-visible downtime or degradation past a threshold, any data loss, on-call intervention, a resolution time past a threshold, and a monitoring failure. Any stakeholder can also ask for one.
+
+The monitoring failure matters most here, since it usually means someone found the incident by hand. A one-hour outage that a person spotted before the tooling did qualifies, and the missing alert is already a finding. The chapter also warns that ["an unreviewed postmortem might as well never have existed"](https://sre.google/sre-book/postmortem-culture/), so put regular review sessions in the calendar instead of relying on goodwill.
+
+[Broadcom's Troubleshooting Blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html) (5 Nov 2026) files root-cause work under problem management, generally done after resolution, while incident management restores service. Keep the two apart. Neither source sets a deadline, and this site's default is a review within a few days, while people can still say why they made each call.
+
+## Keep the evidence during the incident
+
+The 9.1 blueprint [recommends Workbench for all incidents of significance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html). It holds notes, charts and the saved investigation, and retains that history for post-incident review, which makes it the natural start for the timeline. Narrow it to the exact period the issue was detected, look for events showing patches, setting changes or hardware changes, and read the Potential Evidence tab before scanning logs by hand.
+
+Three things sit elsewhere. Tickets and chat hold the decisions, so the timeline still needs them. User actions and system changes are in [Audit Trail Visibility](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs), which the 4 Nov 2026 FAQ lists under the baseline VCF entitlement for forensic analysis. And log bundles need protecting: by default SoS [deletes the previous run's output before writing](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/troubleshooting-vmware-cloud-foundation-or-vmware-vsphere-foundation-deployments.html), so copy the first bundle off or pass `--no-clean-old-logs` before collecting again.
+
+## Test the cause, and leave names out
+
+A cause isn't confirmed until it has been tested. A [full validation](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html) shows both that making a change causes the issue and that reversing it stops the issue, and the blueprint moves reproduction to an isolated environment when production can't safely be tested. An incident closed by a restart may not meet that bar, so this site's advice is to write "suspected" and let the action be the instrumentation that would confirm it next time.
+
+Separate the trigger, meaning what happened, from the conditions: why it could happen, and why nobody saw it sooner. Google's reasoning for leaving blame out is practical. "You can't 'fix' people, but you can fix systems and processes", and under a blame culture [people won't raise issues for fear of punishment](https://sre.google/sre-book/postmortem-culture/). Assume everyone acted in good faith on what they knew at the time, record what that was, and refer to roles instead of names.
+
+## What the record holds
+
+The structure and the action limit are this site's advice. Google's [review criteria](https://sre.google/sre-book/postmortem-culture/) ask whether the action plan is appropriate and the resulting fixes are at the right priority, and they set no count or format.
+
+1. **Summary**: impact, duration, one-line cause, and whether that cause is confirmed or suspected.
 2. **Timeline**: times in one time zone, each with its source.
 3. **Detection**: how it was noticed and how it could have been noticed sooner.
 4. **Trigger and conditions**: what happened, and what allowed it.
 5. **What went well**: so it is kept.
-6. **Actions**: owner, date, and how completion will be checked.
+6. **Actions**: two or three, each with an owner, a date and how completion will be checked.
 
-## Platform conditions, and the check that catches them
+| | Weak review | Useful review |
+|---|---|---|
+| Cause | Human error | The conditions that made the error easy and invisible |
+| Actions | Ten, vague, unowned | Two or three, owned, dated, checked |
+| Output | A document nobody reads | A changed runbook, a new health check, a KB entry |
 
-| Condition | Automatic check |
-|---|---|
-| Certificate expired unnoticed | Certificate expiry in the weekly report |
-| Partition filled slowly | Disk trend per appliance |
-| Password changed outside VCF | Weekly `sos --health-check` for disconnected accounts |
-| Licensing deadline missed | Days-to-deadline in the monthly report |
-| Backup silently failing | Last good backup per component |
-
-See [scripted health checks](/vcf/library/labs/scripted-health-checks/).
-
-<Callout type="field">
-Close every review by asking "which check would have told us a week earlier?" If the answer is a check you can automate, that's the action that matters most.
-</Callout>
-
-## Pitfalls
-
-- **Skipping the review** for incidents that "were only an hour".
-- **Action lists that grow** every review and never shrink.
-- **Naming individuals** in the cause. It ends honest reporting.
+Before closing it, run Google's remaining questions over the draft: was key incident data collected, is the impact assessment complete, does the root cause go deep enough, and has the outcome reached the stakeholders?
