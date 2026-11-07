@@ -19,7 +19,8 @@
     "lint:style": "node scripts/style-lint.mjs",
     "check:privacy": "node scripts/privacy-scan.mjs",
     "check:links": "node scripts/check-content.mjs",
-    "check:external": "node scripts/check-external.mjs"
+    "check:external": "node scripts/check-external.mjs",
+    "gate": "bash scripts/gate.sh"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.14",
