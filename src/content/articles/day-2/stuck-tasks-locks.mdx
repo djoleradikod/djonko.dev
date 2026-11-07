@@ -78,7 +78,7 @@ curl -sk -X DELETE -H "Authorization: Bearer $TOKEN" https://localhost/v1/tasks/
 curl -sk -X DELETE -H "Authorization: Bearer $TOKEN" https://localhost/v1/credentials/tasks/<task-id>
 ```
 
-Password tasks are re-run, not retried: cancel the failed one and start a new rotation or remediation once the account is healthy (<KB id={444986} />).
+To clear a failed password task, cancel it and start a new rotation or remediation once the account is healthy (<KB id={444986} />). The [credentials API](https://developer.broadcom.com/xapis/vmware-cloud-foundation-api/latest/credentials/) also documents `PATCH /v1/credentials/tasks/{id}` to retry one, on that path and not through `/v1/tasks`.
 
 ### 3. Fix what made it fail
 

@@ -32,6 +32,11 @@ export default defineConfig({
     || (process.env.CF_PAGES && process.env.CF_PAGES_BRANCH !== 'main' ? process.env.CF_PAGES_URL : undefined)
     || 'https://djonko.dev',
   trailingSlash: 'always',
+  // Notes merged into another note keep working at their old address.
+  redirects: {
+    '/vcf/library/troubleshooting/password-and-account-failures/': '/vcf/library/day-2/passwords-service-accounts/',
+    '/vcf/library/troubleshooting/certificate-failures/': '/vcf/library/day-2/certificates-in-9/',
+  },
   prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
   integrations: [mdx(), sitemap({ filter: (page) => !HIDDEN.test(new URL(page).pathname) }), devMedia],
   markdown: {

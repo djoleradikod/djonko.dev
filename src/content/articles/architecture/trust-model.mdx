@@ -26,7 +26,7 @@ VCF components trust each other in two ways. The first is **certificates**: the 
 
 <Compare rows={[
   ["Who manages certificates", "SDDC Manager, for vCenter, NSX, SDDC Manager and, in later 5.x releases, ESX", "VCF Operations, Fleet Management > Certificates, for both management components and instances"],
-  ["Issuers", "Microsoft CA or OpenSSL CA integrated with SDDC Manager, VMCA, or an external CA through CSRs", "Microsoft AD CS with auto-renewal, the fleet management CA for management components, VMCA for infrastructure and ESX, and the SDDC Manager OpenSSL CA for infrastructure only"],
+  ["Issuers", "Microsoft CA or OpenSSL CA integrated with SDDC Manager, VMCA, or an external CA through CSRs", "9.0: Microsoft AD CS with auto-renewal, the fleet management CA for management components, VMCA for infrastructure and ESX, and the SDDC Manager OpenSSL CA for infrastructure only. 9.1: VMCA, Microsoft CA or OpenSSL, the last now on VCF Operations."],
   ["Renewal", "Manual replacement workflows", "Auto-renewal toggled per instance. In 9.0.2 and later, renewal starts 60 days before expiry for components that support non-disruptive updates."],
   ["Service account rotation", "SDDC Manager generated and rotated them on request or schedule", "Rotated automatically every 30 days by default for most inter-component accounts, through VCF Operations or SDDC Manager"],
   ["SAN strictness", "Lenient in many places", "9.1 requires FQDN SANs. Missing SANs block upgrades and migration into fleet lifecycle."],
