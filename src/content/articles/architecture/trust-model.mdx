@@ -1,23 +1,36 @@
 ---
 title: "The trust model: certificates, CAs and who trusts whom"
-description: "A cross-component failure in VCF can be a trust failure: a certificate the other side no longer accepts, or a service account it no longer recognises. This note maps which issuer signs what and who stores whose thumbprint, so you can find what went stale."
+description: "When VCF components stop talking, check trust first: a stale thumbprint, trust bundle, CA chain or service account may be the cause, and one CA fault even reports a wrong password. This note maps who issues what in 5.x, 9.0 and 9.1, where trust is recorded, and what to walk after a vCenter certificate changes."
 category: architecture
 order: 9
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Deep dive
 pubDate: 2026-11-02
 updated: 2026-11-07
-kbs: [427937, 441515, 449907, 444734, 450375, 443511, 431963, 441506]
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [427937, 441515, 449907, 444734, 450375, 443511, 431963, 441506, 323341]
 sources:
-  - title: "Automatic certificate renewal in VCF 9"
+  - title: "Automatic certificate renewal in VMware Cloud Foundation 9.0"
     url: "https://blogs.vmware.com/cloud-foundation/2025/06/19/automatic-certificate-renewal-in-vcf-9/"
-    by: "VMware Cloud Foundation blog"
+    by: "Eric Gray, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-06-19
   - title: "Accounts in VMware Cloud Foundation (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
   - title: "VCF 5.2 administration: certificate management"
-    url: "https://docs.vmware.com/en/VMware-Cloud-Foundation/5.2/vcf-admin/GUID-5DA368B0-68CF-44D1-846F-68E36A9136C7.html"
-    by: "VMware"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/certificate-management-admin.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-01
+  - title: "VCF 5.2 administration: rotate passwords"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/manage-passwords-admin/rotate-passwords-admin.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-01
   - title: "Managing Certificates in VMware Cloud Foundation (9.1.x)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0.html"
     by: "Broadcom TechDocs"
@@ -28,8 +41,28 @@ sources:
     by: "Broadcom TechDocs"
     kind: broadcom
     date: 2026-11-05
+  - title: "Set up automatic renewal of certificates (9.1.x)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0/set-up-automatic-renewal-of-certificates-in-vmware-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
   - title: "Recommendations for VCF certificate management (9.1 blueprint)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "ESX certificate management (9.1 blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/vsphere-certificate-management/esx-certificate-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations known issues (9.1.x)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/known-issues/vcfoperations-91-known-issues.html"
     by: "Broadcom TechDocs"
     kind: broadcom
     date: 2026-11-05
@@ -41,26 +74,32 @@ sources:
 ---
 
 <InShort>
-VCF components trust each other in two ways. The first is **certificates**: the TLS identity each component presents, and the trust stores and thumbprints the others keep for it. The second is **service accounts**: system-generated credentials that one component uses to call another. In 5.x, SDDC Manager handled both for everything it managed. In 9.0 the work is split. Fleet management, now part of VCF Operations, looks after the management components, and vCenter's VMCA and SDDC Manager look after the infrastructure. In 9.1, [VCF Operations manages certificates for both](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0.html), and Broadcom's blueprint says to ["Avoid using the SDDC Manager for certificate management"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html). 9.1 also adds a services runtime with its own ingress certificate and trust bundle, and it enforces FQDN SANs strictly. When something "stops talking", check certificates and service accounts before anything else.
+**When two VCF components stop talking, check trust first, and don't take the error text at face value.** On VCF Operations 9.0.1 the NSX connection reports "an incorrect username or password" when the real fault is [CA certificates that never reached the adapter](https://knowledge.broadcom.com/external/article/443511), fixed in 9.0.2.
+
+**On 9.1, run every supported certificate operation through VCF Operations.** Broadcom's [blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html) keeps SDDC Manager APIs "only for backward compatibility", and recommends against vCenter's own API, UI and CLI once VCF Operations manages an ESX or vCenter certificate. Leave internal service accounts to the platform as well, because external PAM tools [must not rotate, change or manage them](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html).
 </InShort>
 
+<Callout type="note" title="Corrected on 7 November 2026">
+This note credited 5.x SDDC Manager with ESX certificates and listed VMCA as an SDDC Manager issuer; the 5.2 documentation says VCF doesn't manage ESXi certificates. It also blamed lifecycle and NSX adapter failures on drifted accounts: KB 450375 names repeated rotations deleting the account, and KB 443511 names missing CA certificates. Its claim that 9.0 automation has unnamed gaps had no source and is gone.
+</Callout>
+
 <Compare rows={[
-  ["Who manages certificates", "SDDC Manager, for vCenter, NSX, SDDC Manager and, in later 5.x releases, ESX", "VCF Operations, Fleet Management > Certificates, for both management components and instances"],
-  ["Issuers", "Microsoft CA or OpenSSL CA integrated with SDDC Manager, VMCA, or an external CA through CSRs", "9.0: Microsoft AD CS with auto-renewal, the fleet management CA for management components, VMCA for infrastructure and ESX, and the SDDC Manager OpenSSL CA for infrastructure only. 9.1: VMCA, Microsoft CA or OpenSSL, the last now on VCF Operations."],
-  ["Renewal", "Manual replacement workflows", "Auto-renewal toggled per instance. In 9.0.2 and later, renewal starts 60 days before expiry for components that support non-disruptive updates."],
-  ["Service account rotation", "SDDC Manager generated and rotated them on request or schedule", "Rotated automatically every 30 days by default for most inter-component accounts, through VCF Operations or SDDC Manager"],
-  ["SAN strictness", "Lenient in many places", "9.1 requires FQDN SANs. Missing SANs block upgrades and migration into fleet lifecycle."],
+  ["Who manages certificates", "SDDC Manager, for <a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/certificate-management-admin.html'>vCenter, NSX Manager, Avi, SDDC Manager and Aria Suite Lifecycle</a>. VCF doesn't manage ESXi certificates.", "VCF Operations, Fleet Management > Certificates, for <a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0.html'>management and instance components</a>, with ESX on 9.1."],
+  ["Issuers", "OpenSSL native to SDDC Manager, Microsoft AD CS, or signed certificates from an external CA. ESXi defaults to VMCA.", "9.0: see the diagram, with auto-renewal on Microsoft AD CS. 9.1: <a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0/configure-a-certificate-authority_9-0.html'>VMCA, Microsoft CA or OpenSSL</a> as configured CAs, with OpenSSL now on VCF Operations, plus external certificates."],
+  ["Renewal", "Replacement, with no automatic renewal described for SDDC Manager's components.", "<a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0/set-up-automatic-renewal-of-certificates-in-vmware-cloud-foundation.html'>Auto-renewal 60 days before expiry</a>, toggled separately for management components, instances, domains and standalone vCenter. <a href='https://knowledge.broadcom.com/external/article/427937'>KB 427937</a> gives the same 60 days for renewal configured in vCenter on VVF 9.0.2."],
+  ["Service account rotation", "<a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/manage-passwords-admin/rotate-passwords-admin.html'>Manual or scheduled at 30, 60 or 90 days</a> through SDDC Manager, automatic for vCenter service accounts, and no auto-rotate for ESXi.", "9.1: <a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html'>nine accounts default to 30-day rotation</a>. Others are listed as system managed with no interval, and ESX service accounts go through SDDC Manager."],
+  ["SAN checks", "Weaker: 9.1 enforces validations that <a href='https://knowledge.broadcom.com/external/article/449907'>previous versions did not</a>.", "9.1 requires the <a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0.html'>FQDN in the SAN</a>. A missing FQDN blocks the upgrade."],
 ]} />
 
 ## Who signs what in 9.0
 
-<Diagram viewBox="0 0 820 250" label="Issuers and what they sign: Microsoft AD CS can sign management and infrastructure; the fleet management CA signs management components; VMCA signs vCenter-managed infrastructure and ESX; the SDDC Manager OpenSSL CA signs infrastructure only." caption="Issuers in VCF 9.0, as described in the VCF blog's certificate renewal post.">
+<Diagram viewBox="0 0 820 250" label="Issuers and what they sign: Microsoft AD CS can sign management and infrastructure components; the fleet management CA signs management components; VMCA signs infrastructure components and ESX hosts; the SDDC Manager OpenSSL CA signs infrastructure only." caption="Issuers in VCF 9.0, from Eric Gray's June 2025 post. VMCA also signs ESX hosts.">
   <rect class="box accent" x="20" y="20" width="230" height="50" rx="6" /><text class="t" x="34" y="50">Microsoft AD CS</text>
   <rect class="box" x="20" y="84" width="230" height="50" rx="6" /><text class="t" x="34" y="114">Fleet management CA</text>
   <rect class="box" x="20" y="148" width="230" height="50" rx="6" /><text class="t" x="34" y="178">vCenter VMCA</text>
   <rect class="box" x="20" y="200" width="230" height="40" rx="6" /><text class="t" x="34" y="225">SDDC Manager OpenSSL CA</text>
-  <rect class="box v9" x="560" y="40" width="240" height="70" rx="8" /><text class="t" x="576" y="68">Management components</text><text class="s" x="576" y="90">VCF Ops, VCFA, identity broker</text>
-  <rect class="box v9" x="560" y="140" width="240" height="70" rx="8" /><text class="t" x="576" y="168">Infrastructure</text><text class="s" x="576" y="190">vCenter, NSX, SDDC Manager, ESX</text>
+  <rect class="box v9" x="560" y="40" width="240" height="70" rx="8" /><text class="t" x="576" y="68">Management components</text><text class="s" x="576" y="90">VCF Operations, VCF Automation</text>
+  <rect class="box v9" x="560" y="140" width="240" height="70" rx="8" /><text class="t" x="576" y="168">Infrastructure</text><text class="s" x="576" y="190">vCenter, NSX, SDDC Manager</text>
   <path class="wire accent" d="M250 45 C 400 45, 420 70, 558 70" marker-end="url(#arra)" />
   <path class="wire accent" d="M250 45 C 400 45, 420 170, 558 170" marker-end="url(#arra)" />
   <path class="wire" d="M250 109 C 400 109, 420 85, 558 85" marker-end="url(#arr)" />
@@ -68,30 +107,43 @@ VCF components trust each other in two ways. The first is **certificates**: the 
   <path class="wire dash" d="M250 220 C 400 220, 420 195, 558 195" marker-end="url(#arr)" />
 </Diagram>
 
-On 9.1 the fleet management CA [is no longer a CA type](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0/configure-a-certificate-authority_9-0.html) and [OpenSSL runs on VCF Operations](https://blogs.vmware.com/cloud-foundation/2026/10/14/managing-certificates-at-scale-with-vmware-cloud-foundation-9-1-1/), so use [the CA table in the certificates note](/vcf/library/day-2/certificates-in-9/#ca-type-against-renewal-behaviour) for 9.1 and 9.1.1.
+The split in 9.0 was among issuers, and VCF Operations already held the [auto-renewal switch](https://blogs.vmware.com/cloud-foundation/2025/06/19/automatic-certificate-renewal-in-vcf-9/). The [October 2026 post by Firth and Hah](https://blogs.vmware.com/cloud-foundation/2026/10/14/managing-certificates-at-scale-with-vmware-cloud-foundation-9-1-1/) says 9.0 management components "can only use Microsoft CAs", which leaves out the fleet management CA in Gray's post. Comparing only the CAs you configure would reconcile them, though that's an inference, so on 9.0 read the certificate list for what actually signed each component.
 
-If you use a VMware-issued CA, distribute its root to administrator workstations, or every browser session will start with a warning.
+If you stay on a VMware-issued CA, add its certificate to administrator systems and mark it trusted, or [browsers will warn](https://blogs.vmware.com/cloud-foundation/2025/06/19/automatic-certificate-renewal-in-vcf-9/).
+
+On 9.1 the fleet management CA [isn't among the CA types](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0/configure-a-certificate-authority_9-0.html), and the choice of CA now has a recommended answer. Default certificates on management components [should be replaced with enterprise CA certificates before production](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html), while ESX goes the other way, with default VMCA described as ["The default and recommended option for VCF fleets"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/vsphere-certificate-management/esx-certificate-management.html). OpenSSL is [meant for testing or development](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0/configure-a-certificate-authority_9-0.html) and can't chain into an external hierarchy. [The CA table in the certificates note](/vcf/library/day-2/certificates-in-9/#ca-type-against-renewal-behaviour) weighs each option on 9.1 and 9.1.1.
 
 ## How trust is recorded
 
-Trust is recorded in several places, and every one of them can go stale:
+Trust is recorded in several places, and each one goes stale in its own way.
 
-- **Trust stores.** Each appliance trusts a set of CA roots. In 9.1 the services runtime distributes trust through a `platform-trust` configmap. A missing intermediate CA there silently breaks the VCF Operations to log management integration (<KB id={441515} />).
-- **Thumbprints.** NSX stores the vCenter thumbprint for its compute manager registration. VCF Operations adapters and VCF Automation cloud accounts store the thumbprints of what they connect to. Replace a vCenter certificate, and each of these needs re-trusting (<KB id={431963} />, <KB id={441506} />).
-- **Service account credentials.** These are stored by the caller and rotated by VCF. Change one out of band and the caller fails. For example, a 9.1 SDDC lifecycle account that drifts breaks upgrades and inventory sync (<KB id={450375} />), and a drifted NSX integration account breaks the VCF Operations NSX adapter (<KB id={443511} />).
+Trust bundles can fail quietly. Each appliance trusts a set of CA roots, and on 9.1 the services runtime distributes trust through a `platform-trust` configmap. On 9.1.x, an ingress TLS certificate issued through the automated Microsoft CA URL can leave the intermediate CA out of that configmap, and the Log Management integration then hits a silent handshake error (<KB id={441515} />). Log Management shows as installed while Operate > Logs offers the install screen, and its backup fails. The interim workaround is to sign the CSR at the CA by hand and import the full chain.
+
+Thumbprints can fail loudly. NSX [keeps the previous thumbprint](https://knowledge.broadcom.com/external/article/323341) and holds the compute manager connection down until it is updated, whether the vCenter certificate was replaced manually or automatically.
+
+Service account credentials, stored by the caller, can fail without anyone touching them. Repeated rotations, scheduled or on demand, can delete the 9.1 SDDC lifecycle account from SDDC Manager or vCenter and leave its stored credentials stale, so VMSP upgrades and `post_upgrade_inventory_sync` fail and runtime addresses can get locked out (<KB id={450375} />). The recovery is that KB's two scripts, which create a new account and patch the Kubernetes secret. On VVF the same symptoms come from an administrator password changed out of band. So the rule against external PAM tools reduces this risk without removing it, and an upgrade that fails on credentials should send you to this KB even when nobody changed anything. Both points are inferences from the KB's cause, and Broadcom states neither.
+
+## After a vCenter certificate changes
+
+| What holds trust | Failure Broadcom documents | What to do |
+|---|---|---|
+| NSX compute manager | Connection Status Down (<KB id={323341} />). During retrust, error 90011 and "Registered with Errors" when two certificate entries exist for one vCenter FQDN (<KB id={431963} />) | Update the thumbprint. VCF 9.x hides the field, so follow the KB's VCF procedure. For 90011, PUT the thumbprint and credentials to the NSX API |
+| VCF Automation | 9.1: "Failed to retrust AUTOMATION truststore" when the CA chain includes intermediates (<KB id={441506} />) | Usually nothing, because Automation 9.0 and later generally doesn't need this retrust. If connectivity broke, edit the cloud account and accept the new certificate |
+| vSphere Supervisor adapter | 9.1.1 known issue: [enters Not Existing](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) on stale trust data after a Machine SSL rotation | Stop the adapter before rotating, and restart it once vCenter collects |
+| SDDC Manager, with vCenter on 8.x | 9.1.1 known issue: ["Failed to retrust VCF Ops truststore"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), and the SDDC Manager UI becomes inaccessible | Apply the notes' truststore workaround, then delete and re-add the VCF integration with the same credentials |
+
+<Callout type="analysis" title="Where this list stops">
+Broadcom's certificate pages don't gather these holders in one place (checked 7 Nov 2026), so the table is assembled from KBs and the 9.1.1 notes and won't be complete for your estate. Add backup tools and third-party integrations, using their vendors' documentation, and [vSphere Client plugins](/vcf/library/integrations/vsphere-client-plugins/). Write the list before the change, because a later failure is quickest to trace to whatever it missed.
+</Callout>
+
+Two known issues in the 9.1.1 notes affect when you schedule the change. A certificate change during relocate initiation [fails the vMotion, with no workaround listed](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), so avoid replacing during migrations. For a management component, VCF Operations may not re-trust the new certificate until the next inventory sync, 24 hours by default, so allow for that before you call a failure a new fault. [The certificates note](/vcf/library/day-2/certificates-in-9/) has the wider failure table.
 
 ## The 9.1 rules to plan for
 
-- **FQDN SANs are mandatory.** Certificates that identify a node only by IP address, or that are missing node FQDNs, block migration of management components into fleet lifecycle during the 9.1 upgrade (<KB id={449907} />).
-- **The identity broker certificate must not carry an IP SAN** during the 9.0 to 9.1 transition (<KB id={444734} />).
-- **Auto-renewal has preconditions.** It must be turned on at the instance level. Native vCenter auto-renewal works only when vCenter's certificate mode is VMCA, not `custom` (<KB id={427937} />).
+The FQDN rule is the one that can stop an upgrade. Component certificates [must carry the FQDN in the SAN](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0.html), an IP is optional, and hostname verification follows RFC 6125, so an IP-only certificate fails. A certificate without FQDNs breaks automated inventory migration into Fleet Lifecycle and blocks the move from 5.2 or 9.0.x to 9.1, so check before you start and replace any with incomplete SANs (<KB id={449907} />). The same strictness reaches outward: the log forwarder [no longer falls back to the Common Name](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/known-issues/vcfoperations-91-known-issues.html), so forwarding destinations need valid SANs too.
 
-<Callout type="field">
-A good habit after any certificate change: list everything that stores the old certificate or its thumbprint, then walk the list. For a vCenter replacement that means NSX compute managers, VCF Operations adapters, VCF Automation cloud accounts, backup tools and any third-party integration. If something breaks after the change, look first for an item missing from that list.
-</Callout>
+The identity broker has its own SAN limit. If a 9.0.x broker has to be moved by backup and restore because it sits on a different network or datastore from the 9.1 management services, a certificate with an IP in its SAN must be replaced with one [that contains only the FQDN](https://knowledge.broadcom.com/external/article/444734).
 
-## Pitfalls
+Auto-renewal has more preconditions than its toggle suggests. It covers [TLS certificates signed by VMCA, Microsoft CA or OpenSSL, on components that support non-disruptive updates](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0/set-up-automatic-renewal-of-certificates-in-vmware-cloud-foundation.html). Root, intermediate, external CA and self-signed certificates stay manual, and anything within 60 days of expiry needs a manual renewal before you switch it on. Keep expiry alerts running regardless: the [blueprint recommends them](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html), and outbound alerting needs the notification plugin.
 
-- **Replacing certificates outside VCF.** It works until the next lifecycle operation, which compares what it expects with what it finds. Use the VCF Operations workflows.
-- **Hand-managing service accounts.** VCF rotates them, and external PAM tools must not touch them.
-- **Forgetting that 9.0 is a transition.** Some management component passwords and certificates are not fully automated in 9.0. Check the release you are on before promising auto-renewal or auto-rotation.
+ESX carries a lasting side effect. Any ESX certificate operation through VCF Operations [changes the mode in vCenter to Custom, so later renewals must go through VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/vsphere-certificate-management/esx-certificate-management.html). The separate renewal configured in vCenter on VVF 9.0.2 or vCenter 8.0 Update 3h needs mode `vmca` and stops working on `custom` (<KB id={427937} />), and in `custom` mode each new host needs a CA-signed certificate before it joins inventory. That's another reason to leave ESX on VMCA unless policy says otherwise.

@@ -1,25 +1,48 @@
 ---
 title: "Where did that button go? The 5.2 to 9.x map of Day-2 tasks"
-description: "For an operations team moving from 5.x: each Day-2 task, where it lived in SDDC Manager, and where it lives now."
+description: "Tasks on hosts, clusters, pools and edges start in vCenter; platform tasks start in VCF Operations. The SDDC Manager UI has been deprecated since 9.0. Many 9.0 menu paths changed again in 9.1, so this map gives 5.2, 9.0 and 9.1 side by side."
 category: day-2
 order: 1
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Overview
 pubDate: 2026-11-02
 updated: 2026-11-07
-kbs: [435599]
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [435599, 426872]
 sources:
-  - title: "10 VCF 9 enhancements simplifying your Day-2 operations"
+  - title: "10 VCF 9 enhancements simplifying your Day-2 operations (Brandon Hahn)"
     url: "https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/"
     by: "VMware Cloud Foundation blog"
-  - title: "Upgrading VCF 5.2 to 9.0: the top 10 questions answered"
+    kind: broadcom
+    date: 2025-09-18
+  - title: "Upgrading VCF 5.2 to 9.0: the top 10 questions answered (Jonathan McDonald)"
     url: "https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/"
     by: "VMware Cloud Foundation blog"
-  - title: "Lifecycle management (VCF 9.1)"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management.html"
+    kind: broadcom
+    date: 2025-12-18
+  - title: "VCF 9.1 general FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "VCF 9.0 product support notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes.html"
     by: "Broadcom TechDocs"
-  - title: "Accounts in VMware Cloud Foundation (9.1)"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "VCF 9.0 product support notes: VCF Installer"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-installer.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "VCF 9.1 product support notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Components in VCF and vSphere Foundation 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/vcf-management-appliances.html"
     by: "Broadcom TechDocs"
     kind: broadcom
     date: 2026-11-05
@@ -28,52 +51,232 @@ sources:
     by: "Broadcom TechDocs"
     kind: broadcom
     date: 2026-11-05
+  - title: "Create a network pool (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/about-network-pools/create-a-network-pool.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Commission ESX hosts (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/commission-hosts.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Create a new workload domain (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/deploy-a-vi-workload-domain-using-the-sddc-manager-ui.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Add an SDDC cluster to a VCF domain (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/expand-a-workload-domain/add-a-cluster-to-a-workload-domain-using-the-sddc-manager-ui.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Add an ESX host to an SDDC cluster (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/expand-a-workload-domain/add-a-host-to-a-vsphere-cluster-using-the-sddc-manager-ui.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Configure centralized network connectivity with edge clusters (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/managing-network-connectivity-in-vcenter/managing-centralized-network-connectivity-with-edge-clusters.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configure an external SFTP server for VCF management services and VCF Automation backups (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/configure-sftp-backup-target-in-vmware-cloud-foundation-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configure SFTP backup target in VCF Operations (VCF 9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/backup-and-restore-of-cloud-foundation/configure-sftp-backup-target-in-vmware-cloud-foundation-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Configure an external SFTP server for SDDC Manager and NSX Manager backups (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/reconfigure-sftp-backups-for-sddc-manager-and-nsx-manager.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF component backup and restore (9.1 blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-backup-and-restore.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Update DNS server configuration (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-external-infrastructure-services/update-dns-server-configuration.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Update NTP server configuration (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-external-infrastructure-services/update-ntp-server-configuration.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configure a certificate authority (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0/configure-a-certificate-authority_9-0.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Set up automatic renewal of certificates (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0/set-up-automatic-renewal-of-certificates-in-vmware-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Recommendations for VCF certificate management (9.1 fleet management blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Managing passwords (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Update passwords (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/update-passwords.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Using SDDC Manager to manage passwords (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/using-sddc-manager-to-manage-passwords.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Rotate passwords (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/using-sddc-manager-to-manage-passwords/rotate-passwords.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Recommendations for VCF password management (9.1 fleet management blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/vcf-password-management/recommendations-for-vcf-password-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Accounts in VMware Cloud Foundation (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Add a license to VCF Operations and license server (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/add-a-license-to-vcf-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Add a license to VCF Operations (VCF 9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/add-a-license-to-vcf-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Add a component license key in the SDDC Manager UI (VCF 5.2)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/license-management-admin/add-a-license-key-admin.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-01
+  - title: "Plan a domain upgrade to 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/plan-an-upgrade.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrading VCF workload domains to 9.1.x"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/upgrade-workload-domains-to-vcf-5-2.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrade or update the core components in your VCF domain (VCF 9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/lifecycle-management/lifecycle-management-of-vcf-core-components/flexible-bom-upgrade-in-vmware-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Apply the VCF 5.2.x upgrade bundle"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/vmware-cloud-foundation-lifecycle-management/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2-lifecycle/apply-cloud-foundation-5-2-update-bundle-lifecycle.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-01
+  - title: "Import a vSphere Lifecycle Manager image to a VCF instance (VCF 9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/lifecycle-management-of-vcf-components/managing-vsphere-lifecycle-manager-images-for-vmware-cloud-foundation/import-a-vsphere-lifecycle-manager-image-to-a-vcf-instance.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Import a vSphere Lifecycle Manager image to a VCF instance (VCF 9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/lifecycle-management/lifecycle-management-of-vcf-core-components/managing-vsphere-lifecycle-manager-images-for-vmware-cloud-foundation/import-a-vsphere-lifecycle-manager-image-to-a-vcf-instance.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Import a vSphere Lifecycle Manager image (VCF 5.2)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/image-management-admin/creating-vsphere-lifecycle-manager-images-in-vmware-cloud-foundation-admin/import-a-vsphere-lifecycle-manager-image-admin.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-01
 ---
 
 <InShort>
-In 5.2, SDDC Manager was where Day-2 work happened, and doing it anywhere else could cause trouble. In 9.x the work is split along a simple line. Tasks about **compute, storage and networking objects** moved to **vCenter**. Tasks about **the platform itself** (domains, certificates, passwords, backup, DNS and NTP, licensing and lifecycle) moved to **VCF Operations**. SDDC Manager still executes much of it underneath, which is why it must stay healthy, but you rarely start there.
+Write each runbook against the release you run, because many 9.0 paths changed again in 9.1. Tasks on hosts, clusters, network pools and edges [moved to vCenter](https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/), and platform tasks moved to VCF Operations: domains, certificates, passwords, backup, DNS and NTP, licensing and lifecycle. Don't start a new runbook in SDDC Manager, whose UI has been [deprecated since 9.0](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes.html), unless it needs rotation or Remediate on a core account. Keep the appliance healthy, because on 9.1 it [still provides](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/vcf-management-appliances.html) core lifecycle and workload domain deployment behind VCF Operations.
 </InShort>
+
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to say the SDDC Manager UI was "still present" in 9.0 and deprecated in 9.1, when the deprecation starts in 9.0. It also gave one 9.x path for tasks whose paths differ between 9.0 and 9.1, and offered a tip about a greyed-out Add Host button that we couldn't find in any public source, so that tip is gone.
+</Callout>
 
 ## The map
 
-| Task | VCF 5.2 (SDDC Manager) | VCF 9.x |
-|---|---|---|
-| Network pools | Administration > Network Settings > Network Pool | **vCenter:** Global Inventory List > Hosts > Network Pools |
-| Commission and decommission hosts | Inventory > Hosts | **vCenter:** Global Inventory List > Hosts > Unassigned Hosts |
-| Create a workload domain | Inventory > Workload Domains | **VCF Operations:** Inventory > VCF Instance |
-| Create or expand a cluster | Workload Domains > Add Cluster or Add Hosts | **vCenter:** Hosts and Clusters > Datacenter > New Cluster > New SDDC Cluster |
-| NSX edge cluster | Workload Domains > Actions > Add Edge Cluster | **vCenter:** network object > Network > Network Connectivity (guided edge deployment) |
-| Backup configuration | Administration > Backup | **VCF Operations:** fleet-level backups under Fleet Management (9.0) or Build > Lifecycle > VCF Management > Backup and Restore (9.1). Instance backups under Inventory > VCF Instance > Manage VCF Instance Settings. |
-| DNS and NTP | Administration > Network Settings | **VCF Operations:** Inventory > VCF Instance > Manage VCF Instance Settings > Network Settings. 9.1 adds fleet-level settings. |
-| Certificate authority | Security > Certificate Authority | **VCF Operations:** Fleet Management > Certificates > Configure CA |
-| Certificates | Workload Domains > domain > Certificates | **VCF Operations:** Fleet Management > Certificates, with auto-renewal |
-| Passwords | Security > Password Management | **VCF Operations:** Fleet Management > Passwords (VCF Management and VCF Instances), for Update. Rotate stays in SDDC Manager, and Remediate [depends on the account](/vcf/library/day-2/passwords-service-accounts/). |
-| Licensing | Administration > Licensing | **VCF Operations:** Licensing |
-| Upgrades and patches | Workload Domains > Updates | **VCF Operations:** Build > Lifecycle (VCF Management, and VCF Instances > domain > Upgrades) |
-| Image management | SDDC Manager > Lifecycle Management > Image Management | **VCF Operations:** Build > Lifecycle > VCF Instances > Image Management |
+The 9.0 paths come from Brandon Hahn's [September 2025 list](https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/), except where a cell links elsewhere. The 9.1 paths come from the 9.1 task pages <AsOf date="2026-11-07" />.
 
-The vCenter paths for workload domains need **VCF SSO and vCenter linking** in place. On the management domain they work without extra setup.
+| Task | 5.2 (SDDC Manager) | 9.0 | 9.1 |
+|---|---|---|---|
+| Network pools | Administration > Network Settings > Network Pool | **vCenter:** Global Inventory List > Hosts > Network Pools | **vCenter:** [Global Inventory Lists > Hosts > Network Pools](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/about-network-pools/create-a-network-pool.html) |
+| Commission or decommission hosts | Inventory > Hosts | **vCenter:** Global Inventory List > Hosts > Unassigned Hosts | **vCenter:** [Global Inventory Lists > Hosts > Unassigned Hosts](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/commission-hosts.html) |
+| Create a workload domain | Inventory > Workload Domains | **VCF Operations:** Inventory > VCF Instance | **VCF Operations:** [Operate > Overview > Inventory > VCF Instances > instance > Add workload domain](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/deploy-a-vi-workload-domain-using-the-sddc-manager-ui.html) |
+| Create a cluster | Inventory > Workload Domains > Clusters | **vCenter:** Hosts and Clusters > Datacenter > New Cluster > New SDDC Cluster | **vCenter:** [Datacenter > Actions > New Cluster > Create SDDC Cluster](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/expand-a-workload-domain/add-a-cluster-to-a-workload-domain-using-the-sddc-manager-ui.html) |
+| Add hosts to a cluster | Inventory > Workload Domains > Clusters > Add Hosts | **vCenter** | **vCenter:** [Cluster > Actions > Add Hosts > Add Unassigned Hosts](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/expand-a-workload-domain/add-a-host-to-a-vsphere-cluster-using-the-sddc-manager-ui.html) |
+| NSX edge cluster | Inventory > Workload Domains > Actions > Add Edge Cluster | **vCenter:** network object > Network > Network Connectivity (guided edge deployment) | **vCenter:** [Networks > Transit Gateways > Setup Network Connectivity](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/managing-network-connectivity-in-vcenter/managing-centralized-network-connectivity-with-edge-clusters.html) |
+| Backup: management components | Administration > Backup | **VCF Operations:** [Fleet Management > Lifecycle > VCF Management > Settings](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/backup-and-restore-of-cloud-foundation/configure-sftp-backup-target-in-vmware-cloud-foundation-operations.html) | **VCF Operations:** [Build > Lifecycle > VCF Management > Backup & Restore](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/configure-sftp-backup-target-in-vmware-cloud-foundation-operations.html) |
+| Backup: instance level | Administration > Backup | **VCF Operations:** Inventory > VCF Instance > Actions > Manage VCF Instance Settings > Backup Settings | **VCF Operations:** [Operate > Administration > SDDC Manager > Backup Settings > Site Settings](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/backup-and-restore-of-cloud-foundation/configure-backup-target-and-schedules-in-vmware-cloud-foundation/reconfigure-sftp-backups-for-sddc-manager-and-nsx-manager.html) (SDDC Manager and NSX Manager) |
+| DNS and NTP | Administration > Network Settings | **VCF Operations:** Inventory > VCF Instance > Actions > Manage VCF Instance Settings > Network Settings | **VCF Operations:** Manage > Fleet management > Fleet settings > [DNS settings](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-external-infrastructure-services/update-dns-server-configuration.html) or [NTP settings](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-external-infrastructure-services/update-ntp-server-configuration.html). Create a named setting, then apply it to instances. |
+| Certificate authority | Security > Certificate Authority | **VCF Operations:** Fleet Management > Certificates > Configure CA | **VCF Operations:** [Manage > Fleet Management > Certificates > VCF Management > Configure CA for Fleet](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0/configure-a-certificate-authority_9-0.html) |
+| Certificates | Inventory > Workload Domains > domain > Certificates | **VCF Operations:** Fleet Management > Certificates, with auto-renewal | **VCF Operations:** [Manage > Fleet management > Certificates](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/certificate-management-9-0/set-up-automatic-renewal-of-certificates-in-vmware-cloud-foundation.html), with auto-renewal 60 days before expiry |
+| Update a password | Security > Password Management | **VCF Operations:** Fleet Management > Passwords (VCF Management and VCF Instances) | **VCF Operations:** [Manage > Fleet Management > Passwords > Update password](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/update-passwords.html) |
+| Rotate a password | Security > Password Management | No Rotate on the VCF Operations Passwords page (<KB id={426872} />) | **SDDC Manager only:** [Security > Password Management](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/using-sddc-manager-to-manage-passwords/rotate-passwords.html) |
+| Add or view licenses | [Administration > Licensing](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/license-management-admin/add-a-license-key-admin.html) | **VCF Operations:** [License Management > Licenses](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/add-a-license-to-vcf-operations.html) | **VCF Operations:** [Licensing > Licenses & Registration](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/add-a-license-to-vcf-operations.html), after adding them in the VCF Business Services console |
+| Upgrades | [Inventory > Workload Domains > domain > Updates](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/vmware-cloud-foundation-lifecycle-management/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2-lifecycle/apply-cloud-foundation-5-2-update-bundle-lifecycle.html) | **VCF Operations:** [Fleet Management > Lifecycle > VCF Instances > domain > Updates](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/lifecycle-management/lifecycle-management-of-vcf-core-components/flexible-bom-upgrade-in-vmware-cloud-foundation.html) | **VCF Operations:** [Build > Lifecycle > VCF Instances > domain > Upgrades](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/plan-an-upgrade.html) |
+| Image management | [Lifecycle Management > Image Management](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/image-management-admin/creating-vsphere-lifecycle-manager-images-in-vmware-cloud-foundation-admin/import-a-vsphere-lifecycle-manager-image-admin.html) | **VCF Operations:** [Fleet Management > Lifecycle > VCF Instances > instance > Image Management](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/lifecycle-management/lifecycle-management-of-vcf-core-components/managing-vsphere-lifecycle-manager-images-for-vmware-cloud-foundation/import-a-vsphere-lifecycle-manager-image-to-a-vcf-instance.html) | **VCF Operations:** [Build > Lifecycle > VCF Instances > instance > Image Management](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/lifecycle-management-of-vcf-components/managing-vsphere-lifecycle-manager-images-for-vmware-cloud-foundation/import-a-vsphere-lifecycle-manager-image-to-a-vcf-instance.html) |
 
-<Compare rows={[
-  ["Principle", "One tool for everything platform-related", "Object tasks in vCenter, platform tasks in VCF Operations"],
-  ["SDDC Manager UI", "Primary", "9.0: still present. 9.1: deprecated."],
-  ["SDDC Manager's own passwords", "Managed in SDDC Manager", "9.1: root and vcf in the OS, admin@local through the SDDC Manager API. 9.1.1: from the VCF Operations UI or API (<a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html' target='_blank' rel='noopener'>accounts table</a>, <a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html' target='_blank' rel='noopener'>9.1.1.0 release notes</a>)."],
-  ["Automation", "SDDC Manager public API for most tasks", "VCF Operations APIs, fleet lifecycle API (9.1), vCenter APIs and the SDDC Manager API for core lifecycle"],
+Licensing appears here as navigation only and isn't legal or purchasing advice. [Broadcom's 9.1 procedure](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/add-a-license-to-vcf-operations.html) is the page to follow.
+
+<Compare v5Label="VCF 5.2" rows={[
+  ["Principle", "Tasks tied to SDDC Manager, and doing them elsewhere often led to issues, as <a href='https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/' target='_blank' rel='noopener'>Hahn puts it</a>", "Object tasks in vCenter, platform tasks in VCF Operations"],
+  ["SDDC Manager UI", "Primary console", "<a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes.html' target='_blank' rel='noopener'>Deprecated in 9.0</a>, to be removed in a future major release, with no date in the notes. Some 9.1 task pages still name it as an alternative."],
+  ["SDDC Manager API", "Public API for most tasks", "Password, certificate and identity APIs <a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-installer.html' target='_blank' rel='noopener'>deprecated in 9.0</a>, and <a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes.html' target='_blank' rel='noopener'>/v1/system/precheck</a> gone. <a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html' target='_blank' rel='noopener'>21 more operations</a> deprecated in 9.1, mainly edge clusters, domain overlays, system DNS and NTP, and upgrade prechecks."],
 ]} />
 
-## How to roll this out to a team
+## What the vCenter paths need first
 
-1. **Print the map** and put it next to the runbooks for the first few months after the upgrade.
-2. **Re-record the procedures** your team does most: host commissioning, cluster expansion, certificate renewal and password rotation. Use the new paths in a lab or a quiet production window.
-3. **Update automation.** Scripts that drive Day-2 tasks through the SDDC Manager API may still work in places, but the 9.x paths are where fixes and features land.
-4. **Update monitoring.** Alerts about certificate and password expiry now come from VCF Operations.
+Settle access before retraining anyone. On 9.1 the vSphere Client tasks for [pools](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/about-network-pools/create-a-network-pool.html), [commissioning](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/host-management/commission-hosts.html), [clusters](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/expand-a-workload-domain/add-a-cluster-to-a-workload-domain-using-the-sddc-manager-ui.html) and [adding hosts](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/expand-a-workload-domain/add-a-host-to-a-vsphere-cluster-using-the-sddc-manager-ui.html) each require access to the management domain vCenter, or an instance configured with VCF SSO and vCenter linking. [Hahn](https://blogs.vmware.com/cloud-foundation/2025/09/18/10-vmware-cloud-foundation-9-enhancements-simplifying-your-day-2-operations/) draws the 9.0 line the same way: the management domain needs no extra setup, while workload domains need SSO and linking.
 
-<Callout type="field">
-If Add Host is greyed out after an upgrade, check two things before calling it a bug. The task may have moved to vCenter, or VCF SSO and vCenter linking may not be configured for that workload domain yet.
+Those four pages also name the SDDC Manager UI as an alternative, which can help while SSO and linking aren't ready. Treat it as a stopgap and leave it out of a new runbook, given the deprecation. Creating a workload domain has no such fallback on [its 9.1 page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/deploy-a-vi-workload-domain-using-the-sddc-manager-ui.html), which describes only VCF Operations. [Hosts, network pools and clusters](/vcf/library/day-2/hosts-network-pools-clusters/) has the task detail, and [What SDDC Manager still owns](/vcf/library/architecture/what-moved-from-sddc-manager/) covers the appliance.
+
+## Where the simple split breaks
+
+The object-versus-platform rule doesn't send ESX or vCenter certificates to vCenter. The 9.1 fleet management blueprint says to manage certificates [exclusively through VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html), to avoid SDDC Manager for them, and to stay off the vCenter API, UI and CLI for ESX and vCenter certificates once VCF Operations manages them. Q55 of the [4 Nov 2026 FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) also describes certificate management as centralised under VCF Operations.
+
+Backup is no longer one screen. On 9.1 the [blueprint's table](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-backup-and-restore.html) splits it by component: management services, VCF Automation and NSX Manager are file-based over SFTP, and VCF Operations is image-based, with all cluster nodes backed up at once. SDDC Manager allows either method, and the design recommends file-based. The license server has no backup, so recovery means deploying a new one and reconfiguring licensing. So the single 5.2 procedure becomes at least three on 9.1, plus a recovery line for the license server.
+
+DNS and NTP became fleet settings. They sat under each instance's settings on 9.0, while on 9.1 you build a named setting and assign it, so check which setting an instance uses before changing it.
+
+Upgrade documentation points two ways. The [9.1 workload domain upgrade chapter](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/upgrade-workload-domains-to-vcf-5-2.html) says either VCF Operations or the SDDC Manager UI works for 5.2 domains and writes its own steps for the UI, while warning that the UI "is being deprecated and will be removed in a future release". The [planning page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/plan-an-upgrade.html) it links uses VCF Operations. Write the VCF Operations path into the runbook.
+
+## Passwords keep a foot in SDDC Manager
+
+[Update in VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/update-passwords.html) is the preferred way to change a password, and it doesn't create configuration drift. A change made outside both consoles does, and that drift can later break upgrades. [Rotate, Remediate for core components and scheduled rotation](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/using-sddc-manager-to-manage-passwords.html) still need the SDDC Manager UI on 9.1, on a page that also says using SDDC Manager for passwords "is not advised". The [password blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/vcf-password-management/recommendations-for-vcf-password-management.html) nonetheless recommends enabling SDDC Manager auto-rotation for inter-component accounts only it can manage, and rules out changing those accounts directly on components.
+
+<Callout type="analysis" title="Reading the password guidance together">
+These fit if SDDC Manager is kept for what only it can do, though Broadcom doesn't spell out that split. So use Update in VCF Operations for deliberate changes and keep scheduled rotation on in SDDC Manager for those inter-component accounts. The [Update page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/update-passwords.html) requires that no workflows are running or scheduled during an update, so check the rotation schedule first. Where Remediate runs for each account is in [the passwords note](/vcf/library/day-2/passwords-service-accounts/), because Broadcom's pages conflict on it.
 </Callout>
 
-## Pitfalls
+<KB id={435599} /> (VCF 9.x, last modified 13 Apr 2026) still calls SDDC Manager's password subsystem the authoritative source for account lifecycles. The [9.1 passwords page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords.html), dated 5 Nov 2026, prefers VCF Operations, so on 9.1 follow the newer page.
 
-- **Doing it twice.** Updating in VCF Operations and rotating in SDDC Manager, or changing it outside both, creates the drift that later breaks upgrades.
-- **Expecting 9.0 and 9.1 to look the same.** VCF Operations menus regrouped between releases, for example Fleet Management against Build > Lifecycle. KBs written for one release may use the other release's paths.
-- **Forgetting the "authoritative" rule in 9.0.** For core component accounts, SDDC Manager password management stays the source of truth in 9.0 (<KB id={435599} />).
+SDDC Manager's own accounts changed in a point release. On 9.1 you change `root` and `vcf` in the OS and `admin@local` through the SDDC Manager API, and [from 9.1.1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/manage-passwords/accounts-in-vmware-cloud-foundation.html) all three move to the VCF Operations UI or API. In 9.1.1 an update [doesn't change an account's lockout state](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), so plan the unlock separately. If you take 9.1.1, change the runbook for those three accounts in the same window.
+
+## Rolling this out
+
+1. **Pick the column you run** and print it without the others, so nobody follows a 9.0 path on 9.1. KBs written for one release may use the other release's paths. Jonathan McDonald's [December 2025 upgrade FAQ](https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/) is a good companion for teams still on 5.2, and it places the SDDC Manager interface under fleet management in the VCF Operations console.
+2. **Re-record the procedures** the team runs most: host commissioning, cluster expansion, certificate renewal and password rotation. Use a lab or a quiet production window.
+3. **Sort scripts against the deprecations.** Scripts that drive Day-2 tasks through the SDDC Manager API may still work in places. The [9.1 notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) don't name the 21 operations, so diff your calls against the "What's changed in SDDC Manager API" changelog they point to, and plan migrations before those endpoints go. The [certificate blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html) keeps SDDC Manager APIs only for backward compatibility during the move to the VCF Operations fleet management API.
+4. **Move expiry alerting.** The blueprints say to use VCF Operations' built-in alerts for [certificate](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/certificate-management/recommendations-for-vcf-certificate-management.html) and [password](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/vcf-password-management/recommendations-for-vcf-password-management.html) expiry, and [9.1.1 generates expiry alarms](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) for all certificates across VCF components.

@@ -117,7 +117,7 @@ A domain is unchanged in meaning: one vCenter, with NSX either dedicated or shar
 
 **The blast radius follows the layer.** If one domain's vCenter goes down, the damage stays inside that domain. If the first instance's management domain goes down, every instance loses the fleet-level services that live there. When VCF Operations itself is unavailable, workloads keep running and existing licences stay valid, but new licence assignments and capacity updates are blocked (<KB id={443240} />). The lifecycle and configuration screens are also unavailable.
 
-**Day-2 tasks moved up a layer.** Certificates, passwords, backup configuration, DNS and NTP settings for an instance, and workload domain creation all start in VCF Operations now. Host commissioning, network pools, cluster creation and edge clusters moved into vCenter. The <a href="/vcf/library/day-2/where-did-that-button-go/">Day-2 task map</a> lists them all.
+**Day-2 tasks moved up a layer.** Certificates, passwords, backup configuration, DNS and NTP settings (named fleet settings on 9.1) and workload domain creation all start in VCF Operations now. Host commissioning, network pools, cluster creation and edge clusters moved into vCenter. The <a href="/vcf/library/day-2/where-did-that-button-go/">Day-2 task map</a> lists them all.
 
 <Callout type="field">
 When a 9.x ticket or design question is vague, the first thing to settle is which layer it is about. "Certificates are failing" means something different for a fleet management component, such as VCF Operations or the identity broker, than it does for an instance's core infrastructure, such as vCenter, NSX or ESX. Different services own them, and they log to different places.
