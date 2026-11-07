@@ -392,8 +392,9 @@ a.badge:hover { border-color: var(--ink-3); color: var(--ink); }
   .copy-btn, .zoom, .video-facade .play, .dl .btn, .pdf-preview { display: none !important; }
 }
 @media print {
-  :root, :root[data-theme="dark"] { --bg: #fff; --surface: #fff; --surface-2: #f4f6f7; --ink: #111; --ink-2: #333; --ink-3: #555; --line: #d5dade; --line-strong: #8a929c; --code-bg: #f4f6f7; --home-bg: #fff; --read-bg: #fff; --read-text: #111; --read-code: #fff; --chart-v9: #12161d; --chart-v5: #838d9c; --chart-other: #838d9c; --dw-ink: #111; --dw-red: #d63b17; --dw-red-ink: #b02d0f; --dw-grid: #aab2be; --dw-grid-fine: #e4e7ec; --chart-signal: #d63b17; --on-signal: #ffffff; --chart-signal-soft: #fdeee9; color-scheme: light; }
+  :root, :root[data-theme="dark"], :root:not([data-theme="light"]) { --bg: #fff; --surface: #fff; --surface-2: #f4f6f7; --ink: #111; --ink-2: #333; --ink-3: #555; --line: #d5dade; --line-strong: #8a929c; --line-2: #c9d0d9; --accent: #2747d6; --accent-ink: #1e3bb8; --accent-soft: #e8ecfc; --on-accent: #ffffff; --v5: #8a5300; --v5-soft: #fbf0e0; --warn: #a04800; --warn-soft: #fcefe3; --code-bg: #f4f6f7; --home-bg: #fff; --read-bg: #fff; --read-text: #111; --read-code: #fff; --chart-v9: #12161d; --chart-v5: #838d9c; --chart-other: #838d9c; --dw-ink: #111; --dw-red: #d63b17; --dw-red-ink: #b02d0f; --dw-grid: #aab2be; --dw-grid-fine: #e4e7ec; --chart-signal: #d63b17; --on-signal: #ffffff; --chart-signal-soft: #fdeee9; color-scheme: light; }
   html, body { background: #fff !important; }
+  :root:root:root .shiki, :root:root:root .shiki span, :root:root:root .astro-code, :root:root:root .astro-code span { color: #111 !important; }
   body { font-size: 10pt; }
   .site-header, .site-footer, .skip, .share, .prev-next, .toc, .no-print { display: none !important; }
   main .wrap { max-width: none; padding: 0; }
@@ -976,17 +977,17 @@ input[type="search"] { width: 100%; max-width: 440px; padding: 10px 12px; border
 
 /* The home page's own rules are in home.css. These two blocks reach other pages too. */
 @media (forced-colors: active) { .sc-r, .sc-r *, .sc-plot::before, .clock-cell, .clock-cell *, .clock-keys, .clock-keys * { forced-color-adjust: none; } }
-@media (forced-colors: active) { .sc-plot::after, .sc-axis::after { forced-color-adjust: none; } }
+@media (forced-colors: active) { .sc-axis::after { forced-color-adjust: none; } }
 /* The drawn clocks keep their shapes in forced colours, so they must use the system's colours: a stored site theme
-   can clash with a contrast theme. The repeated selector outranks every theme rule. The fleet drawing's frames and connectors are
-   borders, and its solid bar stays solid in the system's own pair of colours. */
+   can clash with a contrast theme. The repeated selector outranks every theme rule. The fleet drawing's bars and poles are borders,
+   so they take the same colours. */
 @media (forced-colors: active) {
   :root:root:root { --ink: CanvasText; --ink-2: CanvasText; --ink-3: CanvasText; --bg: Canvas; --line: GrayText; --line-strong: CanvasText; --dw-ink: CanvasText; --dw-grid: GrayText; --dw-grid-fine: GrayText; --dw-red: Highlight; --dw-red-ink: LinkText; --chart-v9: CanvasText; --chart-v5: CanvasText; --chart-other: CanvasText; }
-  :root:root:root .page-home main { --ink-2: CanvasText; --fm-tint: Canvas; }
+  :root:root:root .page-home main { --ink-2: CanvasText; }
 }
 
 @media print {
   .home-lead .actions, .hub-start, .lib-filters { display: none !important; }
   .stand { border: 0; background: none; }
-  .clock-bar, .clock-span, .clock-keys i, .sc-bar, .sc-span, .sc-plot::before, .sc-plot::after { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .clock-bar, .clock-span, .clock-keys i, .sc-bar, .sc-span, .sc-plot::before { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }

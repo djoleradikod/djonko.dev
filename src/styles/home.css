@@ -1,49 +1,53 @@
 /* The home page. Loaded by src/pages/index.astro alone, so other pages don't carry its weight.
-   Forced colours stay last: .page-home.docs sets --bg above, and this has to come after it. */
+   Forced colours stay after every --bg override, because .page-home.docs sets --bg above; print stays last. */
 
 /* ------------------------------------------------------------------------------------------------
-   Home. Ink on paper on one continuous surface, with no bands. The fold is the support clock, with its label and plot columns.
-   Below it the page is paced like a sequence of screens: full width on the page's own left and right edges, one dominant
-   thing at a time (the field note first, the fleet drawing second) with quiet material between them, and air, not rules, at
-   every section seam.
+   Home. Ink on paper. The fold is the support clock, with its label and plot columns. Below it the page is paced like a
+   sequence of screens: full width on the page's own left and right edges, one dominant thing at a time (the latency ruler
+   first, the fleet drawing second), and air, not rules, at every section seam. The paper changes tone once, under the fleet
+   drawing, and nowhere else.
 
-   Emphasis is the clock's language and nothing else: rule weight, solid against hollow, scale, and one red pencil for what
-   is unresolved, which appears nowhere else. The clock is the only chart. Hatching means unresolved and stays in the clock.
+   Emphasis is the clock's language and nothing else: rule weight, heavy bar against thin bar, scale, and one red pencil for
+   what is unresolved, which appears nowhere else. Hatching means unresolved and stays in the clock. Everything drawn is a
+   bar, a stop or a pole, to scale where it has a scale, and built from borders so forced colours and print keep it.
 
    Rules:
-     1px ink       the clock's axis and column line, and a table's header rule
+     1px ink       the clock's axis and column line, the ruler's axis, a table's header and closing rules, the index's heads
      1px --dw-grid hairlines inside a section
-     3 / 2 / 1px   the fleet drawing's solid bar, instances and domains
+     24 / 10 / 4 / 1px  the fleet drawing's fleet, instances, management domains and workload domains
 
-   One type scale, on these tokens, and nothing off it:
-     --t-display  72  the headline
-     --t-head     44  section headings: one size, one weight
-     --t-title    28  the featured note's title
-     --t-sub      24  other titles
-     --t-q        22  the decision table's questions and answers
-     --t-lead     20  the lede, the takeaway, row names on the clock
-     --t-body     18  reading text and links
+   One type scale, on these tokens, and nothing off it. Ranks: a section opener is --t-head, a note's title --t-feature, and an
+   index's head a small label. The ruler's numerals are the one thing below the fold larger than the headline.
+     --t-num     144  the ruler's two thresholds
+     --t-display  72  the headline and the closing line
+     --t-head     48  section openers: one size, one weight
+     --t-title    28  the cheat sheet's numerals
+     --t-feature  28  the featured note's title, the fleet's name
+     --t-sub      24  other titles, the clock's takeaway, what lies past a threshold
+     --t-lead     20  the lede, row names on the clock, the decision table's questions
+     --t-body     18  reading text, links, the index's rows
      --t-note     16  index heads, tables, steps, dates and quiet lines
-     --t-meta     14  source metadata
-     --t-small    13  axis labels, the source line, and the clock's dates on a phone
-   Every gap is a multiple of 4px. --sec is the air between sections; --head is the air under a section heading.
+     --t-meta     14  source metadata, the clock's foot, the ruler's paths
+     --t-small    13  axis labels and the clock's dates on a phone
+   Every gap is a multiple of 4px. --sec is the air between sections, --near the shorter air before the index, which
+   belongs to the note above it, --band the padding inside the toned surface, and --head the air under a section heading.
    ------------------------------------------------------------------------------------------------ */
-.page-home { --shell: 1320px; --t-display: clamp(1.75rem, 8.2vw, 3.75rem); --t-head: max(2.125rem, calc(var(--t-display) * 0.62)); --t-title: max(1.5rem, calc(var(--t-display) * 0.39)); --t-sub: 1.5rem; --t-q: 1.375rem; --t-lead: 1.25rem; --t-body: 1.125rem; --t-note: 1rem; --t-meta: 0.875rem; --t-small: 0.8125rem; --sec: 224px; --head: 72px; --name: 11rem; --inset: 24px; --row: 48px; }
+.page-home { --shell: 1320px; --t-display: clamp(1.75rem, 8.2vw, 3.75rem); --t-num: min(10vw, 9rem); --t-head: max(2.125rem, calc(var(--t-display) * 0.66)); --t-feature: 1.75rem; --t-title: max(1.5rem, calc(var(--t-display) * 0.39)); --t-sub: 1.5rem; --t-lead: 1.25rem; --t-body: 1.125rem; --t-note: 1rem; --t-meta: 0.875rem; --t-small: 0.8125rem; --sec: 160px; --near: 96px; --band: 120px; --head: 72px; --name: 11rem; --row: 42px; }
 .page-home.docs { --bg: var(--home-bg); }
 /* Below the fold the only colours are ink and the red pencil, so links and focus go to ink here. */
-.page-home main { --ink-2: #646d79; --fm-tint: #eaedf1; --accent: var(--ink); --accent-ink: var(--ink); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .page-home main { --ink-2: #97a1ad; --fm-tint: #1b222c; } }
-:root[data-theme="dark"] .page-home main { --ink-2: #97a1ad; --fm-tint: #1b222c; }
+.page-home main { --ink-2: #646d79; --tone: #eef0f4; --accent: var(--ink); --accent-ink: var(--ink); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .page-home main { --ink-2: #97a1ad; --tone: #151a22; } }
+:root[data-theme="dark"] .page-home main { --ink-2: #97a1ad; --tone: #151a22; }
 @media (min-width: 901px) { .page-home { --t-display: min(5vw, 4.5rem); } }
 /* Below the width where the clock's plot fits, the clock folds. */
-@media (max-width: 1080px) { .page-home { --name: 0px; --inset: 0px; --sec: 160px; --head: 56px; --t-q: 1.25rem; --t-sub: 1.25rem; } }
-@media (max-width: 640px) { .page-home { --t-head: 1.625rem; --t-title: 1.3125rem; --t-sub: 1.125rem; --t-q: 1.125rem; --t-lead: 1.125rem; --t-body: 1rem; --sec: 112px; --head: 32px; } }
+@media (max-width: 1080px) { .page-home { --name: 0px; --sec: 128px; --near: 80px; --band: 96px; --head: 56px; --t-sub: 1.25rem; } }
+@media (max-width: 640px) { .page-home { --t-num: clamp(3.5rem, 17vw, 4.25rem); --t-head: 1.75rem; --t-feature: 1.25rem; --t-title: 1.3125rem; --t-sub: 1.125rem; --t-lead: 1.125rem; --t-body: 1rem; --sec: 96px; --near: 64px; --band: 64px; --head: 32px; } }
 
 /* A section below the fold: air above it and nothing else at the seam. An optional kicker, as the hero has, then one heading. */
 .home-sec { padding-top: var(--sec); }
 .home-kick { margin: 0 0 12px; font-size: var(--t-note); line-height: 1.5; color: var(--ink-2); }
 .home-kick a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-.home-h { margin: 0; max-width: 24em; font-size: var(--t-head); line-height: 1.12; letter-spacing: -0.028em; font-weight: 500; color: var(--ink); text-wrap: pretty; }
+.home-h { margin: 0; max-width: 24em; font-size: var(--t-head); line-height: 1.12; letter-spacing: -0.022em; font-weight: 500; color: var(--ink); text-wrap: pretty; }
 .home-hrow { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 16px 40px; }
 
 /* The page's one kind of link out of a section: reading size, ink, an arrow, on a 2px rule. */
@@ -52,10 +56,10 @@
 .page-home .btn.primary:hover { background: var(--ink); border-color: var(--ink); color: var(--bg); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 
 /* The hero: air above the eyebrow, then gaps that grow in step, up to the pause before the clock. All of it, the five rows,
-   the takeaway and the source line fit above 900px at 1440 wide. */
-.home-lead { padding-top: 40px; }
+   the takeaway and the source line fit above 900px at 1440 wide, with air left under the source line. */
+.home-lead { padding-top: 32px; }
 .home-who { margin: 0 0 12px; font-size: var(--t-note); line-height: 1.5; font-weight: 400; color: var(--ink-2); }
-.home-lead h1 { margin: 0; font-size: var(--t-display); line-height: 1.03; letter-spacing: -0.034em; font-weight: 600; color: var(--ink); }
+.home-lead h1 { margin: 0; font-size: var(--t-display); line-height: 1.06; letter-spacing: -0.022em; font-weight: 500; color: var(--ink); }
 .home-photo { display: block; margin-top: 16px; width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 1px solid var(--line); }
 .home-sub { display: grid; gap: 24px; margin-top: 20px; }
 .home-sub > * { min-width: 0; }
@@ -63,24 +67,30 @@
 .home-lead .actions { align-items: center; gap: 8px 16px; margin: 0; }
 .home-lead .btn:not(.primary) { padding-inline: 4px; border-color: transparent; background: none; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
 
-/* The clock, the page's first section. Columns: release name, then the plot. Its frame is its own rules: the axis has the
-   ticks on it, the left edge is the column line that ends at the source line, and the only other line is a hairline under
-   the last row. There are no lines inside the plot, so nothing can run through a date, and each date sits
+/* The clock, the page's first section. Columns: release name, then the plot. Its frame is two rules: the axis has the
+   ticks on it, and the left edge is the column line, which ends level with the foot of the last bar. Nothing frames what
+   comes after the plot. There are no lines inside the plot, so nothing can run through a date, and each date sits
    right after its bar's end. --stop is where a bar ends; --tail is the room past the axis that the last date runs into.
    Every row is the same height, with no rule between rows. */
-.sc { --tail: 72px; --ax: 32px; --h: 12px; display: grid; grid-template-columns: minmax(0, 1fr); padding-top: 56px; }
+.sc { --tail: 72px; --ax: 32px; --cap: 28px; --h: 14px; display: grid; grid-template-columns: minmax(0, 1fr); padding-top: 40px; }
 .sc > * { min-width: 0; }
 .sc-label { grid-row: 1; grid-column: 1; z-index: 2; justify-self: start; max-width: var(--name); margin: 0; font-size: var(--t-note); line-height: 24px; letter-spacing: 0; font-weight: 600; color: var(--ink); }
+/* The key names the two bars in words, at the bars' own thicknesses, level with the plot's title. */
+.sc-key { grid-row: 1; grid-column: 1; z-index: 2; justify-self: end; align-self: start; display: flex; flex-wrap: wrap; gap: 0 16px; margin: 0; font-size: var(--t-small); line-height: 24px; color: var(--ink-2); }
+.sc-key span { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.sc-key i { display: block; width: 20px; height: 0; }
+.sc-key .old { border-top: 6px solid var(--ink-2); }
+.sc-key .new { border-top: 14px solid var(--dw-ink); }
 .sc-plot { position: relative; grid-row: 1; grid-column: 1; }
-.sc-plot::before { content: ""; position: absolute; z-index: 1; left: var(--name); top: var(--ax); bottom: 0; width: 1px; background: var(--dw-ink); }
-.sc-plot::after { content: ""; position: absolute; z-index: 1; left: var(--name); right: 0; bottom: 0; height: 1px; background: var(--dw-grid); }
+.sc-plot::before { content: ""; position: absolute; z-index: 1; left: var(--name); top: calc(var(--cap) + var(--ax)); bottom: calc((var(--row) - var(--h)) / 2); width: 1px; background: var(--dw-ink); }
 .sc-t, .sc-t thead, .sc-t thead tr, .sc-t tbody { display: block; }
 .sc-t { position: relative; z-index: 1; margin: 0; font-size: var(--t-note); line-height: 1.3; }
-.sc-t thead tr { position: relative; }
+.sc-t thead tr { position: relative; padding-top: var(--cap); }
 .sc-t :is(th, td) { display: block; padding: 0; border: 0; color: inherit; font: inherit; }
 .sc-t .sc-axis { position: relative; height: var(--ax); margin-inline: var(--name) var(--tail); font-size: var(--t-small); font-weight: 500; color: var(--ink-2); }
 .sc-axis::after { content: ""; position: absolute; left: 0; right: calc(-1 * var(--tail)); bottom: 0; height: 1px; background: var(--dw-ink); }
-.sc-t .sc-endh { position: absolute; right: 0; top: 5px; font-size: var(--t-small); font-weight: 400; white-space: nowrap; color: var(--ink-2); }
+/* What every date in the plot means: the plot's title, on the column line, level with the clock's name. */
+.sc-t .sc-endh { position: absolute; left: var(--name); top: 0; font-size: var(--t-note); line-height: 24px; font-weight: 500; white-space: nowrap; color: var(--ink); }
 .sc-ticks { position: absolute; left: 0; right: 0; top: 0; height: 24px; }
 .sc-ticks span { position: absolute; bottom: 2px; left: 0; transform: translateX(-50%); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .sc-ticks span:first-child { transform: none; }
@@ -90,8 +100,10 @@
 .sc-t .sc-n { grid-column: 1; grid-row: 1; padding-right: 8px; font-size: var(--t-lead); line-height: 1.3; font-weight: 400; letter-spacing: -0.012em; color: var(--ink); }
 .sc-t .sc-tl { position: relative; grid-column: 2; grid-row: 1; height: 100%; }
 .sc-bar { position: absolute; left: 1px; top: 50%; width: calc(var(--end) - 1px); height: var(--h); margin-top: calc(var(--h) / -2); }
+/* 9.x is the heavy ink bar. Everything older is a thin bar in the second ink, so the groups differ by thickness in greyscale
+   and in forced colours, where both inks are the same colour, and by thickness and tone everywhere else. */
 .sc-r.v9 .sc-bar { background: var(--dw-ink); }
-.sc-r:not(.v9) .sc-bar { background: var(--bg); box-shadow: inset 0 0 0 2px var(--dw-ink); }
+.sc-r:not(.v9) .sc-bar { --h: 6px; background: var(--ink-2); }
 .sc-stop { position: absolute; top: 50%; left: var(--stop); width: 2px; height: 24px; margin: -12px 0 0 -1px; background: var(--dw-ink); }
 .sc-span { position: absolute; top: 50%; left: var(--end); width: calc(var(--to) - var(--end)); height: 20px; margin-top: -10px; background: repeating-linear-gradient(135deg, var(--dw-red) 0 1.5px, transparent 1.5px 6px) var(--bg); }
 .sc-span::before, .sc-span::after { content: ""; position: absolute; top: -6px; bottom: -6px; width: 3px; background: var(--dw-red); }
@@ -103,27 +115,27 @@
 /* "Unresolved" sits on the span the way a dimension sits on its line; its mask is taller than the hatching. */
 .sc-b a { position: absolute; top: 50%; left: var(--end); width: calc(var(--to) - var(--end)); display: flex; justify-content: center; transform: translateY(-50%); text-decoration: none; pointer-events: auto; }
 .sc-flag { padding-inline: 8px; background: var(--bg); font-size: var(--t-note); line-height: 24px; font-weight: 500; white-space: nowrap; color: var(--dw-red-ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-/* Under the plot, on the spine: the takeaway at regular weight, so the chart stays the one object; the release facts beside it; then the source as one quiet line. */
-.sc-foot, .sc-cap { margin-left: var(--name); padding-left: var(--inset); border-left: 1px solid var(--dw-ink); }
-/* The same inset either side, so the release facts don't run into the page edge. */
-.sc-foot { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px 40px; padding-top: 20px; padding-right: var(--inset); }
-.sc-lead { min-width: 0; max-width: 52rem; margin: 0; font-size: var(--t-lead); line-height: 28px; font-weight: 400; letter-spacing: -0.008em; color: var(--ink); }
-.sc-rel { flex: none; margin: 0; font-size: var(--t-note); line-height: 28px; }
+/* Under the plot, on the bars' left edge: the takeaway at a title's size, the chart's payoff, with its instruction in weight.
+   Then one quiet block at one size: the release facts on the same edge, the source lines starting on the first labelled tick. */
+.sc-lead, .sc-facts { margin-left: var(--name); }
+.sc-lead { min-width: 0; margin-block: 0; padding-top: 20px; font-size: var(--t-sub); line-height: 32px; font-weight: 400; letter-spacing: -0.014em; color: var(--ink); text-wrap: pretty; }
+.sc-lead b { font-weight: 600; }
+.sc-facts { display: grid; grid-template-columns: calc((100% - var(--tail)) * var(--c)) minmax(0, 1fr); padding-top: 16px; font-size: var(--t-meta); line-height: 20px; color: var(--ink-2); }
+.sc-rel { margin: 0; padding-right: 16px; }
 .sc-rel > div { display: flex; flex-wrap: wrap; gap: 0 8px; }
-.sc-rel dt { color: var(--ink-2); }
 .sc-rel dd { margin: 0; color: var(--ink); font-variant-numeric: tabular-nums; }
-.sc-rel b { font-weight: 500; }
-.sc-cap { margin-block: 0; padding-block: 12px 0; padding-right: var(--inset); font-size: var(--t-small); line-height: 20px; color: var(--ink-2); }
+.sc-cap { margin: 0; }
 .sc-cap a { color: inherit; }
-@media (min-width: 1081px) and (max-height: 820px) { .home-lead { padding-top: 24px; } .sc { --row: 40px; padding-top: 40px; } }
+.sc-cap span { display: block; }
+@media (min-width: 1081px) and (max-height: 820px) { .home-lead { padding-top: 24px; } .sc { --row: 38px; padding-top: 32px; } }
 /* Below the width where the plot fits, the clock is recomposed: a ruler on top, then each row is its name and date on one
    line, every date at the right margin, with the bar directly under them. "Unresolved" sits on the bar's line, right after
    the hatching, so it never shares a line with the date. */
 @media (max-width: 1080px) {
-  .sc { --tail: 0px; display: flex; flex-direction: column; padding-top: 56px; }
-  .sc-label { max-width: none; margin-bottom: 8px; }
-  .sc-plot::before, .sc-plot::after { display: none; }
-  .sc-t .sc-endh { top: -32px; line-height: 24px; }
+  .sc { --tail: 0px; --h: 12px; display: flex; flex-direction: column; padding-top: 56px; }
+  .sc-label { max-width: none; }
+  .sc-key { margin-bottom: 16px; }
+  .sc-plot::before { display: none; }
   .sc-r { grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: 24px 16px; column-gap: 16px; align-items: center; height: auto; margin-top: 16px; }
   .sc-t .sc-n { padding: 0; line-height: 24px; }
   .sc-t .sc-d { grid-column: 2; grid-row: 1; justify-self: end; margin: 0; }
@@ -136,15 +148,15 @@
   .sc-span { height: 12px; margin-top: -6px; }
   .sc-span::before, .sc-span::after { top: -2px; bottom: -2px; }
   .sc-stop { height: 16px; margin-top: -8px; }
-  .sc-foot, .sc-cap { border-left: 0; }
-  .sc-foot { flex-direction: column; align-items: stretch; padding-top: 24px; }
+  .sc-lead { padding-top: 24px; line-height: 1.4; }
+  .sc-facts { display: block; }
+  .sc-cap { padding-top: 12px; }
 }
 @media (max-width: 640px) {
   .sc { padding-top: 40px; }
   .sc-r { margin-top: 12px; }
   .sc-t .sc-n { font-size: var(--t-note); letter-spacing: -0.02em; }
   .sc-dt, .sc-flag { font-size: var(--t-small); }
-  .sc-foot { padding-top: 24px; }
 }
 
 /* A sheet: a real page from the site, set open on the page. It ends on a complete row, then a line saying where the rest is. */
@@ -161,60 +173,117 @@
 .sheet-t thead th { padding-top: 0; border-bottom: 1px solid var(--dw-ink); font-weight: 500; color: var(--ink); }
 .sheet-t tbody th { font-weight: 500; color: var(--ink); }
 
-/* Field Notes. The heading, then the note set open at full width: the first screen's one dominant thing. Open type on
-   horizontal rules, flush to both page edges, every cell on the first baseline. */
+/* Field Notes. The heading, then the note set open at full width: its title a clear step below the heading, its drawing the
+   section's peak, its table at reading size. Open type on horizontal rules, flush to both page edges, every cell on the first
+   baseline. */
 .sheet-q { margin-top: var(--head); }
-.sheet-run { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 24px; margin: 0 0 16px; font-size: var(--t-note); line-height: 1.5; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.sheet-run { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 24px; margin: 0 0 12px; font-size: var(--t-meta); line-height: 1.5; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .sheet-path { display: flex; flex-wrap: wrap; gap: 0 16px; }
 .sheet-path span:first-child { color: var(--ink); }
-.sheet-q h3 { font-size: var(--t-title); line-height: 1.2; letter-spacing: -0.02em; font-weight: 500; }
-.sheet-q .sheet-sum { margin-top: 12px; max-width: 52rem; font-size: var(--t-lead); line-height: 1.4; }
-.sheet-q .sheet-t { margin: 56px 0 0; font-size: var(--t-q); line-height: 1.3; }
-.sheet-q .sheet-t :is(th, td) { padding: 28px 40px 28px 0; vertical-align: baseline; }
+.sheet-q h3 { font-size: var(--t-feature); line-height: 1.2; letter-spacing: -0.016em; font-weight: 500; }
+.sheet-q .sheet-sum { margin-top: 8px; max-width: 52rem; font-size: var(--t-body); line-height: 1.5; }
+
+/* The latency ruler: the second chart, in the clock's language at a larger scale. A pole stands at each threshold from its
+   numeral through the axis to the end of its heavy bar. What each threshold bounds sits right after the bar, as a date does on
+   the clock. The other bounds are thin bars on the same scale. --a and --b are the thresholds' places on the scale. */
+.rl { --rl-h: 32px; --rl-gap: 12px; margin: 72px 0 0; }
+.rl-plot, .rl-in { position: relative; }
+.rl-flags { display: grid; grid-template-columns: var(--a) calc(var(--b) - var(--a)) minmax(0, 1fr); align-items: start; }
+.rl-title { grid-column: 1; grid-row: 1; margin: 0; padding-right: 16px; font-size: var(--t-note); line-height: 24px; font-weight: 600; color: var(--ink); }
+.rl-flag { display: flex; flex-direction: column; min-width: 0; margin: 0; padding: 0 0 20px var(--rl-gap); color: var(--ink); }
+.rl-f1 { grid-column: 2; grid-row: 1; }
+.rl-f2 { grid-column: 3; grid-row: 1; }
+.rl-num { font-size: var(--t-num); line-height: 0.92; font-weight: 400; letter-spacing: -0.045em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.rl-num small { font-size: var(--t-sub); font-weight: 400; letter-spacing: -0.01em; color: var(--ink-2); }
+.rl-then { margin-top: 12px; font-size: var(--t-sub); line-height: 1.25; font-weight: 500; letter-spacing: -0.016em; }
+.rl-axis { position: relative; height: 48px; border-bottom: 1px solid var(--dw-ink); font-size: var(--t-small); color: var(--ink-2); }
+.rl-ticks span { position: absolute; top: 0; line-height: 20px; transform: translateX(-50%); font-variant-numeric: tabular-nums; }
+.rl-ticks span:first-child { transform: none; }
+.rl-ruler { position: absolute; left: 0; bottom: 0; width: 100%; height: 20px; overflow: visible; }
+.rl-ruler path { fill: none; stroke: var(--dw-ink); stroke-width: 1; vector-effect: non-scaling-stroke; shape-rendering: crispEdges; }
+.rl-pole { position: absolute; top: 0; bottom: 0; margin-left: -1px; border-left: 2px solid var(--dw-ink); }
+.rl-p1 { left: var(--a); }
+.rl-p2 { left: var(--b); }
+.rl-row { position: relative; display: flex; align-items: center; min-height: 72px; padding-left: calc(var(--at) + 16px); }
+.rl-r1 { padding-right: calc(100% - var(--b) + 16px); }
+.rl-bar { position: absolute; left: 0; top: 50%; width: var(--at); height: 0; margin-top: calc(var(--rl-h) / -2); border-top: var(--rl-h) solid var(--dw-ink); }
+.rl-txt { margin: 0; font-size: var(--t-note); line-height: 24px; color: var(--ink); }
+.rl-txt b { font-weight: 600; }
+.rl-v { color: var(--ink); font-variant-numeric: tabular-nums; }
+.rl-path { display: block; font-size: var(--t-meta); line-height: 20px; color: var(--ink-2); }
+.rl-minor { list-style: none; margin: 24px 0 0; padding: 0; font-size: var(--t-meta); line-height: 20px; color: var(--ink-2); }
+.rl-minor li { margin: 16px 0 0; }
+.rl-mname { margin: 0; }
+.rl-mline { position: relative; margin: 0; }
+.rl-mline i { position: absolute; left: 0; top: 7px; width: var(--at); height: 0; border-top: 6px solid var(--ink-2); }
+.rl-mline i::after { content: ""; position: absolute; right: -1px; top: -13px; height: 20px; border-left: 2px solid var(--dw-ink); }
+.rl-mline span { display: block; padding-top: 20px; color: var(--ink); }
+.rl-cap { max-width: 60rem; margin-top: 32px; font-size: var(--t-meta); line-height: 20px; color: var(--ink-2); }
+.rl-cap a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+/* No room beside the long bars: each row's words go under its bar, on the paper, and the poles pass behind them. */
+@media (max-width: 1080px) {
+  .rl { --rl-h: 20px; margin-top: 56px; }
+  .rl-then { font-size: var(--t-lead); }
+  .rl-row, .rl-r1 { display: block; min-height: 0; padding: 12px 0 0; }
+  .rl-bar { position: static; display: block; margin: 0; }
+  .rl-txt { position: relative; z-index: 1; padding: 8px 0 4px; background: var(--bg); }
+}
+/* A phone: the numerals stack, 300 standing left of its pole and 100 right of its own, so each keeps its size. The title row and
+   the first flag's row have set heights, so the first pole can start under them. */
+@media (max-width: 760px) {
+  .rl { --rl-gap: 8px; --rl-t: 32px; --rl-f: 112px; }
+  .rl-flags { grid-template-rows: var(--rl-t) var(--rl-f) auto; }
+  .rl-title { grid-column: 1 / -1; padding: 0; }
+  .rl-f2 { grid-column: 1 / 3; grid-row: 2; align-items: flex-end; padding: 0 var(--rl-gap) 0 0; text-align: right; }
+  .rl-f1 { grid-column: 2; grid-row: 3; padding-bottom: 12px; }
+  .rl-then { margin-top: 8px; }
+  .rl-num small { font-size: var(--t-note); }
+  .rl-fine { display: none; }
+  .rl-p1 { top: calc(var(--rl-t) + var(--rl-f)); }
+  .rl-p2 { top: var(--rl-t); }
+}
+
+.sheet-q .sheet-t { margin: 72px 0 0; font-size: var(--t-lead); line-height: 1.35; }
+.sheet-q .sheet-t :is(th, td) { padding: 20px 32px 20px 0; vertical-align: baseline; }
 .sheet-q .sheet-t :is(th, td):last-child { padding-right: 0; }
-.sheet-q .sheet-t thead th { padding-block: 0 12px; font-size: var(--t-note); line-height: 1.5; font-weight: 500; color: var(--ink-2); vertical-align: bottom; }
-.sheet-q thead th:nth-child(1) { width: 56px; }
+.sheet-q .sheet-t thead th { padding-block: 0 12px; font-size: var(--t-meta); line-height: 1.5; font-weight: 500; color: var(--ink-2); vertical-align: bottom; }
+.sheet-q thead th:nth-child(1) { width: 44px; }
 .sheet-q thead th:nth-child(2) { width: 42%; }
-.sheet-q thead th:nth-child(3) { width: 25%; }
+.sheet-q thead th:nth-child(3) { width: 22%; }
 .sheet-q .sheet-t :is(th, td):first-child { padding-right: 0; }
-.sheet-q td:first-child { font-variant-numeric: tabular-nums; letter-spacing: -0.012em; color: var(--ink-2); }
+.sheet-q td:first-child { font-size: var(--t-note); font-variant-numeric: tabular-nums; color: var(--ink-2); }
 .sheet-q .sheet-t tbody th { font-size: inherit; line-height: inherit; letter-spacing: -0.012em; font-weight: 400; color: var(--ink); }
-.sheet-q td:nth-child(3) { font-weight: 600; letter-spacing: -0.012em; color: var(--ink); }
-.sheet-q td:nth-child(4) { font-size: var(--t-body); line-height: 1.4; color: var(--ink-2); }
+/* The question and what it rules out read first. The answer is plain text between them, and only a threshold gets more. A closing
+   rule ends the table as its header began it. */
+.sheet-q .sheet-t tbody tr:last-child :is(th, td) { border-bottom-color: var(--dw-ink); }
+.sheet-q td:nth-child(3) { font-size: var(--t-body); line-height: 1.4; font-weight: 400; color: var(--ink-2); }
+.sheet-q td:nth-child(4) { font-size: var(--t-body); line-height: 1.4; color: var(--ink); }
+.sheet-q td.lim { font-weight: 500; color: var(--ink); }
 /* Where the note itself says nothing is fixed: the one unresolved answer, in the red pencil. */
 .sheet-q td.open { color: var(--dw-red-ink); }
 /* Too narrow for four columns: each row stacks, and each answer says which column it came from. */
 @media (max-width: 760px) {
-  .sheet-q .sheet-t { margin-top: 32px; }
+  .sheet-q .sheet-t { margin-top: 56px; }
   .sheet-q .sheet-t, .sheet-q tbody { display: block; width: 100%; }
   .sheet-q thead { display: none; }
-  .sheet-q tbody tr { display: grid; grid-template-columns: 32px minmax(0, 1fr); align-items: baseline; padding-block: 24px; border-bottom: 1px solid var(--dw-grid); }
+  .sheet-q tbody tr { display: grid; grid-template-columns: 32px minmax(0, 1fr); align-items: baseline; padding-block: 20px; border-bottom: 1px solid var(--dw-grid); }
   .sheet-q tbody tr:first-child { border-top: 1px solid var(--dw-ink); }
   .sheet-q .sheet-t :is(th, td), .sheet-q .sheet-t :is(th, td):first-child, .sheet-q .sheet-t :is(th, td):last-child { display: block; padding: 0; border: 0; }
   .sheet-q td:first-child { grid-row: 1 / span 3; }
   .sheet-q td[data-h] { grid-column: 2; margin-top: 8px; font-size: var(--t-note); line-height: 1.5; }
-  .sheet-q td[data-h]::before { content: attr(data-h) ": "; font-weight: 400; color: var(--ink-2); }
+  .sheet-q td[data-h]::before { content: attr(data-h) ": "; font-size: var(--t-note); font-weight: 400; letter-spacing: 0; color: var(--ink-2); }
+  .sheet-q tbody tr:last-child { border-bottom-color: var(--dw-ink); }
 }
-/* The sources and the index: quiet. Small heads on a hairline, plain type under them, and no boxes. */
-.fn-src { margin-top: 96px; }
-.ix-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--dw-grid); }
-.ix-h { margin: 0; font-size: var(--t-note); line-height: 24px; letter-spacing: 0; font-weight: 600; color: var(--ink); }
-.ix-h a { color: inherit; text-decoration: none; }
-.ix-h a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-.fn-more { font-size: var(--t-note); line-height: 24px; color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-.fn-strip { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); column-gap: 40px; list-style: none; margin: 0; padding: 0; }
-.fn-strip li { min-width: 0; margin: 0; }
-.fn-strip a { display: flex; flex-direction: column; gap: 12px; height: 100%; padding-top: 16px; color: inherit; text-decoration: none; }
-.fn-strip a:hover .t { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-.fn-strip .t { display: block; font-size: var(--t-note); line-height: 1.4; color: var(--ink); }
-.fn-strip .m { display: block; margin-top: auto; font-size: var(--t-meta); line-height: 1.4; color: var(--ink-2); font-variant-numeric: tabular-nums; }
-/* No room for five columns: the same sources as ruled rows. */
-@media (max-width: 1240px) {
-  .fn-strip { grid-template-columns: minmax(0, 1fr); }
-  .fn-strip li { border-bottom: 1px solid var(--dw-grid); }
-  .fn-strip a { gap: 4px; padding-block: 12px; }
-}
-@media (max-width: 640px) { .fn-src { margin-top: 64px; } }
+/* The sources: a footnote to the table, one running paragraph at the small size, with every link kept. */
+.fn-src { max-width: 60rem; margin-top: 20px; font-size: var(--t-meta); line-height: 1.6; color: var(--ink-2); }
+.fn-h { display: inline; margin: 0; font-size: inherit; line-height: inherit; letter-spacing: 0; font-weight: 500; color: var(--ink); }
+.fn-strip, .fn-strip li { display: inline; margin: 0; padding: 0; list-style: none; }
+.fn-strip li::after { content: "; "; }
+.fn-strip li:last-child::after { content: ". "; }
+.fn-strip a { color: inherit; text-decoration: none; }
+.fn-strip .t { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.fn-strip a:hover { color: var(--ink); }
+.fn-more { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 
 /* The cheat sheet's steps: large numerals, and commands on a rule, with no tint. */
 .tri { display: grid; gap: 32px; counter-reset: tri; list-style: none; margin: 32px 0 0; padding: 0; }
@@ -236,8 +305,14 @@
   .tri li { padding-left: 32px; }
 }
 
-/* Library and Reference, one quiet index on a four-column grid: three columns of areas, one of reference items. Names and
-   counts in plain type on hairlines. A count of notes doesn't get a mark. */
+/* Library and Reference, one index on a four-column grid: three columns of areas, one of reference items. Their heads are small
+   labels on an ink rule, a step below any title on the page, with names at reading size and quiet counts on hairlines. */
+.home-sec.ix { padding-top: var(--near); }
+.ix-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--dw-ink); }
+.ix-h { margin: 0; font-size: var(--t-note); line-height: 24px; letter-spacing: 0; font-weight: 600; color: var(--ink); }
+.ix-h a { color: inherit; text-decoration: none; }
+.ix-h a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.ix .ix-head .ix-c { font-size: var(--t-note); color: var(--ink-2); }
 .ix { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 40px; }
 .ix-lib { grid-column: span 3; min-width: 0; }
 .ix-ref { min-width: 0; }
@@ -249,6 +324,7 @@
 .ix-rows a:focus-visible { outline-offset: -2px; }
 .ix-n { min-width: 0; }
 .ix-c { flex: none; font-size: var(--t-note); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.ix-rows .ix-c { font-size: var(--t-note); font-weight: 400; color: var(--ink-2); }
 @media (max-width: 1080px) {
   .ix { grid-template-columns: minmax(0, 1fr); row-gap: 56px; }
   .ix-lib { grid-column: auto; }
@@ -256,75 +332,49 @@
 }
 @media (max-width: 760px) { .ix-rows, .ix-ref .ix-rows { columns: 1; } }
 
-/* The fleet model, the second big moment: full width, reading-size type, and three levels that look different. The fleet is a
-   solid ink bar with paper text, instances are medium outlines, domains are light boxes with the management domains tinted.
-   --fm-gap and the columns keep each connector's ends on the same centre line as the box it lands on: a bus is built from one
-   segment per box, starting from that box's own centre, so a bus cannot miss its drop. Each drop stops at the inner edge of
-   the frame's border, so it lands on the border and enters nothing. --fm-trunk is the fleet-to-instance run and --fm-drop
-   the stub-to-domain run; the paddings above each row of boxes are derived from them so the bus sits on both. */
-.fm-fig { --fl-1: 3px; --fl-2: 2px; --fl-3: 1px; --fm-gap: 40px; --fm-dom-gap: 16px; --fm-trunk: 34px; --fm-drop: 25px; margin: var(--head) 0 0; }
-.fm-fleet { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 32px; padding: 24px 32px; border: var(--fl-1) solid var(--dw-ink); background: var(--dw-ink); font-size: var(--t-body); line-height: 32px; color: var(--bg); print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-.fm-fleet b { font-size: var(--t-q); line-height: 40px; font-weight: 400; letter-spacing: -0.012em; color: var(--bg); }
-.fm-fleet .fm-l { font-size: var(--t-head); line-height: 56px; font-weight: 600; letter-spacing: -0.028em; }
-.fm-fleet span { margin-left: auto; color: var(--bg); }
-.fm-insts { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--fm-gap); padding-top: calc(var(--fm-trunk) * 2 - 4px); }
-/* The trunk, from the fleet's bottom border to the bus. */
-.fm-insts::before { content: ""; position: absolute; left: 50%; top: 0; height: var(--fm-trunk); margin-left: -1px; border-left: var(--fl-2) solid var(--dw-ink); }
-.fm-inst { position: relative; min-width: 0; border: var(--fl-2) solid var(--dw-ink); }
-/* One drop from the bus to the instance's top border at its centre, and the bus segment that reaches it. */
-.fm-inst::before { content: ""; position: absolute; left: 50%; top: calc(-1 * var(--fm-trunk)); height: var(--fm-trunk); margin-left: -1px; border-left: var(--fl-2) solid var(--dw-ink); }
-.fm-inst::after { content: ""; position: absolute; top: calc(-1 * var(--fm-trunk)); height: 0; border-top: var(--fl-2) solid var(--dw-ink); }
-.fm-inst:first-child::after { left: 50%; right: calc(-1 * (var(--fm-gap) / 2 + 3px)); margin-left: -1px; }
-.fm-inst:last-child::after { left: calc(-1 * (var(--fm-gap) / 2 + 3px)); right: 50%; margin-right: -1px; }
-.fm-name { display: block; padding: 16px 24px; border-bottom: var(--fl-3) solid var(--dw-ink); font-size: var(--t-sub); line-height: 32px; font-weight: 500; letter-spacing: -0.016em; color: var(--ink); }
-/* Inside: a stub under the title strip to the bus, then one drop to each domain's top centre. */
-.fm-doms { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--fm-dom-gap); padding: calc(var(--fm-drop) * 2 - 2px) 24px 24px; }
-.fm-doms::before { content: ""; position: absolute; left: 50%; top: 0; height: var(--fm-drop); border-left: var(--fl-3) solid var(--ink-2); }
-.fm-dom { position: relative; min-width: 0; padding: 16px; border: var(--fl-3) solid var(--ink-2); font-size: var(--t-body); line-height: 28px; color: var(--ink); }
-.fm-mgmt { background: var(--fm-tint); print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-.fm-dom::before { content: ""; position: absolute; left: 50%; top: calc(-1 * var(--fm-drop)); height: var(--fm-drop); border-left: var(--fl-3) solid var(--ink-2); }
-.fm-dom::after { content: ""; position: absolute; top: calc(-1 * var(--fm-drop)); left: calc(-1 * (var(--fm-dom-gap) / 2 + 2px)); right: calc(-1 * (var(--fm-dom-gap) / 2 + 2px)); height: 0; border-top: var(--fl-3) solid var(--ink-2); }
-.fm-dom:first-child::after { left: 50%; }
-.fm-dom:last-child::after { right: calc(50% - 1px); }
-.fm-dom b { display: block; width: min-content; margin-bottom: 12px; font-size: var(--t-lead); line-height: 26px; font-weight: 600; letter-spacing: -0.012em; color: var(--ink); }
+/* The page's one change of surface: the paper goes a tone darker behind the fleet drawing, edge to edge. The shadow paints the
+   tone out to the window's edges and adds no scrollable width; clip-path holds it to the section's own height. It falls back to
+   Canvas in forced colours and to no fill in print, both below. */
+.home-sec.fm { margin-top: var(--sec); padding-block: var(--band); background: var(--tone); box-shadow: 0 0 0 100vmax var(--tone); clip-path: inset(0 -100vmax); }
+
+/* The fleet model, drawn as the clock is: bars, poles and open type, no boxes. Width shows what holds what. The fleet is a bar
+   across the page, each instance a medium bar under it, each domain a rule under that, heavier for management. A pole hangs from
+   each bar down the left edge of what it holds and carries that thing's words beside it, like the ruler's flags. --fm-n sets the
+   instance name's row, which each domain's pole crosses to reach its instance's bar. */
+.fm-fig { --fm-gap: 40px; --fm-dom-gap: 16px; --fm-n: 72px; --fm-pad: 16px; margin: var(--head) 0 0; }
+.fm-fleet { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--fm-gap); border-top: 24px solid var(--dw-ink); }
+.fm-fleet > div { min-width: 0; padding: 16px var(--fm-pad) 40px; border-left: 2px solid var(--dw-ink); }
+.fm-fleet b, .fm-fleet span { display: block; }
+.fm-fleet .fm-l { font-size: var(--t-feature); line-height: 36px; font-weight: 500; letter-spacing: -0.016em; color: var(--ink); }
+.fm-fleet .fm-svc { margin-top: 4px; font-size: var(--t-body); line-height: 28px; font-weight: 400; color: var(--ink); }
+.fm-fleet span { padding-top: 8px; font-size: var(--t-body); line-height: 28px; color: var(--ink-2); }
+.fm-insts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--fm-gap); }
+.fm-inst { min-width: 0; border-top: 10px solid var(--dw-ink); }
+.fm-name { display: block; height: var(--fm-n); padding: 12px var(--fm-pad) 0; border-left: 2px solid var(--dw-ink); font-size: var(--t-sub); line-height: 32px; font-weight: 500; letter-spacing: -0.016em; color: var(--ink); }
+.fm-doms { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--fm-dom-gap); }
+.fm-dom { position: relative; min-width: 0; padding: 12px 8px 0 12px; border-top: 1px solid var(--dw-ink); border-left: 1px solid var(--dw-ink); font-size: var(--t-note); line-height: 24px; color: var(--ink-2); }
+.fm-mgmt { border-top-width: 4px; border-left-width: 2px; }
+.fm-dom:not(:first-child)::before { content: ""; position: absolute; left: -1px; top: calc(-1 * var(--fm-n) - 1px); height: var(--fm-n); border-left: 1px solid var(--dw-ink); }
+.fm-dom b { display: block; margin-bottom: 8px; font-size: var(--t-body); line-height: 24px; font-weight: 500; letter-spacing: -0.008em; color: var(--ink); }
 .fm-dom span { display: block; }
-.fm-more { margin: 40px 0 0; line-height: 1; }
-@media (max-width: 1240px) {
-  .fm-fig { --fm-gap: 32px; --fm-dom-gap: 12px; }
-  .fm-fleet span { margin-left: 0; width: 100%; }
-}
-@media (max-width: 1240px) and (min-width: 1121px) {
-  .fm-doms { padding-inline: 16px; }
-  .fm-dom { padding: 12px; font-size: var(--t-note); line-height: 24px; }
-  .fm-dom b { font-size: var(--t-body); }
-}
-/* Instances stack: the trunk becomes a spine down the left, with a branch landing on each instance's left border at its
-   centre. It ends at the last branch. */
+.fm-more { margin: 56px 0 0; line-height: 1; }
+@media (max-width: 1240px) { .fm-fig { --fm-gap: 32px; --fm-dom-gap: 12px; } }
+/* Instances stack: the fleet's pole becomes a spine down the left, and each instance hangs from it, indented. */
 @media (max-width: 1120px) {
-  .fm-insts { grid-template-columns: minmax(0, 1fr); row-gap: 24px; padding: 24px 0 0 24px; }
-  .fm-insts::before { display: none; }
-  .fm-inst::before { left: -26px; top: -26px; bottom: -26px; height: auto; margin: 0; }
-  .fm-inst:last-child::before { bottom: calc(50% - 2px); }
-  .fm-inst::after, .fm-inst:first-child::after, .fm-inst:last-child::after { left: -26px; right: 100%; top: 50%; margin: 0; }
+  .fm-fleet { grid-template-columns: minmax(0, 1fr); }
+  .fm-fleet > div { padding-bottom: 0; }
+  .fm-fleet > div + div { padding-block: 0 32px; }
+  .fm-insts { grid-template-columns: minmax(0, 1fr); row-gap: 32px; padding-left: var(--fm-pad); border-left: 2px solid var(--dw-ink); }
 }
-/* Domains stack too: a spine from under the title strip, with a branch to each box's left border at its centre. */
+/* Domains stack too: the same again, one level in. */
 @media (max-width: 640px) {
-  .fm-fleet { padding: 16px; gap: 0 16px; }
-  .fm-fleet .fm-l { line-height: 40px; }
-  .fm-fleet b { line-height: 32px; }
-  .fm-fleet span { line-height: 24px; }
-  .fm-insts { padding: 16px 0 0 16px; row-gap: 16px; }
-  .fm-inst::before { left: -18px; top: -18px; bottom: -18px; }
-  .fm-inst::after, .fm-inst:first-child::after, .fm-inst:last-child::after { left: -18px; }
-  .fm-name { padding: 4px 12px; }
-  .fm-doms { grid-template-columns: minmax(0, 1fr); row-gap: 12px; padding: 16px 12px 12px 32px; }
-  .fm-doms::before { display: none; }
-  .fm-dom { padding: 12px; font-size: var(--t-body); line-height: 24px; }
-  .fm-dom::before { left: -17px; top: -13px; bottom: -13px; height: auto; }
-  .fm-dom:first-child::before { top: -17px; }
-  .fm-dom:last-child::before { bottom: calc(50% - 1px); }
-  .fm-dom::after, .fm-dom:first-child::after, .fm-dom:last-child::after { left: -17px; right: 100%; top: 50%; }
-  .fm-dom b { width: auto; margin-bottom: 4px; }
+  .fm-fig { --fm-pad: 12px; }
+  .fm-fleet { border-top-width: 16px; }
+  .fm-inst { border-top-width: 8px; }
+  .fm-name { height: auto; padding-block: 8px 12px; }
+  .fm-doms { grid-template-columns: minmax(0, 1fr); row-gap: 12px; padding-left: var(--fm-pad); border-left: 2px solid var(--dw-ink); }
+  .fm-dom:not(:first-child)::before { display: none; }
+  .fm-dom, .fm-mgmt { padding: 8px 0 0 0; border-left: 0; }
 }
 
 /* What I do: four open blocks with air between them and no rules. */
@@ -365,7 +415,8 @@
 .page-home .rows-new a { grid-template-columns: 10.5rem minmax(0, 1fr) auto; }
 
 .home-close { padding-bottom: var(--sec); }
-.home-close h2 { max-width: 22em; }
+/* The close is said at the headline's size and weight, so the page ends in the voice it began in. */
+.home-close h2 { max-width: 16em; font-size: var(--t-display); line-height: 1.06; letter-spacing: -0.022em; }
 .home-close-go { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-top: 32px; }
 .home-close-go p { margin: 0; font-size: var(--t-lead); line-height: 1.4; color: var(--ink-2); }
 
@@ -385,9 +436,12 @@
 @media (forced-colors: active) {
   .page-home.docs { --bg: Canvas; }
   .sc-dt, .sc-flag, .sc-n { forced-color-adjust: auto; }
-  .fm-fleet, .fm-fleet * { forced-color-adjust: none; }
+  :root:root:root .page-home main { --tone: Canvas; }
+  .home-sec.fm { box-shadow: none; clip-path: none; }
 }
 
 @media print {
-  :root .page-home main, :root[data-theme="dark"] .page-home main, :root:not([data-theme="light"]) .page-home main { --ink-2: #333; --fm-tint: #eee; }
+  :root .page-home main, :root[data-theme="dark"] .page-home main, :root:not([data-theme="light"]) .page-home main { --ink-2: #333; --tone: transparent; }
+  .home-sec.fm { background: none; box-shadow: none; clip-path: none; padding-block: 0; }
+  .rl-txt { background: #fff; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
