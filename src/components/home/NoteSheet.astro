@@ -1,7 +1,7 @@
 ---
 // One note set open on the page: running head, title, one-line summary, an optional drawing, then a real table from the note's
 // own body, always whole rows, and an optional footnote. Everything comes from the note at build time. The explicit roles keep
-// it a table for a screen reader on a phone, where its rows stack; each answer carries its column's name for that layout. A
+// it a table for a screen reader at every width, because its rows are laid out as grids and stack on a phone; each answer carries its column's name for that layout. A
 // cell the note itself says has no fixed answer is set in the page's one accent for what is unresolved, and an answer that
 // states a latency threshold keeps a little more weight than the others.
 import { CATEGORIES } from '../../data/categories';

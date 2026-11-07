@@ -15,9 +15,10 @@
      1px ink       the clock's axis and column line, the ruler's axis, a table's header and closing rules, the index's heads
      1px --dw-grid hairlines inside a section
      24 / 10 / 4 / 1px  the fleet drawing's fleet, instances, management domains and workload domains
-     32 / 12px     the ruler's two thresholds and its four other bounds
+     32 / 12px     the ruler's two thresholds and its four other bounds; the thresholds are 20px at 1080px and below
 
-   Left edges. Three, held down the page, and all of them collapse to the first below 1080px:
+   Left edges. Three, held down the page, collapsing to the first below 1080px, except that the decision table and What I do keep
+   the midline down to 761px, with the table's question on --hang there:
      the page edge  headings, labels, the ruler's zero, every first column
      --name         the clock's plot, its takeaway and foot; the decision table's questions; the ruler's paths and caption; the
                     sources; the titles in Latest writing
@@ -204,6 +205,8 @@
    A pole stands at each threshold from its numeral through the axis to the end of its heavy bar. What each threshold bounds sits
    right after the bar, as a date does on the clock. --a and --b are the thresholds' places on the scale. */
 .rl { --bg: var(--inv-bg); --ink: var(--inv-ink); --ink-2: var(--inv-ink-2); --dw-ink: var(--inv-ink); --accent: var(--inv-ink); --accent-ink: var(--inv-ink); --rl-h: 32px; --rl-gap: 12px; margin: var(--head) 0 0; padding-block: var(--band); color: var(--ink); background: var(--bg); box-shadow: 0 0 0 100vmax var(--bg); clip-path: inset(0 -100vmax); }
+/* Selected text keeps full contrast on this page and on the band, which redefines these two tokens. */
+.page-home main ::selection { background: var(--ink); color: var(--bg); }
 .rl-plot, .rl-in { position: relative; }
 .rl-flags { display: grid; grid-template-columns: var(--a) calc(var(--b) - var(--a)) minmax(0, 1fr); align-items: start; }
 .rl-title { grid-column: 1; grid-row: 1; margin: 0; padding-right: 16px; font-size: var(--t-note); line-height: 24px; font-weight: 600; color: var(--ink); }
@@ -274,8 +277,10 @@
 .sheet-q td:first-child { font-size: var(--t-note); font-variant-numeric: tabular-nums; color: var(--ink-2); }
 .sheet-q .sheet-t tbody th { font-size: inherit; line-height: inherit; letter-spacing: -0.012em; font-weight: 400; color: var(--ink); }
 /* Each row is a grid, as it already is on a phone, so its columns can sit on the page's edges: the number on the page edge, the
-   question on --name, the answer on the midline. The answer's column stays narrow; what it rules out takes the rest. */
-@media (min-width: 761px) {
+   question on --name, the answer on the midline. The answer's column stays narrow; what it rules out takes the rest. A closing
+   rule ends the table as its header began it. Written as "not" so a fractional width, such as a zoomed window, can't fall between
+   this and the phone layout. */
+@media not all and (max-width: 760px) {
   .sheet-q .sheet-t, .sheet-q thead, .sheet-q tbody { display: block; width: 100%; }
   .sheet-q tr { --q: max(var(--name), var(--hang)); display: grid; grid-template-columns: var(--q) calc(50% + var(--gut) / 2 - var(--q)) 19% minmax(0, 1fr); align-items: baseline; border-bottom: 1px solid var(--dw-grid); }
   .sheet-q thead tr { border-bottom-color: var(--dw-ink); }
@@ -284,8 +289,7 @@
   .sheet-q .sheet-t :is(th, td):first-child, .sheet-q .sheet-t :is(th, td):last-child { padding-right: 0; }
   .sheet-q .sheet-t thead th { padding-block: 0 12px; font-size: var(--t-note); line-height: 1.5; font-weight: 500; color: var(--ink-2); }
 }
-/* The question and what it rules out read first. The answer is plain text between them, and only a threshold gets more. A closing
-   rule ends the table as its header began it. */
+/* The question and what it rules out read first. The answer is plain text between them, and only a threshold gets more. */
 .sheet-q td:nth-child(3) { font-size: var(--t-body); line-height: 1.4; font-weight: 400; color: var(--ink-2); }
 .sheet-q td:nth-child(4) { font-size: var(--t-body); line-height: 1.4; color: var(--ink); }
 .sheet-q td.lim { font-weight: 500; color: var(--ink); }
@@ -450,7 +454,7 @@
 .home-close-go { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-top: 32px; }
 .home-close-go p { margin: 0; font-size: var(--t-lead); line-height: 1.4; color: var(--ink-2); }
 
-/* The phone hero is tightened so the whole clock is on the first screen: a one-line eyebrow, three lines of headline. */
+/* The phone hero is tightened so the whole clock is on the first screen: a one-line eyebrow, four lines of headline at 390px. */
 @media (max-width: 640px) {
   .home-lead { padding-top: 24px; }
   .home-who { margin-bottom: 8px; white-space: nowrap; }
