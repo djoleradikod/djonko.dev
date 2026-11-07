@@ -1,82 +1,216 @@
 ---
 title: "VCF Operations as the console: from optional add-on to mandatory core"
-description: "In 5.x, Aria Operations was a monitoring product you could choose to deploy. In 9.x, VCF Operations is the platform's front door, and its availability needs designing as carefully as vCenter's."
+description: "VCF Operations is required in every 9.x fleet. Run production on the three-node HA model with a second cloud proxy, size the proxy correctly first time, and write an outage runbook, because evaluation estates carry a licensing clock. A 9.1 upgrade with no Aria Operations 8.18.x means deploying it yourself first."
 category: architecture
 order: 3
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Overview
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [397782, 443240, 437258, 443680, 440630]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [443240, 437258, 443680, 440630, 324340, 397782, 457248, 441515]
 sources:
   - title: "VCF Operations deployment models (VCF 9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-operations.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "High Availability VCF Operations model (9.1 single-site blueprint)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections%281%29/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-high-availability-vcf-operations-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF fleet in a single site with minimal footprint blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-with-minimal-footprint-blueprint.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF fleet with multiple sites in a single region blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-with-multiple-sites-in-a-single-region-blueprint.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "High Availability VCF Operations model (9.1 design library)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-ha-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Continuous Availability VCF Operations model (9.1 design library)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/continuous-availability-vcf-operations-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations detailed design (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF fleet sizing models (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-fleet-sizing-models-9-x.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Deploy cloud proxy for the VCF 9.1 upgrade"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/configuring-cloud-proxies-in-vrealize-operations-cloud.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Deploy VCF Operations as part of a VCF 9.1 upgrade"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/deploy-vcf-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrading to VCF Operations 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Deploy VCF management services and License Server as part of a VCF 9.1 upgrade"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Log management detailed design (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF component backup and restore blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-backup-and-restore.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Operations 9.1.1.0 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Dashboards in VCF Operations (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/dashboards-and-widgets/using-dashboards.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "View license usage per product in VCF Operations (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-usage-analytics/view-license-usage-per-product-in-vcf-operations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VMware Cloud Foundation 9.1 general FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
   - title: "Flexible combinations with VCF fleet deployment models"
     url: "https://williamlam.com/2025/10/flexible-combinations-with-vcf-fleet-deployment-models.html"
     by: "William Lam"
+    kind: practitioner
+    date: 2025-10-27
   - title: "VCF 5.2 release notes"
-    url: "https://docs.vmware.com/en/VMware-Cloud-Foundation/5.2/rn/vmware-cloud-foundation-52-release-notes/index.html"
-    by: "VMware"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/vcf-release-notes/vmware-cloud-foundation-52-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-01
   - title: "Upgrading VCF 5.2 to 9.0: the top 10 questions answered"
     url: "https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/"
-    by: "VMware Cloud Foundation blog"
+    by: "Jonathan McDonald, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-12-18
 ---
 
 <InShort>
-VCF Operations is the renamed and expanded Aria Operations. In 9.x it is mandatory, and it is where you build, operate, license and secure the fleet. A 5.2 upgrade deploys it if it is missing. Because so much now depends on it, it needs the same design attention you would give a management vCenter: a deployment model, sizing, cloud proxies, backup, and a plan for what happens if it is down.
+VCF Operations, the renamed and expanded Aria Operations, is [a required component of every fleet](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) in 9.x and [the central console](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-operations.html) for monitoring, licensing and lifecycle, so its availability is a design decision. Run production on the three-node HA model [Broadcom's single-site blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections%281%29/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-high-availability-vcf-operations-model.html) selects, with a second cloud proxy in a collector group. Choose the proxy size for your forecast at the start, because changing it later means a new collector group (<KB id={457248} />). In an outage, licensed workloads keep running, while an estate still in evaluation has a 90-day clock (<KB id={443240} />).
 </InShort>
 
-<Compare rows={[
-  ["Status", "Optional. Aria Operations was deployed through Aria Suite Lifecycle, which can run in VCF-aware mode.", "Mandatory. Deployed by the VCF Installer, or added during the 5.2 upgrade."],
-  ["Job", "Monitoring, capacity and alerting. It connected to workload domains to collect data.", "The fleet console: monitoring, plus lifecycle (Build), licensing, certificates, passwords, identity and log search."],
-  ["Licensing", "None. Keys lived in SDDC Manager and vCenter.", "Holds the licence file and assigns licences to vCenter. In 9.1 it works with a separate License Server appliance."],
-  ["Collection", "Remote collectors and cloud proxies, optional per site.", "Cloud proxies are required for instance integration, and in 9.1 before management services can be deployed."],
-  ["Availability", "If it was down, you lost monitoring.", "If it is down, you lose the lifecycle UI, configuration changes and new licence assignments. Workloads keep running."],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to say that a 5.2 upgrade deploys VCF Operations if it is missing, that log ingestion continues and users can still sign in during an outage, that workloads are simply unaffected, and that 9.1 sizing comes from the 9.0 guide. The 9.1 guide has you deploy VCF Operations yourself if there's no Aria Operations 8.18.x, no Broadcom page we opened states either outage claim, evaluation estates are exposed, and 9.1 sizing now points to Configuration Maximums.
+</Callout>
 
-## What it does now
+## Pick the availability model first
 
-The 9.x VCF Operations console groups its work into a few areas, which are worth learning by name because KBs and documentation refer to them:
+[Broadcom's 9.1 design pages](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-operations.html) describe three models, and the blueprints show which they would pick:
 
-- **Build.** Lifecycle for the management components and for each VCF instance: plans, prechecks, upgrades and deployments. In 9.1 this drives fleet lifecycle and SDDC lifecycle on the services runtime.
-- **Operate.** Health, alerts, VCF Health, topology and, in 9.1, log search through Operate > Logs.
-- **Fleet Management.** Certificates, passwords, identity and access (VCF SSO), and fleet settings.
-- **Licensing.** Licences and registration, usage reporting and, in 9.1, License Servers.
-- **Inventory > VCF Instance.** Per-instance actions such as workload domain creation, backup settings and network settings.
+| | Simple | High availability | Continuous availability |
+|---|---|---|---|
+| Nodes | One | Primary, replica and data | Node pairs across two availability zones, with a witness in a third |
+| After a failure | vSphere HA restarts the node. Recovery is slower, with possible interruption to monitoring, alerting and fleet management | Rapid recovery from a single-node failure | No service interruption if one zone fails |
+| What it costs | Smallest footprint | [At least four ESX hosts in the management cluster](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-ha-model.html), so the anti-affinity rule still allows maintenance mode | [A second VCF instance, manual steps across vSphere and VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/continuous-availability-vcf-operations-model.html), and at most 10 ms between zones |
+| Blueprint that selects it | [Minimal footprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-with-minimal-footprint-blueprint.html) | [Single site](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint/management-domain-design-selections%281%29/operations-layer-fleet-single-site/vcf-fleet-in-a-single-site-high-availability-vcf-operations-model.html) and [multiple sites in a single region](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-with-multiple-sites-in-a-single-region-blueprint.html) | None of these three |
 
-## Deployment models
+Choose HA unless a small footprint matters more to you than the interruption Simple accepts. Move to continuous availability only if the console must survive losing a location. The single-region blueprint selects HA and doesn't describe how VCF Operations recovers from a site failure, so if you follow it, write that recovery into your design.
 
-VCF Operations has three deployment models:
+Deploy the load balancer with HA. The HA attributes call it optional, yet [the same page recommends an external load balancer](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-ha-model.html) to spread connections across the nodes. It [needs an extra IP and FQDN](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-operations.html), and that FQDN must be in the certificate SAN.
 
-- **Simple:** a single node.
-- **High availability:** in practice a primary, a replica and a data node, with a load balancer FQDN.
-- **Continuous availability:** listed in the 9.1 design guidance for stretched designs.
+HA on these nodes doesn't protect lifecycle. In 9.1, fleet management runs [within VCF management services and takes its protection from that configuration](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-ha-model.html), so that model is a second decision, covered in [the failure-impact matrix](/vcf/library/architecture/failure-impact-matrix/).
 
-The VCF Installer UI applies a single choice of Simple or HA to VCF Operations, VCF Automation and NSX together. The JSON method lets you choose per component, and William Lam shows how to mix them.
+The VCF Installer UI applies one choice of Simple or HA to VCF Operations, VCF Automation and NSX Manager together. William Lam's [October 2025 post](https://williamlam.com/2025/10/flexible-combinations-with-vcf-fleet-deployment-models.html) shows the JSON route to the eight possible mixes, and he confirmed in a September 2026 comment that it holds for 9.1.1.
 
-Size it from the official sizing guide (<KB id={397782} />) against the number of objects you will monitor. Then add headroom, because the console now carries lifecycle and licensing work as well as monitoring.
+The recovery path the HA model page documents is [a restore from backup](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-ha-model.html). Those backups are [image-based, must cover all cluster nodes at the same time, and are best taken with the cluster offline](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/security-modernization/vcf-backup-and-restore.html). Keep them away from dynamic threshold calculations, which run at 2 a.m. by default.
+
+## Size from the 9.1 sources
+
+<KB id={397782} /> covers 9.0 only. Broadcom's sizing index (<KB id={324340} />) sends 9.1.x to VMware Configuration Maximums, so check your forecast object count there. The [installer's default profiles](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-fleet-sizing-models-9-x.html) for a first instance are a starting point, and JSON allows other sizes:
+
+| Profile | VCF Operations | Cloud proxy |
+|---|---|---|
+| Simple | 1x Small | 1x Small |
+| HA - Small | 2x Small | 1x Small |
+| HA - Medium | 3x Medium | 1x Standard |
+| HA - Large | 3x Large | 1x Standard |
+
+The HA - Small row conflicts with the HA model pages, which require [a three-node cluster](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-ha-model.html). Budget for three until Broadcom resolves it. Lifecycle capacity isn't part of this choice in 9.1, because the [services runtime size sets the size of the other management services](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html).
 
 ## Cloud proxies are part of the design
 
-The cloud proxy is not optional plumbing. The VCF adapter that reads SDDC Manager runs on it, as do the vCenter and NSX adapters. If the management domain's cloud proxy is offline, even the SSO configuration page fails to load (<KB id={437258} />). In 9.1 a cloud proxy must exist in the first instance before management services are deployed. The upgrade guide names a *unified* cloud proxy of Small or Standard size for this (<KB id={440630} />).
+A cloud proxy is [mandatory and goes in the management domain of each VCF instance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design.html). In 9.1 it's [required before management services can be deployed](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/deploy-vcf-operations.html), and the [first instance must have one before its upgrade](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore.html). Put it on the management network, give it DNS records, and include it in backups. Deploy [the Unified configuration](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/configuring-cloud-proxies-in-vrealize-operations-cloud.html): Small covers up to 16,000 VMs with 4 vCPUs and 16 GB, Standard covers 16,000 to 80,000 with 8 vCPUs and 48 GB, and Classic is only for when support asks for it.
 
-Plan at least one cloud proxy per instance. Put it on the management network, give it DNS records, and include it in backups.
+<Callout type="warn" title="Broadcom's scale-up advice conflicts with its own KB">
+The [design requirement](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-ha-model.html) says you may need to scale proxies up to a greater size. <KB id={457248} /> says resizing an active proxy is deprecated and mixed sizes in a collector group are unsupported: add same-size nodes, or build a new group and move the adapters.
+</Callout>
+
+Follow the KB, since it's the narrower and more specific statement. In practice that makes the first size a long-lived choice, so pick it from the VM forecast. That reading is this site's analysis.
+
+One proxy is a single point of failure until you act on the HA model page's recommendations, all manual and all after deployment: [a collector group per instance, a second collector, a DRS anti-affinity rule, and the default VCF adapter pointed at the group](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-ha-model.html). Expect a gap even then, because [failover takes a few minutes and logs may be lost](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html).
+
+Three faults are worth planning around:
+
+- A secondary instance newer than VCF Operations gets a proxy that fails to register, since [the proxy needs an exact version match while the installer checks major.minor only](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) (9.1.1). Upgrade VCF Operations before adding that instance.
+- HAProxy on the proxy needs every node's FQDN to resolve, and DNS failures, certificate mismatches or moving VMs between segments can leave it Offline. If that's the management domain's proxy, the SSO page in VCF Operations fails to load (<KB id={437258} />), which can look like an identity fault. Firewall rules should [allow 443 and restrict by FQDN](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/configuring-cloud-proxies-in-vrealize-operations-cloud.html).
+- On 9.0.x, importing an existing vCenter and NSX as a workload domain can stop proxy collection and fail the VCF adapter. The cause there is a communication timeout with SDDC Manager, plus trust settings or UI state flags, and restarting the collector doesn't fix it (<KB id={443680} />).
 
 ## What happens when it is down
 
-<Callout type="field">
-Write this into the operations runbook before go-live, so the answer is ready at the first outage.
-</Callout>
+No Broadcom page we opened gives an outage table for VCF Operations <AsOf date="2026-11-07" />, so keep documented and inferred behaviour apart in the runbook, and write it before go-live. Licensing is the documented part, on 9.1 (<KB id={443240} />), and this is technical behaviour, so check entitlement questions with Broadcom:
 
-- **Workloads:** unaffected.
-- **Licensing:** existing licences stay valid, but new assignments and capacity updates are blocked. An environment still in evaluation, or waiting on a renewal, is at risk if the outage lasts past the evaluation window (<KB id={443240} />).
-- **Lifecycle and configuration:** there is no lifecycle UI, and you cannot make certificate, password, SSO or fleet DNS and NTP changes.
-- **Monitoring:** alerts and dashboards are lost. In 9.1, log ingestion continues but log search is unavailable.
-- **SSO:** users can still sign in, because the identity broker is a separate service.
+- **Fully licensed:** existing entitlements stay active and workloads keep running, but new assignments and capacity changes are blocked until connectivity returns.
+- **Evaluation or expiring:** automatic sync fails. If the 90-day evaluation ends before connectivity returns, ESXi hosts go Disconnected and VMs can't power on.
 
-## Pitfalls
+The same KB recommends monitoring the VCF Operations appliance and the License Server VM, and alerting on the vCenter license server banner, so set those up from day one.
 
-- **Sizing for monitoring only.** The console now also runs lifecycle and licensing. Choose HA for production unless you have a strong reason not to.
-- **Treating a 5.2 upgrade as "Aria is optional, so skip it".** The upgrade will deploy VCF Operations and fleet management if they are not there. Prepare IP addresses, DNS records and certificates for them in advance.
-- **Forgetting the cloud proxy in firewall and DNS plans.** A proxy that can resolve and reach everything is the difference between a working console and a confusing "Failed" status on every adapter (<KB id={443680} />).
+The rest is inference from where components sit, and [the failure-impact matrix](/vcf/library/architecture/failure-impact-matrix/) treats it the same way, so test it on non-production first. Expect no lifecycle console, no fleet password, certificate, SSO or DNS and NTP tasks, and no alerts or dashboards. Existing sign-on should continue because the broker runs separately. Broadcom's log design doesn't say what happens to ingestion or search in this outage, so make no promise to the log owners until you've tested it. Proxy failover starts [once VCF Operations detects the failure](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/vcf-operations-for-logs-deployment-models.html), so a proxy that fails during the outage may not fail over, though Broadcom doesn't state that.
+
+## Coming from 5.x
+
+<Compare rows={[
+  ["Status", "Optional. <a href='https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/'>The 5.2 to 9.0 FAQ says no Aria component is needed before upgrading</a>. <a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/vcf-release-notes/vmware-cloud-foundation-52-release-notes.html'>Aria Suite Lifecycle can deploy Aria Operations</a>.", "<a href='https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs'>Required in each fleet</a>. <a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-operations.html'>The VCF Installer deploys it</a> on a new build."],
+  ["Job", "A separate product that <a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/vcf-release-notes/vmware-cloud-foundation-52-release-notes.html'>connects to workload domains from its own UI</a>.", "<a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-operations.html'>Central console</a>: dashboards, log analysis, licensing, and fleet management for lifecycle, certificates and passwords."],
+  ["Licensing", "<a href='https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs'>25-character keys</a>.", "<a href='https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs'>License files uploaded to VCF Operations and assigned to vCenters</a>. In 9.1 a headless License Server, deployed during a VCF 9.1 install or upgrade, holds some of the logic and data."],
+  ["Collection", "<a href='https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore.html'>Aria Operations 8.18.x cloud proxies</a>. Some that forward logs are shut down after a 9.1 upgrade.", "Mandatory cloud proxy in each instance."],
+  ["Availability", "The platform could run without it.", "If it's down, licensed workloads keep running, evaluation estates carry a clock, and you should expect lifecycle and configuration tasks to stop."],
+]} />
+
+The upgrade doesn't create VCF Operations for you on 9.1. With no Aria Operations 8.18.x, [you must deploy it before the upgrade can proceed](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/deploy-vcf-operations.html), from an OVA in the vSphere Client on the management domain vCenter, and it starts in evaluation mode, so assign the entitlement before adding other components. Jonathan McDonald's [December 2025 FAQ](https://blogs.vmware.com/cloud-foundation/2025/12/18/upgrading-vmware-cloud-foundation-5-2-to-9-0-the-top-10-questions-answered/) on 5.2 to 9.0 conflicts with itself here: one answer says VCF Operations and fleet management "will be deployed as they are mandatory", and a later one says to download and deploy them yourself. Plan from the 9.1 guide.
+
+The licensing clock may also apply during the upgrade itself. The components [move to evaluation mode during a 5.x upgrade](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs), although that FAQ answer is worded for 9.0, so treat a console outage in that window as the evaluation case above. Before management services go in, reserve at least 12 IP addresses on the management network (<KB id={440630} />, which also sets the upgrade sequence), and prepare their DNS records and certificates in advance. An SSL-terminating proxy server on VCF Operations [must be removed before they deploy](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html).
+
+## Where things live in the console
+
+KBs and documentation refer to these paths, so they're worth knowing by name:
+
+| Path | What's there |
+|---|---|
+| Build > Lifecycle > VCF Management > Components | Component install status (<KB id={441515} />) |
+| Operate > Logs | Log Management (<KB id={441515} />) |
+| [Operate > Dashboards](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/dashboards-and-widgets/using-dashboards.html) | Dashboards |
+| Fleet Management > Identity & Access | SSO configuration (<KB id={437258} />) |
+| [Manage > Licensing](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/license-usage-analytics/view-license-usage-per-product-in-vcf-operations.html) | Licensing, including usage analytics |

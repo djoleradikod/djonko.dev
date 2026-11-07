@@ -1,65 +1,125 @@
 ---
 title: "Reading adapter status: Collecting, Object down, Data receiving, and what each combination means"
-description: "VCF Operations shows integration health in four different places with slightly different words. Once you know the vocabulary, the combination of proxy state, collection state and status points straight at the fix: credentials, certificates, reachability or a stuck collector."
+description: "Check the cloud proxy first, then the account's Warning tooltip and collection status. Object down points to credentials, Stopping to a stop and restart of collection, PKIX to trust, Duplicate key to the vCenter chain or an import type. Includes the exceptions in the 9.1.1 release notes."
 category: integrations
 order: 3
-versions: ["9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [325773, 421016, 449013, 446874, 421958, 429451, 433259, 410383]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [325773, 421016, 449013, 446874, 421958, 429451, 433259, 410383, 454432, 443106, 342832, 452095, 442564]
 sources:
+  - title: "Cloud Proxy Troubleshooting (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/cloud-proxy-troubleshooting.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
   - title: "Cloud proxy troubleshooting (9.0)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/cloud-proxy-troubleshooting.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VCF Operations 9.1.1.0 Release Notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-09-03
+  - title: "VCF Fleet in a Single Site blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Simple VCF Operations Model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/simple-vcf-operations-model1.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Troubleshooting Concepts, VCF Troubleshooting Blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "Deploy Cloud Proxy as part of a VCF 9.1 Upgrade"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/configuring-cloud-proxies-in-vrealize-operations-cloud.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
 ---
 
 <InShort>
-Read health in this order: **proxy** (Online, Offline, Going Online), **account status** (Collecting, Warning, Failed), the **tooltip** on a warning (State and Status), and the **admin UI** collection status (Data receiving, No data receiving). The combination usually tells you the fix. **Proxy Online, account Collecting, status Object down** means the credentials are wrong. **State: Stopping** that never finishes means a stuck collector: stop and start collection. **PKIX** or **SSLHandshake** errors mean certificate trust. **Duplicate key ... CertificateConfig** means a duplicate certificate in a chain or in trusted certificates (<KB id={449013} />).
+Read health from the outside in: the cloud proxy, the account under Administration > Integrations > Accounts, the tooltip on its Warning icon, then the collection status on the object's inventory or summary page. **State: Collecting with Status: Object down** points to wrong credentials. **State: Stopping** that never finishes needs a stop and start of collection. **PKIX or SSLHandshakeException** means VCF Operations doesn't trust the vCenter certificate. **Duplicate key** has two documented routes, a malformed vCenter chain (<KB id={449013} />) and an import-type bug that 9.1.1 resolved, so rule out the second before you rebuild the chain.
 </InShort>
 
-<Compare rows={[
-  ["Where to look", "Administration > Solutions, then Collection status", "Operate > Administration > Integrations > Accounts, then the admin UI"],
-  ["Credentials", "Can be your own accounts", "Can be system-managed: Rotate, Validate, Save"],
-  ["Adapter logs", "/storage/log/vcops/log/adapters/", "The same, on whichever node or proxy runs the adapter"],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+This note used to list "Failed" as an account status, told readers to import leaf, intermediate and root certificates every time, and said "Going Online" takes 20 minutes after first boot. The KBs show Warning or a validate or save failure, the import is the leaf plus any root or intermediate that's missing, and the limit is up to 20 minutes on first reboot. It also listed a `VcfAdapter` log folder and an Administration > Solutions path that Broadcom's public pages don't show for this task (checked 7 November 2026), so both are gone.
+</Callout>
+
+## If the proxy isn't Online, start there
+
+Of the pages behind this note, only the Object down case ties the status to the proxy state. Clearing the proxy before reading anything else is this site's triage order, and it's cheap, since [a cloud proxy is what collects from the endpoint and uploads to VCF Operations](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-backup-and-restore/configuring-cloud-proxies-in-vrealize-operations-cloud.html).
+
+| Proxy | What to do ([9.1 troubleshooting](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/cloud-proxy-troubleshooting.html)) |
+|---|---|
+| Going Online | Wait, because it "can take up to 20 minutes on first reboot". After that, check `httpd-north.service`, `haproxy.service` and `collector.service`, and start any that are down. |
+| Offline, VM running | Run `cprc-cli -s` for the proxy status and check outbound 443. The documented causes are wrong network proxy settings, closed ports, an invalid certificate, a full `/storage/log`, those same services down, and an expired registration key, which means redeploying with a new key. |
+| Disconnects at regular intervals | Check connectivity, latency and DNS from the VM. DNS failures from the proxy have [their own note](/vcf/library/troubleshooting/vcf-operations-and-cloud-proxies/). |
 
 ## The combinations
 
-| Proxy | Account | Detail | Meaning and fix |
+| What you see | Meaning | Fix | Scope |
 |---|---|---|---|
-| Online | Collecting | Status: Object down | Credentials wrong or rotated. Rotate or update, validate, save (<KB id={421958} />). |
-| Online | Warning | State: Stopping | Collector stuck. Stop collecting, then start (<KB id={429451} />). |
-| Online | Failed | "Certificate verification failed" | The endpoint certificate changed. Edit, validate, accept the new certificate (<KB id={325773} />). |
-| Online | Failed | PKIX or SSLHandshakeException | Trust chain. Import leaf, intermediate and root into Trusted Certificates (<KB id={421016} />). |
-| Online | Warning | "Unable to connect to VC: Duplicate key" | Duplicate certificate in vCenter's chain. Rebuild the chain (<KB id={449013} />). |
-| Offline or Going Online | Any | | Fix the proxy first: DNS, outbound 443, registration. "Going Online" can take 20 minutes after first boot. |
+| State: Collecting, Status: Object down | [Incorrect account credentials](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/collecting-data-with-cloud-proxies-in-vrealize-operations-cloud/cloud-proxy-troubleshooting.html). <KB id={421958} /> shows the same message on NSX. | Update the credentials. For a managed credential: Rotate, test, save. If the warning stays, stop collecting, wait a minute or two, and re-enable. | 9.0, 9.1 |
+| Warning, State: Stopping | The adapter is stuck; <KB id={429451} /> gives no cause. | In Inventory Management, Stop Collecting, wait for Not Collecting, then Start Collecting. | 9.0, 8.18 in the KB; also the 9.1.1 notes |
+| Warning, "Certificate verification failed" | The vCenter certificate was renewed and the new thumbprint isn't accepted (<KB id={325773} />). | Edit, Validate Connection, accept the thumbprint, Save. Confirm the status returns to Data Receiving. | 8.x, 9.x |
+| Warning, "Unable to connect to VC" | Stale credentials or the same thumbprint problem (<KB id={325773} />). | Check the service account isn't locked or expired, then update the password in Edit and validate. | 8.x, 9.x |
+| Validate or save fails: SSLHandshakeException, PKIX in the `VMwareAdapter` log, "SDDC not found" | The new CA-signed vCenter certificate isn't in the trusted store (<KB id={421016} />). | Import the leaf under Administration > Control Panel > Trusted Certificates, plus any root or intermediate that's missing. Validate, then save. | 9.0 |
+| "Unable to connect to VC: Duplicate key" (or `Duplicate key ... CertificateConfig`), then "VC extensions info check task failed" | A duplicate intermediate or missing root in vCenter's `MACHINE_SSL_CERT` store (<KB id={449013} />). | See the next section. | 9.0, 9.1 |
+| Warning, "Invalid username or password" that persists; the analytics log may say "Failed to create service accounts" | The system-managed credential has drifted (<KB id={446874} />). | Rotate, validate, save. The KB's fallback is to untick system-managed and enter local appliance credentials. | 9.1 |
+| Workload domain vCenter and NSX sub-accounts stay Stopped; blank hostname in the Edit wizard | They stayed on the default legacy collector ([9.1.1 notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html)). | Re-save each workload domain account to rebind it to the cloud proxy. | 9.1 onward |
+| Management pack adapters stop collecting straight after the 9.1.1 upgrade | The packs listed in <KB id={454432} /> need versions built for 9.1.1's newer dependencies. | Upgrade each pack from the Solutions Catalog PAK, immediately after the upgrade. | 9.1.1 |
 
-## Two cases that look broken but aren't
+The Stopping fix sits in different menus depending on the page: Infrastructure Operations > Configurations in <KB id={429451} />, Administration > Configurations in the [9.1.1 notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html). Look under Inventory Management in either.
 
-- **"No data receiving" on vCenter from the Supervisor adapter** is by design. It only borrows vCenter's credentials (<KB id={410383} />).
-- **Duplicate VCF adapters**, one by IP and one by FQDN, cause "Service or view is not available". Delete one **without** deleting related objects (<KB id={433259} />).
+## Duplicate key: check the import before the chain
+
+The documented fix in <KB id={449013} /> is surgery on vCenter: snapshot vCenter and SDDC Manager, back up the certificate and key, delete the chain from `MACHINE_SSL_CERT`, recreate it as leaf, intermediate, root with no duplicates, and force a refresh. Then verify from SDDC Manager, rebooting vCenter if it's still serving the old chain, and re-add the adapter.
+
+The [9.1.1 notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) list a second route to the same words as resolved: a vCenter or SDDC Manager certificate imported into VCF Operations with the type `CERTIFICATE_AUTHORITY` also produced "Unable to connect to VC: Duplicate Key" when saving the VCF adapter, and it failed the installer's converge at stage 3 of adapter configuration. The notes name no affected releases and no workaround.
+
+So on anything before 9.1.1, look at how those certificates were imported before touching vCenter's chain. That order is an inference from two pages, and Broadcom doesn't state it. The import check costs nothing, while the chain rebuild needs snapshots and possibly a vCenter reboot.
+
+Separately, trust can lag after a legitimate change. When a certificate is replaced on a VCF management component, an integration [may report a connection failure until the next inventory sync](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), which runs every 24 hours by default. Allow for that if the replacement was recent; the notes give a temporary hourly schedule if you can't wait.
+
+## Supervisor "No data receiving" is expected, but a certificate rotation can make it real
+
+On a vCenter object, the vSphere Supervisor adapter shows a gray icon and "No data receiving" by design, because it only uses that object's credentials and never pulls data from the vCenter adapter (<KB id={410383} />, written for 9.0).
+
+The same words after a vCenter Machine SSL rotation can be a real fault in 9.1.1. [The Supervisor adapter may stop collecting and move to Not Existing](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html), and the impact can reach Supervisor adapters in other domains. Plan for it by stopping the Supervisor adapter before the rotation and starting it once the vCenter adapter collects. If it already shows No Data Receiving, confirm the vCenter adapter is collecting, then stop and start the Supervisor adapter. A stop and start won't recover Not Existing, so delete that adapter with `DELETE /api/adapters/{id}` and the vCenter adapter recreates it on its next collection. These pages give no other way to tell the two "No data receiving" cases apart, so check whether vCenter's certificate was rotated before dismissing the status.
+
+## When deleting is the documented fix
+
+Almost every fix above happens in place, so treat delete and re-add as a last move. The pages behind this note document it in three cases:
+
+- **Two VCF integrations for one SDDC Manager**, one by IP and one by FQDN, cause "Service or view is not available for the selected object". Snapshot VCF Operations, delete one, and leave "Delete related objects" unticked (<KB id={433259} />).
+- **A certificate replaced on a vCenter 8.x instance** can break trust in both VCF Operations and SDDC Manager. Restore SDDC Manager first, then [delete the VCF integration and re-add it with the same credentials](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html).
+- **A Supervisor adapter in Not Existing**, as above.
 
 ## Where the logs are
 
+Log in to the VCF Operations node or cloud proxy where that adapter instance runs (<KB id={342832} />). That KB is written against Aria Operations 8.12 and later and uses an undefined `$VCOPS_BASE` variable, so the paths below come from the KBs named beside them.
+
 ```text
-On the node or proxy running the adapter:
-  /storage/log/vcops/log/collector.log
-  /storage/log/vcops/log/adapters/VMwareAdapter/      vCenter
-  /storage/log/vcops/log/adapters/VcfAdapter/          VCF account
-  /storage/log/vcops/log/adapters/ManagementAdapter/   passwords, certificates, licensing tasks
-On a cloud proxy:
-  cprc-cli -s                                           proxy status
+/storage/log/vcops/log/adapters/VMwareAdapter/VMwareAdapter_<id>.log   vCenter, PKIX failures (KB 421016)
+/storage/log/vcops/log/adapters/ManagementAdapter/ManagementAdapter.log   Duplicate key (KB 449013)
+/storage/log/vcops/log/adapters/ManagementAdapter/ManagementAdapter_##.log   license assignment tasks (KB 442564)
+/storage/log/vcops/log/web.log            saveVCFCloudAccount failures (KB 449013)
+/storage/log/vcops/log/analytics-<id>.log service account creation (KB 446874)
+/storage/log/vcops/log/collector.log      License Server responses, VCF Operations node (KB 452095)
 ```
 
-If "Invalid username or password" persists with system-managed credentials, the analytics log may show that service account creation failed. Rotate, then validate (<KB id={446874} />).
+## Design and process choices
 
-<Callout type="field">
-Teach the four-word rule to the operations team: "Online, Collecting, Object down: credentials." They can fix that combination by correcting the credentials, without escalating.
+<Callout type="analysis" title="What this site would do">
+Put a second proxy in. The [single-site blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint.html) starts its high-availability model with one proxy and says an additional one should be deployed and combined in a collector group. The [simple model](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-operations-design/simple-vcf-operations-model1.html) keeps one, protected by vSphere HA, with data persistence on and its storage monitored. In 9.1 the VCF instance adapter must also point to a healthy proxy or group, or the management services deployment fails validation (<KB id={443106} />). One cost is a known issue in 9.1.1: if the collector changes through load balancing or a user action before the next 6-hourly collection, certificate operations fail with "Unable to find end point", and [Start Maintenance then End Maintenance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/vcfoperations-9-1-1-0-release-notes.html) on the Infrastructure Management adapters clears it. [Sizing and grouping have their own note](/vcf/library/integrations/cloud-proxies-and-collector-groups/).
+
+Check the combinations table before opening an incident in Workbench as well. The troubleshooting blueprint [recommends Workbench for all incidents of significance](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/troubleshooting-guide/troubleshooting-methods.html) and that page doesn't mention adapter health. An account that stopped collecting could leave a hole in the evidence you're reading. That's an inference, and Broadcom doesn't state it.
+
+Operations teams can own that table's first row: online proxy, Collecting, Object down means fix the credentials, with no escalation needed.
 </Callout>
-
-## Pitfalls
-
-- **Deleting and re-adding an account** as the first move. You lose history and sometimes create duplicates.
-- **Deleting related objects** when removing a duplicate adapter.
-- **Reading logs on the wrong node.** Adapters run where their collector is.
