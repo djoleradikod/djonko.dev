@@ -46,6 +46,11 @@ sources:
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/managing-vmware-cloud-foundation-operations-sso/how-to-change-the-deployment-mode-in-vcf-sso.html"
     by: "Broadcom TechDocs"
     kind: broadcom
+  - title: "Step 1: Choose the Deployment Mode (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/setting-up-sso/choose-the-deployment-mode.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
   - title: "Migration of Identity Broker Embedded to Identity Broker Instance (9.1)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/managing-vmware-cloud-foundation-operations-sso/migration-of-vcf-identity-broker-embedded-to-vcf-identity-broker-appliance.html"
     by: "Broadcom TechDocs"
@@ -116,7 +121,7 @@ This note used to say there is no migration from vIDM and that moving from embed
 
 ## The questions, in order
 
-**1. Is this a lab or a proof of concept?** If so, embedded is what it's for: one node inside the management vCenter, no deployment, restored with vCenter. Otherwise choose instance and stop weighing the mode. [Broadcom's embedded page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-instance-models/embedded-vidb.html) says it is "intended for" those uses and warns that vCenter maintenance also hits authentication, and [the instance page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-instance-models/external-vidb.html) recommends instance for production (<AsOf date="2026-11-07" />).
+**1. Is this a lab or a proof of concept?** If so, embedded is what it's for: one node inside the management vCenter, no deployment, restored with vCenter. Otherwise choose instance and stop weighing the mode. Broadcom also says embedded ["will be deprecated in later versions of VCF"](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/setting-up-sso/choose-the-deployment-mode.html), and that you have to migrate to instance before it reaches end of support. [Broadcom's embedded page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-instance-models/embedded-vidb.html) says it is "intended for" those uses and warns that vCenter maintenance also hits authentication, and [the instance page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-instance-models/external-vidb.html) recommends instance for production (<AsOf date="2026-11-07" />).
 
 <Callout type="analysis" title="Broadcom's pages don't line up">
 The [9.0 page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/what-is/deployment-models-for-sso.html) steered a single instance to embedded. The [9.1 SSO models page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models.html) still says both broker models are supported under every SSO model, and no 9.1 page calls embedded in production unsupported. This note follows the stricter design pages. Embedded also saves little, because the instance page says the first broker is deployed automatically in the first management domain.

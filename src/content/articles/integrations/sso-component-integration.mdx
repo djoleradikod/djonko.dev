@@ -1,57 +1,137 @@
 ---
 title: "Connecting components to VCF SSO: NSX, VCF Automation and the directory behind the broker"
-description: "Joining NSX, vCenter or VCF Automation to VCF single sign-on is a few clicks when the prerequisites are in place. When they aren't, the error is generic. The checklist: a collecting adapter, one adapter per manager, and directory access from the right addresses."
+description: "Clear Enhanced Linked Mode, a stale or duplicate NSX adapter and old directory firewall rules before joining VCF SSO, and plan role assignments with the join. The costly recovery is VCF Automation's: its fix deletes the leftover integration and loses user access and privileges."
 category: integrations
 order: 9
-versions: ["9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [432503, 440395, 447767, 442139, 427554, 456430, 452420]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [432503, 440395, 447767, 442139, 427554, 456430, 453283, 452420]
 sources:
-  - title: "Deployment models for VCF single sign-on (9.0)"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/what-is/deployment-models-for-sso.html"
+  - title: "Considerations and Prerequisites for VCF Single Sign-On (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/points-to-consider-while-setting-up-vmware-cloud-foundation-sso.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configure a New VCF Single Sign-On for a VCF Instance (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/setting-up-sso.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Step 1: Choose the Deployment Mode (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/setting-up-sso/choose-the-deployment-mode.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Step 3: Configure VCF Single Sign-On for NSX and vCenter (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/setting-up-sso/connect-components.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configure VCF Single Sign-On for VCF Operations and VCF Automation Provider (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/setting-up-sso/configure-vmware-cloud-foundation-sso-for-the-operations-and-automation-appliance%281%29/join-or-add-vcf-components-to-vcf-single-sign-on.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Step 4: Configure VCF Single Sign-On for NSX and vCenter (9.0)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/what-is/setting-up-sso/connect-components.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Identity and Access Management, fleet management blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/identity-and-access-management.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Configuring VCF SSO, fleet management blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/identity-and-access-management/choose-a-user-and-group-provisioning-method-for-vcf-sso.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Fleet in a Single Site blueprint (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF Single Sign-On Detailed Design (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Identity Broker Detailed Design (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-instance-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VCF 9.1 Frequently Asked Questions"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
 ---
 
 <InShort>
-Components are joined to VCF SSO from **Identity & Access > Component Configuration** in VCF Operations. For NSX, the **NSX adapter must be collecting** first, or the join fails with a generic "Error occurred while configuring the component for SSO" (<KB id={432503} />). Remove any **standalone NSX adapter** that duplicates the VCF-integrated one (<KB id={440395} />). Don't use identity broker users for the **NSX adapter** itself, because the token exchange isn't supported; keep the automatic service account (<KB id={447767} />). In 9.1, the broker's LDAP traffic can come from **runtime node addresses**, so open 389 and 636 from those (<KB id={442139} />).
+A join to VCF SSO can fail on what was left undone beforehand: a vCenter still in Enhanced Linked Mode, or an NSX adapter that is duplicated or not collecting. Directory firewall rules that still name the old source break logins after an upgrade. Clear those, then run the wizard under **Fleet Management > Identity & Access** in VCF Operations. Plan role assignments as part of the join, because users and groups aren't migrated. Take most care with VCF Automation after an upgrade, since its fix deletes the leftover integration and loses user access and privileges (<KB id={452420} />).
 </InShort>
 
-<Compare rows={[
-  ["Join point", "Each product's own identity settings", "VCF Operations: Identity & Access, per component"],
-  ["Directory traffic source", "vCenter or Workspace ONE Access", "The broker nodes. 9.1 on the runtime: runtime node IPs."],
-  ["Adapter accounts", "Any account with rights", "System-managed local service accounts. Broker users not supported for the NSX adapter."],
-]} />
+<Callout type="note" title="Corrected on 7 November 2026">
+This note told readers to rejoin VCF Automation after a rotated secret and to unjoin and rejoin NSX on 9.1.1. <KB id={452420} /> has VCF Automation delete its leftover integration, at the cost of user access and privileges, and <KB id={456430} /> needs a state sync on the "Not eligible" instance before both NSX components are unjoined and joined. Three claims had no source and are gone: time sync as a join prerequisite, role mappings vanishing on rejoin, and a 5.x comparison table.
+</Callout>
 
-## Before you join a component
+## Clear these before the wizard
 
-```text
-[ ] The component's adapter is Collecting in VCF Operations
-[ ] Only one adapter exists for that component (no legacy standalone duplicate)
-[ ] The broker can reach the directory on 389/636 from every node (and runtime nodes in 9.1)
-[ ] Time is in sync across the broker, VCF Operations and the component
-[ ] Role mappings for the component are written down
-```
+- **No Enhanced Linked Mode.** VCF SSO [is not compatible with it](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/points-to-consider-while-setting-up-vmware-cloud-foundation-sso.html), so deactivate it on every participating vCenter first. Standalone vCenters use `cmsso-util break-elm`, and upgraded instances use an SDDC Manager API procedure.
+- **The right scope.** Whoever configures SSO [needs the "All Objects" scope](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/points-to-consider-while-setting-up-vmware-cloud-foundation-sso.html) in VCF Operations.
+- **An identity provider.** The [9.1 join step](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/setting-up-sso/connect-components.html) requires it to be configured already.
+- **One healthy NSX adapter.** It must be collecting, with its NSX password Active under Fleet Management > Passwords (<KB id={432503} />, written for 9.0.x), and no standalone adapter may point at the same NSX Manager (<KB id={440395} />).
+- **Directory paths from every broker node**, on TCP 389 for LDAP and 636 for LDAPS (<KB id={427554} />). With SCIM, also allow [inbound traffic from the provider to the broker](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/identity-and-access-management.html).
+- **Role assignments written down** for each component, for the reasons under roles below.
+
+Broadcom's own material conflicts on the first item. The [4 Nov 2026 FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) (Q29) still says VCF deploys workload domains with vCenters in Enhanced Link Mode, while TechDocs makes leaving it a prerequisite. Plan to TechDocs, because it documents the join itself and calls the two incompatible.
+
+## The firewall change that upgrades hit
+
+Upgrading to 9.1 can move the broker's directory traffic to a new source: the Node IP of the host running its container (<KB id={442139} />). Rules that allow only the old source, such as the broker appliance, then block it, and logins fail with connect timeouts. In instance mode, 9.1 [installs the first broker on the VCF services runtime nodes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/points-to-consider-while-setting-up-vmware-cloud-foundation-sso.html), so read "Node IP" as those nodes. That is an inference from the two pages, and the KB doesn't use the word runtime, so confirm the addresses with the KB's first step before raising the change. Get the firewall ticket in before the upgrade window.
+
+Mode matters here too. The 9.1 wizard labels [Instance as recommended](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/setting-up-sso/choose-the-deployment-mode.html) and says embedded "will be deprecated in later versions of VCF" <AsOf date="2026-11-07" />, the [design library](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-instance-models.html) scopes embedded to labs and proofs of concept, and the [single-site blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/vcf-fleet-in-a-single-site-blueprint.html) selects the instance model. Settle that first, using [the mode decision](/vcf/library/architecture/identity-broker/), so the rules are written once.
+
+## What a join covers, and what it leaves to you
+
+The [9.1 workflow](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/setting-up-sso.html) runs deployment mode, identity provider, then NSX and vCenter, with VCF roles, VCF Operations, VCF Automation Provider and other components after those as optional steps (Salt RaaS from 9.1.1). The path is Manage > Fleet Management > Identity & Access in 9.1 and [Fleet Management > Identity & Access in 9.0](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/fleet-management/what-is/setting-up-sso/connect-components.html). Manage SSO from there afterwards and not from the components.
+
+A few limits decide how to scope the work. All workload domain components in an instance [must use the same broker](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models.html). With an embedded broker, the management domain vCenter is [configured automatically and can't be unjoined](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/setting-up-sso/connect-components.html), so a rejoin isn't available there and [the failures note](/vcf/library/troubleshooting/sso-identity-broker-failures/) covers that case. The fleet workflow covers NSX Local Managers, and [NSX Global Managers are enabled manually](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs).
+
+Roles are where a successful join can still lock people out. On vCenter, the join [overrides any existing identity provider configuration](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/points-to-consider-while-setting-up-vmware-cloud-foundation-sso.html) and role assignments may have to be redone. Users and groups are not migrated, so they must be provisioned again. VCF Operations and VCF Automation Provider [need role assignments before SSO is active](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/setting-up-sso/configure-vmware-cloud-foundation-sso-for-the-operations-and-automation-appliance%281%29/join-or-add-vcf-components-to-vcf-single-sign-on.html). Two neighbours change as well, [Broadcom documents](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/managing-identity-and-access-using-vcf-single-sign-on/what-is/points-to-consider-while-setting-up-vmware-cloud-foundation-sso.html): once the management domain vCenter is configured, the SDDC Manager UI takes local admin accounts only (its APIs still accept SSO users), and PowerCLI integrations must be re-performed unless the provider sits in the management domain vCenter in embedded mode.
+
+The provisioning method sets when those roles can exist. Broadcom's [blueprint](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-blueprints-for/infrastructure-modernization/fleet-management-blueprint/identity-and-access-management/choose-a-user-and-group-provisioning-method-for-vcf-sso.html) doesn't name one method and leaves the choice to regulation, network policy and identity lifecycle.
+
+| Method | When roles can be assigned | What it costs |
+|---|---|---|
+| SCIM | Fully, before first login | Inbound connectivity from the provider to the broker |
+| AD/LDAP pre-provisioning | Before first login | Periodic sync, weekly by default, so shorten it if grants and revocations need to land sooner |
+| AD/LDAP on-demand | The blueprint doesn't say, so test it before relying on it for a cutover | Real-time lookups at login add latency, and it can't be combined with pre-provisioning on the same AD |
+| JIT with group pre-provisioning | Group roles before first login | User objects still appear only at login |
+| JIT | Only after first login | No way to prepare roles for a cutover |
+
+<Callout type="analysis" title="How to run the cutover">
+Choose SCIM or a pre-provisioning method if people must have access the moment a component joins, because plain JIT can't prepare roles in advance. The wizard's grid lets you select components individually, so join them one at a time and test each with an ordinary SSO user who has no local fallback, then with a local admin. Join them all at once and you can't tell which join broke which login. [Local accounts and the emergency access client stay functional](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/single-sign-on-models.html) during SSO failures, so that login is the way back. This sequence is this site's advice, and the 9.1 join step sets no order within the grid.
+</Callout>
 
 ## Failures and fixes
 
-| Symptom | Cause and fix |
-|---|---|
-| "Error occurred while configuring the component for SSO" | NSX adapter not collecting. Rotate its credential, collect, then deregister and reconfigure (<KB id={432503} />). |
-| SSO workflow aborts for NSX | A duplicate standalone NSX adapter. Delete it (<KB id={440395} />). |
-| 403 when integrating NSX with a broker user | Not supported. Use the service account (<KB id={447767} />). |
-| LDAP timeouts after the 9.1 upgrade | The broker now connects from runtime node IPs (<KB id={442139} />). |
-| Intermittent "LDAP server is not reachable" | One broker node lacks the path (<KB id={427554} />). |
-| NSX SSO "Access Denied" on 9.1.1 | Unjoin and rejoin NSX (<KB id={456430} />). |
-| VCF Automation SSO "Not Configured" after an upgrade | A secret rotated while the component was offline. Rejoin as the KB describes (<KB id={452420} />). |
+| Symptom | Applies to | Cause and fix |
+|---|---|---|
+| "Error occurred while configuring the component for SSO" | VCF Operations 9.0.x | The NSX adapter isn't collecting, possibly because of a stale system-managed credential. Confirm the NSX password is Active, stop collection, rotate the credential, restart and wait for a successful cycle. Deregister and reconfigure only if the component doesn't then show Successful and Configured (<KB id={432503} />) |
+| "Unable to configure VCF-SSO", NSX component not set up | 9.x | Two adapters target one NSX management plane, so the workflow stops without sending trust data. Delete the legacy or standalone adapter, keep the VCF-integrated one, rerun (<KB id={440395} />) |
+| "Failed to establish connection to NSX manager due to an incorrect username or password", with a broker user that signs in to NSX fine (the KB's title says 403 Forbidden) | 9.x | The bearer token exchange isn't supported for broker users entered as manual credentials on the NSX integration. Use a local account, or legacy vIDM where it remains. Standard 9.0 deployments register NSX with local service accounts automatically (<KB id={447767} />) |
+| Logins fail after the upgrade, "Connect timed out" in broker logs | 9.1 | The directory traffic source moved to Node IPs. Allow them to AD on TCP 389 for LDAP and 636 for LDAPS (<KB id={442139} />) |
+| Intermittent "VCF Identity Broker encountered an issue during authentication", or "LDAP server is not reachable" on sync | 9.x | One or more broker nodes lack the path to the domain controller. Test each node (<KB id={427554} />) |
+| NSX shows "Access denied. Check client credentials.", the instance shows "Not eligible", other components log in | 9.1.1 | Open the "Not eligible" instance and confirm its components to trigger a state sync, wait for "Configured", then unjoin both NSX components and join both again. The KB calls the first step the most important (<KB id={456430} />) |
+| NSX Manager UI hangs at VCF SSO login, backend 401 invalid_client | NSX on VCF, no version listed | The OAuth2 client secret expired or fell out of sync. Unjoin NSX, wait for unconfigured, configure it again (<KB id={453283} />) |
+| VCF Automation SSO "Not Configured", vCenter logins return HTTP 400 | 9.1 with broker 9.1.0.0100 | A periodic check ran while a component was down for upgrade, so the secret reset reached the broker and missed the component. vCenter: remove from SSO and rejoin. VCF Automation: delete the leftover vIDB integration, wait 5 to 10 minutes, confirm, then assign roles again (<KB id={452420} />) |
 
-<Callout type="field">
-Join components one at a time, and test login with a normal user and a break-glass local account after each. Doing all of them at once makes it impossible to tell which join broke which login.
-</Callout>
+The last row is the one to schedule. Deleting that integration, the VCF Automation OIDC configuration, loses user access and old privileges (<KB id={452420} />). The KB says the procedure can be followed during initial setup, tells administrators of a deployment that has been running for some time to warn the customer about the loss, and says the role step can be omitted if only native VCF roles are used. On an estate in use, capture role assignments first and book a window.
 
-## Pitfalls
-
-- **Opening directory ports only from the broker appliance** in a 9.1 runtime deployment.
-- **Rejoining without saving role mappings.** Permissions do not come back on their own.
-- **Testing with an administrator** who also has a local fallback. Test with a normal user.
+<KB id={432503} /> lists only VCF Operations 9.0.x, and a 9.1 version didn't turn up (checked 7 Nov 2026), so on 9.1 use the first row as a lead: check adapter collection, and ask Support before rotating the credential. Failures after a join succeeds, such as clock, certificate and broker outages, are in [the failures note](/vcf/library/troubleshooting/sso-identity-broker-failures/).

@@ -77,7 +77,7 @@ Two switches change what you deploy. VCF Automation stays out unless you pass `-
 
 - **Training.** Give each student one environment and write exercises against the names and addresses in your Holodeck config. The docs set no maximum for environments on a host, only "sufficient capacity", so memory for a class is the sizing note's figure times the head count.
 - **Day-2 practice.** Jatin Purohit's [9 Nov 2025 post](https://blogs.vmware.com/cloud-foundation/2025/11/09/add-clusters-and-hosts-in-vcf-using-holodeck/) walks through adding hosts and clusters on Holodeck 9.0. Check the commands against 9.1.1 docs before building a lesson on them.
-- **Break-fix.** Snapshot, break something on purpose and have the team diagnose it. See [break-fix exercises](/vcf/library/labs/break-fix-exercises/).
+- **Break-fix.** Set a rollback point for each component, break something on purpose and have the team diagnose it. See [break-fix exercises](/vcf/library/labs/break-fix-exercises/).
 - **Upgrade rehearsal, with care.** Holodeck can stand up a 5.2 or 9.0 starting point, which makes a rehearsal possible. The docs describe no nested upgrade workflow, though: 9.1.1's patch support is "greenfield deployment", and the docs' one migration entry moves the Holorouter to 9.0.2. Treat the upgrade itself as your own exercise, and don't expect it to predict timings on real hardware.
 
 ## Before you commit

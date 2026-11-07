@@ -80,7 +80,7 @@ This note used to say uppercase breaks the SDDC Manager FQDN and, in 9.1, more n
 
 The Installer's 9.1.1 release fixes two things worth having before the first host is touched. A space in the DNS server list no longer leaves SDDC Manager stuck on "VMware Cloud Foundation is initializing" (<KB id={444111} />), and [hosts with NICs under 10 Gbit used only for management](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-1-0-release-notes/sddc-manager-9-1-1-0-release-notes.html) are no longer blocked. The 9.1.1 release notes also ask you to use the latest available binaries.
 
-Those 9.1.1 notes don't mention FQDN case, the proxy or HCL data, and <KB id={447366} /> is scoped to 9.1.0.x. So plan as if both the uppercase issue and the proxy bypass still apply on 9.1.1. That's an inference, and the `curl` test in the checklist shows only that the direct path is open, which covers you either way.
+Those 9.1.1 notes don't mention the proxy or HCL data, and <KB id={447366} /> is scoped to 9.1.0.x. So plan as if the proxy bypass still applies on 9.1.1. That's an inference, and the `curl` test in the checklist shows only that the direct path is open, which covers you either way. Capitals are less clear: the VCF Operations 9.1.1.0 notes call mixed case fixed while the planning and upgrade pages still say lowercase, so [stay lowercase](/vcf/library/day-2/dns-ntp-proxy/).
 
 The Scope column below is each source's own label. Treat a 9.0 entry as a lead on 9.1, because most of those KBs don't say either way.
 
