@@ -1,39 +1,47 @@
 ---
-// The VCF 9 model, the page's second set piece, drawn in the support clock's language in light strokes on the page's one
-// tonal shift. The band holds this section's heading and its drawing, as one object. A fleet contains two instances and
-// each instance its domains, so the frames nest; a line runs from the fleet's title strip to the centre of each instance
-// and on to a rail with a tick on each domain's column, ending at the last tick. Same facts as the diagram in the note
-// "The VCF 9 mental model". Real text in CSS boxes, not an SVG, so it reflows on a phone and stays at reading size.
+// The VCF 9 model, the page's main explanatory figure, as one system in three visibly different levels: the fleet a solid ink
+// bar, instances medium outlines, domains light boxes with the management domains tinted. One trunk leaves the fleet for a
+// bus, and one drop from that bus lands on each instance's top border at its centre. Inside an instance, a stub under the
+// title strip meets a bus with one drop to each domain's top centre. No connector crosses a frame or a title. Same facts as
+// the diagram in the note. Real text in CSS boxes, not an SVG, so it reflows on a phone and stays at reading size. Connectors
+// are real borders, so forced colours keep them.
+import type { allArticles } from '../../lib/articles';
+import { urlOf } from '../../lib/articles';
 import Icon from '../Icon.astro';
+
+interface Props { note: Awaited<ReturnType<typeof allArticles>>[number]; }
+const { note } = Astro.props;
+// The section is named by the note's title, up to its colon.
+const name = note.data.title.split(':')[0].trim();
+if (!name) throw new Error(`The home page names its fleet section after ${note.id}, whose title has gone.`);
 ---
-<section class="fm-band" aria-labelledby="fm-h">
-  <div class="wrap">
-    <h2 class="home-h2" id="fm-h">VCF 9 puts a fleet and instances above the domains you knew from 5.x.</h2>
-    <a class="go" href="/vcf/library/architecture/vcf9-mental-model/">Read the note <Icon name="arrow-right" size={16} /></a>
-    <figure class="fm-fleet" aria-labelledby="fm-h">
-      <div class="fm-head">
-        <b class="fm-l">Fleet</b>
-        <b>VCF Operations · VCF Automation</b>
-        <span>Console, licensing, identity and fleet lifecycle</span>
-      </div>
-      <div class="fm-insts">
-        <div class="fm-inst">
-          <span class="fm-name">Instance 1</span>
-          <div class="fm-doms">
-            <div class="fm-dom"><b>Management domain</b><span>SDDC Manager<br />vCenter · NSX<br />Services runtime</span></div>
-            <div class="fm-dom"><b>Workload domain</b><span>vCenter · NSX</span></div>
-            <div class="fm-dom"><b>Workload domain</b><span>vCenter · NSX</span></div>
-          </div>
-        </div>
-        <div class="fm-inst">
-          <span class="fm-name">Instance 2</span>
-          <div class="fm-doms">
-            <div class="fm-dom"><b>Management domain</b><span>SDDC Manager<br />vCenter · NSX<br />Services runtime</span></div>
-            <div class="fm-dom"><b>Workload domain</b><span>vCenter · NSX own</span></div>
-            <div class="fm-dom"><b>Workload domain</b><span>vCenter · NSX shared</span></div>
-          </div>
+<section class="home-sec fm" aria-labelledby="fm-h">
+  <p class="home-kick">{name}</p>
+  <h2 class="home-h" id="fm-h">VCF 9 puts a fleet and instances above the domains you knew from 5.x.</h2>
+  <figure class="fm-fig" aria-labelledby="fm-h">
+    <div class="fm-fleet">
+      <b class="fm-l">Fleet</b>
+      <b>VCF Operations · VCF Automation</b>
+      <span>Console, licensing, identity and fleet lifecycle</span>
+    </div>
+    <div class="fm-insts">
+      <div class="fm-inst">
+        <span class="fm-name">Instance 1</span>
+        <div class="fm-doms">
+          <div class="fm-dom fm-mgmt"><b>Management domain</b><span>SDDC Manager<br />vCenter · NSX<br />Services runtime</span></div>
+          <div class="fm-dom"><b>Workload domain</b><span>vCenter<br />NSX</span></div>
+          <div class="fm-dom"><b>Workload domain</b><span>vCenter<br />NSX</span></div>
         </div>
       </div>
-    </figure>
-  </div>
+      <div class="fm-inst">
+        <span class="fm-name">Instance 2</span>
+        <div class="fm-doms">
+          <div class="fm-dom fm-mgmt"><b>Management domain</b><span>SDDC Manager<br />vCenter · NSX<br />Services runtime</span></div>
+          <div class="fm-dom"><b>Workload domain</b><span>vCenter<br />NSX own</span></div>
+          <div class="fm-dom"><b>Workload domain</b><span>vCenter<br />NSX shared</span></div>
+        </div>
+      </div>
+    </div>
+  </figure>
+  <p class="fm-more"><a class="go" href={urlOf(note)}>Read the note <Icon name="arrow-right" size={16} /></a></p>
 </section>

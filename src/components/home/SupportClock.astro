@@ -1,9 +1,9 @@
 ---
-// The support clock, drawn to scale: the page's signature (ink rules, date ticks, hatching, one red pencil). Its label
-// sits in the plot's corner and its words under it. Rows are ordered by what they are, and each family has its own
-// stroke: an open bar for VCF 5.x, a single line for vSphere 8, a solid bar for VCF 9.x. Every row is named and the same
-// height. Red hatching is only what nobody can plan to yet. Dates sit in their own column, so the major lines run the
-// plot's full height under the bars with nothing on them. It is a real table underneath: release, timeline, date, basis.
+// The support clock, drawn to scale. Two columns: the label column holds its name and row
+// names, the plot column its axis, bars and words. Two encodings: solid for 9.x, hollow for everything
+// older, plus red hatching for what nobody can plan to yet. Every row is named and the same height, so there is no legend.
+// There are no lines inside the plot, and each date sits right after its bar's end. It is a real table underneath:
+// release, timeline, date, basis.
 // src/data/releases.ts answers to the note, and the hub's build fails if the two stop agreeing.
 import { summaryLine } from '../../data/decisions';
 import { AXIS, CURRENT_RELEASE, NEXT_RELEASE, SUPPORT_ENDS } from '../../data/releases';
@@ -18,7 +18,7 @@ const at = (t: number) => ((t - t0) / (t1 - t0)) * 100;
 const num = (n: number) => n.toFixed(2);
 const pct = (iso: string) => `${num(at(Date.parse(iso)))}%`;
 
-// A tick for every month on the axis; only the labelled dates run on through the plot, as lines under the bars.
+// A tick for every month on the axis; the labelled dates get a taller tick.
 const majors = new Set(AXIS.ticks.map((t) => Date.parse(t.iso)));
 const first = new Date(t0);
 const months: number[] = [];
@@ -26,7 +26,6 @@ for (let m = first.getUTCMonth() + 1, ts = Date.UTC(first.getUTCFullYear(), m, 1
 const minor = months.filter((ts) => !majors.has(ts));
 const major = months.filter((ts) => majors.has(ts));
 const ruler = `${minor.map((ts) => `M${num(at(ts))} 4V10`).join('')}${major.map((ts) => `M${num(at(ts))} 0V10`).join('')}`;
-const majorGrid = major.map((ts) => `M${num(at(ts))} 0V100`).join('');
 
 // 5.x, then vSphere 8, then 9.x, keeping the data's own order inside each group.
 const groups = ['v5', 'other', 'v9'];
@@ -36,10 +35,9 @@ const rows = groups.flatMap((g) => SUPPORT_ENDS.filter((r) => r.family === g).ma
 }));
 if (rows.length !== SUPPORT_ENDS.length) throw new Error('The support clock has a release in a family it does not draw.');
 ---
-<section class="wrap sc" aria-labelledby="sc-h">
+<section class="sc" aria-labelledby="sc-h">
   <h2 class="sc-label" id="sc-h">Where things stand</h2>
   <div class="sc-plot">
-    <svg class="sc-grid" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d={majorGrid}></path></svg>
     <table class="sc-t" role="table">
       <caption class="sr-only">General support ends, drawn to scale from {AXIS.fromLabel}</caption>
       <thead role="rowgroup">
