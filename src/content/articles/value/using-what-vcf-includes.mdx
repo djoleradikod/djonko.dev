@@ -84,7 +84,7 @@ sources:
     by: "Broadcom KB"
     kind: broadcom
   - title: "Counting Cores for VCF and vSphere Foundation and TiBs for vSAN (KB 313548)"
-    url: "https://knowledge.broadcom.com/external/article/313548/vcf-subscription-portability-policy.html"
+    url: "https://knowledge.broadcom.com/external/article/313548/counting-cores-for-vmware-cloud-foundati.html"
     by: "Broadcom KB"
     kind: broadcom
   - title: "Purchasing a Subscription for VMware Live Recovery (KB 428834)"
@@ -220,7 +220,7 @@ Four smaller mismatches don't change a cell:
 - **The name Live Recovery.** Check which product an order line means. VMware Live Recovery is now Protection and Recovery, according to the [Protection and Recovery 9.1 release notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/protection-and-recovery/9-1/release-notes/protection-and-recovery-91-release-notes.html) (build date 12 May 2026), yet the 4 Nov post, FC and TechDocs all sell VMware Live Recovery as an Advanced Service. The BOM also marks Protection and Recovery Yes for VVF and Express, while FC and AS don't offer Live Recovery on VVF. EXP treats vSphere Replication as part of protection and recovery, which may explain the mark, but the BOM doesn't say.
 - **External DNS on VVF.** FC p3 marks it, FC p10 doesn't, and the BOM says yes.
 - **The Express core limit.** Both sources say 128 cores and scope them differently: "across all environments" in the post, and per customer in EXP, which adds that the console blocks allocation above 128 "per customer or site ID".
-- **vSAN rounding on VVF.** [KB 313548](https://knowledge.broadcom.com/external/article/313548/vcf-subscription-portability-policy.html) rounds 0.25 TiB per core up to a whole TiB, but its version list predates 9 and ADD doesn't mention rounding, so neither page confirms the rule for 9. Despite its URL, that KB doesn't cover portability.
+- **vSAN rounding on VVF.** [KB 313548](https://knowledge.broadcom.com/external/article/313548/counting-cores-for-vmware-cloud-foundati.html) rounds 0.25 TiB per core up to a whole TiB, but its version list predates 9 and ADD doesn't mention rounding, so neither page confirms the rule for 9. Despite its URL, that KB doesn't cover portability.
 
 <Callout type="note" title="How far to trust the FAQ">
 The FAQ carries a 4 Nov date and some older text, and parts of it disagree with each other or with FC. Q41 still calls 9.1 "upcoming". Q57 and Q61 give different minimum versions for import (8.0 U1 and 8.0 U3). Q34 allows iSCSI for both domains, while Q33 limits the management domain to vSAN, NFS or Fibre Channel and FC p7 marks iSCSI as supplemental only. Q86 retires Advanced Cyber Compliance, Q88 still describes it, and the [9.1 What's New page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new.html) still uses the old name.

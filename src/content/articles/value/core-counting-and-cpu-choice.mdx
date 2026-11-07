@@ -34,7 +34,7 @@ sources:
     kind: broadcom
     date: 2026-11-05
   - title: "Counting Cores for VMware Cloud Foundation and vSphere Foundation and TiBs for vSAN (KB 313548)"
-    url: "https://knowledge.broadcom.com/external/article/313548/vcf-subscription-portability-policy.html"
+    url: "https://knowledge.broadcom.com/external/article/313548/counting-cores-for-vmware-cloud-foundati.html"
     by: "Broadcom KB"
     kind: broadcom
   - title: "Broadcom Updates VMware Portfolio to Protect and Accelerate Private AI Cloud Deployments"
@@ -100,7 +100,7 @@ This note said dual 20-core needed the fewest licensed cores and the fewest host
 | Disabled cores | Licensed | Licensed | Licensed | Not stated for Express |
 | Per order or estate | None published | None published | At least 10 Edge Locations within a year of first deployment | At most 128 cores per customer |
 | Per site | None published | None published | At most 256 cores | Console blocks allocation above 128 "per customer or site ID"; default licence can't be shared across sites |
-| vSAN per core | 1 TiB | 0.25 TiB, rounded up | 1 TiB, usable only across Edge cores | No add-ons; the page doesn't mention vSAN |
+| vSAN per core | 1 TiB | 0.25 TiB, rounded up in KB 313548 | 1 TiB, usable only across Edge cores | No add-ons; the page doesn't mention vSAN |
 
 Count sockets and cores and leave logical processors out. Every core on the server needs a licence, "including Cores deactivated by the BIOS", and a core is "a single physical computational unit", in all three June 2026 program documents ([VCF](https://ftpdocs.broadcom.com/cadocs/0/VCF_SPD_June2026.pdf), [VVF](https://ftpdocs.broadcom.com/cadocs/0/VVF_SPD_June2026.pdf), [Edge](https://ftpdocs.broadcom.com/cadocs/0/VCF_Edge_SPD_June2026.pdf)). The VCF, VVF and Edge columns come from those documents, with VVF's rounding from <KB id={313548} />, and [FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) Q75 (4 Nov 2026) repeats the Edge figures.
 
