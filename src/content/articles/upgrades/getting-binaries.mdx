@@ -1,77 +1,185 @@
 ---
-title: "Getting binaries: from the 5.x depot to the 9.1 software depot and activation code"
-description: "Download what the plan needs before the upgrade window. The mechanism changed three times between 5.2 and 9.1: credentials, then tokens, then activation codes, and the traffic now leaves from new addresses."
+title: "Getting VCF 9.1 binaries: which route fits your network, and where the commands are"
+description: "Use the online depot if the runtime pool can reach Broadcom. Otherwise host an offline depot, over HTTPS or HTTP, and side-load only if no server is allowed. Route table, what 9.1.1 changed, the token conflict, egress rules and a symptom table."
 category: upgrades
 order: 5
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [443647, 420374, 440282, 443166, 441349, 447995, 441340, 446454, 442857, 442978, 447542, 442735, 444267, 448839, 447589, 424728, 447248]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [443647, 420374, 441349, 442857, 443166, 443216, 453116, 447632, 442978, 447542, 442735, 444267, 432021, 416358, 440282, 450430, 441340, 446454, 448839, 447589, 421477, 424728, 447248, 447995, 419118]
 sources:
-  - title: "VCF 5.2 release notes (offline depot, authenticated proxy)"
-    url: "https://docs.vmware.com/en/VMware-Cloud-Foundation/5.2/rn/vmware-cloud-foundation-52-release-notes/index.html"
-    by: "VMware"
-  - title: "Upgrade SDDC Manager to 9.1"
-    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/apply-cloud-foundation-5-2-update-bundle.html"
+  - title: "VCF 9.1: VCF Download Tool (VCFDT) cheatsheet"
+    url: "https://williamlam.com/2026/05/vcf-9-1-vcf-download-tool-vcfdt-cheatsheet.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-05-27
+  - title: "VCF 9.1: side-loading VCF binaries into VCF Installer and Fleet Depot Service for air-gapped environments"
+    url: "https://williamlam.com/2026/06/vcf-9-1-side-loading-vcf-binaries-into-vcf-installer-fleet-depot-service-for-air-gapped-environments.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-06-02
+  - title: "VCF 9.1: new HTTP offline depot support for VCF Installer and Fleet Depot Service"
+    url: "https://williamlam.com/2026/05/vcf-9-1-new-http-offline-depot-support-for-vcf-installer-fleet-depot-service.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-05-08
+  - title: "10 exciting enhancements in VMware Cloud Foundation 9.1.1"
+    url: "https://williamlam.com/2026/09/10-exciting-enhancements-in-vmware-cloud-foundation-9-1-1.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-09-03
+  - title: "Configure a Software Depot Connection Mode"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/connect-sddc-manager-to-a-software-depot-for-downloading-bundles.html"
     by: "Broadcom TechDocs"
-  - title: "Before you upgrade to VCF 9.1: what you need to have ready"
-    url: "https://www.wwt.com/blog/before-you-upgrade-to-vcf-91-what-you-need-to-have-ready"
-    by: "WWT"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Set Up an Offline Depot"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/set-up-an-offline-depot-web-server-for-vmware-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Download Binaries to an Offline Depot by Using the VCF Download Tool"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/download-bundles-to-an-offline-depot.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Download Binaries to Software Depot in Disconnected Mode by Using the VCF Download Tool"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/offline-download-of-vmware-cloud-foundation-5-2-upgrade-bundles.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Connect VCF Installer to Broadcom or an Offline Depot and Download Binaries"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/preparing-your-environment/downloading-binaries-to-the-vcf-installer-appliance/connect-to-an-online-depot-to-download-binaries.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Manually Transfer Binaries to VCF Installer"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/preparing-your-environment/downloading-binaries-to-the-vcf-installer-appliance/use-the-vmware-download-tool-to-download-binaries.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Download Installation Binaries to an Offline Depot"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/preparing-your-environment/downloading-binaries-to-the-vcf-installer-appliance/download-install-binaries-to-an-offline-depot.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Public URLs Required for Online Functionalities for VCF and vSphere Foundation"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/planning-and-preparation/public-urls-required-for-vmware-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
 ---
 
-<InShort>
-In 5.x, SDDC Manager pulled bundles from the online depot, or from an offline depot staged with the Bundle Transfer Utility. 9.0 introduced the **VCF Download Tool**, and depot access moved to download tokens. In 9.1, depot access for the installer and SDDC Manager uses an **activation code**, obtained by registering a Software Depot ID. Binaries for management components live in the **software depot service** on the runtime, and its downloads leave from the runtime's addresses. Three things go wrong: the entitlement (wrong code or site), the path (firewall, proxy or TLS inspection), and the order (binaries that only appear after an earlier upgrade).
-</InShort>
+| Your network | Route | What it needs | What 9.1.1 changed | Where the steps are |
+|---|---|---|---|---|
+| The Installer, VCF Operations and the runtime pool reach Broadcom, directly or by proxy | **Online depot** (TechDocs calls it Connected) | Depot activation code. [Allow-list](#runtime-egress) from every source. No Kerberos or NTLMv2 proxy. | `vcf.packages.broadcom.com` joins the allow-list | [Connection modes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/connect-sddc-manager-to-a-software-depot-for-downloading-bundles.html) and [Installer connection](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/preparing-your-environment/downloading-binaries-to-the-vcf-installer-appliance/connect-to-an-online-depot-to-download-binaries.html), TechDocs, 5 Nov 2026 |
+| No internet on the management network, but you can run a web server there and one machine can download | **Offline depot over HTTPS** | Download Tool on an internet-connected host. Web server, 1 TB minimum recommended, TLS 1.2 or 1.3. Its certificate imported into the [Installer](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/preparing-your-environment/downloading-binaries-to-the-vcf-installer-appliance/connect-to-an-online-depot-to-download-binaries.html) and [SDDC Manager](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/connect-sddc-manager-to-a-software-depot-for-downloading-bundles.html). | Tool 9.1.1 lists and downloads latest versions by default. New `artifacts` commands; OCI artifacts must be uploaded with the tool. | [Set Up an Offline Depot](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/set-up-an-offline-depot-web-server-for-vmware-cloud-foundation.html) and [Download Binaries](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/download-bundles-to-an-offline-depot.html), TechDocs, 5 Nov 2026; [Lam's cheat sheet](https://williamlam.com/2026/05/vcf-9-1-vcf-download-tool-vcfdt-cheatsheet.html), 27 May 2026 |
+| The same, and that segment doesn't need TLS | **Offline depot over HTTP** | The same tree and tool. HTTP is documented without authentication only. | Installer UI accepts HTTP and a custom URL path. 9.1.0 needs the API. | [Lam on HTTP depots](https://williamlam.com/2026/05/vcf-9-1-new-http-offline-depot-support-for-vcf-installer-fleet-depot-service.html), 8 May 2026, for the API calls; [Lam on 9.1.1](https://williamlam.com/2026/09/10-exciting-enhancements-in-vmware-cloud-foundation-9-1-1.html), 3 Sep 2026, for the UI |
+| No internet and no server allowed | **Side-load** (TechDocs: Manual Transfer for the Installer, Disconnected for the fleet) | Download Tool on an internet-connected Windows or Linux machine. Upload to the Installer, then again to the Fleet Depot Service after the fleet deploys. Up to twice the binaries' size free when uploading a whole directory. CLI only for the fleet. | TechDocs now asks for Download Tool 9.1.1 or later | [Lam on side-loading](https://williamlam.com/2026/06/vcf-9-1-side-loading-vcf-binaries-into-vcf-installer-fleet-depot-service-for-air-gapped-environments.html), 2 Jun 2026; [Manual Transfer](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/preparing-your-environment/downloading-binaries-to-the-vcf-installer-appliance/use-the-vmware-download-tool-to-download-binaries.html) and [Disconnected](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/offline-download-of-vmware-cloud-foundation-5-2-upgrade-bundles.html), TechDocs, 5 Nov 2026 |
+| Upgrading from 5.x or 9.0 | One of the routes above, in the upgrade's order | From 9.0: VCF Operations 9.1 PAK first, then SDDC Manager, then the depot (<KB id={440282} />), with [nine depot items](/vcf/library/upgrades/90-to-91-management-services/) present before management services deploy (<KB id={450430} />). From 5.x: the bundle transfer utility stops once SDDC Manager is on 9.x, so switch to the Download Tool (<KB id={419118} />). | | [9.0 to 9.1 management services](/vcf/library/upgrades/90-to-91-management-services/); the 5.x sections of Lam's cheat sheet |
 
-<Compare rows={[
-  ["Online depot authentication", "Support portal credentials, later download tokens", "9.0: download token. 9.1: activation code from registering a Software Depot ID (<a href='https://knowledge.broadcom.com/external/article/443647' target='_blank' rel='noopener'>KB 443647</a>)."],
-  ["Offline and dark sites", "Bundle Transfer Utility (OBTU). 5.2 adds an offline depot SDDC Manager can point at.", "VCF Download Tool. OBTU is not supported for SDDC Manager 9.x."],
-  ["Where binaries live", "SDDC Manager's bundle store", "SDDC Manager for core bundles. The software depot service for management components (9.1)."],
-  ["Who downloads", "SDDC Manager", "SDDC Manager, the VCF Installer and, in 9.1, depot-service pods on the runtime"],
-  ["Proxy handling", "SDDC Manager proxy, authenticated from 5.2", "Per component. The 9.1 software depot proxy and CA are set with a utility script."],
-]} />
+Take the online depot if the firewall team will open the paths. If they won't, build an offline depot before considering side-load: one tree then serves the Installer and the fleet, while side-loading uploads to two places, including 15 component IDs into the Fleet Depot Service. Lam makes the same recommendation for air-gapped sites in his June post.
 
-## Entitlement problems
+HTTP is the offline depot with TLS removed. [TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/set-up-an-offline-depot-web-server-for-vmware-cloud-foundation.html) lists HTTP without authentication as supported from 9.1, with no production caveat, and Lam calls it a customer choice that helps development and PoC work. Use HTTPS unless the depot sits on an isolated segment, because no-auth HTTP gives whoever shares that network read access to the binaries and leaves the Installer no way to verify the server. That's an inference from how HTTP works, and Broadcom doesn't state it.
 
-- **Wrong mechanism.** After upgrading SDDC Manager to 9.1, re-point Depot Settings to an activation code. Download tokens are no longer used for depot authentication (<KB id={443647} />).
-- **Wrong site.** A 403 while a manual `curl` works often means the token or activation code belongs to a Site ID without the 9.1 entitlement (<KB id={441349} />). Generic 403 handling is covered in <KB id={420374} />.
-- **Two different activation codes.** The depot activation code is not the licence registration code. See <a href="/vcf/library/licensing/two-activation-codes/">The download activation code is not your licence</a>.
+Whichever route you take, finish downloads before the change window and confirm each binary shows as available, so a blocked path surfaces while there is still time to fix it.
 
-## Path problems
-
-- **Egress from new addresses.** In 9.1, depot downloads leave from the runtime node addresses, not from SDDC Manager. A firewall rule written for SDDC Manager produces a 403 or a timeout from the depot (<KB id={443166} />). The KB lists the allow-list targets and the response codes a working path should return.
-- **Proxies.** The 9.1 software depot takes its proxy settings and the proxy's CA through a utility script on the runtime (<KB id={447542} />, <KB id={442978} />).
-- **TLS inspection.** SSL-inspecting proxies break the trust chain. SDDC Manager reports PKIX errors (<KB id={442735} />), and the installer reports `certificate_unknown(46)` (<KB id={444267} />). Exempt the depot hosts from inspection, or import the proxy CA where the product supports it.
-
-## Order problems
-
-- **9.1 binaries do not appear in VCF Operations 9.0.** Upgrade VCF Operations, then SDDC Manager, then configure the new depot (<KB id={440282} />).
-- **Install as well as upgrade.** The new 9.1 components are installs. Download the INSTALL type for the runtime, fleet and SDDC lifecycle, depot, Salt, telemetry, License Server and identity broker.
-
-## Dark sites with the VCF Download Tool
-
-```bash
-# 9.1 example: management services components for an offline depot
-./vcf-download-tool binaries download \
-  --sku VCF --vcf-version 9.1.0.0 \
-  --component VCF_FLEET_LCM,VCF_SDDC_LCM,VSP,DEPOT_SERVICE \
-  --type INSTALL \
-  --depot-download-activation-code-file ./activation-code.txt \
-  --depot-store /data/vcf-depot        # the depot ROOT, not a subfolder
-```
-
-- Use Download Tool **9.1 or later** for 9.1. Earlier versions do not know the new component IDs (<KB id={441340} />).
-- `--depot-store` must be the depot root (<KB id={446454} />).
-- `ESX_HOST` only appears under `--type UPGRADE` (<KB id={442857} />).
-- Keep the offline depot's metadata fresh. Stale metadata (<KB id={447589} />) and a vSAN HCL older than 90 days (<KB id={424728} />) both fail checks. The installer must also trust the offline depot's certificate (<KB id={448839} />).
-
-<Callout type="field">
-Before the upgrade window, download every bundle the plan needs and confirm it shows as available. Do not count on downloading during the window. Then clean up superseded bundles on SDDC Manager, because a full disk is the next failure (<KB id={447248} />).
+<Callout type="note" title="Corrected on 7 November 2026">
+This note and its offline-depot companion called plain HTTP a lab option and said flatly that download tokens had stopped working in 9.1. Broadcom now lists HTTP without authentication as a supported mode, and the token position is contested, as set out below.
 </Callout>
 
-## Pitfalls
+## Which page has which command
 
-- **Reusing a 9.0 runbook for 9.1 downloads.** The mechanism, the addresses and the tool version all changed.
-- **Allow-listing hostnames on a proxy, but not the source addresses on the firewall.** Both are needed.
-- **Copying only part of an offline depot.** Copy the depot root unchanged, including its metadata files.
+Lam's cheat sheet is the place for download syntax and nothing here tries to replace it. It predates 9.1.1 and leaves out proxies, moving the depot and the layout, which is what the sections below cover.
+
+| You need | Go to |
+|---|---|
+| 9.1 install binaries | Cheat sheet, "VVF/VCF 9.1 Installation Binaries for VCF Installer" |
+| 9.1 upgrade or express patch binaries | Cheat sheet, "Upgrade Binaries" and "Patch Binaries" sections |
+| 5.2 binaries in an offline depot | Cheat sheet, the two "VCF 5.x" sections (only vCenter and NSX, plus ESX for upgrades) |
+| ESX patches through the `esx` namespace, which replaces a UMDS install | Cheat sheet, "ESX Binaries"; TechDocs [Download Binaries](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/download-bundles-to-an-offline-depot.html) |
+| Supervisor, VKS and VKR images with `artifacts` | [Lam on 9.1.1](https://williamlam.com/2026/09/10-exciting-enhancements-in-vmware-cloud-foundation-9-1-1.html), 3 Sep 2026 |
+| Log Management, Operations for Networks and other day-N components | Cheat sheet, "Day-N Optional Components"; for the fleet, [Lam on side-loading](https://williamlam.com/2026/06/vcf-9-1-side-loading-vcf-binaries-into-vcf-installer-fleet-depot-service-for-air-gapped-environments.html) |
+
+The two newest sources differ on one flag. Lam's September post presents `--latest` as an option you add, while [TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/download-bundles-to-an-offline-depot.html) (5 Nov 2026) says tool 9.1.1 and later return only the latest versions by default, with `--latest false` to get all of them. Run `binaries list` before a long download, particularly if you need an older patch for a specific target. [TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/preparing-your-environment/downloading-binaries-to-the-vcf-installer-appliance/use-the-vmware-download-tool-to-download-binaries.html) also dates new 9.1.1 component patches 12 October, and Fleet LCM has to reach 9.1.1 before other components do, [Lam notes](https://williamlam.com/2026/09/10-exciting-enhancements-in-vmware-cloud-foundation-9-1-1.html), so put its binary first in the download plan.
+
+## From download token to activation code
+
+On 9.1, register a Software Depot ID and use the depot activation code, the only credential Broadcom documents for 9.1 downloads. "Download Tokens are no longer used for depot authentication" (<KB id={443647} />), and the TechDocs download pages of 5 November 2026 mention only codes.
+
+Practice looks looser, and the conflict is worth writing down in a runbook. Lam's May cheat sheet says "all VVF/VCF downloads support both download token and activation codes", with no date for tokens to end, and his September `--latest` examples still pass a token file. Broadcom's own KBs split too: <KB id={441349} /> fixes a 9.1 403 by generating a new token, and <KB id={442857} /> uses both flags. A token may therefore still work in the tool, but ESX downloads accept only a code, so a token-based script already fails on ESX. Move scripts to the code now.
+
+The ID comes from the Installer or the tool and is registered in the VCF Business Services console, under the tenant and Site ID that hold the entitlement. Keep the registered name lowercase (<KB id={443166} />). The appliance side is simpler than the download side: connected mode takes the code, an offline depot takes only a URL and credentials if authentication is on, and in disconnected mode binaries arrive by upload from a machine with internet access. The switch to codes starts with 9.1 (<KB id={443647} />), which leaves 9.0 and earlier on the 32-character token (<KB id={420374} />). That's an inference, because neither KB says it about older releases.
+
+This code isn't the licence activation code: see [Two activation codes](/vcf/library/licensing/two-activation-codes/).
+
+## Depot layout rules
+
+An offline depot is a web server over the tree the tool writes, and in this mode the software depot forwards requests there without keeping a local copy ([TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/lifecycle-management/binary-management-for-vmware-cloud-foundation/connect-sddc-manager-to-a-software-depot-for-downloading-bundles.html)). The Download Tool is the only supported way to fetch binaries without internet access, so let it build the tree and don't rearrange it.
+
+- Point `--depot-store` at the depot root. A subfolder produces a wrongly built depot that later fails on the ESX sync (<KB id={446454} />).
+- Give every release the same destination folder and the tool merges them, Lam's cheat sheet says. Don't merge trees by hand.
+- Copy the whole root when moving a depot. Building by hand means the metadata zip plus binaries in `PROD/COMP/<product>/` with original filenames (<KB id={421477} />). That KB is 9.0-scoped, and its first method is the old bundle transfer utility, which is unsupported on SDDC Manager 9.x (<KB id={447995} />).
+- Three metadata files must be current: `vcfManifest.json`, `productVersionCatalog.json` and `VmwareCompatibilityData.json`. Turn caching off on the web server and on any proxy in front of it (<KB id={447589} />).
+- Refresh the vSAN HCL file at least every 90 days, or host commissioning fails (<KB id={424728} />, written for 9.0.x).
+- If you turn on basic authentication, copy the access split from TechDocs' Apache example, where `PROD/COMP` and `PROD/metadata` need credentials and `PROD/vsan/hcl` stays open.
+- For HTTPS, issue the certificate with both DNS name and IP address as SANs, as TechDocs' example does. A reader on Lam's May post reported sync failures without them.
+
+Two configuration behaviours matter on a rebuild. Configuring an offline depot on the Installer deactivates and deletes the online connection ([TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/preparing-your-environment/downloading-binaries-to-the-vcf-installer-appliance/connect-to-an-online-depot-to-download-binaries.html)). And HTTP settings applied on the Installer before the fleet deploys carry over to the Fleet Depot Service, Lam reports, so set it there and skip the second API call.
+
+## Runtime egress
+
+Downloads change source address when the fleet deploys. The depot moves off the Installer into a container on the VCF Management Services Platform, using addresses from the VCF Services Runtime IP pool, and Broadcom warns that "firewall rules may not be in place for this shift" (<KB id={443216} />). A rule written for SDDC Manager won't cover it (<KB id={443166} />). The 90-to-91 note covers [when that happens in an upgrade](/vcf/library/upgrades/90-to-91-management-services/).
+
+Allow outbound 443 from the VCF Installer, vCenter, VCF Operations, the Download Tool host and every runtime IP pool hosting a software depot, per the [Public URLs page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/planning-and-preparation/public-urls-required-for-vmware-cloud-foundation.html) (5 Nov 2026):
+
+- `dl.broadcom.com`, `eapi.broadcom.com`, `vvs.broadcom.com`, `vsanhealth.vmware.com`
+- `vcf.packages.broadcom.com` from 9.1.1
+- `projects.packages.broadcom.com` for Supervisor and VCF services, from the runtime pools
+
+<KB id={453116} /> also calls `depot.broadcom.com` mandatory, and the Public URLs page doesn't list it. Use the Public URLs page as the request and add that host only if the depot still fails with the others open.
+
+Test with curl from VCF Operations and a control-plane node. A working path returns 403 from `dl` and `vvs` and 500 from `eapi` and `vsanhealth` (<KB id={443216} />), so a 403 in this test is good news and a timeout is the failure. The reverse trap sits in SDDC Manager: "Depot Connection Active" only proves reachability, so a 403 during download points at the credential (<KB id={420374} />).
+
+Proxies and TLS inspection are set per component. On the runtime, `vmsp-utility.py` on a control-plane node configures the proxy (option 2, <KB id={447542} />) and adds an inspection CA to the truststore (option 4, <KB id={442978} />). Exempting `dl.broadcom.com` from inspection removes the manual imports on SDDC Manager (<KB id={442735} />). The runtime's failures also involve `eapi.broadcom.com` (<KB id={442978} />), so exempt both and the runtime truststore step should fall away too. That's an inference from those two KBs, and Broadcom doesn't state it. If deep inspection has to stay, the Public URLs page lists CDN wildcards you also need. The Download Tool has its own trust store: an HTTPS proxy's certificate goes into the tool's bundled JRE ([TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/preparing-your-environment/downloading-binaries-to-the-vcf-installer-appliance/download-install-binaries-to-an-offline-depot.html)).
+
+<Callout type="field">
+Put the depot path in the network design as its own flow: source addresses, destinations, ports, proxy and inspection exemptions. A firewall request carried over from 5.x won't cover it.
+</Callout>
+
+## Symptoms
+
+Broadcom's KBs show no revision date, so each row gives the versions the article covers and the date it was checked.
+
+| Symptom | Cause | Fix | Source |
+|---|---|---|---|
+| "Depot returned authentication/authorization failure. Expected HTTP status 200 but received 403" | Rules allow SDDC Manager only, and the proxy blocks Fleet components | Allow the hosts above from the Fleet sources. If it persists, check the registered name is all lowercase. | <KB id={443166} />, 9.1, 7 Nov 2026 |
+| "Failed to connect to Broadcom OAuth Authorization server" with "Connection timed out", then LCM's "Bundle with ID ... was not found in Software depot" | The `vcf-fleet-depot` service can't reach `eapi.broadcom.com` | `curl -I -v https://eapi.broadcom.com` from the node, open 443, re-test the depot | <KB id={453116} />, 9.x, 7 Nov 2026 |
+| The same OAuth message with "PKIX path building failed" in the depot-service log | TLS inspection re-signs the traffic | Add the full CA chain with `vmsp-utility.py` option 4. The depot UI goes blank for about 15 minutes. | <KB id={442978} />, 9.1, 7 Nov 2026 |
+| Validation passes but the depot stays disconnected; log shows "Network is unreachable" | Broadcom URLs missing from the allow-list | Allow them, test with curl, then stop and start the Software Depot service in VCF Operations | <KB id={443216} />, 9.1.0, 7 Nov 2026 |
+| Software Depot shows "Disconnected" though other appliances in the subnet connect and the perimeter is open | Transient state, caching or profile sync failure in NSX; the management plane may not push the correct state to transport nodes | Change a harmless setting in the active IP-Discovery profile to force a push, then revert if you like | <KB id={447632} />, 9.1, 7 Nov 2026 |
+| "no binaries are displayed for any category" in VCF Operations 9.0 | 9.1 binaries don't appear in 9.0 | Upgrade VCF Operations by PAK, then SDDC Manager, then configure the depot | <KB id={440282} />, 9.0 to 9.1, 7 Nov 2026 |
+| "Got Http error[403] while downloading bundle", while curl with the same token works | Token generated under the wrong Site ID | Have Broadcom non-technical support tie the Depot UUID to the entitled Site ID, then generate a new token. The KB doesn't cover codes, so on a code check the registration sits under that Site ID. | <KB id={441349} />, 9.1, 7 Nov 2026 |
+| "Invalid token provided, status code: 403" | Malformed or stale token on 4.x to 9.x | New 32-character token from a private browser window, wait about 10 minutes, update Depot Settings | <KB id={420374} />, 7 Nov 2026 |
+| `Failed to connect to VMware depot with the provided user credentials. Cause: {0}` with PKIX errors in `lcm-debug.log` | TLS inspection in front of SDDC Manager | Exempt `dl.broadcom.com`, or import the CA into both SDDC Manager trust stores | <KB id={442735} />, 7 Nov 2026 |
+| "certificate_unknown(46)" on the Installer; proxy test returns 403 | TLS-intercepting proxy re-signs `dl.broadcom.com` | Add the issuer to the Installer truststores. The KB sends you to <KB id={432021} />, which only describes SDDC Manager's store, so an inspection exemption is the cleaner way out. | <KB id={444267} />, 9.1.0, 7 Nov 2026 |
+| "Download Failed : handshake_failure(40)" | 9.0 Fleet Management appliance has no path to `dl.broadcom.com` | Open the path | <KB id={416358} />, 9.0, 7 Nov 2026 |
+| "Secure protocol communication error" with an empty status code | Installer doesn't trust the depot's certificate | Import it. The KB reboots the Installer; [TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/deploying-a-new-vmware-cloud-foundation-or-vmware-vsphere-foundation-private-cloud-/preparing-your-environment/downloading-binaries-to-the-vcf-installer-appliance/connect-to-an-online-depot-to-download-binaries.html) only restarts its services, so try that first. | <KB id={448839} />, 9.1, 7 Nov 2026 |
+| "Initializing binary database, please wait..." with "Matching VCF release corresponding to appliance version ... not found" | Old, cached or partial `vcfManifest.json` | Replace the three metadata files, disable caching, re-enter the URL | <KB id={447589} />, 9.x, 7 Nov 2026 |
+| "Connect to an Offline Depot with a Local Server" | No VCF manifest at the path you gave | Point at the root holding metadata and `PROD` | <KB id={421477} />, 9.0, 7 Nov 2026 |
+| "Failed to execute UMDS command" at the UMDS_SYNC task | `--depot-store` pointed at a subfolder | Rerun against the root, then restart the sync | <KB id={446454} />, 9.1, 7 Nov 2026 |
+| `ESX_HOST` with `--type INSTALL` "returns 0 elements", or the list is "incomplete" | ESX has no INSTALL payload, and the default list holds only day-0 products | Use `--type UPGRADE` for ESX and `--component` for the rest. Items outside the tool come from the Support Portal. | <KB id={442857} />, 9.1.0, 7 Nov 2026 |
+| Fleet Manager "notably missing" from the download | Tool 9.0.x predates the 9.1 component structure, and the old appliance has gone | Use tool 9.1 or later and request `VCF_FLEET_LCM`, `VCF_SDDC_LCM`, `VSP` and `DEPOT_SERVICE`; the KB's example uses `--type INSTALL` | <KB id={441340} />, 9.1.0, 7 Nov 2026 |
+| "cannot be used to upload items to SDDC Manager with version 9.x and above" | The bundle transfer utility works only to 5.x | Upload with the Download Tool | <KB id={419118} />, 9.0, 7 Nov 2026 |
+| "NSX pre-upgrade bundle missing from SDDC Manager appliance" | Components upgraded out of order | Follow the guide for your baseline; the bundle comes at the NSX step | <KB id={447995} />, 5.2 to 9.1, 7 Nov 2026 |
+| "Unable to verify vSAN HCL" with an offline depot | HCL data older than 90 days | Upload a fresh `all.json` from `vvs.broadcom.com` to the depot | <KB id={424728} />, 9.0.x, 7 Nov 2026 |
+| "LCM Bundle folder disk space" pre-check failure | `/nfs/vmware/vcf/nfs-mount` is full | Snapshot SDDC Manager, then remove old bundles with the cleanup utility | <KB id={447248} />, 5.2.x and 9.x, 7 Nov 2026 |
+| Tool doesn't recognise `NSX_ALB` for a Fleet Depot upload | Missing from the tool's upload inclusion list, Lam says in the comments on his June post | Upload the AVI binary to SDDC Manager, where that workflow runs | [Lam, comment](https://williamlam.com/2026/06/vcf-9-1-side-loading-vcf-binaries-into-vcf-installer-fleet-depot-service-for-air-gapped-environments.html), 15 Jul 2026 |
+| `esx configuration -G` rejects `--proxy-server` | Reader report, not documented behaviour | Pass the proxy on `esx download`, whose 9.1.1 help lists it. Lam expects this to work but hadn't confirmed it. | [Cheat sheet comments](https://williamlam.com/2026/05/vcf-9-1-vcf-download-tool-vcfdt-cheatsheet.html), 28 Oct 2026 |
+
+## Lab only
+
+None of this belongs in a production design. Any web server that serves the tree unchanged with caching off is enough for a lab rebuild, and one shared depot means every rebuild tests identical binaries. Lam's 9.0 workaround, HTTP with basic authentication, still works on 9.1 and he calls it more of a hack. TechDocs doesn't list that combination, so on 9.1 use plain HTTP without authentication in the lab instead.

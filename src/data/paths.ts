@@ -45,8 +45,8 @@ export const PATHS: ReadingPath[] = [
     id: 'lab', title: 'Building a VCF 9 lab', who: 'Anyone who needs a lab to learn or test in',
     blurb: 'Choose an approach, size it, get it running on lab hardware and an offline depot, then use it: break things on purpose and automate the checks.',
     steps: [
-      'labs/choosing-a-lab-approach', 'labs/sizing-a-vcf-9-lab', 'labs/esx-settings-for-labs',
-      'labs/offline-depot-in-a-lab', 'labs/nested-lab-automation', 'labs/break-fix-exercises', 'labs/scripted-health-checks',
+      'labs/choosing-a-lab-approach', 'labs/sizing-a-vcf-9-lab', 'labs/esx-settings-for-labs', 'upgrades/getting-binaries',
+      'labs/nested-lab-automation', 'labs/break-fix-exercises', 'labs/scripted-health-checks',
     ],
   },
   {

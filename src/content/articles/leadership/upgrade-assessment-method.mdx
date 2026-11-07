@@ -1,73 +1,174 @@
 ---
-title: "Assessing a 5.x estate for VCF 9: the questions that decide the plan"
-description: "An upgrade assessment is only useful if it ends in a plan the customer can approve. These are the questions, grouped by what they decide, that turn a 5.x estate into a sequenced, risk-ranked VCF 9 upgrade proposal."
+title: "Assessing an estate for VCF 9.1: each question tied to the tool that answers it"
+description: "Scope a VCF 9.1 assessment by access. The Upgrade Planner needs none and gives the sequence. VCF Check reads the estate but is pre-release and wants admin and root. vcf-readiness needs BMCs. The Installer pre-check suits new fleets only. Windows, ownership and contracts have no public tool."
 category: leadership
 order: 2
-versions: ["5.x", "9.0", "9.1"]
+versions: ["5.x", "9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
-updated: 2026-11-06
-kbs: [440630]
+updated: 2026-11-07
+reviewed: 2026-11-07
+reviewDue: 2027-02-15
+kbs: [440630, 454898, 443265, 428874, 314608]
 sources:
-  - title: "Modernizing infrastructure: VCF 5.2.x to 9.1 upgrade guide"
-    url: "https://blogs.vmware.com/cloud-foundation/2026/06/05/modernizing-infrastructure-vmware-cloud-foundation-5-2-x-to-9-1-upgrade-guide/"
-    by: "VMware Cloud Foundation blog"
-  - title: "Upgrading to VCF 9.1.x"
+  - title: "Upgrading to VMware Cloud Foundation 9.1.x"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
     by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrade ESX to 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/upgrade-esxi-for-vmware-cloud-foundation-5-2-1.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Deploy VCF management services and license server"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VCF Upgrade Planner"
+    url: "https://vmware.github.io/vcf-upgrade-planner/"
+    by: "VMware on GitHub"
+    kind: broadcom
+  - title: "VCF 9.1: interactive upgrade planning tool"
+    url: "https://williamlam.com/2026/05/vcf-9-1-interactive-upgrade-planning-tool.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-05-20
+  - title: "Major enhancements to the VCF 9.1 Upgrade Planner tool"
+    url: "https://williamlam.com/2026/10/major-enhancements-to-vcf-9-1-upgrade-planner-tool.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-10-22
+  - title: "VCF 9.1 quick tip: using the VCF Installer as a standalone pre-check tool"
+    url: "https://williamlam.com/2026/05/vcf-9-1-quick-tip-using-the-vcf-installer-as-a-standalone-pre-check-tool.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-05-22
+  - title: "vmware/vcf-upgrade-precheck (VCF Check), README for release 2.0.0.1016"
+    url: "https://github.com/vmware/vcf-upgrade-precheck/releases/download/2.0.0.1016/README.html"
+    by: "VMware on GitHub"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "vmware/vcf-readiness"
+    url: "https://github.com/vmware/vcf-readiness"
+    by: "VMware on GitHub"
+    kind: broadcom
+    date: 2026-10-30
+  - title: "Introducing the VCF Inspector Fling"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/07/28/vcf-inspector-fling/"
+    by: "Alan Renouf, VCF blog"
+    kind: broadcom
+    date: 2026-07-28
+  - title: "KB 440630: Upgrade Sequence and Related Issues for VCF and vSphere Foundation 9.1"
+    url: "https://knowledge.broadcom.com/external/article/440630"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "KB 454898: Performing Health-Checks for VCF 9.1 Upgrade Readiness"
+    url: "https://knowledge.broadcom.com/external/article/454898"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "KB 443265: VCF Installer 9.0 Validation Fails: Cluster is not vLCM image based"
+    url: "https://knowledge.broadcom.com/external/article/443265/"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "KB 428874: Deprecated CPU Systems / Servers in ESX 9.0 and implications for support"
+    url: "https://knowledge.broadcom.com/external/article/428874"
+    by: "Broadcom KB"
+    kind: broadcom
+    date: 2026-09-18
+  - title: "KB 314608: Correlating VMware Cloud Foundation version with the versions of its constituent products"
+    url: "https://knowledge.broadcom.com/external/article/314608/correlating-vmware-cloud-foundation-vers.html"
+    by: "Broadcom KB"
+    kind: broadcom
+  - title: "Modernizing infrastructure: VCF 5.2.x to 9.1 upgrade guide"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/06/05/modernizing-infrastructure-vmware-cloud-foundation-5-2-x-to-9-1-upgrade-guide/"
+    by: "Abhilash Kunhappan and others, VCF blog"
+    kind: broadcom
+    date: 2026-06-05
+  - title: "Upgrade to VCF 9.1 and Express Patching webinar: top 10 questions answered"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/10/08/upgrade-to-vmware-cloud-foundation-9-1-and-express-patching-webinar-top-10-questions-answered/"
+    by: "Jonathan McDonald, VCF blog"
+    kind: broadcom
+    date: 2026-10-08
+  - title: "Planning a VCF 9 Upgrade: Why We Broke It Into Phases"
+    url: "https://www.vcfinsider.com/cloud%20foundation/2026/04/01/planning-a-vcf-9-upgrade-why-we-broke-it-into-phases/"
+    by: "Chris Kitchens, VCF Insider"
+    kind: practitioner
+    date: 2026-04-01
 ---
 
 <InShort>
-An assessment answers five questions, each of which decides part of the plan. **Where are we?** Versions, topology and drift decide the path and the first step. **What's in the way?** Baseline-managed clusters, unsupported hardware, add-on versions and certificates decide the pre-work. **What changes for the people?** The new consoles, SSO, licensing and the services runtime decide the training and the change plan. **What are the dependencies?** DNS, firewalls, IP pools and the depot decide the lead times. **What's the risk appetite?** Windows, rollback points and sequencing decide the schedule. The deliverable is a sequenced plan with owners, not an inventory.
+**Scope the assessment by the access you can get, because access decides which questions get answers.** The Upgrade Planner needs none and gives you the sequence, but it only knows what you type. VCF Check reads the estate most widely, and it's a pre-release wanting admin and, for its deeper checks, root credentials. vcf-readiness answers hardware questions from the BMCs. The VCF Installer pre-check belongs only to routes ending in a new fleet. Change windows, ownership, contracts and phase durations have no public tool, so those answers come from people and a rehearsal <AsOf date="2026-11-07" />.
 </InShort>
 
-<Compare v5Label="Inventory" v9Label="Assessment" title="What makes it an assessment" rows={[
-  ["Output", "Spreadsheet of components", "A sequenced plan with risks and owners"],
-  ["Focus", "What exists", "What blocks, what changes, what it costs"],
-  ["Audience", "Engineers", "Engineers and the person who approves the budget"],
-]} />
+## Run them in this order
 
-## The question bank
+1. Settle the route and target in the [route chooser](/vcf/library/upgrades/upgrade-route-chooser/). Everything below depends on it.
+2. Build the plan in the [Upgrade Planner](https://vmware.github.io/vcf-upgrade-planner/) with versions read from the estate, then check each build pair in the [Interoperability Matrix](https://interopmatrix.broadcom.com/Upgrade?productId=851).
+3. Scan every domain with [VCF Check](https://github.com/vmware/vcf-upgrade-precheck). Its domain picker lets you deselect workload domains, and you shouldn't. They can upgrade later, but they still carry risk and a support date.
+4. Scan the hosts' BMCs with [vcf-readiness](https://github.com/vmware/vcf-readiness) when hardware is in doubt or vSAN ESA is on the table.
+5. Run Broadcom's own readiness set from <KB id={454898} />: the SoS health check on SDDC Manager, the vSphere Diagnostic Tool on each vCenter, and the services platform check where one exists.
+6. Interview the owners for the rows no tool answers, then write the plan.
 
-**Where are we?**
-- Exact versions of every component, including add-ons (Avi, replication, HCX, Aria products).
-- Number of instances, domains and clusters, and which share NSX or SSO.
-- Anything changed outside SDDC Manager: passwords, certificates, manual patches.
+Ask for two approvals before the work starts: credentials for VCF Check, and a route to the BMC network with a read-only account for vcf-readiness. If either is refused, the assessment can still deliver a route, a sequence and a dependency list, but say in the proposal that its health or hardware findings are missing.
 
-**What's in the way?**
-- Clusters still on baselines rather than images (images are required from 9.0).
-- Hardware and firmware against the compatibility guide for the target release.
-- Certificates: issuer, expiry, and whether SANs will satisfy 9.1's stricter checks.
-- Aria products and how each one maps to its 9.x successor.
+An estate already on 9.1.0 is the case that changes this order. VCF Check's README scopes it to vSphere 8, VCF 5.2.x and VCF 9.0 sources, so use <KB id={454898} /> and Alan Renouf's [VCF Inspector Fling](https://blogs.vmware.com/cloud-foundation/2026/07/28/vcf-inspector-fling/) (28 Jul 2026) instead. Inspector is built for 9.1 and lists pre-upgrade checks on passwords, host status, port reachability, in-flight tasks and certificate expiry. The post states no support commitment, so raise anything it finds with Broadcom before acting on it. Choosing it for this gap is an inference from that scope.
 
-**What changes for the people?**
-- Who will operate VCF Operations day to day, and who owns licensing in the console.
-- Identity: current SSO model, identity provider, and the target VCF SSO model.
-- Runbooks that reference SDDC Manager UI paths that will move.
+## Question by question
 
-**What are the dependencies?**
-- DNS and IP addresses for new components: VCF Operations, the License Server, the services runtime pool, VCF Automation.
-- Firewall changes, especially outbound from runtime nodes in 9.1.
-- Depot method: online, proxy, or offline.
+| Question | What answers it | What it can't tell you | What to do with the result |
+|---|---|---|---|
+| Which route and target? | [Route chooser](/vcf/library/upgrades/upgrade-route-chooser/), then Planner. Its VCF path starts at 5.2, 9.0 or 9.1 | Whether what you typed is true. Build pairs need the Matrix | Record one target. A 5.0 or 5.1 estate is two hops, so plan the second after the first |
+| Exact versions of every component? | SDDC Manager and vCenter inventory. <KB id={314608} /> maps a 5.x release to its components, while its 9.x table gives only version, date and release notes | Add-ons outside SDDC Manager | Feed the Planner. Keep the list as the assessment's baseline, dated |
+| Which add-ons exist? | Owners first. VCF Check inventories HCX, SRM and RecoverPoint registrations in vCenter | HCX registration says nothing about Service Mesh versions or pairing, and no SRM registration "does not prove deployed appliances are absent". Its README doesn't mention Avi, vSphere Replication or Data Services Manager. HCX isn't in the Planner's product list (7 Nov 2026) | Enter the rest in the Planner, which asks about them. Sequence HCX by hand from Broadcom's order, where it's step 13 |
+| What changed outside SDDC Manager? | Partly VCF Check (lock table, trust store, Aria VM placement). No public tool gives a full drift list | VMs moved by hand, certificates replaced directly | Pull moves from change records, since [a move found late can cost the window](/vcf/library/upgrades/prechecks-that-fail/) |
+| Is it healthy today? | VCF Check, SoS and the diagnostic tool per <KB id={454898} /> | Whether it stays healthy. Passwords and certificates age | "Must resolve before VCF upgrade" findings become pre-work. Rerun for the [go or no-go](/vcf/library/leadership/go-no-go-and-rollback/) gate |
+| Any clusters on baselines? | VCF Check's vLCM Enablement, cluster by cluster | The check says "Blocks upgrade? No" and only warns, yet [9.0 and later support only image clusters](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/upgrade-esxi-for-vmware-cloud-foundation-5-2-1.html) | Treat each warning as required pre-work. Its README says a Supervisor cluster can't transition until vCenter reaches 9.0, so sequence those separately |
+| Will the hardware carry 9.1? | vcf-readiness over Redfish. VCF Check's ESX checks through vCenter, using shipped snapshots of the compatibility guide | A green result "does not certify a server or guarantee upgrade success". Compatibility data goes stale unless refreshed | Confirm flagged hosts in the [Compatibility Guide](https://compatibilityguide.broadcom.com/), which outranks both tools. Skylake-SP is "supported in Deprecated Mode" (<KB id={428874} />), so budget the refresh. See [hardware readiness](/vcf/library/upgrades/hardware-readiness/) |
+| Can hosts be evacuated? | VCF Check's maintenance-mode simulation, which needs vCenter 8.0 U1 or later | It doesn't replace VCF's own validator or certify storage placement | Fix capacity before the ESX phase. Two-node clusters depend on host capacity and witness policy, [McDonald notes](https://blogs.vmware.com/cloud-foundation/2026/10/08/upgrade-to-vmware-cloud-foundation-9-1-and-express-patching-webinar-top-10-questions-answered/) (8 Oct 2026) |
+| Certificates and passwords? | VCF Check for expiry, and its 9.1 Password Complexity check | On Aria components the SAN test covers only names you entered, and Aria Operations for Logs has none. Dictionary, history and customised policies "need separate verification" | Build the SAN list from [the strictest rule](/vcf/library/upgrades/prechecks-that-fail/). vCenter root must be [15 to 20 characters](https://blogs.vmware.com/cloud-foundation/2026/06/05/modernizing-infrastructure-vmware-cloud-foundation-5-2-x-to-9-1-upgrade-guide/), Kunhappan and colleagues warn (5 Jun 2026) |
+| What happens to Aria? | [Upgrade guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html): Suite Lifecycle, vIDM and Logs have no 9.1 upgrade. VCF Check runs up to 58 Aria health checks | Health isn't migration design. Moving content and integrations has no public assessment tool | One line per product, using the [vIDM](/vcf/library/upgrades/vidm-to-identity-broker/), [logs](/vcf/library/upgrades/aria-logs-to-log-management/) and [Automation](/vcf/library/upgrades/vcf-automation-side-by-side/) notes |
+| DNS and IPs for new components? | [Deployment prerequisites](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/deploy-vcf-management-services.html): at least 12 IPs (/28), 30 recommended (/27), up to five FQDNs on unique addresses outside that range, with capitals barred on four of them. Planner lists requirements | None of these tools describes testing names and pools you haven't deployed yet | Raise the requests now, and check the page's internal CIDR against your networks. The [precheck map](/vcf/library/upgrades/prechecks-that-fail/) shows what fails later |
+| Firewall and proxy? | The same page, which points to Broadcom's ports reference. Inspector lists port reachability | No public tool tests traffic from nodes that don't exist yet, as far as these descriptions show | Raise firewall changes with their lead time. With additional management components, an SSL-terminating proxy on VCF Operations has to come off before deployment |
+| Depot? | VCF Check's Bundle Repository Access. [Getting binaries](/vcf/library/upgrades/getting-binaries/) for the method | Your approval path for an offline depot | Pick online, proxy or offline, and name who downloads |
+| Who owns licensing, and what's the entitlement? | No public tool reads your contract. VCF Check reports licence status on existing products | Entitlement, price, or who holds the role | Ask Broadcom and read [licensing through upgrades](/vcf/library/licensing/licensing-through-upgrades/). Name one owner |
+| SSO target? Who runs VCF Operations? | VCF Check flags Enhanced Linked Mode as an advisory. No tool answers the rest | It reports replication health and states it's "not an instruction to break replication" | Decide the identity model. Lifecycle moves off the deprecated SDDC Manager UI, so update runbooks using the [runbook diff](/vcf/library/day-2/runbook-diff-91/) |
+| How long, and what windows? | Planner splits phases for maintenance windows. No public tool gives durations for your estate | Time per phase | Rehearse where you can, and put the [measured duration](/vcf/library/leadership/go-no-go-and-rollback/) in the gate |
+| What's the support date and way back? | [Support clock](/vcf/library/upgrades/support-clock/) and [rollback checkpoints](/vcf/library/upgrades/rollback-checkpoints/). No tool | Your risk appetite | Report the date of the last domain still to move, as the route chooser says |
 
-**What's the risk appetite?**
-- Change windows and freeze periods.
-- Rollback expectations for each phase.
-- Whether a lab rehearsal is required before production.
+## What each tool needs from you
 
-## The plan structure
+**VCF Check** is the [vmware/vcf-upgrade-precheck](https://github.com/vmware/vcf-upgrade-precheck) repo's product, and the repo is easy to misread. Its branches hold a compatibility data bundle and no source or README. The documentation is a [README.html](https://github.com/vmware/vcf-upgrade-precheck/releases/download/2.0.0.1016/README.html) attached to two releases, both flagged pre-release (2 and 5 Nov 2026), and it tells you to install a ZIP "provided to you out of band". Ask your Broadcom contact whether the public build is the one to use before you write it into a statement of work.
 
-1. **Pre-work** with lead times: DNS, IPs, firewall, certificates, images, add-on upgrades.
-2. **Phase gates** in the order set by [Broadcom's upgrade guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html), with a go or no-go check at each. <KB id={440630} /> says that sequence is mandatory.
-3. **Risk register**: each risk with likelihood, impact, owner and mitigation.
+Its catalogue gives 147 checks for VCF 5.x with Aria, 89 without, 121 and 66 for vSphere 8, and 87 for VCF 9.0. The README's introduction says 84 for 9.0, so quote the catalogue. The README says a scan installs and changes nothing, but the access isn't small: an SDDC Manager ADMIN account, plus root through VMware Tools when guest OS checks are on. That's why the approval comes first.
+
+The README also sets operating terms a scope should repeat: one operator, a dedicated OS account on a managed workstation, and encrypted storage for reports. Scrubbed exports are "not proof of anonymity", so an outside assessor needs the data owner's sign-off before anything leaves. Online data updates are off by default, so load the current bundle before scanning.
+
+**[vcf-readiness](https://github.com/vmware/vcf-readiness)** (9.12.1, 30 Oct 2026) reads server hardware through Redfish: CPU tier, memory, drives against the vSAN HCL, NICs, LLDP neighbours, BIOS drift, TPM and an 84-control BMC audit. Its README lists an experimental diagnostic-tool integration but doesn't mention vCenter, NSX or SDDC Manager, so use it for hardware questions alone. Run it from source with Python 3.9 or newer, since the prebuilt binaries are unsigned. Turn on `--verify-ssl` where the BMCs have a trusted CA, because certificate checks are off by default.
+
+Both repos carry the same licence: a CA, Inc. agreement granting use "for use in connection with CA, Inc. products", with no warranty. It isn't a standard open-source licence, so read it ([vcf-readiness](https://github.com/vmware/vcf-readiness/blob/main/LICENSE.md), [vcf-upgrade-precheck](https://github.com/vmware/vcf-upgrade-precheck/blob/main/LICENSE.md)) before you redistribute or adapt either one, and take it to your own counsel if that matters.
+
+**[The Planner](https://vmware.github.io/vcf-upgrade-planner/)** is the one to give the change board. William Lam, a Broadcom architect, [describes the plan](https://williamlam.com/2026/05/vcf-9-1-interactive-upgrade-planning-tool.html) as phases, resource and networking requirements, and pitfalls (20 May 2026). His [22 Oct update](https://williamlam.com/2026/10/major-enhancements-to-vcf-9-1-upgrade-planner-tool.html) adds 9.1.1, Express Patches, workload domain and instance paths, Supervisor and VKS, and text and Markdown export. The page asks for selections and shows no connection to an environment, so a wrong version gives you a clean plan for the wrong estate. Date every export, since the [repository](https://github.com/vmware/vcf-upgrade-planner) changed as late as 5 Nov. VxRail paths are Dell-supported, [McDonald notes](https://blogs.vmware.com/cloud-foundation/2026/10/08/upgrade-to-vmware-cloud-foundation-9-1-and-express-patching-webinar-top-10-questions-answered/), so open that question with Dell.
+
+**The [Installer pre-check](https://williamlam.com/2026/05/vcf-9-1-quick-tip-using-the-vcf-installer-as-a-standalone-pre-check-tool.html)** is Lam's tip from "a quick test in my lab" (22 May 2026), for validating before "deploying a new VCF Fleet". You deploy the appliance and connect a depot. Binary-dependent checks then "fail as expected", the rest run, and you can save the JSON. It suits vSphere estates heading for a new fleet: <KB id={443265} /> shows Installer validation catching a baseline cluster on 9.0. Don't use it to assess a 5.2 or 9.0 upgrade, whose route starts with VCF Operations, as the route chooser explains. Lam lists no checks in text, so don't promise a coverage list from it.
+
+## What the plan looks like
+
+1. **Pre-work** with owners and lead times, drawn from the last column above.
+2. **Phase gates** in the order set by [Broadcom's upgrade guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html), with a [go or no-go check](/vcf/library/leadership/go-no-go-and-rollback/) at each. <KB id={440630} /> calls the sequence "mandatory".
+3. **Risk register**: each risk with likelihood, impact, owner and mitigation, including every question no tool could answer.
 4. **People plan**: training, runbook updates, licensing ownership.
 
-<Callout type="field">
-Present the plan with one recommendation and the reason for it, plus the alternatives you considered. Say what you would do and why, and don't hand over five options.
-</Callout>
+Cut the phases to fit your change process. Chris Kitchens's [account of his own team's plan](https://www.vcfinsider.com/cloud%20foundation/2026/04/01/planning-a-vcf-9-upgrade-why-we-broke-it-into-phases/) (1 Apr 2026) sized phases to eight-hour weekday windows and sent one phase through non-production while the next went through approval, which is worth borrowing. His order isn't. It predates 9.1 and defers Automation until after the management domain's NSX and vCenter, where Broadcom's 9.1 table puts VCF Automation at step 9, ahead of NSX at 15.
 
-## Pitfalls
+This example is constructed, so replace each line with your own. It assumes a VCF 5.2.3 estate with one workload domain.
 
-- **Assessing only the management domain.** Workload domains carry risk too.
-- **Ignoring add-ons.** They can decide the order.
-- **No owner for licensing.** It can become a blocker.
+| Finding | From | Plan line | Owner | Assumed lead time |
+|---|---|---|---|---|
+| Two workload clusters on baselines | VCF Check warning | Move to images before the ESX phase | Platform | 3 weeks |
+| Six Skylake-SP hosts | vcf-readiness, confirmed in the guide | Upgrade under Deprecated Mode, budget the refresh | Platform, finance | Next budget cycle |
+| HCX paired to a second site | Owner interview, VCF Check | Upgrade paired appliances to 9.0 or later so pairing holds, per the upgrade guide | Network | 2 weeks |
+| No free /28 on the management network | Deployment prerequisites | Allocate a /27 and five DNS records | Network | 2 weeks |
+| Phase durations unknown | No tool | Rehearse in non-production, then set the gates | Decision owner | 4 weeks |
+
+Hand it over with one recommendation and its reason, plus the alternatives you rejected. If a row in the question table stayed unanswered, say so in the plan, because an approver can accept a known gap but can't weigh one left out.

@@ -36,6 +36,8 @@ export default defineConfig({
   redirects: {
     '/vcf/library/troubleshooting/password-and-account-failures/': '/vcf/library/day-2/passwords-service-accounts/',
     '/vcf/library/troubleshooting/certificate-failures/': '/vcf/library/day-2/certificates-in-9/',
+    '/vcf/library/troubleshooting/depot-and-download-failures/': '/vcf/library/upgrades/getting-binaries/',
+    '/vcf/library/labs/offline-depot-in-a-lab/': '/vcf/library/upgrades/getting-binaries/',
   },
   prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
   integrations: [mdx(), sitemap({ filter: (page) => !HIDDEN.test(new URL(page).pathname) }), devMedia],
