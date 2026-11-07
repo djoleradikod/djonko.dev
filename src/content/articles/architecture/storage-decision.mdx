@@ -1,0 +1,188 @@
+---
+title: "vSAN ESA, storage clusters or an array in VCF 9.1: the questions that decide it"
+description: "Start with ESA on the compute hosts. The management default cluster can't use a storage cluster. Storage clusters pay when capacity forces new hosts in; arrays when you own one or a quote beats the price worked out here. vVols are out for new designs. Every cost study is labelled by who paid for it."
+category: architecture
+order: 12
+versions: ["9.1", "9.1.1"]
+level: Practitioner
+pubDate: 2026-11-07
+updated: 2026-11-07
+reviewed: 2026-11-06
+reviewDue: 2027-02-15
+kbs: [416270, 435850, 401070, 313548]
+sources:
+  - title: "Storage Models, VCF 9.1 design"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/storage-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Single-Rack vSAN Storage Cluster Storage Model"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/storage-models-9-x/standard-vsan-storage-model/single-rack-storage-models/vsan-storage-cluster-storage-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Single-Rack vSAN ESA Storage Model"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/storage-models-9-x/standard-vsan-storage-model/single-rack-storage-models/vcf-hardware-configuration-for-vsan.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Stretched vSAN Storage Cluster Storage Model"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/storage-models-9-x/standard-vsan-storage-model/stretched-cluster-storage-models/vsan-stretched-storage-cluster.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Fibre Channel Storage Model"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/storage-models-9-x/fibre-channel-storage.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "NFS Storage Model"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/storage-models-9-x/nfs-storage.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Sharing remote vSAN datastores, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsan-deployment-administration-and-monitoring/administering-vmware-vsan/expanding-and-managing-a-vsan-cluster/sharing-remote-vsan-datastores-with-hci-mesh.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Stretching vSAN clusters in VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/stretching-clusters.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Create a New Workload Domain, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/deploy-a-vi-workload-domain-using-the-sddc-manager-ui.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "What's new in vSAN, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vsan.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VMware Cloud Foundation 9.1 general FAQs"
+    url: "https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs"
+    by: "Broadcom"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "VMware Cloud Foundation 9 now ready for all storage"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/11/11/vmware-cloud-foundation-9-now-ready-for-all-storage/"
+    by: "John Nicholson, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-11-11
+  - title: "What's new for vSAN in 9.1?"
+    url: "https://www.yellow-bricks.com/2026/05/07/whats-new-for-vsan-in-9-1/"
+    by: "Duncan Epping"
+    kind: practitioner
+    date: 2026-05-07
+  - title: "Episode 114: vSAN Storage Clusters with Kalyan Krishnaswamy (show notes)"
+    url: "https://www.yellow-bricks.com/2026/03/16/114-vsan-storage-clusters-with-kalyan-krishnaswamy/"
+    by: "Duncan Epping"
+    kind: practitioner
+    date: 2026-03-16
+  - title: "Episode 129: Enhanced Compression, QLC, vSAN over FC, featuring Anoop Gunturi (show notes)"
+    url: "https://www.yellow-bricks.com/2026/10/26/129-enhanced-compression-qlc-vsan-over-fc-and-much-more-featuring-anoop-gunturi/"
+    by: "Duncan Epping"
+    kind: practitioner
+    date: 2026-10-26
+  - title: "Financial and Operational Impact of VMware vSAN ESA vs. External Fibre Channel Storage (sponsored by Broadcom)"
+    url: "https://www.vmware.com/docs/signal65-storage-tco-comparison-october-2026"
+    by: "Jonathan Fellows, Signal65"
+    kind: sponsored
+  - title: "Save up to 62% on Storage TCO by Adopting VMware vSAN, According to New Analyst Research"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/10/23/signal65-storage-tco-october-2026/"
+    by: "Tom Nagelmeyer, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-10-23
+  - title: "The Economics of Disaggregated Private Cloud Storage (commissioned by VMware by Broadcom)"
+    url: "https://www.signal65.com/research/the-economics-of-disaggregated-private-cloud-storage/"
+    by: "Mitch Lewis, Signal65"
+    kind: sponsored
+    date: 2024-07-15
+  - title: "How to Cut VMware Storage Costs Up to 62%"
+    url: "https://blog.everpuredata.com/solutions/rethink-vsan-save-up-to-62-on-your-vmware-stack/"
+    by: "Erin Stevens, Pure Storage blog"
+    kind: vendor
+    date: 2025-06-13
+---
+
+<InShort>
+**Default to vSAN ESA on the compute hosts**, in any domain whose hosts qualify. Choose a **storage cluster** when capacity, rather than compute, is what forces new hosts in: at the list prices in Signal65's Broadcom-sponsored model, a core costs nearly twice a TiB of add-on, so buying hosts for their entitlement loses money. Choose an **array** when you own one with life left, can't buy ESA hosts, or get a quote under the price worked out below. The management domain's default cluster can't use a storage cluster at all. vVols are out of every new design. Every cost figure below comes from someone with a stake, and the newest study prices no storage-only hosts.
+</InShort>
+
+<Callout type="analysis" title="Whose reasoning this is">
+Broadcom documents the matrix and limits. The question order, defaults and example are this site's.
+</Callout>
+
+## What is supported where
+
+Principal storage is what a domain or cluster is created on. Supplemental storage is added afterwards, and can run workloads or hold templates, backups and ISOs. From Broadcom's [Storage Models page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/storage-models.html): <AsOf date="2026-11-05" />
+
+| Storage | Management default cluster | Management additional clusters | Workload domain |
+|---|---|---|---|
+| vSAN ESA or OSA, HCI | Principal | Principal | Principal |
+| vSAN storage cluster or compute cluster | **Not supported** | Principal | Principal |
+| VMFS on Fibre Channel, NFSv3 | Principal, supplemental | Principal, supplemental | Principal, supplemental |
+| NFSv4.1 | Principal\*, supplemental | Principal\*, supplemental | Principal\*, supplemental |
+| iSCSI, NVMe/TCP, NVMe/FC, NVMe/RDMA | Principal\*, supplemental | Supplemental | Principal\*, supplemental |
+
+\* Only by converging or importing an environment you built by hand (<KB id={416270} />). Greenfield workflows don't offer these.
+
+Broadcom contradicts itself once here. The [NFS model page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/storage-models-9-x/nfs-storage.html) says NFSv4.1 "is only supported as a supplemental storage option", against the matrix and the KB, so use NFSv3 for principal storage unless Broadcom confirms otherwise in writing.
+
+## The questions, in order
+
+1. **Is this the management domain's default cluster?** Storage and compute clusters are then out, leaving HCI, Fibre Channel or NFSv3 on a new build. Choose as if it were permanent: <KB id={435850} /> says SDDC Manager changes principal storage only like for like, and FC "must be selected during the initial deployment". vSAN needs 3 hosts for a simple install and 4 for high availability. FC and NFS allow 2 for a simple install, and Broadcom [recommends starting at 4](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/storage-models-9-x/fibre-channel-storage.html). [FAQ Q33](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) calls vSAN recommended but not required.
+
+2. **Does the design lean on vVols?** Change it. The array stays eligible, as VMFS or NFS.
+
+3. **Can the hosts run ESA?** ESA takes [NVMe only](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/storage-models-9-x/standard-vsan-storage-model/single-rack-storage-models/vcf-hardware-configuration-for-vsan.html), attached directly to a PCIe slot and never through a Tri-Mode controller. If they can't, storage clusters and global deduplication are out, and you are choosing between an array and OSA. [vSAN ESA or OSA](/vcf/library/architecture/vsan-esa-osa/) covers that choice.
+
+4. **Will this cluster ever stretch, or run on two nodes?** Global deduplication is then out, [as Broadcom states for both](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/storage-models-9-x/standard-vsan-storage-model/single-rack-storage-models/vcf-hardware-configuration-for-vsan.html). A storage cluster [must be stretched before its compute clusters](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/stretching-clusters.html), at [four hosts per zone](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/storage-models-9-x/standard-vsan-storage-model/stretched-cluster-storage-models/vsan-stretched-storage-cluster.html). On arrays, Broadcom's [Storage Models page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/storage-models.html) rules out stretching on iSCSI and NVMe, and points FC and NFS to vSphere Metro Storage Cluster.
+
+5. **Is planned raw capacity at or below your core count, across the estate?** Then HCI needs no add-on. Above it, price the add-on, using the rules in [The vSAN entitlement](/vcf/library/value/vsan-entitlement/). An array leaves its hosts' entitlement idle.
+
+6. **Is capacity, rather than compute, forcing new hosts?** Only then consider a storage cluster, and check it clears the floor: ESA hardware, [4 hosts minimum and 32 maximum](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/storage-models-9-x/standard-vsan-storage-model/single-rack-storage-models/vsan-storage-cluster-storage-model.html), [20 TiB per host and under 5 ms to clients](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsan-deployment-administration-and-monitoring/administering-vmware-vsan/expanding-and-managing-a-vsan-cluster/sharing-remote-vsan-datastores-with-hci-mesh.html), 25 GbE for storage traffic and 10 GbE for clients. An HCI cluster [can't be converted](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsan-deployment-administration-and-monitoring/administering-vmware-vsan/expanding-and-managing-a-vsan-cluster/sharing-remote-vsan-datastores-with-hci-mesh.html) without deactivating vSAN. Two Broadcom pages differ on size: the sharing page recommends six hosts and allows 128 per datastore, the Design Library says design for seven and allows 104. Design to seven and 104.
+
+7. **Do you already own an array with life left?** Compare it on price, below, and on what it gives up: Broadcom's [feature table](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/storage-models.html) marks every array protocol without storage policy management, automated deployment and scale, and automated lifecycle. It can also stay as supplemental storage beside vSAN principal, in all three columns.
+
+## vVols
+
+Don't start on them. [FAQ Q32](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs), dated 4 November 2026, says they "will be fully removed in a future release", and <KB id={401070} /> ended their 9.0 certification at once. The Storage Models matrix has no row for them, though the [workload domain page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/deploy-a-vi-workload-domain-using-the-sddc-manager-ui.html) still offers a vVol-based domain while calling the capability deprecated. For the removal-date dispute and the exit, follow [the deprecation radar](/vcf/library/architecture/deprecation-radar/) and [vSAN ESA or OSA](/vcf/library/architecture/vsan-esa-osa/). A management domain on vVols has one cross-type route in SDDC Manager: vVol to vSAN (<KB id={435850} />).
+
+## Not design inputs yet
+
+**vSAN over Fibre Channel** appears in the show notes of [Unexplored Territory #129](https://www.yellow-bricks.com/2026/10/26/129-enhanced-compression-qlc-vsan-over-fc-and-much-more-featuring-anoop-gunturi/) (26 Oct 2026), a roadmap discussion with a disclaimer that it is "not a binding commitment". The [9.1 what's new page for vSAN](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/what-s-new/whats-new-vsan.html) doesn't mention it. **QLC** "for various workloads" sits under the same disclaimer. For 9.1 today, [Duncan Epping's May post](https://www.yellow-bricks.com/2026/05/07/whats-new-for-vsan-in-9-1/) says the devices are "not intended" for regular production and aim mainly at Cyber Recovery. The notes for [#114](https://www.yellow-bricks.com/2026/03/16/114-vsan-storage-clusters-with-kalyan-krishnaswamy/) only name traffic separation and stretched vSphere-only clusters as topics.
+
+## A constructed example
+
+Assumptions, invented except where a source is named:
+
+- One workload domain, 12 compute hosts at 2 x 24 cores: 576 cores. It holds 300 TiB, with no data reduction or growth, and nothing else draws on the pool.
+- RAID-6 at 1.5x and 30% free, as in [The vSAN entitlement](/vcf/library/value/vsan-entitlement/). Raw needed: 300 x 1.5 / 0.7 = 642.9 TiB. A 7.68 TB drive is 6.98 TiB.
+- Storage hosts run 2 x 16 cores and carry VCF. <KB id={313548} /> doesn't name storage clusters, but the 2024 Signal65 model licensed them this way. Confirm with Broadcom.
+- Prices come from Signal65's October 2026 list-price model: add-on at $17.50 per TiB per month, $1,050 over five years, and VCF at $2,000 per core over five years ($4,096,000 / 2,048 cores). Replace them with your quotes.
+
+| Design | Drives | Raw claimed | Licensed cores | Add-on | Extra licence cost, 5 years |
+|---|---|---|---|---|---|
+| ESA HCI | 8 x 12 hosts | 670.6 TiB | 576 | 95 TiB | $99,750 |
+| Storage cluster, 6 hosts | 16 x 6 hosts | 670.6 TiB | 576 + 192 = 768 | None, 97 TiB spare | 192 x $2,000 = $384,000, plus 6 servers |
+| FC array | None | 0 | 576 | None, 576 TiB idle | $0, plus array and fabric |
+
+HCI wins by $284,250 in licences before the extra servers, and by $64,000 more at the seven hosts advised above. A core brings 1 TiB (<KB id={313548} />) for $2,000, and a TiB alone costs $1,050.
+
+Now double the data to 600 TiB and limit the compute hosts to 8 drive bays. The 1,285.7 TiB of raw needed takes 192 drives either way, which claims 1,341.1 TiB, and add-on is that figure less all licensed cores, rounded up. HCI needs 24 hosts: 576 more cores ($1,152,000), making 1,152, plus 190 TiB of add-on ($199,500), or $1,351,500. Twelve 32-core storage hosts with 16 drives each need 384 cores ($768,000), making 960, plus 382 TiB ($401,100), or $1,169,100. The storage cluster saves $182,400 for the same number of added servers, because storage hosts don't need 48 cores.
+
+**The array's price to beat** in the 300 TiB case: 96 drives is 737.3 TB, which at the same model's tier-one $2,466 per TB is $1,818,132. Its 4.39% yearly support adds $399,080 over five years, and the add-on $99,750, for about **$2.32M**. An array with fabric and five years' support, quoted at 300 TiB usable, wins below that, before admin time and either side's data reduction.
+
+## What the cost evidence is worth
+
+| Evidence | Who paid | Claim | What limits it |
+|---|---|---|---|
+| [Signal65, Oct 2026](https://www.vmware.com/docs/signal65-storage-tco-comparison-october-2026) | Report: "In partnership with", "was asked to compare". [Broadcom's post](https://blogs.vmware.com/cloud-foundation/2026/10/23/signal65-storage-tco-october-2026/): "sponsored by Broadcom" | vSAN 13.5% cheaper at 12 hosts, 39.5% at 64. "Up to 62" in the post | vSAN on the compute hosts against FC, at equal raw capacity, with no storage-only hosts priced. Excludes facilities, migration and downtime. The report itself won't call it a TCO |
+| [Signal65, July 2024](https://www.signal65.com/research/the-economics-of-disaggregated-private-cloud-storage/) | Page: "Research commissioned by" VMware by Broadcom | $2.66M against $3.69M over 5 years, 27.83% | The only one modelling storage-only nodes. 2024 prices, with a 38% array discount and 17% on servers |
+| [Pure Storage blog, Jun 2025](https://blog.everpuredata.com/solutions/rethink-vsan-save-up-to-62-on-your-vmware-stack/) | An array vendor; credits ESG, no sponsor stated | 42% to 62% lower TCO than vSAN over 3 years | The post gives no inputs to test |
+
+<Callout type="analysis" title="How to read them">
+Use the October report for its inputs and ignore its headline. The 62% needs build-to-order hosts priced from one integrator, with no response-time commitment. The 13.5% doesn't apply to a VCF buyer, because FC runs on vSphere Standard in that case: add the $672,000 licence gap to its capital table and vSAN leads by 31%. The report lists its raw-capacity basis among simplifications that understate FC cost, yet an array returning more usable capacity per raw TB would narrow the gap. In the 2024 model, year one's $1.09M saving exceeds the whole $1.03M total, and vSAN costs more in years 3 to 5. The direction is plausible, since arrays carry controllers, fabric and dearer support. The size won't transfer to your estate, so get a quote at usable capacity and run the example with it.
+</Callout>

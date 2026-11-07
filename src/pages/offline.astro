@@ -24,7 +24,7 @@ const all = [...core, ...notes.map(urlOf)];
   <section id="off-actions" aria-labelledby="off-save-h">
     <h2 id="off-save-h">Save ahead of time</h2>
     <p class="path-actions">
-      <button type="button" class="btn primary" data-offline-save={JSON.stringify(all)}>Save all {notes.length} notes and the reference pages</button>
+      <button type="button" class="btn primary" data-offline-save={JSON.stringify(all)}>Save all {notes.length} notes and reference pages</button>
       <span class="small muted" data-offline-status aria-live="polite"></span>
     </p>
     <ul class="list">

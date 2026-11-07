@@ -1,35 +1,32 @@
 ---
-import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import FleetModel from '../components/home/FleetModel.astro';
+import SupportClock from '../components/home/SupportClock.astro';
 import { SITE } from '../data/site';
 import { CATEGORIES } from '../data/categories';
+import { SUPPORT_NOTE } from '../data/releases';
 import { KB_INDEX } from '../data/kb';
 import { TOOLS } from '../data/tools';
 import { allArticles, urlOf } from '../lib/articles';
 import { allPosts, allProjects, postUrl, fmtDate } from '../lib/posts';
 import { readingPaths } from '../lib/paths';
 import { personLd } from '../lib/schema';
-import triageSheet from '../assets/home/triage-sheet.png';
 
 const notes = await allArticles();
 const posts = await allPosts();
 const projects = await allProjects();
 const paths = await readingPaths();
+// Posts and notes together, newest change first. Anything first published that day leads a tie, as the newest work.
 const latest = [
-  ...posts.map((p) => ({ title: p.data.title, date: p.data.updated ?? p.data.pubDate, href: postUrl(p), kind: 'Blog' })),
-  ...notes.map((a) => ({ title: a.data.title, date: a.data.updated ?? a.data.pubDate, href: urlOf(a), kind: 'VCF note' })),
-].sort((a, b) => +b.date - +a.date).slice(0, 6);
+  ...posts.map((p) => ({ title: p.data.title, date: p.data.updated ?? p.data.pubDate, pub: p.data.pubDate, href: postUrl(p), kind: 'Blog' })),
+  ...notes.map((a) => ({ title: a.data.title, date: a.data.updated ?? a.data.pubDate, pub: a.data.pubDate, href: urlOf(a), kind: 'VCF note' })),
+].sort((a, b) => +b.date - +a.date || +b.pub - +a.pub || a.title.localeCompare(b.title)).slice(0, 6);
 
 const perArea = CATEGORIES.map((c) => ({ ...c, n: notes.filter((a) => a.data.category === c.id).length }));
-// Four rows from the comparison table in the note "The VCF 9 mental model", shown as a sample of a note.
-const peek: [string, string, string][] = [
-  ['Top-level unit', 'One SDDC Manager and its domains.', 'The fleet: one VCF Operations and one VCF Automation over one or more instances.'],
-  ['Where you start', 'The SDDC Manager UI.', 'VCF Operations, with SDDC Manager underneath it.'],
-  ['Identity', 'vCenter SSO per domain, and vIDM for Aria.', 'VCF Identity Broker, scoped to the fleet, several instances or one.'],
-  ['Upgrade order', 'SDDC Manager first, then each domain.', 'VCF Operations and the fleet first, then each instance.'],
-];
+
+const clock = notes.find((a) => a.id === SUPPORT_NOTE);
+if (!clock) throw new Error(`The home page names "${SUPPORT_NOTE}", which is not a published note.`);
 const makers = [
   { label: 'Broadcom', n: TOOLS.filter((t) => t.maker === 'broadcom').length },
   { label: 'Flings', n: TOOLS.filter((t) => t.maker === 'fling').length },
@@ -48,36 +45,51 @@ const ld = [
   { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: new URL('/', Astro.site).href, author: { '@id': new URL('/#person', Astro.site).href } },
 ];
 ---
-<Base jsonLd={ld}>
-  <section class="home-hero">
-    <div class="home-hero-text">
-      <p class="eyebrow">{SITE.author}, {SITE.role}</p>
+<Base jsonLd={ld} shell page="home">
+  <section class="wrap home-lead" id="content-start" tabindex="-1">
+    <div>
+      <p class="home-who">{SITE.author}, {SITE.role}</p>
       <h1>I help teams design, upgrade and run VMware Cloud Foundation.</h1>
-      <p class="lede">Architecture reviews, 5.x to 9.x upgrades, day-2 operations and hard escalations, written down so your team can run VCF itself.</p>
+      {SITE.photo && <img class="home-photo" src={SITE.photo} alt={`Photo of ${SITE.author}`} width="72" height="72" />}
+    </div>
+    <div>
+      <p class="home-lede">Architecture reviews, 5.x to 9.x upgrades, day-2 operations and hard escalations, written down so your team can run VCF itself.</p>
       <div class="actions">
         <a class="btn primary" href="/vcf/">Read the VCF notes <Icon name="arrow-right" size={16} /></a>
         <a class="btn" href="/about/">How I work</a>
       </div>
-      {SITE.photo && <img class="photo" src={SITE.photo} alt={`Photo of ${SITE.author}`} width="72" height="72" />}
     </div>
-    <FleetModel />
   </section>
 
-  <section class="figures" aria-label="The site in numbers">
-    <dl>
-      <div><dt>Field notes</dt><dd class="fig-n">{notes.length}</dd><dd class="fig-d">each with the 5.x and 9.x answer side by side</dd></div>
-      <div><dt>Reading paths</dt><dd class="fig-n">{paths.length}</dd><dd class="fig-d">notes in order for one job, from upgrade to on-call</dd></div>
-      <div><dt>Broadcom KBs indexed</dt><dd class="fig-n">{KB_INDEX.length}</dd><dd class="fig-d">with a one-line topic and the notes that cite them</dd></div>
-      <div><dt>Tools catalogued</dt><dd class="fig-n">{TOOLS.length}</dd><dd class="fig-d">for planning, upgrading, diagnosing and automating VCF 9</dd></div>
-    </dl>
+  <SupportClock note={clock} />
+
+  <section class="wrap home-sec lx" aria-labelledby="lx-h">
+    <div class="lx-head">
+      <h2 class="home-h2" id="lx-h"><a href="/vcf/">{SITE.vcfName}</a></h2>
+      <p>{notes.length} notes in {CATEGORIES.length} areas. Each one links the sources behind it, and where 5.x and 9.x differ it says how.</p>
+    </div>
+    <nav aria-label="Library">
+      <ul class="lx-areas">
+        {perArea.map((c) => <li><a href={`/vcf/library/${c.id}/`}>{c.short}<span>{c.n}<span class="sr-only"> notes</span></span></a></li>)}
+      </ul>
+      <ul class="lx-more">
+        <li><a href="/vcf/library/">Library<span>{notes.length}</span></a></li>
+        <li><a href="/vcf/paths/">Reading paths<span>{paths.length}</span></a></li>
+        <li><a href="/vcf/tools/">Tools for VCF 9.x<span>{TOOLS.length}</span></a></li>
+        <li><a href="/vcf/resources/kb-index/">KB index<span>{KB_INDEX.length}</span></a></li>
+      </ul>
+    </nav>
   </section>
 
-  <section class="block">
-    <h2 class="block-h">What I do</h2>
-    <div class="focus">
+  <div class="home-plate">
+    <div class="wrap"><FleetModel /></div>
+  </div>
+
+  <section class="wrap home-sec">
+    <h2 class="home-h2">What I do</h2>
+    <div class="do-list">
       {focus.map((f) => (
         <a href={f.href}>
-          <span class="focus-ic"><Icon name={f.icon} size={22} /></span>
           <h3>{f.t}</h3>
           <p>{f.d}</p>
         </a>
@@ -85,67 +97,54 @@ const ld = [
     </div>
   </section>
 
-  <section class="block">
-    <h2 class="block-h">Selected work</h2>
-    <div class="bento">
-      <a class="tile tile-notes" href="/vcf/">
-        <div>
-          <h3>{SITE.vcfName}</h3>
-          <p>{notes.length} notes in {CATEGORIES.length} areas. Each one sets the 5.x and 9.x answers side by side, links the KBs behind it and credits its sources.</p>
-        </div>
-        <div class="peek" aria-hidden="true">
-          <div class="peek-cap"><span>What changed from 5.x</span><span class="muted">from the fleet model note</span></div>
-          <table>
-            <thead><tr><th></th><th class="v5">VCF 5.x</th><th class="v9">VCF 9.x</th></tr></thead>
-            <tbody>{peek.map(([t, a, b]) => <tr><td>{t}</td><td>{a}</td><td>{b}</td></tr>)}</tbody>
-          </table>
-        </div>
-        <ul class="areas" aria-label="Areas">{perArea.map((c) => <li>{c.short}<span>{c.n}</span></li>)}</ul>
-      </a>
-      <a class="tile tile-talks" href="/talks/">
+  <section class="wrap home-sec">
+    <h2 class="home-h2">Selected work</h2>
+    <a class="ex-plate" href="/talks/">
+      <div>
         <h3>A five-part VCF 9 workshop series</h3>
-        <ol class="modules">{modules.map((m) => <li>{m}</li>)}</ol>
-        <span class="tile-go">Delivered to engineers and to customers <Icon name="arrow-right" size={15} /></span>
+        <span class="ex-go">Delivered to engineers and to customers <Icon name="arrow-right" size={15} /></span>
+      </div>
+      <ol class="ex-modules" role="list">{modules.map((m) => <li>{m}</li>)}</ol>
+    </a>
+    <div class="ex-three">
+      <a class="ex-col" href="/vcf/resources/triage-cheat-sheet/">
+        <h3>VCF 9.x triage cheat sheet</h3>
+        <p>Eight checks in order, each with a command, what good looks like and what to do when it is not.</p>
       </a>
-      <a class="tile tile-sheet" href="/vcf/resources/triage-cheat-sheet/">
-        <div>
-          <h3>VCF 9.x triage cheat sheet</h3>
-          <p>Eight checks in order, each with a command, what good looks like and what to do when it is not.</p>
-        </div>
-        <Image src={triageSheet} alt="First page of the triage cheat sheet: eight numbered checks, each with a command and the expected result." widths={[280, 560]} sizes="(max-width: 820px) 60vw, 280px" />
-      </a>
-      <a class="tile tile-tools" href="/vcf/tools/">
+      <a class="ex-col" href="/vcf/tools/">
         <h3>Tools for VCF 9.x</h3>
         <p>The tools worth knowing, grouped by job, with support status and a link to each publisher.</p>
-        <dl class="mini">{makers.map((m) => <div><dt>{m.label}</dt><dd class="num">{m.n}</dd></div>)}</dl>
+        <dl class="ex-mini">{makers.map((m) => <div><dt>{m.label}</dt><dd class="num">{m.n}</dd></div>)}</dl>
       </a>
-      <a class="tile tile-open" href="/projects/">
-        <span class="focus-ic"><Icon name="toolbox" size={22} /></span>
-        <div>
-          <h3>Open tools for VCF Operations</h3>
-          <p>{projects.length > 1 ? `${projects.length} scripts, agents and management packs` : 'Scripts, agents and management packs'} for VCF Operations 9.1.1 and later, least privilege by default. The first ones are in development.</p>
-          <ul class="ticks">
-            <li><Icon name="check" size={15} />Read-only service accounts</li>
-            <li><Icon name="check" size={15} />A compatibility matrix for each tool</li>
-            <li><Icon name="check" size={15} />Open source</li>
-          </ul>
-        </div>
+      <a class="ex-col" href="/projects/">
+        <h3>Open tools for VCF Operations</h3>
+        <p>{projects.length > 1 ? `${projects.length} scripts, agents and management packs` : 'Scripts, agents and management packs'} for VCF Operations 9.1.1 and later, least privilege by default. The first ones are in development.</p>
+        <ul class="ex-ticks">
+          <li><Icon name="check" size={15} />Read-only service accounts</li>
+          <li><Icon name="check" size={15} />A compatibility matrix for each tool</li>
+          <li><Icon name="check" size={15} />Open source</li>
+        </ul>
       </a>
     </div>
   </section>
 
-  <section class="block">
-    <div class="block-head"><h2 class="block-h">Latest writing</h2><a href="/blog/">All posts <Icon name="arrow-right" size={14} /></a></div>
-    <ol class="dated">
+  <section class="wrap home-sec">
+    <div class="home-new-head">
+      <h2 class="home-h2">Latest writing</h2>
+      <a class="hub-all" href="/blog/">All posts <Icon name="arrow-right" size={14} /></a>
+    </div>
+    <ol class="hub-rows rows-new">
       {latest.map((i) => (
-        <li><a href={i.href}><time class="num" datetime={i.date.toISOString()}>{fmtDate(i.date)}</time><span class="t">{i.title}</span><span class="k">{i.kind}</span></a></li>
+        <li><a href={i.href}><time class="num" datetime={i.date.toISOString().slice(0, 10)}>{fmtDate(i.date)}</time><span class="t">{i.title}</span><span class="k">{i.kind}</span></a></li>
       ))}
     </ol>
   </section>
 
-  <section class="closing">
+  <section class="wrap home-close">
     <h2>Working through a VCF 9 upgrade, or an escalation that will not close?</h2>
-    <p>Tell me where it stands and what has been tried so far.</p>
-    <a class="btn primary" href="/contact/">Contact</a>
+    <div>
+      <p>Tell me where it stands and what has been tried so far.</p>
+      <a class="btn primary" href="/contact/">Contact</a>
+    </div>
   </section>
 </Base>

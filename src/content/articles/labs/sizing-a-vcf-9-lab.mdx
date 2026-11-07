@@ -1,40 +1,196 @@
 ---
-title: "Sizing a VCF 9 lab: what the smallest working fleet needs, and what to buy first"
-description: "The minimum VCF 9.0 lab with VCF Operations and Automation fits in roughly 48 vCPU and 194 GB of memory with simple deployment modes. VCF Automation sets the floor for host cores. Buy memory first, or NVMe capacity for memory tiering."
+title: "Sizing a VCF 9.1 lab: the figures for each build, whose they are, and what to buy"
+description: "A VCF 9.1.1 Simple fleet with Automation is allocated 76 vCPU, 251 GB and 7,448 GB (Broadcom). Holodeck recommends 48 cores, 650 GB and 2.2 TB for seven nested hosts. Lam runs a full fleet on one 14-core, 256 GB host with NVMe tiering. This note compares the builds and says which to buy."
 category: labs
 order: 2
-versions: ["9.0", "9.1"]
+versions: ["9.0", "9.1", "9.1.1"]
 level: Practitioner
 pubDate: 2026-11-02
 updated: 2026-11-06
-kbs: []
+reviewed: 2026-11-06
+reviewDue: 2027-02-15
+kbs: [455842]
 sources:
+  - title: "VCF Fleet Sizing Models (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-fleet-sizing-models-9-x.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.1.1 Planning and Preparation Workbook"
+    url: "https://techdocs.broadcom.com/content/dam/broadcom/techdocs/us/en/assets/vmware-cis/vcf/vcf-9.1.1-planning-and-preparation-workbook.xlsx"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+  - title: "VCF Automation Sizing: What You Are Actually Choosing"
+    url: "https://arunnukula.com/blog/vcf-automation-sizing-what-you-are-actually-choosing"
+    by: "Arun Nukula"
+    kind: practitioner
+    date: 2026-09-19
+  - title: "VCF 9.1 Home Lab Series, part 3: pre-deployment planning"
+    url: "https://vstellar.com/2026/05/vcf-9-1-home-lab-series-part-3-pre-deployment-planning/"
+    by: "Manish Jha"
+    kind: practitioner
+    date: 2026-05-18
+  - title: "Simple VCF Management Services Model (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-management-services-availabilty-detailed-design/vcf-management-services-simple-deployment-model.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Reducing footprint of VCF management services cluster that is only hosting Day 0 component (KB 455842)"
+    url: "https://knowledge.broadcom.com/external/article/455842"
+    by: "Broadcom"
+    kind: broadcom
+  - title: "Holodeck documentation, Getting Started"
+    url: "https://vmware.github.io/Holodeck/latest/"
+    by: "VMware on GitHub"
+    kind: broadcom
+  - title: "Holodeck release notes"
+    url: "https://vmware.github.io/Holodeck/latest/release_notes/"
+    by: "VMware on GitHub"
+    kind: broadcom
+  - title: "Announcing the general availability of Holodeck 9.0"
+    url: "https://blogs.vmware.com/cloud-foundation/2025/06/30/announcing-the-general-availability-of-holodeck-9-0/"
+    by: "Jatin Purohit, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-06-30
   - title: "Minimal resources for deploying VCF 9.0 in a lab"
     url: "https://williamlam.com/2025/06/minimal-resources-for-deploying-vcf-9-0-in-a-lab.html"
     by: "William Lam"
-  - title: "NVMe tiering with nested virtualization in VCF 9.0"
-    url: "https://williamlam.com/2025/06/nvme-tiering-with-nested-virtualization-in-vcf-9-0.html"
+    kind: practitioner
+    date: 2025-06-18
+  - title: "VCF 9.1: automated VCF and VVF nested lab deployment"
+    url: "https://williamlam.com/2026/05/vcf-9-1-automated-vmware-cloud-foundation-vcf-vmware-vsphere-foundation-vvf-nested-lab-deployment.html"
     by: "William Lam"
+    kind: practitioner
+    date: 2026-05-14
+  - title: "vcf-fleet-automated-lab-deployment (README and 9.1.0 sample)"
+    url: "https://github.com/lamw/vcf-fleet-automated-lab-deployment"
+    by: "William Lam"
+    kind: practitioner
+  - title: "VCF 9.1: VMUG x Intel x Micron single VCF host deployment"
+    url: "https://williamlam.com/2026/06/vcf-9-1-vmug-x-intel-x-micron-collaboration-on-single-vcf-host-deployment-for-vmug-connect.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-06-01
+  - title: "VCF 9.1.1 in a Box (README, bill of materials)"
+    url: "https://github.com/lamw/vcf-91-in-box"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-10-23
+  - title: "VCF 9.1: enabling high availability for a small VCFMS deployment"
+    url: "https://williamlam.com/2026/06/vcf-9-1-enabling-high-availability-for-a-small-vcf-management-services-vcfms-deployment.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-06-22
+  - title: "VCF 9.1.1: adopting the reduced VCFMS footprint after an upgrade"
+    url: "https://williamlam.com/2026/09/vcf-9-1-1-adopting-the-reduced-vcf-management-services-vcfms-footprint-after-an-upgrade.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-09-03
+  - title: "Clarifying minimum required ESX hosts for VCF deployments"
+    url: "https://williamlam.com/2026/06/clarifying-minimum-required-esx-hosts-for-vcf-deployments.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-06-18
+  - title: "VCF 9.1.1: single ESX host for VCF fleet, workload domain or cluster"
+    url: "https://williamlam.com/2026/09/vcf-9-1-1-single-esx-host-for-vcf-fleet-vcf-workload-domain-or-vcf-cluster.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-09-30
+  - title: "VCF 9.1: comprehensive VCF Installer and SDDC Manager workarounds for lab deployments"
+    url: "https://williamlam.com/2026/05/vcf-9-1-comprehensive-vcf-installer-sddc-manager-configuration-workarounds-for-lab-deployments.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-05-11
+  - title: "VCF 9.1: deploying VCF Automation to a non-management network"
+    url: "https://williamlam.com/2026/06/vcf-9-1-deploying-vcf-automation-vcfa-to-non-management-network.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-06-05
+  - title: "VCF 9.1: are you using the correct ESXCLI command to enable NVMe Tiering?"
+    url: "https://williamlam.com/2026/06/vcf-9-1-are-you-using-the-correct-esxcli-command-to-enable-nvme-tiering.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-06-12
+  - title: "VCF Infrastructure Services (VIS) appliance for VCF 9.1 lab/PoC"
+    url: "https://williamlam.com/2026/07/vcf-infrastructure-services-vis-appliance-for-vcf-9-1-lab-poc.html"
+    by: "William Lam"
+    kind: practitioner
+    date: 2026-07-20
   - title: "NVMe memory tiering design and sizing on VCF 9, part 5"
     url: "https://blogs.vmware.com/cloud-foundation/2025/12/29/nvme-memory-tiering-design-and-sizing-on-vmware-cloud-foundation-9-part-5/"
-    by: "VMware Cloud Foundation blog"
-  - title: "Announcing the general availability of Holodeck 9.0"
-    url: "https://blogs.vmware.com/cloud-foundation/2025/06/30/announcing-the-general-availability-of-holodeck-9-0/"
-    by: "VMware Cloud Foundation blog"
+    by: "Dave Morera, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2025-12-29
 ---
 
 <InShort>
-With **simple (single-node) deployment modes**, one instance of each 9.0 component adds up to about **48 vCPU, 194 GB of memory and 3.2 TB provisioned**, of which about 330 GB is used. **VCF Automation** is the constraint: a 24 vCPU, 96 GB VM, which needs a physical host with at least **12 cores and 24 threads**. Its memory can't be reduced. A fuller nested fleet with a four-node management domain and a three-node workload domain, as Holodeck builds it, needs about **30 cores, 325 GB of memory and 1.1 TB of disk**. Plan memory first, and look at **NVMe memory tiering** before buying more RAM.
+Size a VCF 9.1.1 lab from **76 vCPU, 251 GB of memory and 7,448 GB of disk**: Broadcom's Simple profile, with VCF Automation included (updated 5 Nov 2026). Those are appliance allocations, so they can run on much less physical CPU and disk.
+
+- **Buying one machine:** 14 cores, 256 GB of DRAM and two 1 TB NVMe drives beyond the boot device, one of them for memory tiering. William Lam runs a complete 9.1 fleet on that, using lab workarounds.
+- **Avoiding the host-count workaround:** three hosts. Lam's bill of materials uses Minisforum MS-A2 boxes with 128 GB, and his 2025 post gives the MS-A2 16 cores.
+- **Holodeck's 48 cores, 650 GB and 2.2 TB** is a recommendation for seven nested hosts. Borrow that server. Don't buy to it unless you need Holodeck itself.
 </InShort>
 
-<Compare rows={[
-  ["NSX Managers", "Three required", "One in simple mode"],
-  ["Management appliances", "SDDC Manager, vCenter, NSX, optional Aria", "Adds VCF Operations, the collector, fleet management (9.0) or the services runtime (9.1), and optionally VCF Automation"],
-  ["Largest single VM", "NSX Manager or Aria Automation", "VCF Automation: 24 vCPU and 96 GB"],
-  ["Memory relief", "None built in", "NVMe memory tiering, including for nested ESX"],
-]} />
+<Callout type="note" title="Corrected on 6 November 2026">
+This note gave 48 vCPU and 194 GB as the total of its 9.0 table. Those are the totals printed on Lam's post, but the rows add up to 50 vCPU and 201 GB. It also gave 30 cores for Holodeck 9.0, which the current docs list as 32 or 24 depending on vSAN type, and it had no 9.1 figures.
+</Callout>
 
-## The minimal 9.0 footprint
+## The 9.1 figures, side by side
+
+Nothing here was run by this site. Each row belongs to the source named, and "sum" marks this site's arithmetic. <AsOf date="2026-11-06" />
+
+| Build | Source and date | CPU | Memory | Disk |
+|---|---|---|---|---|
+| Simple profile, appliance total | Broadcom [Fleet Sizing Models](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/vmware-cloud-foundation-concepts/vcf-fleet-sizing-models-9-x.html), 5 Nov 2026 | 76 vCPU | 251 GB | 7,448 GB |
+| HA Small profile, appliance total | Same page | 106 vCPU | 335 GB | 8,422 GB |
+| Holodeck, single site (4 + 3 nested hosts) | [Holodeck docs](https://vmware.github.io/Holodeck/latest/), toolkit 9.1.1, Oct 2026 | 48 cores | 650 GB | 2.2 TB |
+| Holodeck, dual site | Same page | 96 cores | 1,536 GB | 5 TB |
+| Lam's nested script, 3 management hosts | [Repo sample for 9.1.0](https://github.com/lamw/vcf-fleet-automated-lab-deployment) | Sum: 3 × 32 = 96 vCPU | Sum: 3 × 112 = 336 GB | Sum: 3 × (64 + 32 + 500) = 1,788 GB thin |
+| Add 3 workload domain hosts | Same repo | Sum: 3 × 16 = 48 vCPU | Sum: 3 × 32 = 96 GB | Sum: 3 × (64 + 32 + 250) = 1,038 GB thin |
+| Lam's physical build, 1 host | [Lam, 1 Jun 2026](https://williamlam.com/2026/06/vcf-9-1-vmug-x-intel-x-micron-collaboration-on-single-vcf-host-deployment-for-vmug-connect.html) | 14 cores, 28 threads | 256 GB | 2 × 1 TB NVMe (vSAN ESA and tiering) |
+| Lam's physical build, 2 or 3 hosts | [VCF 9.1.1 in a Box](https://github.com/lamw/vcf-91-in-box), 23 Oct 2026 | 16 cores each ([Lam, 2025](https://williamlam.com/2025/06/minimal-resources-for-deploying-vcf-9-0-in-a-lab.html)). Sum: 32 or 48 | 128 GB each. Sum: 256 or 384 GB | Per host: 1 TB vSAN ESA, 1 TB tiering, 500 GB boot |
+
+These rows measure different things. Broadcom's is what the VMs are given. Holodeck's is a host recommendation, and its pre-checks warn below it without blocking the build. It also pays for a workload domain and four management hosts, which the Simple profile doesn't. Lam's physical rows are hardware he reports working, and they don't state how much room is left for workloads.
+
+<Callout type="analysis" title="Reading memory against CPU">
+On Lam's one-host build, 76 vCPU on 28 threads is 2.7 to 1, which a quiet lab can absorb. 251 GB on 256 GB of DRAM leaves 5 GB before ESX takes its share, so that build depends on tiering. This is why this site would spend on memory or a tier device before extra cores. Three of the 16-core hosts change both ratios: 76 vCPU on 96 threads, 251 GB on 384 GB.
+</Callout>
+
+## Which to buy
+
+| Your situation | Build | Hardware |
+|---|---|---|
+| One purchase, full stack, you accept workarounds | Physical, one host | The 14-core, 256 GB spec above. Single-host deployment [needs a workaround](https://williamlam.com/2026/05/vcf-9-1-comprehensive-vcf-installer-sddc-manager-configuration-workarounds-for-lab-deployments.html), and adding clusters or domains later [needs the SDDC Manager API](https://williamlam.com/2026/09/vcf-9-1-1-single-esx-host-for-vcf-fleet-vcf-workload-domain-or-vcf-cluster.html) |
+| vSAN and vMotion must behave as they would across hosts | Physical, three hosts | Three of the 16-core, 128 GB boxes, plus a 10 GbE switch as in Lam's BOM. The docs Lam [quotes](https://williamlam.com/2026/06/clarifying-minimum-required-esx-hosts-for-vcf-deployments.html) ask for 3 hosts with vSAN or 2 with external storage in Simple mode |
+| You already have a vSphere host with memory free | [Lam's nested script](/vcf/library/labs/nested-lab-automation/) | Nothing new. Allow 336 GB of nested host memory for management alone |
+| A team needs identical environments, or a workload domain | [Holodeck](/vcf/library/labs/holodeck/) | Borrow a server near the single-site row, plus the Holorouter at 6 CPU, 12 GB and 75 GB. The docs don't say whether their table includes it |
+
+Check memory prices before choosing. Lam's bill of materials lists the 128 GB kit at $279.99, then $1,195 as of 7 Jan 2026. Three kits at that price are $3,585 (sum), before anything else. <AsOf date="2026-11-06" />
+
+Holodeck, Lam's scripts and the single-host workarounds are for labs. Holodeck's docs call it "not a VMware supported product", and Lam [documents his workarounds](https://williamlam.com/2026/05/vcf-9-1-comprehensive-vcf-installer-sddc-manager-configuration-workarounds-for-lab-deployments.html) for non-production use.
+
+## What you can cut, and what it saves
+
+- **VCF Automation.** Holodeck makes it opt-in with `-DeployVcfAutomation`, while Broadcom's Simple profile counts it. Holodeck's docs don't say whether their 9.1 row includes it. Broadcom's sizing page prints only totals, but the reference tables in its [9.1.1 Planning and Preparation Workbook](https://techdocs.broadcom.com/content/dam/broadcom/techdocs/us/en/assets/vmware-cis/vcf/vcf-9.1.1-planning-and-preparation-workbook.xlsx) put Small at 24 vCPU, 96 GB and 600 GB, the same CPU and memory as Lam's 9.0 table. Arun Nukula's [19 Sep 2026 post](https://arunnukula.com/blog/vcf-automation-sizing-what-you-are-actually-choosing) reads them the same way. Those figures fit the total: with Automation counted, the workbook's values for the other listed components come to 74 vCPU and 247 GB, leaving 2 vCPU and 4 GB for the License Server, which the workbook doesn't size. Leaving it out gives 76 − 24 = 52 vCPU and 251 − 96 = 155 GB. These are this site's sums. Lam [describes](https://williamlam.com/2026/06/vcf-9-1-deploying-vcf-automation-vcfa-to-non-management-network.html) adding it later through Fleet LCM as a Day-N step, in an upgrade flow, so confirm your Installer screen offers the same on a new fleet.
+- **A worker node, if you upgraded.** New 9.1.1 deployments get one fewer VCF Management Services worker automatically. An environment upgraded from 9.1.0 keeps it until you run the procedure in <KB id={455842} />, which saves [12 vCPU and 24 GB](https://williamlam.com/2026/09/vcf-9-1-1-adopting-the-reduced-vcf-management-services-vcfms-footprint-after-an-upgrade.html). The KB limits it to Day-0-only deployments without Log Management or Real-time Metrics.
+- **The workload domain, in Holodeck.** `-ManagementOnly` deploys the management domain alone. The docs give no separate figure for it.
+- **High availability.** Staying on Simple rather than HA Small saves 106 − 76 = 30 vCPU and 335 − 251 = 84 GB.
+- **VCF itself.** If the job fits VVF, Holodeck lists 24 cores, 512 GB and 2 TB for VVF 9.1 single site. Lam's script README asks for 12 vCPU, 104 GB and 100 GB thin.
+- **DRAM, through NVMe tiering.** Lam [reports](https://williamlam.com/2026/05/vcf-9-1-automated-vmware-cloud-foundation-vcf-vmware-vsphere-foundation-vvf-nested-lab-deployment.html) that from 9.1 nested ESX VMs run on tiered physical hosts with no workaround. For nested 9.0 labs, Dave Morera's [29 Dec 2025 post](https://blogs.vmware.com/cloud-foundation/2025/12/29/nvme-memory-tiering-design-and-sizing-on-vmware-cloud-foundation-9-part-5/) has tiering on the outer host unsupported and Holodeck's 9.0.x notes warn of instability, so size those from DRAM. The 9.0 commands [no longer enable it properly in 9.1](https://williamlam.com/2026/06/vcf-9-1-are-you-using-the-correct-esxcli-command-to-enable-nvme-tiering.html).
+
+Disk needs less attention than the 7,448 GB suggests. In Lam's 9.0 table the provisioned disk is about 10 times what is written (3,275 ÷ 334), and his 9.1 builds fit a 1 TB vSAN device. That margin closes as you add snapshots and workloads, and Holodeck's 9.0.x notes warn that nested vSAN ESA may use more than expected.
+
+One addition is worth its small cost if you go physical: Lam's [VIS appliance](https://williamlam.com/2026/07/vcf-infrastructure-services-vis-appliance-for-vcf-9-1-lab-poc.html) at 2 vCPU, 4 GB and 30 GB bundles the supporting lab services. He pitches it at people who don't meet Holodeck's requirements.
+
+## Where the sources disagree
+
+- **Worker nodes in Simple.** Broadcom's Fleet Sizing Models page shows 1 control plane and 2 workers, while its [Simple model page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/vcf-management-services-availabilty-detailed-design/vcf-management-services-simple-deployment-model.html) still requires 3 workers (both updated 5 Nov 2026). Lam's posts explain it: [3 workers on 9.1.0](https://williamlam.com/2026/06/vcf-9-1-enabling-high-availability-for-a-small-vcf-management-services-vcfms-deployment.html), one fewer on new 9.1.1. Using his node sizes of 4 vCPU and 10 GB, and 12 vCPU and 24 GB, the runtime takes 4 + (2 × 12) = 28 vCPU and 10 + (2 × 24) = 58 GB on new 9.1.1. An upgraded fleet that hasn't shrunk would be 76 + 12 = 88 vCPU and 251 + 24 = 275 GB. These are this site's sums.
+- **Lam's nested README against its own defaults.** The README asks for "up to 275 GB" and VMs of up to 24 vCPU, yet its sample gives each management host 112 GB and 32 vCPU. 275 GB matches the upgraded total above, so it looks like the fleet's memory rather than the nested hosts' allocation. This is inference. Plan on the 336 GB, because that is what the script allocates.
+- **Holodeck 9.0.** The [June 2025 launch post](https://blogs.vmware.com/cloud-foundation/2025/06/30/announcing-the-general-availability-of-holodeck-9-0/) by Jatin Purohit says about 30 cores. The current docs list 32 with vSAN ESA and 24 with OSA, both at 325 GB and 1.1 TB, and the [release notes](https://vmware.github.io/Holodeck/latest/release_notes/) tie those to VCF Automation's minimum. Use the docs.
+
+## If you are staying on 9.0
+
+These figures come from [Lam's table of 18 June 2025](https://williamlam.com/2025/06/minimal-resources-for-deploying-vcf-9-0-in-a-lab.html). The bottom row is this site's addition.
 
 | Component | vCPU | Memory | Provisioned | Used |
 |---|---|---|---|---|
@@ -42,25 +198,12 @@ With **simple (single-node) deployment modes**, one instance of each 9.0 compone
 | NSX Manager | 6 | 24 GB | 300 GB | ~14 GB |
 | SDDC Manager | 4 | 16 GB | 931 GB | ~77 GB |
 | VCF Operations | 4 | 16 GB | 290 GB | ~13 GB |
-| Fleet management (9.0) | 4 | 12 GB | 206 GB | ~117 GB |
+| Fleet management | 4 | 12 GB | 206 GB | ~117 GB |
 | Collector | 4 | 16 GB | 280 GB | ~11 GB |
 | VCF Automation | 24 | 96 GB | 626 GB | ~72 GB |
+| **Lam's printed total** | 48 | 194 GB | 3.2 TB | 330 GB |
+| **Sum of the rows** | **50** | **201 GB** | **3,275 GB** | **~334 GB** |
 
-Figures from William Lam's measurements on 9.0. In 9.1, fleet management is replaced by the services runtime, which has its own node count and sizing, so measure your own build.
+Without VCF Automation the rows add up to 26 vCPU, 105 GB and 2,649 GB. Plan on the sums, because they are the larger figures and the post doesn't explain its totals.
 
-## What to buy, in order
-
-1. **Memory** first, or NVMe capacity for memory tiering.
-2. **Cores**: at least 12 cores and 24 threads if VCF Automation is in scope. An 8-core consumer system won't run it.
-3. **NVMe storage**: thin provisioning hides most of the 3.2 TB, but vSAN ESA and snapshots add up.
-4. **10 GbE** if you go physical with more than one host.
-
-<Callout type="field">
-Leave VCF Automation out of the first build unless the lab is for Automation. Deploy it later as a Day-N step. The rest of the fleet fits in much smaller hardware, and you learn the core platform faster.
-</Callout>
-
-## Pitfalls
-
-- **Counting provisioned storage as used.** Thin disks make the real number much smaller, until snapshots pile up.
-- **Hand-shrinking VCF Automation's vCPU.** It has been done, but behaviour beyond setup is not guaranteed.
-- **Ignoring host memory overhead** for nested ESX VMs.
+The same post sets the 9.0 floor: VCF Automation's 24 vCPU VM needs a host with at least 12 cores and 24 threads, and an 8-core, 16-thread box won't run it. Broadcom's 9.1.1 workbook keeps Small at 24 vCPU, so expect the same floor on 9.1; this is inference. Manish Jha's [9.1 pre-deployment checklist](https://vstellar.com/2026/05/vcf-9-1-home-lab-series-part-3-pre-deployment-planning/) of 18 May 2026 also asks for 12 cores and 24 threads per host, without giving a reason, and Lam's 14-core host clears it. Lam also says there is no workaround for its memory. He records Tomas Fojta's report that the vCPU can be edited down to 16 or perhaps 12, with a warning that behaviour past initial setup may suffer. Treat that as a report and test it yourself; this site doesn't recommend it.

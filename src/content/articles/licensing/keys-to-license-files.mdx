@@ -1,6 +1,6 @@
 ---
 title: "From 25-character keys to license files: where each VCF add-on goes, and in what order"
-description: "The VCF license file carries the primary license, vSAN TiB and Private AI Foundation only. vDefend 9.1 and Avi 32.1.1 use separate signed files through License Hub, Live Recovery depends on the order line, and no document checked states DSM's route since 4 Nov 2026. A checked map and work order."
+description: "The VCF license file carries the primary license, vSAN TiB and Private AI Foundation only. vDefend 9.1 and Avi 32.1.1 use separate signed files through License Hub, Live Recovery depends on the order line, and the Broadcom documents cited here don't state DSM's route since 4 Nov 2026."
 category: licensing
 order: 1
 versions: ["5.x", "9.0", "9.1", "9.1.1"]
@@ -104,12 +104,12 @@ sources:
 ---
 
 <InShort>
-A checked comparison of Broadcom's documents, <AsOf date="2026-11-06" />. A VCF 9.x subscription doesn't turn every key into one file.
+A VCF 9.x subscription doesn't turn every key into one file. The add-ons follow different routes, <AsOf date="2026-11-06" />.
 
 - **In the VCF file:** the VCF or VVF primary license, vSAN TiB and Private AI Foundation with NVIDIA cores. Assign the primary to vCenter first.
 - **In a separate signed file:** vDefend 9.1 and Avi 32.1.1. Convert the key on the Support Portal, then license through License Hub and the Avi Cloud Console.
 - **Depends on the order line:** Live Recovery. A standalone SRM line is a 25-character key, and subscriptions run through the Live Recovery console.
-- **Not stated:** Data Services Manager, which moved into TrueSource on 4 Nov. No Broadcom page opened for this note gives its route, so get it in writing before you plan around it.
+- **Not stated:** Data Services Manager, which moved into TrueSource on 4 Nov. The Broadcom documents cited here don't give its route (checked 6 Nov 2026), so get it in writing before you plan around it.
 - **Still a key:** Tanzu Platform, added in Tanzu Hub.
 </InShort>
 
@@ -123,9 +123,9 @@ In 5.x you hold 25-character keys and type them into products. In 9.x, [FAQ Q12 
 
 Capacity pools by product and Site ID into a default license. Broadcom's [Private License Files guide](https://vcf.broadcom.com/vcf/clm/assets/VCF-9.1-Licensing-Private-License-Files.pdf) gives the arithmetic: 500 VCF cores also bring 500 TiB of vSAN in a separate license, and a 200 TiB add-on takes that license to 700 TiB. In 9.1 the file sits with a [license server beside VCF Operations](/vcf/library/licensing/license-server/). Connected mode [sends usage and fetches a new file every 24 hours](https://blogs.vmware.com/cloud-foundation/2026/05/18/vcf-9-1-licensing-programmatic-centralized-and-built-to-scale/), and disconnected mode [repeats the exchange by hand](/vcf/library/licensing/180-day-cycle/) at least every 180 days.
 
-The [9.1 overview](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview.html) names only two add-ons the console manages. Everything else has its own route.
+The [9.1 overview](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview.html) names only two add-ons the console manages, so everything else has its own route.
 
-<Diagram viewBox="0 0 760 282" label="Three licensing routes in VCF 9.1" caption="DSM and Tanzu Platform are left out: DSM's route isn't stated in the documents checked, and Tanzu Platform takes a key in Tanzu Hub.">
+<Diagram viewBox="0 0 760 282" label="Three licensing routes in VCF 9.1" caption="DSM and Tanzu Platform are left out: DSM's route isn't stated in the Broadcom documents cited here, and Tanzu Platform takes a key in Tanzu Hub.">
   <text class="lbl" x="10" y="18">VCF file: primary, vSAN TiB, PAIF-N</text>
   <rect class="box accent" x="10" y="26" width="165" height="56" rx="8"/>
   <text class="t" x="92" y="50" text-anchor="middle">Business Services</text>
@@ -174,22 +174,22 @@ The [9.1 overview](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-an
 
 ## What each add-on does
 
-Entitlement sits in [the checked matrix](/vcf/library/value/using-what-vcf-includes/). This table covers delivery only.
+For what each edition entitles you to, use [the entitlement matrix](/vcf/library/value/using-what-vcf-includes/). This table covers delivery only.
 
-| Add-on | How 9.1 delivers it | What changes from a 5.x key | How firm |
+| Add-on | How 9.1 delivers it | What changes from a 5.x key | Documented? |
 |---|---|---|---|
 | vSAN TiB | VCF file. [Applies to every vSAN cluster](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/add-on-licenses-in-vcf-9-0.html) under the vCenter, or to one cluster by override from 9.1 | No key. Add-on TiB pools with the TiB included in VCF | Documented |
 | Private AI Foundation | VCF file, counted in cores | No key. TechDocs says that from 3 Nov 2025 you "might also receive" it, so check the console | Documented; entitlement in [conflict 4](/vcf/library/value/using-what-vcf-includes/) |
 | vDefend Firewall | [Signed file through License Hub](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/vdefend/vdefend-firewall/9-1/release-notes/vmware-vdefend-91-release-notes.html) from vDefend 9.1. Usage due from the hub every 180 days | Key must be converted on the Support Portal before assignment | Documented |
 | Avi Load Balancer | [Signed file](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/avi-load-balancer/avi-load-balancer-vmware-cloud-foundation/9-1/build-and-deploy-avi-91/license-management-for-avi-load-balancer.html) from 32.1.1, through License Hub, or registered directly if a Controller can't run a hub. The console issues an activation code when connected and a signed file when disconnected | Same conversion, with a 90-day grace period to move to the new format on the upgrade to 32.1.1 | Documented. The [Licensing Tiers page](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/avi-load-balancer/avi-load-balancer-vmware-cloud-foundation/9-1/nsx-advanced-load-balancer-editions.html) (18 June) still says "License key" |
 | Live Recovery, standalone SRM (VCF-SRM) | 25-character key from the Support Portal, entered in the product (<KB id={429032} />, <KB id={427391} />). It doesn't appear in the console | Key stays, but needs reassigning after a major upgrade (<KB id={376866} />, 8.x to 9.0) | Documented for 9.0 |
-| Live Recovery, subscription | Live Recovery console, or an [offline key tied to one site pair](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-fleet-disaster-recovery/fleet-disaster-recovery-task-library/implementation-of-vsphere-replication-for-the-management-domain/configure-failover-of-the-sddc-management-components-for-the-management-domain/protected-site-configuration-tasks/assign-licenses-to.html) (<KB id={428834} />, 9.0.x; console scope in <KB id={429032} />) | Advanced Cyber Compliance runs to the end of its term, then the buyer can move to Live Recovery (FAQ Q86) | Route for the on-premises line (FAQ Q87 and the [feature comparison](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-feature-comparison-and-upgrade-paths) p17, both 4 Nov) not found in the pages opened |
-| Data Services Manager | Not stated in the pages opened, since the [FAQ Q84](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) move to TrueSource data services | Pre-9.0: "No license enforcement" (<KB id={406836} />). 9.1 checks the vCenter license | Open |
+| Live Recovery, subscription | Live Recovery console, or an [offline key tied to one site pair](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/fleet-management/vcf-fleet-disaster-recovery/fleet-disaster-recovery-task-library/implementation-of-vsphere-replication-for-the-management-domain/configure-failover-of-the-sddc-management-components-for-the-management-domain/protected-site-configuration-tasks/assign-licenses-to.html) (<KB id={428834} />, 9.0.x; console scope in <KB id={429032} />) | Advanced Cyber Compliance runs to the end of its term, then the buyer can move to Live Recovery (FAQ Q86) | Not for the on-premises line named in FAQ Q87 and the [feature comparison](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-feature-comparison-and-upgrade-paths) p17 (both 4 Nov) |
+| Data Services Manager | Not stated since the [FAQ Q84](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) move to TrueSource data services (checked 6 Nov) | Pre-9.0: "No license enforcement" (<KB id={406836} />). 9.1 checks the vCenter license | Open |
 | Tanzu Platform | Key for Elastic Application Runtime, [validated and added in Tanzu Hub](https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/tanzu-hub/10-4/tnz-hub/foundations-manage-license-keys.html) | No change documented | Hub 10.4 only |
 
 Three of those rows need a closer reading.
 
-**DSM.** The June 2025 post put it on keys, and the [May 2026 post](https://blogs.vmware.com/cloud-foundation/2026/05/05/vmware-data-services-manager-9-1-automating-the-modern-databases-that-drive-ai-and-private-cloud/) says only that it's licensed apart from core VCF. The [DSM 9.1 guide](https://techdocs.broadcom.com/content/dam/broadcom/techdocs/us/en/pdf/vmware/dsm/vmwdsm/vmware-data-services-manager-9-1.pdf) (25 Sep, p124-125) has alerts that read the vCenter license: `LicenseInsufficient` means the license doesn't include DSM, and the fix for `VCENTER_LICENSE_INVALID` is a VCF primary on that vCenter. A search of that guide found no procedure for entering a DSM license. The [Advanced Services page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vcf-advanced-services.html) (5 Nov) still lists VMware Data Services Manager and doesn't mention TrueSource, while the feature comparison (4 Nov, p17) lists TrueSource Data Services among the add-ons.
+**DSM.** The June 2025 post put it on keys, and the [May 2026 post](https://blogs.vmware.com/cloud-foundation/2026/05/05/vmware-data-services-manager-9-1-automating-the-modern-databases-that-drive-ai-and-private-cloud/) says only that it's licensed apart from core VCF. The [DSM 9.1 guide](https://techdocs.broadcom.com/content/dam/broadcom/techdocs/us/en/pdf/vmware/dsm/vmwdsm/vmware-data-services-manager-9-1.pdf) (25 Sep, p124-125) has alerts that read the vCenter license: `LicenseInsufficient` means the license doesn't include DSM, and the fix for `VCENTER_LICENSE_INVALID` is a VCF primary on that vCenter. Searching that guide turns up no procedure for entering a DSM license. The [Advanced Services page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vcf-advanced-services.html) (5 Nov) still lists VMware Data Services Manager and doesn't mention TrueSource, while the feature comparison (4 Nov, p17) lists TrueSource Data Services among the add-ons.
 
 **vDefend on the way through.** The [9.1.1 notes](https://techdocs.broadcom.com/us/en/vmware-security-load-balancing/vdefend/vdefend-firewall/9-1/release-notes/vmware-vdefend-911-release-notes.html) give two expiry behaviours. After evaluation or trial expiry, a firewall in an unlicensed state "allows all traffic". After a subscription expires, there are 90 days' grace, and then rules keep protecting workloads but you can't create or edit them. They don't say which one applies to an upgrade with an unconverted key.
 

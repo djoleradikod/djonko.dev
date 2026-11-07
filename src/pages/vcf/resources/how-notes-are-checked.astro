@@ -1,0 +1,46 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { issueUrl } from '../../../data/site';
+
+const kinds: [string, string][] = [
+  ['Broadcom', 'TechDocs, knowledge base articles, the VMware blog and Broadcom documents. The primary source, though its pages can disagree with each other or go stale.'],
+  ['Practitioner', 'A named person writing from their own work. Some work at Broadcom, and the note says so where it matters.'],
+  ['Press report', 'A news outlet reporting something. It stays attributed until Broadcom confirms it.'],
+  ['Analyst', 'An analyst firm, where its text can be read for free.'],
+  ['Commissioned or sponsored', 'Research a vendor paid for. Useful, and always labelled.'],
+  ['Other vendor', 'A competitor, partner or reseller, which has a stake. It only ever states that party’s claim.'],
+  ['Third-party tracker', 'A site that collects dates. A pointer, and never the last word.'],
+  ['Reference', 'Anything else worth reading that makes no claim the note relies on.'],
+];
+const report = issueUrl({ template: 'correction.yml', title: 'Correction: ', note: '' });
+---
+<Base title="How these notes are checked" description="What 'Sources checked' means on a VCF note, how evidence is labelled, what is analysis, and how corrections work.">
+  <div data-pagefind-body>
+    <p class="eyebrow"><a href="/vcf/" style="color:inherit;text-decoration:none">VCF notes</a> / <a href="/vcf/resources/" style="color:inherit;text-decoration:none">Resources</a></p>
+    <h1>How these notes are checked</h1>
+    <p class="lede">Facts in this field date fast, and a confident sentence with no source behind it is worse than none. This page explains what the dates and labels on a note mean, and what they don't.</p>
+
+    <h2>What "Sources checked" means</h2>
+    <p>On that date, the note's dated claims were compared with the pages it links: versions, dates, limits, licensing terms, and what a KB or a document says. A note without that date hasn't been through this yet, and shows the date it was published or updated.</p>
+    <p>It doesn't mean the steps were run in a lab. Each note is built from the public sources it lists, and it reports a lab run or a first-hand result only where it says so.</p>
+    <p>"Next check due" appears when something in a note is known to date soon, such as an announced release.</p>
+
+    <h2>What is documented, and what is analysis</h2>
+    <p>A linked claim says what the source says. Reasoning of this site's own sits in a box marked <strong>Analysis</strong>, or is worded as inference. "Derived" means arithmetic on a rule the vendor states, and it is not a date the vendor has given. "In practice" boxes are advice, and they make no claim about how often anything happens.</p>
+    <p>Where sources disagree, the note names the conflict and says which it would trust and why. Where something can't be established from public material, the note says it is unresolved.</p>
+
+    <h2>How sources are labelled</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Label</th><th>What it means</th></tr></thead>
+        <tbody>{kinds.map(([k, d]) => <tr><td>{k}</td><td>{d}</td></tr>)}</tbody>
+      </table>
+    </div>
+
+    <h2>Corrections</h2>
+    <p>A note that said something wrong a reader may have acted on carries a dated "Corrected" box saying what it used to say. If you find something wrong or out of date, <a href={report}>report it</a>. Link the source if you can.</p>
+
+    <h2>What these notes aren't</h2>
+    <p>They aren't Broadcom guidance, and licensing notes aren't legal or purchasing advice. Confirm against current Broadcom documentation and your own contract before you act on them.</p>
+  </div>
+</Base>

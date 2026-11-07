@@ -112,7 +112,7 @@ The table is this site's inference from the sources below. Broadcom publishes th
 This note said global deduplication was limited availability and that vVols removal was planned for a later 9.x. Deduplication is GA in 9.1, and Broadcom's KB says only "future" releases. It also called OSA not deprecated without saying that hybrid and RDMA are flagged as going, and said mixed mode lets OSA clusters run to end of life, which Broadcom's post doesn't say.
 </Callout>
 
-## What's flagged, and how firmly
+## What Broadcom has flagged
 
 | Feature | Broadcom's wording | Named release | Status in 9.1 |
 |---|---|---|---|
@@ -139,10 +139,10 @@ Broadcom's KB describes no migration path. Dell names Storage vMotion as the rou
 
 ## Global deduplication and compression in 9.1
 
-Facts from Broadcom's [May post](https://blogs.vmware.com/cloud-foundation/2026/05/07/vsan-compression-and-global-deduplication-in-vcf-9-1/) unless linked otherwise:
+These facts come from Broadcom's [May post](https://blogs.vmware.com/cloud-foundation/2026/05/07/vsan-compression-and-global-deduplication-in-vcf-9-1/) unless another source is linked.
 
 - **Where it runs.** ESA HCI clusters of 3 to 64 hosts, and storage clusters. It isn't supported on stretched or 2-node clusters, and it now works alongside data-at-rest encryption.
-- **The decision that is hard to reverse.** [TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/stretching-clusters.html) says an ESA or storage cluster can't be stretched if global deduplication is enabled. Turning deduplication off only pauses post-processing, and deduplicated data stays deduplicated. None of the pages opened for this note says whether a cluster can be stretched after that. If stretching is on the roadmap for a cluster, ask Broadcom before enabling it.
+- **The decision that is hard to reverse.** [TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/stretching-clusters.html) says an ESA or storage cluster can't be stretched if global deduplication is enabled. Turning deduplication off only pauses post-processing, and deduplicated data stays deduplicated. None of the sources cited here says whether a cluster can be stretched after that (checked 6 Nov 2026). If stretching is on the roadmap for a cluster, ask Broadcom before enabling it.
 - **Ratios.** The launch post says ["up to 8x"](https://blogs.vmware.com/cloud-foundation/2026/05/05/announcing_vsan_in_vcf_9-1/). That is a vendor ceiling, and the deduplication post gives no ratio figures at all. Size on a measured ratio or on 1:1, as the [vSAN entitlement](/vcf/library/value/vsan-entitlement/) note works through.
 - **Compression stays on.** ZSTD replaces LZ4 on ESA, and compression is, in Broadcom's words, "an always-on feature of the cluster".
 - **Upgraded clusters gain slowly.** The health service prompts a quick, non-disruptive disk format update, and existing data keeps the old algorithm until it is rewritten. Don't count on freed capacity on upgrade day.
@@ -161,13 +161,13 @@ Protection schemes and capacity arithmetic are in [vSAN ESA space efficiency](/v
 
 <KB id={432894} /> rules out in-place conversion. The on-disk formats and data paths differ. It gives two routes: a new ESA cluster with Storage vMotion, or emptying existing hosts of VMs, deleting their disk groups and moving them into an ESA cluster. The second destroys whatever is left on those devices.
 
-9.1 adds [mixed mode](https://blogs.vmware.com/cloud-foundation/2026/05/12/vsan-storage-clusters-in-vcf-9-1/): OSA, ESA and compute-only clusters can mount remote datastores of either architecture, so an OSA cluster can mount a new ESA datastore and vMotion workloads across as desired. The same post suggests extending the life of old OSA clusters by repurposing them as compute for a vSAN storage cluster. Check these first, from the [9.1 sharing page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsan-deployment-administration-and-monitoring/administering-vmware-vsan/expanding-and-managing-a-vsan-cluster/sharing-remote-vsan-datastores-with-hci-mesh.html):
+9.1 adds [mixed mode](https://blogs.vmware.com/cloud-foundation/2026/05/12/vsan-storage-clusters-in-vcf-9-1/): OSA, ESA and compute-only clusters can mount remote datastores of either architecture, so an OSA cluster can mount a new ESA datastore and vMotion workloads across as desired. The same post suggests extending the life of old OSA clusters by repurposing them as compute for a vSAN storage cluster. Check these limits from the [9.1 sharing page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsan-deployment-administration-and-monitoring/administering-vmware-vsan/expanding-and-managing-a-vsan-cluster/sharing-remote-vsan-datastores-with-hci-mesh.html) first.
 
 - A datastore serves up to 10 client clusters and 128 hosts. A client mounts up to 5 remote datastores.
 - Air-gapped networks and clusters with multiple vSAN VMkernel ports aren't supported. All of a VM's objects must sit on one datastore.
 - Moving to a storage cluster instead means at least four hosts with 20 TiB each and under 5 ms to clients. An HCI cluster can't be converted into one without deactivating vSAN and reconfiguring the cluster.
 
-Raise two gaps with Broadcom. That page still lists mounting different architectures as unsupported beside a note saying 9.1 allows it. The blog and the [stretching page's table](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/stretching-clusters.html) support the note, so the list looks stale. And no page opened here says whether hybrid OSA is included, so confirm that before basing a hybrid exit on mixed mode.
+Raise two gaps with Broadcom. That page still lists mounting different architectures as unsupported beside a note saying 9.1 allows it. The blog and the [stretching page's table](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/stretching-clusters.html) support the note, so the list looks stale. None of the sources cited here says whether hybrid OSA is included, so confirm that before basing a hybrid exit on mixed mode.
 
 ## ESA-only features and RDMA
 

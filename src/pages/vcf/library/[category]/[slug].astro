@@ -52,7 +52,7 @@ const ld = {
 <Base title={a.data.title} description={a.data.description} jsonLd={ld} ogType="article" shell>
   <div class="shell">
     <LibraryNav current={a} />
-    <article class="note-grid" id="note-start" tabindex="-1" data-pagefind-body data-note={a.id}>
+    <article class="note-grid" id="content-start" tabindex="-1" data-pagefind-body data-note={a.id}>
       <header class="note-head">
         <p class="note-crumbs"><a href="/vcf/">VCF notes</a> / <a href={`/vcf/library/${cat.id}/`} data-pagefind-filter="category">{cat.short}</a></p>
         <h1>{a.data.title}</h1>
@@ -87,7 +87,8 @@ const ld = {
               {(a.data.reviewed || a.data.reviewDue) && (
                 <p class="sources-checked">
                   {a.data.reviewed && `Checked against this note on ${fmt(a.data.reviewed)}. `}
-                  {a.data.reviewDue && `Next check due ${fmt(a.data.reviewDue)}.`}
+                  {a.data.reviewDue && `Next check due ${fmt(a.data.reviewDue)}. `}
+                  <a href="/vcf/resources/how-notes-are-checked/">How notes are checked</a>
                 </p>
               )}
               {a.data.sources.length > 0 && (

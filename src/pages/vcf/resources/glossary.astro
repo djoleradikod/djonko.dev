@@ -9,7 +9,7 @@ const rows: [string, string, string, string][] = [
   ['Workspace ONE Access / vIDM', 'VCF Identity Broker (embedded or appliance)', 'Identity broker (embedded or instance mode)', 'No upgrade path from vIDM. Identity Broker is deployed new.'],
   ['vCenter SSO per domain, or isolated domains', 'VCF SSO through Identity Broker', 'VCF SSO through Identity broker', 'One sign-on across the fleet, with scopes for fleet, cross-instance or instance.'],
   ['Aria Operations for Logs', 'VCF Operations for logs (fresh deploy)', 'Log management service', 'No in-place upgrade. Up to 90 days of logs can be migrated in 9.0. In 9.1 it is no longer a separate appliance.'],
-  ['Aria Automation / vRA, VMware Cloud Director', 'VCF Automation', 'VCF Automation (side-by-side upgrade from 9.0)', 'VCD is not supported with VCF 9 and has no official migration path.'],
+  ['Aria Automation / vRA, VMware Cloud Director', 'VCF Automation', 'VCF Automation (side-by-side upgrade from 9.0)', 'VCD has a documented migration to VCF Automation 9.1, through VCD 10.6.2 and the Environment Assessment Tool.'],
   ['Aria Automation Config (SaltStack)', 'Configuration drift in VCF Operations', 'Salt RaaS and Salt Master services', 'Desired-state configuration is part of the management services.'],
   ['Aria Operations for Networks', 'VCF Operations for networks', 'VCF Operations for networks', 'A rename. It is still an appliance.'],
   ['HCX', 'HCX', 'VCF Operations HCX', 'A rename in the 9.1 component list. Lifecycle is through SDDC Manager.'],

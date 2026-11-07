@@ -1,6 +1,6 @@
 ---
 title: "vSphere 8 into VCF 9.1: converge, import or neither, with Broadcom's conflicting answers reconciled"
-description: "With a VCF instance already running, import from vCenter 8.0 U3a and ESX 8.0 U3. With no fleet, converge. ELM, baselines or SDDC Manager: neither yet. Aim at 9.1.1, since 9.1.0 only imports U3j and U3k and blocks NSX 4.2.4 or later. FAQ Q57's 8.0 U1 import floor matches the 9.0 docs and conflicts with 9.1."
+description: "With a VCF instance already running, import from vCenter 8.0 U3a and ESX 8.0 U3. With no fleet, converge. With ELM, baselines or SDDC Manager, neither yet. Aim at 9.1.1, since 9.1.0 only imports U3j and U3k and blocks NSX 4.2.4 or later. FAQ Q57's 8.0 U1 import floor matches the 9.0 docs and conflicts with 9.1."
 category: upgrades
 order: 9
 versions: ["9.1", "9.1.1"]
@@ -147,7 +147,7 @@ This note said upgrade and converge for 8.0 U3j and U3k would arrive in a later 
 | 8.0 U3j (27 May 2026) | Import only | Upgrade named in TechDocs. Converge by inference. |
 | 8.0 U3k (29 Jul 2026) | Import only | Upgrade per Lam and KB 448135. TechDocs doesn't name it. Converge by inference. |
 
-The 9.1.0 column comes from <KB id={450972} />, which covers only that target. The 11 May date is the converge page's; the 9.1 release notes header reads 12 May, which changes no row here. Later builds of 8.0 hit the same rule: a target must be released after the source. The Interoperability Matrix is the final word. It's an interactive tool this review could not read, so check your exact build pair there.
+The 9.1.0 column comes from <KB id={450972} />, which covers only that target. The 11 May date is the converge page's; the 9.1 release notes header reads 12 May, which changes no row here. Later builds of 8.0 hit the same rule: a target must be released after the source. The Interoperability Matrix is the final word. This table hasn't been checked against that interactive tool, so look up your exact build pair there.
 
 <Callout type="analysis" title="Aim at 9.1.1">
 This is this site's reasoning. Per KB 448135, 9.1.1 removes the U3j, U3k and NSX 4.2.4 blocks that 9.1.0 has. The import page also says 9.1.1 stops turning on NSX for distributed port groups, while 9.1.0.x activates it and with it the Distributed Firewall on every port group in the imported cluster, with allow-all default rules. The 9.1.1 release notes say you can converge directly at that version. If your fleet is already on 9.1.0, import is the only route for U3j and U3k until the fleet moves.
@@ -167,7 +167,7 @@ This is this site's reasoning. Per KB 448135, 9.1.1 removes the U3j, U3k and NSX
 | **Undoing the wrong NSX** | Lam: revert doesn't apply to management domains. KB 430524: covers a brownfield-imported domain and doesn't mention management domains. | **Lam, as the only source that addresses it.** Treat converge as having no documented undo. |
 
 <Callout type="analysis" title="Order of trust where they disagree">
-This ranking is this site's judgement. Start with the Matrix for a specific build pair, since TechDocs and the KBs both defer to it. Next come the 9.1 TechDocs workflow pages, updated 5 November. Then use KBs for one failure or mechanism; this review could read no updated date on KB 450972 or KB 448135, and KB 450972 covers 9.1.0 only. Lam's posts come next for what changed and when, and Broadcom's own 8.0 U3k release notes link to his back-in-time post. The FAQ comes last. It's dated 4 November, but Q57 contradicts Q61 in the same document.
+This ranking is this site's judgement. Start with the Matrix for a specific build pair, since TechDocs and the KBs both defer to it. Next come the 9.1 TechDocs workflow pages, updated 5 November. Then use KBs for one failure or mechanism. KB 450972 and KB 448135 showed no updated date on 6 Nov 2026, and KB 450972 covers 9.1.0 only. Lam's posts come next for what changed and when, and Broadcom's own 8.0 U3k release notes link to his back-in-time post. The FAQ comes last. It's dated 4 November, but Q57 contradicts Q61 in the same document.
 </Callout>
 
 ## What each route does

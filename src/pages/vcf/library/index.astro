@@ -1,8 +1,9 @@
 ---
 import Base from '../../../layouts/Base.astro';
-import VersionBadges from '../../../components/VersionBadges.astro';
+import ArticleList from '../../../components/ArticleList.astro';
+import LibraryNav from '../../../components/LibraryNav.astro';
 import { CATEGORIES } from '../../../data/categories';
-import { allArticles, urlOf } from '../../../lib/articles';
+import { allArticles } from '../../../lib/articles';
 const items = await allArticles();
 // Every note covers 9.x; the useful split is whether it also sets out the 5.x answer.
 const scopes = [
@@ -11,44 +12,51 @@ const scopes = [
 ];
 const levels = [...new Set(items.map((a) => a.data.level).filter(Boolean))] as string[];
 ---
-<Base title="Library" description={`All ${items.length} field notes on VCF 5.x and 9.x, by category, filterable by version and level.`}>
-  <p class="eyebrow"><a href="/vcf/" style="color:inherit;text-decoration:none">VCF notes</a></p>
-  <h1>Library</h1>
-  <p class="lede">All {items.length} notes. Each one answers one question and says what changed between VCF 5.x and 9.x. Filter by words, version or depth, or press <kbd>/</kbd> to search the full text.</p>
+<Base title="Library" description={`All ${items.length} field notes on VCF 5.x and 9.x, by category, filterable by version and level.`} shell>
+  <div class="shell">
+    <LibraryNav />
+    <div class="lib-main" id="content-start" tabindex="-1">
+      <header class="lib-head">
+        <p class="note-crumbs"><a href="/vcf/">VCF notes</a></p>
+        <h1>Library</h1>
+        <p class="note-lede">All {items.length} notes. Filter by words, version or depth, or press <kbd>/</kbd> to search the full text.</p>
+      </header>
 
-  <div class="lib-filters">
-    <p><label for="lq" class="small muted" style="display:block;margin-bottom:4px">Filter titles and summaries</label>
-      <input type="search" id="lq" placeholder="For example 'upgrade', 'licence' or 'NSX'" /></p>
-    <div class="pill-row" id="lv" role="group" aria-label="Filter by VCF version">
-      <button class="pill" aria-pressed="true" data-v="">Any version</button>
-      {scopes.map((x) => <button class="pill" aria-pressed="false" data-v={x.v}>{x.label}</button>)}
-    </div>
-    {levels.length > 1 && (
-      <div class="pill-row" id="ll" role="group" aria-label="Filter by depth">
-        <button class="pill" aria-pressed="true" data-v="">Any depth</button>
-        {levels.map((l) => <button class="pill" aria-pressed="false" data-v={l}>{l}</button>)}
+      <div class="lib-filters">
+        <label for="lq" class="sr-only">Filter titles and summaries</label>
+        <input type="search" id="lq" placeholder="Filter titles and summaries, for example 'NSX'" />
+        <div class="pill-row" id="lv" role="group" aria-label="Filter by VCF version">
+          <button class="pill" aria-pressed="true" data-v="">Any version</button>
+          {scopes.map((x) => <button class="pill" aria-pressed="false" data-v={x.v}>{x.label}</button>)}
+        </div>
+        {levels.length > 1 && (
+          <div class="pill-row" id="ll" role="group" aria-label="Filter by depth">
+            <button class="pill" aria-pressed="true" data-v="">Any depth</button>
+            {levels.map((l) => <button class="pill" aria-pressed="false" data-v={l}>{l}</button>)}
+          </div>
+        )}
+        <p class="lib-count" id="lc" aria-live="polite"></p>
       </div>
-    )}
-    <p class="small muted" id="lc" aria-live="polite"></p>
-  </div>
 
-  {CATEGORIES.map((c) => {
-    const mine = items.filter((a) => a.data.category === c.id);
-    return (
-      <section class="lib-cat">
-        <div class="section-head"><h2><a href={`/vcf/library/${c.id}/`} style="color:inherit;text-decoration:none">{c.title}</a></h2><a class="small" href={`/vcf/library/${c.id}/`}>{mine.length} notes</a></div>
-        <p class="muted" style="margin-top:-4px">{c.blurb}</p>
-        <ul class="list lib-list">
-          {mine.map((a) => (
-            <li data-v={a.data.versions.includes('5.x') ? 'both' : '9only'} data-l={a.data.level ?? ''} data-s={`${a.data.title} ${a.data.description}`.toLowerCase()}>
-              <a href={urlOf(a)}><span class="t">{a.data.title}</span><VersionBadges versions={a.data.versions} level={a.data.level} /></a>
-            </li>
-          ))}
-        </ul>
-      </section>
-    );
-  })}
-  <p id="lnone" class="muted" hidden>No notes match. Clear the filter, or press <kbd>/</kbd> to search the full text.</p>
+      {CATEGORIES.map((c) => {
+        const mine = items.filter((a) => a.data.category === c.id);
+        return (
+          <section class="lib-cat">
+            <div class="nr-head">
+              <div>
+                <h2><a href={`/vcf/library/${c.id}/`}>{c.title}</a> <span class="nr-count">{mine.length} notes</span></h2>
+                <p class="nr-blurb">{c.blurb}</p>
+              </div>
+              <span class="nr-lab" aria-hidden="true">Versions</span>
+              <span class="nr-lab" aria-hidden="true">Sources checked</span>
+            </div>
+            <ArticleList items={mine} searchable />
+          </section>
+        );
+      })}
+      <p id="lnone" class="muted" hidden>No notes match. Clear the filter, or press <kbd>/</kbd> to search the full text.</p>
+    </div>
+  </div>
 
   <script is:inline>
     (() => {
@@ -84,10 +92,3 @@ const levels = [...new Set(items.map((a) => a.data.level).filter(Boolean))] as s
     })();
   </script>
 </Base>
-<style>
-  .lib-list a { grid-template-columns: 1fr auto; }
-  .lib-filters { position: sticky; top: 57px; z-index: 5; background: var(--bg); padding: 8px 0 2px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
-  .lib-filters .pill-row { margin-bottom: 8px; }
-  .lib-filters p { margin: 0 0 8px; }
-  @media (max-width: 640px) { .lib-filters { position: static; } }
-</style>

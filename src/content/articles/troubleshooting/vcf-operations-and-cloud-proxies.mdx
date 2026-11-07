@@ -33,7 +33,7 @@ sources:
 ---
 
 <InShort>
-Check three areas first. **Disk on the analytics nodes**: a full `/storage/db` stops analytics, and the fix is a **new disk on every analytics node**, not expanding an existing one (<KB id={318768} />, <KB id={454593} />). A full root partition is a separate case (<KB id={410759} />). **Cluster state**: stuck at "Waiting for Analytics", which is recovered by taking the cluster offline in the admin UI, restarting each node in turn from vCenter, then bringing it online (<KB id={446447} />). **Cloud proxies and DNS**: proxies going offline every few hours, or 503s through haproxy, point to name resolution (<KB id={426042} />, <KB id={443900} />). Before reverting VCF Operations to a snapshot, check the set was taken offline and includes the cloud proxies: [the rollback note](/vcf/library/upgrades/rollback-checkpoints/) separates the documented revert after a failed upgrade from other cases (<KB id={402329} />, <KB id={436047} />).
+**Start with disk on the analytics nodes, the cluster's state, and DNS from the cloud proxies.** A full `/storage/db` stops analytics, and the fix is to add a new disk to every analytics node rather than expand an existing one (<KB id={318768} />, <KB id={454593} />). A full root partition is a separate case (<KB id={410759} />). A cluster stuck at "Waiting for Analytics" is recovered by taking it offline in the admin UI, restarting each node in turn from vCenter, then bringing it online (<KB id={446447} />). Cloud proxies going offline every few hours, or 503s through haproxy, point to name resolution (<KB id={426042} />, <KB id={443900} />). Before reverting VCF Operations to a snapshot, check the set was taken offline and includes the cloud proxies. [The rollback note](/vcf/library/upgrades/rollback-checkpoints/) separates the documented revert after a failed upgrade from other cases (<KB id={402329} />, <KB id={436047} />).
 </InShort>
 
 <Callout type="note" title="Corrected on 6 November 2026">
@@ -72,7 +72,7 @@ df -h / /storage/db /storage/log
 | "VCF Operations lost connection to SDDC Manager" | An expired token on the diagnostics adapter. Recreate it (<KB id={440916} />). |
 
 <Callout type="analysis">
-This is this site's advice. Treat VCF Operations like vCenter now: image-level backups, disk monitoring, and a change window for upgrades. In 9.x it holds licensing and lifecycle for the whole fleet.
+This site's advice is to treat VCF Operations like vCenter now, with image-level backups, disk monitoring and a change window for upgrades, because in 9.x it holds licensing and lifecycle for the whole fleet.
 </Callout>
 
 ## Pitfalls

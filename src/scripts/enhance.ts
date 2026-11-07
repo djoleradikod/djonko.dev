@@ -239,6 +239,21 @@ if (tocLinks.length) {
   });
 }
 
+// 6b. Phone menu: a native disclosure that also closes on Escape (focus back on its button), on a tap outside,
+// and when Tab moves focus past its last link.
+const navMenu = document.querySelector<HTMLDetailsElement>('details.nav-menu');
+if (navMenu) {
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navMenu.open) { navMenu.open = false; navMenu.querySelector('summary')?.focus(); }
+  });
+  document.addEventListener('click', (e) => { if (navMenu.open && !navMenu.contains(e.target as Node)) navMenu.open = false; });
+  addEventListener('pagehide', () => { navMenu.open = false; }); // or Back restores the page with the panel open
+  navMenu.addEventListener('focusout', (e) => {
+    const next = e.relatedTarget as Node | null;
+    if (navMenu.open && next && !navMenu.contains(next)) navMenu.open = false;
+  });
+}
+
 // 7. Reading progress, kept only in this browser. A note counts as read once its end has been on
 //    screen. Path pages show which steps are done and link to the first unread one.
 const READ_KEY = 'djonko:read';

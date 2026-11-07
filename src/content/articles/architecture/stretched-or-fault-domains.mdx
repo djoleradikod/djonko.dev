@@ -1,0 +1,183 @@
+---
+title: "Stretched cluster or fault domains on vSAN 9.1: the questions that decide it"
+description: "Two places to put hosts: stretched, with a witness in a third. Four or more rooms within 1 ms: fault domains, unless data must survive a host failure during a room outage. Constructed example: 10 hosts and 240 TiB raw stretched, 12 hosts and 160 TiB in four rooms. Stretched rules out global dedupe."
+category: architecture
+order: 11
+versions: ["9.1", "9.1.1"]
+level: Practitioner
+pubDate: 2026-11-06
+updated: 2026-11-06
+reviewed: 2026-11-06
+kbs: [439973, 439976, 424360]
+sources:
+  - title: "vSAN Stretched Cluster vs Fault Domains in a \"campus\" setting?"
+    url: "https://www.yellow-bricks.com/2025/09/25/vsan-stretched-cluster-vs-fault-domains-in-a-campus-setting/"
+    by: "Duncan Epping"
+    kind: practitioner
+    date: 2025-09-25
+  - title: "vSAN Stretched Cluster Guide, VCF 9.1"
+    url: "https://www.vmware.com/docs/vsan-stretched-cluster-guide"
+    by: "Pete Koehler, VMware"
+    kind: broadcom
+    date: 2026-05-05
+  - title: "vSAN Availability Technologies, VCF 9.1"
+    url: "https://www.vmware.com/docs/vmw-vSAN-Availability-Technologies"
+    by: "VMware"
+    kind: broadcom
+    date: 2026-10-12
+  - title: "vSAN Space Efficiency Technologies, VCF 9.1"
+    url: "https://www.vmware.com/docs/vmw-vsan-space-efficiency"
+    by: "VMware"
+    kind: broadcom
+    date: 2026-05-11
+  - title: "Stretching vSAN Clusters in VMware Cloud Foundation (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/stretching-clusters.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Stretched vSAN Storage Models (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/storage-models-9-x/standard-vsan-storage-model/stretched-cluster-storage-models.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "vSAN Stretched Cluster Design Considerations (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsan-deployment-administration-and-monitoring/vsan-planning-and-deployment/working-with-virtual-san-stretched-cluster/introduction-to-stretched-clusters/vsan-stretched-cluster-design-considerations.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Managing Fault Domains in vSAN Clusters (9.1)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsan-deployment-administration-and-monitoring/administering-vmware-vsan/expanding-and-managing-a-vsan-cluster/managing-fault-domains-in-vsan-clusters.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Using Fault Domains in vSAN ESA"
+    url: "https://blogs.vmware.com/cloud-foundation/2023/06/08/using-fault-domains-in-vsan-esa/"
+    by: "Pete Koehler, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2023-06-08
+  - title: "More Capacity with VMware vSAN Compression and Global Deduplication in VCF 9.1"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/05/07/vsan-compression-and-global-deduplication-in-vcf-9-1/"
+    by: "Pete Koehler, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-05-07
+  - title: "Can I replicate or snapshot my vSAN Stretched Cluster Witness Appliance for fast recovery?"
+    url: "https://www.yellow-bricks.com/2026/01/20/can-i-replicate-or-snapshot-my-vsan-stretched-cluster-witness-appliance-for-fast-recovery/"
+    by: "Duncan Epping"
+    kind: practitioner
+    date: 2026-01-20
+  - title: "vSAN ESA Witness memory and CPU resources?"
+    url: "https://www.yellow-bricks.com/2026/03/10/vsan-esa-witness-memory-and-cpu-resources/"
+    by: "Duncan Epping"
+    kind: practitioner
+    date: 2026-03-10
+  - title: "What do I do after a vSAN Stretched Cluster Site Takeover?"
+    url: "https://www.yellow-bricks.com/2025/11/10/what-do-i-do-after-a-vsan-stretched-cluster-site-takeover/"
+    by: "Duncan Epping"
+    kind: practitioner
+    date: 2025-11-10
+  - title: "What happens after a Site Takeover when my failed sites come back online again?"
+    url: "https://www.yellow-bricks.com/2025/12/04/what-happens-after-a-site-takeover-when-my-failed-sites-come-back-online-again/"
+    by: "Duncan Epping"
+    kind: practitioner
+    date: 2025-12-04
+  - title: "Memory Tiering Considerations and frequently asked questions!"
+    url: "https://www.yellow-bricks.com/2026/07/16/memory-tiering-considerations-and-frequently-asked-questions/"
+    by: "Duncan Epping"
+    kind: practitioner
+    date: 2026-07-16
+---
+
+<InShort>
+**Count the rooms first.** Two places that can hold hosts means a stretched cluster, with a witness in a third place. Four or more rooms within 1 ms that don't share power, cooling or spine switches means fault domains, unless data must survive a host failure while a room is down. Three rooms work only if you accept running unprotected until the lost room returns. In the constructed example below, one workload takes 10 hosts and 240 TiB raw stretched, or 12 hosts and 160 TiB across four rooms. Stretched also rules out global deduplication.
+</InShort>
+
+Duncan Epping's [pros and cons](https://www.yellow-bricks.com/2025/09/25/vsan-stretched-cluster-vs-fault-domains-in-a-campus-setting/) (25 September 2025) explain both models and leave the choice to your requirements. Read him first. Epping is a Broadcom Chief Technologist writing on his own blog.
+
+## The questions, in order
+
+| # | Question | Answer | Rules out |
+|---|---|---|---|
+| 1 | How many rooms can hold hosts, always within 1 ms RTT, with separate power, cooling and spine? | Fewer than three | Fault domains |
+| 2 | Is there a third location for a witness, within 200 ms of both sites? | No | Stretched |
+| 3 | Can you meet VCF's conditions for stretching? | No | Stretched |
+| 4 | Does the capacity case depend on global deduplication? | Yes | Stretched |
+| 5 | Must data survive a host failure during a room outage, or must some VMs stay in one room? | Yes | Fault domains |
+| 6 | Does memory fit with a room gone? | No | Neither: add hosts |
+
+Fewer than three rooms and no witness location leaves neither model. Run two single-site clusters and replicate, accepting a restart and a recovery point.
+
+**1. Rooms.** [Koehler's ESA post](https://blogs.vmware.com/cloud-foundation/2023/06/08/using-fault-domains-in-vsan-esa/) (2023) sets the 1 ms limit; the [stretched guide](https://www.vmware.com/docs/vsan-stretched-cluster-guide) allows 5 ms and a 10 Gbps minimum. Below three domains, [Auto-RAID](https://www.vmware.com/docs/vmw-vSAN-Availability-Technologies) drops to FTT=0. At three, [TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsan-deployment-administration-and-monitoring/administering-vmware-vsan/expanding-and-managing-a-vsan-cluster/managing-fault-domains-in-vsan-clusters.html) warns of "the inability to reprotect data after a failure" and asks for four or more. Count rooms by what they share: David Pasek, commenting under Epping's post, says he would love to build seven racks with RAID-6, then points out that with the spine and border leaf switches in two racks "you are back to stretched cluster architecture with two fault domains + witness".
+
+**2. Witness.** It [must sit](https://www.vmware.com/docs/vsan-stretched-cluster-guide) outside both data sites on a licensed vSphere host, one per stretched cluster, with about 2 Mbps per 1,000 components. It can't run on a stretched cluster in the same sites. Memory is 16, 32 or 64 GB by size ([Epping](https://www.yellow-bricks.com/2026/03/10/vsan-esa-witness-memory-and-cpu-resources/), March 2026).
+
+**3. VCF conditions.** [TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/stretching-clusters.html) requires the default management domain cluster to be stretched first and equal host counts per zone. It blocks DPU-backed hosts, L3 subnets within a zone and a storage policy shared with another cluster. [Layer 2 must span the zones](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/storage-models-9-x/standard-vsan-storage-model/stretched-cluster-storage-models.html). Price the management stretch in.
+
+**4. Deduplication.** [Broadcom doesn't support it](https://blogs.vmware.com/cloud-foundation/2026/05/07/vsan-compression-and-global-deduplication-in-vcf-9-1/) on stretched clusters, and enabling it blocks stretching later, as the [ESA or OSA note](/vcf/library/architecture/vsan-esa-osa/) covers. <AsOf date="2026-11-06" /> The exclusions don't name fault domains. A campus cluster is the multi-rack case, though, where the [space efficiency guide](https://www.vmware.com/docs/vmw-vsan-space-efficiency) asks for a highly durable spine and leaf. Size at 1:1 either way.
+
+**5. Protection inside a room.** Stretched adds resilience within each site from [three hosts per site](https://www.vmware.com/docs/vsan-stretched-cluster-guide), plus storage policies that keep a VM's data in one site. [Epping](https://www.yellow-bricks.com/2025/09/25/vsan-stretched-cluster-vs-fault-domains-in-a-campus-setting/) lists neither for fault domains, and with three to five rooms [Auto-RAID](https://www.vmware.com/docs/vmw-vSAN-Availability-Technologies) uses RAID-5 at FTT=1, so another host failing after a room loss can take objects offline. Six or more rooms get RAID-6 at FTT=2, which leaves one failure in hand. One exception: [SMP-FT](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsan-deployment-administration-and-monitoring/vsan-planning-and-deployment/working-with-virtual-san-stretched-cluster/introduction-to-stretched-clusters/vsan-stretched-cluster-design-considerations.html) isn't supported on a stretched cluster with site tolerance set.
+
+**6. Memory.** The [stretched guide](https://www.vmware.com/docs/vsan-stretched-cluster-guide) says stretched hosts shouldn't exceed an average of 50% utilization, with HA admission control at 50%. That covers consumption only. Epping's [July FAQ](https://www.yellow-bricks.com/2026/07/16/memory-tiering-considerations-and-frequently-asked-questions/) says tiering "does not take that scenario into consideration", and the [memory tiering note](/vcf/library/value/nvme-memory-tiering/) shows that 50% active after failure means 25% before it. The same arithmetic extends to fault domains:
+
+| Layout | Hosts left | Normal active memory, at most | HA reservation |
+|---|---|---|---|
+| Two sites | 1/2 | 25% of DRAM | 50% |
+| Three rooms | 2/3 | 33% | 33% |
+| Four rooms | 3/4 | 37.5% | 25% |
+
+## Protecting the witness
+
+[Broadcom](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vsan-deployment-administration-and-monitoring/vsan-planning-and-deployment/working-with-virtual-san-stretched-cluster/introduction-to-stretched-clusters/vsan-stretched-cluster-design-considerations.html) says "Do not create snapshots of the witness host or backup the witness host". [Epping](https://www.yellow-bricks.com/2026/01/20/can-i-replicate-or-snapshot-my-vsan-stretched-cluster-witness-appliance-for-fast-recovery/) (January 2026) rules out replication too, because a reverted witness holds old sequence numbers. Your protection is redeployment: keep capacity and the OVA at the third location, and rehearse it.
+
+The same Broadcom page says you can't add or remove the witness while a host is disconnected or not responding. This site infers that a dead witness can't be swapped during a site outage, so replace a failed witness the day it fails.
+
+## Two constructed examples
+
+The workload matches the tiering note's: 6,000 GB consumed, 40% active (2,400 GB), hosts with 1,024 GB of DRAM tiered 1:1, 90% fill of presented memory, 512 GB active per surviving host, no spare host beyond the failure. Added here: ESA with Auto-RAID, 60 TiB of data at 1:1, and 25% free (Koehler's fault domain figure, applied to every layout).
+
+**Example 1: two buildings at 3 ms, witness in a colocation site.** Question 1 makes it stretched.
+
+- Capacity: 60 × 3.0 = 180 TiB, ÷ 0.75 = 240 TiB raw.
+- Memory: 2,400 ÷ 512 = 4.7, so 5 hosts per site, 5+5+1, at 24 TiB per host.
+- Normal running: 600 GB per host (59% of DRAM), 240 GB active (23%).
+- Site lost: 1,200 GB per host with the tier in use, 480 GB active (47%).
+- Without tiering: 6,000 ÷ 921.6 = 6.5, so 7 per site, 14 hosts.
+
+**Example 2: a campus with four independent rooms within 1 ms.**
+
+| | Stretched, as above | Three rooms | Four rooms |
+|---|---|---|---|
+| Hosts | 5+5+1 | 3×3 = 9 | 4×3 = 12 |
+| Auto-RAID footprint | Mirror plus RAID-5: 180 TiB | RAID-5: 90 TiB | RAID-5: 90 TiB |
+| Raw at 25% free | 240 TiB | 120 TiB | 160 TiB, leaving 25% free after a room's loss |
+| Per host, room lost: consumed | 1,200 GB | 1,000 GB (98%) | 667 GB (65%) |
+| Per host, room lost: active | 480 GB (47%) | 400 GB (39%) | 267 GB (26%) |
+| Rebuild after room loss | When it returns | When it returns | Into three rooms, 75% used |
+| Another host fails meanwhile | Data stays up | Objects can go offline | Objects can go offline until rebuilt |
+
+Three hosts per room is Koehler's recommended floor. Four rooms stay below the 80% where tiering starts, so drop the NVMe tier there. Three rooms would need 12 hosts without it (7 survivors, so 4 per room).
+
+Choose four rooms: two more hosts than stretched, 80 TiB less flash, no witness and no management stretch. If question 5 is yes, choose stretched.
+
+## The day a site fails
+
+**Stretched.** After [about 5 to 7 seconds](https://www.vmware.com/docs/vsan-stretched-cluster-guide), objects are marked absent, quorum forms between the witness and the surviving site, and HA restarts VMs there. No extra storage is consumed. Rebuild waits for the lost site to return, and DRS waits for resync before moving VMs back. If only the inter-site link fails, the preferred site wins, so choose it deliberately. After a site loss, Adaptive Quorum Control shifts votes within seconds to minutes, and the witness can then fail too. A site and witness failing together takes the cluster offline.
+
+**Fault domains.** HA restarts VMs in the remaining rooms. With three to five rooms, that data is RAID-5 with no redundancy left. After the [default 60-minute wait](https://www.vmware.com/docs/vmw-vSAN-Availability-Technologies), four rooms rebuild if capacity allows. Three rooms stay exposed until the room returns.
+
+## Site takeover: don't count on it for a double failure
+
+Broadcom's sources disagree on when it applies. <AsOf date="2026-11-06" />
+
+- The [stretched guide](https://www.vmware.com/docs/vsan-stretched-cluster-guide) (May 2026) limits manual takeover to a site already in maintenance mode, says it "does not allow for the recovery of any site in a simultaneous double failure", and sends that case to Global Support through 9.1.
+- [Epping](https://www.yellow-bricks.com/2025/11/10/what-do-i-do-after-a-vsan-stretched-cluster-site-takeover/) (November 2025) describes it for a failed witness and data site. <KB id={439973} />, for vSAN 9.1, also starts from a site and witness going down.
+
+<Callout type="analysis" title="What to write in the design">
+Count a site and witness failing together as an outage until a site returns or Global Support recovers it. Ask Broadcom in writing whether your scenario qualifies before an RTO depends on takeover.
+</Callout>
+
+If you do run it, this is what remains:
+
+- **Inventory.** Failed hosts and the witness stay in vCenter, and the cluster still shows as stretched ([Epping](https://www.yellow-bricks.com/2025/11/10/what-do-i-do-after-a-vsan-stretched-cluster-site-takeover/)). If they're gone for good, remove them, delete the witness VM and the leftover fault domain entry, then rebuild and stretch again.
+- **Sites returning.** Stale components are discarded and a [full resync](https://www.yellow-bricks.com/2025/12/04/what-happens-after-a-site-takeover-when-my-failed-sites-come-back-online-again/) follows. By this site's arithmetic, Example 1's 60 TiB over 10 Gbps takes 14.7 hours at line rate before compression, about 29 hours at half the link, with no second site's copy until it finishes.
+- **Skipped objects.** File service (<KB id={439976} />) and iSCSI (<KB id={439973} />) objects aren't recovered by default. Both KBs set `ClomEnableRecoveryOfSkippedObjs` around the takeover and need the failed hosts and witness kept off the network first.
+- **A red health check.** Inconsistent takeover state can block I/O on recovered objects; <KB id={424360} /> says to reboot the affected hosts.

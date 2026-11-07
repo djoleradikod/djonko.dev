@@ -1,0 +1,63 @@
+---
+// The support clock, drawn to scale: the home page's one figure. Bars are ink (9.x), fog (5.x) and an outline
+// (vSphere 8), so lightness and fill tell them apart with no help from hue, and each carries its own name and
+// date, which is why this figure needs no legend. The only colour is the unresolved stretch on 5.0 and 5.1,
+// because that is the part nobody can plan to. It is a real table underneath: release, timeline, date, basis.
+// src/data/releases.ts answers to the note, and the hub's build fails if the two stop agreeing.
+import { summaryLine } from '../../data/decisions';
+import { AXIS, CURRENT_RELEASE, NEXT_RELEASE, SUPPORT_ENDS } from '../../data/releases';
+import { allArticles, urlOf } from '../../lib/articles';
+
+interface Props { note: Awaited<ReturnType<typeof allArticles>>[number]; }
+const { note } = Astro.props;
+
+const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+const t0 = Date.parse(AXIS.from), t1 = Date.parse(AXIS.to);
+const at = (iso: string) => ((Date.parse(iso) - t0) / (t1 - t0)) * 100;
+const pct = (n: number) => `${n.toFixed(2)}%`;
+const ticks = AXIS.ticks.map((t) => ({ ...t, left: pct(at(t.iso)) }));
+const gridlines = ticks.map((t) => `linear-gradient(var(--line), var(--line)) ${t.left} 0 / 1px 100% no-repeat`).join(', ');
+
+// An unresolved date reads across its own span: the first date ends the solid bar, the second ends the hatching.
+const rows = SUPPORT_ENDS.map((r) => {
+  const [first, second] = r.unresolvedTo ? r.date.split(' or ') : [r.date];
+  return { ...r, first, second, vars: `--end:${pct(at(r.end))}${r.unresolvedTo ? `;--to:${pct(at(r.unresolvedTo))}` : ''}` };
+});
+---
+<section class="wrap sc" aria-labelledby="sc-h">
+  <h2 id="sc-h">Where things stand</h2>
+  <p class="sc-lead">{summaryLine(note.data.description)}</p>
+  <table class="sc-t" role="table">
+    <caption class="sr-only">General support ends, drawn to scale from {AXIS.fromLabel}</caption>
+    <thead role="rowgroup">
+      <tr role="row">
+        <th role="columnheader" scope="col" class="sr-only">Release</th>
+        <th role="columnheader" scope="col" class="sc-axis">
+          <span class="sr-only">Timeline, to scale</span>
+          <span class="clock-ticks" aria-hidden="true"><span>{AXIS.fromLabel}</span>{ticks.map((t) => <span style={`left:${t.left}`}>{t.label}</span>)}</span>
+        </th>
+        <th role="columnheader" scope="col" class="sr-only">General support ends</th>
+        <th role="columnheader" scope="col" class="sr-only">Basis</th>
+      </tr>
+    </thead>
+    <tbody role="rowgroup" style={`background:${gridlines}`}>
+      {rows.map((r) => (
+        <tr role="row" class={`sc-r ${r.family}${r.unresolvedTo ? ' open' : ''}`} style={r.vars}>
+          <th role="rowheader" scope="row" class="sc-n">{r.item}</th>
+          <td role="cell" class="sc-tl"><span aria-hidden="true"><i class="sc-bar"></i>{r.unresolvedTo && <i class="sc-span"></i>}</span></td>
+          <td role="cell" class="sc-d"><span class="a">{r.first}</span>{r.second && <> <span class="b">or {r.second}</span></>}</td>
+          {r.anchor
+            ? <td role="cell" class="sc-b"><a href={`${urlOf(note)}#${r.anchor}`}><span class="sc-chip">{r.basis}</span></a></td>
+            : <td role="cell" class="sr-only">{r.basis}</td>}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <div class="sc-foot">
+    <p><a href={urlOf(note)}>{note.data.title}</a>. {note.data.reviewed && <>Sources checked <time datetime={note.data.reviewed.toISOString().slice(0, 10)}>{fmt(note.data.reviewed)}</time>. </>}The end of the 9.1 bar uses the derived day, 12 Aug 2028; Broadcom states the month.</p>
+    <dl class="sc-rel">
+      <div><dt>Current release</dt><dd><b>{CURRENT_RELEASE.name}</b>, <time datetime={CURRENT_RELEASE.iso}>{CURRENT_RELEASE.date}</time></dd></div>
+      <div><dt>Next release</dt><dd>{NEXT_RELEASE.name}. Planned "{NEXT_RELEASE.plan}"</dd></div>
+    </dl>
+  </div>
+</section>

@@ -110,13 +110,13 @@ Measure rows 1 and 3 with [MTAT](https://blogs.vmware.com/cloud-foundation/2026/
 
 ## Worked example
 
-Constructed. Replace each number with your own.
+This example is constructed, so replace each number with your own.
 
 - **Hosts:** 32 cores, 1,024 GB of DRAM, 1:1, so 2,048 GB presented.
 - **Workload:** 6,000 GB consumed, 80 cores of CPU demand, all VMs tier.
 - **Limits:** fill to 90% of presented memory, one spare host, 512 GB active per surviving host.
 
-DRAM only: 6,000 ÷ 921.6 = 6.51, so 7 + 1 = **8 hosts, 256 cores**. Tiered, memory asks for 6,000 ÷ 1,843.2 = 3.26, so 4 + 1 = 5 hosts. Active memory sets its own floor: active GB ÷ 512, rounded up, plus 1. The higher floor wins.
+On DRAM alone, 6,000 ÷ 921.6 = 6.51, so 7 + 1 = **8 hosts, 256 cores**. Tiered, memory asks for 6,000 ÷ 1,843.2 = 3.26, so 4 + 1 = 5 hosts. Active memory sets its own floor: active GB ÷ 512, rounded up, plus 1. The higher floor wins.
 
 | Active share | Active GB | Active floor | Tiered hosts | Active per host, one failed | Hosts saved | Cores saved |
 |---|---|---|---|---|---|---|
@@ -127,15 +127,15 @@ DRAM only: 6,000 ÷ 921.6 = 6.51, so 7 + 1 = **8 hosts, 256 cores**. Tiered, mem
 
 The saving ends at 3,072 GB active (6 × 512), or 51%. Past 3,584 GB (7 × 512, 60%), tiering costs a host. CPU can end it sooner: at a 75% ceiling each surviving host gives 24 cores, so demand above 144 cores needs 8 hosts anyway. The 25% row adds five NVMe devices, ten if mirrored, and on VCF drops the [vSAN entitlement](/vcf/library/value/vsan-entitlement/) from 256 to 160 TiB, at 1 TiB per core (<KB id={313548} />).
 
-**If active memory is higher than measured.** Keep the 5-host design. At 40% active, hosts run 480 GB (47%) and pass, then reach 600 GB (59%) with one failed. At 60%, they run 720 GB (70%), then 900 GB (88%), past the 75% the performance guide mentions.
+Now suppose active memory turns out higher than measured and you've kept the 5-host design. At 40% active, hosts run 480 GB (47%) and pass, then reach 600 GB (59%) with one failed. At 60%, they run 720 GB (70%), then 900 GB (88%), past the 75% the performance guide mentions.
 
 <Callout type="analysis" title="The failure is slowness, and HA won't report it">
-The [percentage policy page](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control/cluster-resources-percentage-admission-control.html) sums each VM's reservation plus overhead, uses 0 MB where no reservation is set, and asks only overhead of a tiered VM in DRAM. It doesn't list active memory as an input. Inference from those rules: both cases can restart every VM on green status, then run slowly while the cluster is already degraded.
+The [percentage policy page](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control/cluster-resources-percentage-admission-control.html) sums each VM's reservation plus overhead, uses 0 MB where no reservation is set, and asks only overhead of a tiered VM in DRAM. It doesn't list active memory as an input. Inferring from those rules, both cases can restart every VM on green status, then run slowly while the cluster is already degraded.
 </Callout>
 
 ## What 9.1.1 changes for HA
 
-Broadcom [documents](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control/memory-tiering-and-ha-admission-control.html) the old behaviour. Through 9.1, HA treated DRAM and NVMe as one pool, so restarts could fail for lack of DRAM while status stayed green. Its term is a "silent failure".
+Broadcom [documents](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control/memory-tiering-and-ha-admission-control.html) the old behaviour. Through 9.1, HA treated DRAM and NVMe as one pool, so restarts could fail for lack of DRAM while status stayed green, which it calls a "silent failure".
 
 From 9.1.1, a VM is admitted only if total memory and DRAM both pass. [In auto mode](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control/cluster-resources-percentage-admission-control.html), the DRAM reservation is the DRAM of the n largest hosts. In manual mode, your percentage applies to each pool. A non-tiered VM needs reservation plus overhead in DRAM. Broadcom says not to use the slot policy with tiering. [Epping adds](https://www.yellow-bricks.com/2026/09/22/memory-tiering-aware-vsphere-ha-admission-control-in-vcf-vsphere-9-1-1/) two limits the TechDocs page doesn't state: the logic needs DRS on, and "does not work when vCenter is unavailable and the SPE is used". He doesn't expand SPE.
 
@@ -147,21 +147,21 @@ From 9.1.1, a VM is admitted only if total memory and DRAM both pass. [In auto m
 
 ## Stretched clusters: the gap
 
-Epping's FAQ takes the question from someone who typically runs a stretched cluster at or below 50% consumed. The answer: "Currently memory tiering does not take that scenario into consideration." <AsOf date="2026-11-06" />
+Epping's FAQ takes the question from someone who typically runs a stretched cluster at or below 50% consumed. The answer reads, "Currently memory tiering does not take that scenario into consideration." <AsOf date="2026-11-06" />
 
 <Callout type="analysis" title="Constructed, same workload, no spare host per site">
 Each site must carry everything: 4 tiered hosts per site (6,000 ÷ 1,843.2), so 8 against 14 on DRAM.
 
-**Normal running:** 750 GB per host, 73% of DRAM, so the tier stays empty.
+In normal running each host holds 750 GB, 73% of DRAM, so the tier stays empty.
 
-**Site lost:** 1,500 GB per host. The tier takes its first pages during the outage, so include that state in failover tests.
+With a site lost, each host holds 1,500 GB. The tier takes its first pages during the outage, so include that state in failover tests.
 
-**Active limit:** failover doubles active memory per host, so 50% after failure means 25% before it. At 40% active share, normal running shows 300 GB (29%) and passes an assessment, then site loss gives 600 GB (59%). Five hosts per site fixes it at 480 GB (47%), 10 hosts against 14.
+Failover also doubles active memory per host, so 50% after failure means 25% before it. At 40% active share, normal running shows 300 GB (29%) and passes an assessment, then site loss gives 600 GB (59%). Five hosts per site fixes it at 480 GB (47%), 10 hosts against 14.
 </Callout>
 
 ## How far to believe the percentages
 
-Claims on record <AsOf date="2026-11-06" />:
+These are the claims on record, <AsOf date="2026-11-06" />.
 
 | Figure | Who, when | Measures | Assumptions shown | Interest |
 |---|---|---|---|---|

@@ -1,0 +1,231 @@
+---
+title: "Deprecation radar: everything VCF 9.x has put on notice, by who has to act"
+description: "Every 9.x removal and deprecation in one dated table, by who has to act. The 9.1 upgrade stops on IPFIX on uplinks, and it switches off vCLS, port 514 syslog to vCenter and vCenter login to VCF Operations without asking. Only two calendar deadlines exist: 30 May 2027 and 11 October 2027."
+category: architecture
+order: 11
+versions: ["9.0", "9.1", "9.1.1"]
+level: Practitioner
+pubDate: 2026-11-06
+updated: 2026-11-06
+reviewed: 2026-11-06
+reviewDue: 2027-02-15
+kbs: [318697, 428874, 391170, 401070, 401071, 439411, 316514, 459135, 422643]
+sources:
+  - title: "VCF 9.1 product support notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "VCF 9.0 product support notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "VCF 9.0 vSphere support notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsphere.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "VCF 9.0 vSAN support notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsan.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "VCF 9.0 NSX support notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-nsx.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "VCF 9.0 VCF Operations support notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vcf-ops.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "VCF 9.0 VCF Automation support notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vcf-automation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "VCF 9.0 VCF Installer support notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-installer.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-02
+  - title: "Protection and Recovery 9.1 release notes"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/protection-and-recovery/9-1/release-notes/protection-and-recovery-91-release-notes.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-10-20
+  - title: "Create a New Workload Domain, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/deploy-a-vi-workload-domain-using-the-sddc-manager-ui.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Import an Existing vCenter to Create a Workload Domain, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/import-an-existing-vcenter-to-create-a-workload-domain.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Upgrading VMware Cloud Foundation, VCF 9.1"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
+  - title: "Broadcom VCF portfolio updates"
+    url: "https://blogs.vmware.com/cloud-foundation/2026/11/04/broadcom-vcf-portfolio-updates/"
+    by: "Prashanth Shenoy, VMware Cloud Foundation blog"
+    kind: broadcom
+    date: 2026-11-04
+  - title: "Will vSAN OSA hybrid be available in future versions?"
+    url: "https://www.yellow-bricks.com/2026/09/29/will-vsan-osa-hybrid-be-available-in-future-versions/"
+    by: "Duncan Epping"
+    kind: practitioner
+    date: 2026-09-29
+  - title: "Deprecated and removed features in VCF 9.1"
+    url: "https://vinfrastructure.it/2026/05/deprecated-and-removed-features-in-vcf-9-1/"
+    by: "Andrea Mauro"
+    kind: practitioner
+    date: 2026-05-16
+  - title: "Dell Unity: vVols support ending, upgrade and migration considerations"
+    url: "https://www.dell.com/support/kbdoc/en-us/000414330/dell-unity-vvols-support-ending-upgrade-and-migration-considerations"
+    by: "Dell"
+    kind: vendor
+    date: 2026-10-07
+  - title: "Broadcom discontinues vVols storage capability for VMware"
+    url: "https://www.techtarget.com/searchstorage/news/366627334/Broadcom-discontinues-vVols-storage-capability-for-VMware"
+    by: "Tim McCarthy, TechTarget"
+    kind: press
+    date: 2025-07-09
+  - title: "Broadcom VCF portfolio update"
+    url: "https://www.storagereview.com/news/broadcom-vcf-portfolio-update-vsphere-express-live-recovery"
+    by: "Harold Fritts, StorageReview"
+    kind: press
+    date: 2026-11-04
+---
+
+<InShort>
+**Clear the blockers, then fix what changes without warning.** The vCenter upgrade to 9.1 stops on IPFIX on uplinks or LACP ports. It doesn't stop for the rest: vCLS goes off for good, syslog to vCenter on port 514 is blocked, vCenter logins to VCF Operations end, and the Network Share plugin is deleted with its data. Only two calendar deadlines exist: the NSX Load Balancer bridge on 30 May 2027, and vSphere 8 and Aria Operations 8.18 on 11 October 2027. Buy no server that depends on anything marked deprecated below.
+</InShort>
+
+Broadcom keeps this list across a page per release and one per component, and a KB per hardware class. The 9.1 page reads "None" under vSAN, which is easy to take for good news: the 9.0 notices against OSA hybrid and vVols still stand. Here it is as one table, sorted by who has to act, with the wording of each deadline kept and the disputes named. <AsOf date="2026-11-06" />
+
+## What the upgrade does by itself
+
+**It stops** for IPFIX on uplinks or LACP ports (vCenter 9.1), for HCX WAN Optimization or VMs under HCX protection (HCX 9.0), and for a discontinued CPU (the installer). Clear those first. End of Life I/O devices may not stop it, which is worse: Broadcom says the upgrade can fail or cost you storage and network access, so replace them before you start. Estates with several NSX instances per vCenter have to change topology before NSX 9.0.
+
+**It carries on** through everything marked "Effective now" or "Removed" for 9.1 under Operations. The one that destroys something is the Network Share plugin, where [Broadcom's notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) say the plugin, its settings and its data are removed automatically during the upgrade.
+
+An estate on 5.2 takes both lists in one move, because [the upgrade guide](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation.html) (5 Nov 2026) allows a skip-level upgrade to 9.1.x. Read every 9.0 row as well as the 9.1 rows.
+
+## How to read the status column
+
+| Status | Meaning |
+|---|---|
+| Removed | Gone in that release, or the installer refuses it |
+| Effective now | Behaviour changes on upgrade, whatever the heading on Broadcom's page says |
+| Deprecated: next major | Works today. Broadcom names the next major release |
+| Deprecated: future major | Works today. A major release, not necessarily the next |
+| Deprecated: future release | Works today. Could be any release |
+| Flagged by others | Not Broadcom's statement. These rows sit at the end of the table |
+
+[KB 318697](https://knowledge.broadcom.com/external/article/318697/cpu-support-deprecation-and-discontinuat.htm) defines a major release as one that increments the first digit, so "next major" means the release after the 9.x series.
+
+<Callout type="analysis" title="Whose reasoning this is">
+Status, release and any named replacement come from the linked sources. The "What to do" column and generic entries such as "a NIC listed in the Compatibility Guide" are this site's advice, and so is applying the KB's CPU definition of "major" to the rest of the table. Broadcom doesn't say whether the [next VCF release](https://blogs.vmware.com/cloud-foundation/2026/11/04/broadcom-vcf-portfolio-updates/), planned for "Q1FY27", is major or minor. [StorageReview](https://www.storagereview.com/news/broadcom-vcf-portfolio-update-vsphere-express-live-recovery) reads that quarter as running to the start of February, which is why this note is due for review on 15 February 2027. Python 3.7 and 3.8 are the only items worded "next release".
+</Callout>
+
+## The radar
+
+Search the page for a product, a CPU or one of the four groups: hardware buyers, storage, network, operations. Broadcom's KB pages show no update date unless the text gives one, so those cells give the day they were checked.
+
+| Who acts | Item | Status | Release | What replaces it | What to do | Source and date |
+|---|---|---|---|---|---|---|
+| Hardware buyers | Broadwell-EP and -DE, Skylake-S, Kabylake-S, Skylake-D, Skylake-W CPUs | Removed: installer blocks | 9.x | A CPU listed for 9.x in the Compatibility Guide | Replace before upgrading. Skylake-D and -W share raw CPUID 0x00050654 with Skylake-SP, so check the model | <KB id={318697} />, checked 6 Nov 2026 |
+| Hardware buyers | I/O devices marked End of Life | Removed: not claimed by ESX | 9.0 | A device listed for 9.0 | Replace first. Broadcom warns of "non-recoverable consequences" including lost storage or network access | <KB id={391170} />, checked 6 Nov 2026 |
+| Hardware buyers | Intel Optane persistent memory | Removed | 9.0 | Memory Tiering over NVMe | Move workloads off it, and ask the OEM about alternatives | [9.0 vSphere notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsphere.html) |
+| Hardware buyers | Skylake-SP CPUs (Xeon 8100, 6100, 5100, 4100, 3100) | Deprecated: extended on 18 Sep 2026, ends with 9.x | 9.x, including 9.0 | A newer CPU | Existing servers can stay if the Compatibility Guide lists the model. Take the install route from the KB's PDF. Without Intel or OEM support terms, the risk is yours | <KB id={428874} />, 18 Sep 2026 |
+| Hardware buyers | Cascade Lake, EPYC 7001, EPYC 7002 and 7Fx2, Xeon E-2100 and E-2200, Atom C3000 | Deprecated: next major | 9.x | A CPU not on the deprecated list | Run existing servers; the installer warns only. Buy none of these. Support depends on the OEM keeping the model listed | <KB id={318697} />, checked 6 Nov 2026 |
+| Hardware buyers | USB and SD boot, no persistent OSDATA device, system storage under 32 GB, APIs that relocate system storage | Deprecated: next major | 9.1 | Persistent system storage of 32 GB or more | Specify it on every new server. Inventory boot devices now, and budget the rest for refresh | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Hardware buyers | Cisco VIC 1200 and 1300 | Deprecated: future major | 9.1 | An adapter with Enhanced Data Path support | Price replacement adapters for UCS estates. Broadcom gives the lack of EDP as the reason | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Hardware buyers | Marvell FastLinQ 57800, 57810, 57811, 41000 and 45000 | Deprecated: future major | 9.1 | A NIC listed in the Compatibility Guide | Buy no more, and plan replacement at refresh | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Hardware buyers | Marvell/Aquantia Atlantic NICs, AMD Solarflare 8000 and X2 | Deprecated: future release | 9.1 | A NIC listed in the Compatibility Guide | Buy no more. Broadcom describes Atlantic as common in home labs | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Hardware buyers | I/O devices marked Restricted | Deprecated: next major | 9.0 | A device not marked Restricted | Fixes are best effort and hardware support comes from the OEM. Replace at the earliest chance | <KB id={391170} />, checked 6 Nov 2026 |
+| Storage | Storage DRS I/O load balancing, Storage I/O Control | Removed | 9.0 | None named | Turn off before upgrading. Review shares and reservations in storage policies and orchestrator workflows | [9.0 vSphere notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsphere.html); [9.0 Automation notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vcf-automation.html) |
+| Storage | First Class Disks on NFS v3 datastores shared by more than 128 hosts | Effective now: not supported | 9.1 | Not stated | Count hosts on shared NFS v3 datastores that hold these disks. Broadcom's heading says deprecated, its text says not supported | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Storage | VMFSsparse delta disks | Effective now: SEsparse only | 9.0 | SEsparse | Check backup and clone tooling that names the old format | [9.0 vSphere notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsphere.html) |
+| Storage | vVols replication in Protection and Recovery | Deprecated: last supported in 9.1 | 9.1 | Array-based replication | Move replication while you still run a supported pair | [Protection and Recovery 9.1 notes, 20 Oct 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/protection-and-recovery/9-1/release-notes/protection-and-recovery-91-release-notes.html) |
+| Storage | vVols, and the VASA provider capabilities partners use | Deprecated: future release. Removal release disputed | 9.0 | None named by Broadcom. Dell names VMFS by Storage vMotion | Inventory and move them before 9.1, per [the vSAN note](/vcf/library/architecture/vsan-esa-osa/) | <KB id={401070} />, checked 6 Nov 2026 |
+| Storage | vSAN OSA hybrid | Deprecated: future release | 9.0 | Not stated. [This site's vSAN note](/vcf/library/architecture/vsan-esa-osa/) advises ESA | Add no capacity. Budget replacement, per [the vSAN note](/vcf/library/architecture/vsan-esa-osa/) | [9.0 vSAN notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsan.html) |
+| Storage | vSAN over RDMA on OSA | Deprecated: future release | 9.0 | Not stated. [This site's vSAN note](/vcf/library/architecture/vsan-esa-osa/) advises testing on TCP | Test the cluster on TCP before the removal arrives | [9.0 vSAN notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsan.html) |
+| Storage | Ruby vSphere Console and its Ruby components | Deprecated: future release | 9.0 | PowerCLI, DCLI, vCenter UI | Rewrite any script that still calls RVC | [9.0 vSAN notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsan.html) |
+| Storage | ESX host cache for VM swap | Deprecated: future release | 9.0 | Memory Tiering over NVMe | Don't design it into anything new | [9.0 vSphere notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsphere.html) |
+| Storage | Dell PowerFlex Storage Data Client | Deprecated in the 9.0 notes. KB now lists support on 9.0 and 9.1 with SDC 5.1 | 9.0, 9.1 | SDC 5.1 | Run SDC 5.1, and ask Dell what follows 9.1 | [9.0 vSphere notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsphere.html); <KB id={401071} />, checked 6 Nov 2026 |
+| Storage | vSAN all-flash OSA | No notice | n/a | n/a | Stay on it where hosts can't run ESA | [9.0 vSAN notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsan.html) |
+| Network | IPFIX on uplink port groups or LACP ports | Effective now: blocks the vCenter upgrade. Deprecated: future major | 9.1 | None for uplinks: Connection Track-based IPFIX doesn't cover them | Remove the configuration before the upgrade, and find another flow source for uplinks | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Network | HCX WAN Optimization | Removed: blocks the HCX upgrade | HCX 9.0 | None named | Remove it from Service Meshes and Compute Profiles first | [9.0 Operations notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vcf-ops.html) |
+| Network | HCX Disaster Recovery | Removed: blocks the HCX upgrade | HCX 9.0 | None named | Unprotect or recover the VMs first | [9.0 Operations notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vcf-ops.html) |
+| Network | HCX vCenter plug-ins, HCX NSX V2T migration | Removed | HCX 9.0 | HCX Manager UI on port 443 or 9443 | Update bookmarks and runbooks | [9.0 Operations notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vcf-ops.html) |
+| Network | Several NSX instances on one vCenter | Removed: one NSX per vCenter | 9.0 | One NSX per vCenter | Change the topology before upgrading to NSX 9.0 | [9.0 NSX notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-nsx.html) |
+| Network | NSX Embedded | Removed: existing deployments stay, the vCenter link goes | 9.0 | NSX Manager | Move alarm monitoring to NSX Manager | [9.0 NSX notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-nsx.html) |
+| Network | NSX overlay agents on physical servers | Removed | 9.0 | Edge bridging | Redesign the connectivity before upgrading | [9.0 NSX notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-nsx.html) |
+| Network | NSX Manager APIs and Advanced UIs | Removed | 9.0 | Policy APIs and UIs | Promote Manager objects to Policy before upgrading | [9.0 NSX notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-nsx.html) |
+| Network | NSX Migration Coordinator | Removed | 9.0 | Migrate to NSX 4.x first, on that release's coordinator | NSX for vSphere estates go via 4.x | [9.0 NSX notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-nsx.html) |
+| Network | Logical MP API for port mirroring | Removed | 9.1 | Not stated | Find scripts that call it | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Network | NSX Load Balancer for general-purpose use | Effective now, with a bridge to **30 May 2027** for existing users holding equivalent Avi licences | 9.0, 9.1 | Avi at 100 VCF cores to 1 Service Unit. Infrastructure and Supervisor L4 stay entitled | Count cores behind NSX Managers using it, and license Avi. Broadcom recommends its vACT tool for the move. See [NSX in 9](/vcf/library/architecture/nsx-in-9/) | <KB id={439411} />, checked 6 Nov 2026; [9.0 NSX notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-nsx.html) |
+| Network | "Standard" virtual switch mode | Deprecated: no sooner than a year from the notice, which carries no date | 9.0 | Enhanced Datapath Standard, the 9.0 default | Plan the move, and check adapters for EDP support | [9.0 NSX notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-nsx.html) |
+| Network | PhotonOS-based HCX appliances | Deprecated: no removal stated | 9.1 | A stack based on NSX Edge | Plan the appliance change into the next HCX upgrade | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Network | vIDM in NSX, Principal Identity accounts | Deprecated: future release. Principal Identity is planned for deprecation | 9.0 | VCF SSO through Identity Broker; federated users | List scripts that log in as Principal Identity. NSX now takes one OIDC endpoint | [9.0 NSX notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-nsx.html) |
+| Operations | vCLS | Effective now: off, can't be re-activated. Remaining APIs go next major | 9.1 | None needed. DRS and HA no longer depend on it | Delete vCLS steps and exclusions from runbooks and monitoring | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html); <KB id={316514} />, checked 6 Nov 2026 |
+| Operations | Syslog to vCenter on port 514 (UDP and TCP) | Effective now: blocked | vCenter 9.1 | Port 1514 with TLS; `syslog.ext.tls.port` in scripted installs | Move senders to 1514 and handle the certificate. Test forwarding out of vCenter as well | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Operations | vCenter login to VCF Operations, UI and API | Removed | 9.1 | Not named on the page | Before upgrading, give people and API clients another account source | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Operations | Network Share plugin in VCF Operations | Removed: plugin, settings and data deleted on upgrade. FIPS on, can't be turned off | 9.1 | Standard Email plugin | Export what you need and repoint report delivery first | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Operations | Logs content packs in VCF Operations | Effective now: unusable | 9.1 | Management packs, converted | Convert third-party packs before the upgrade | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Operations | Bundled OpenSSL in the logs agent | Effective now from agent 9.1.0 | 9.1 | OpenSSL 3 or later on the host | Check agent hosts. An older agent is Broadcom's other option | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Operations | vCenter Assessment report, standalone Management Pack Builder | Report removed. Standalone appliance no longer supported or maintained | 9.1 | In-product Management Pack Builder. No report replacement named | Rebuild anything that relies on them | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Operations | Deleted APIs: 369 Provider Infrastructure operations, Hybrid Linked Mode REST, vStats tech preview | Removed | 9.1 | Real-time Metrics API for vStats; the changelogs for the rest | Run scripts and integrations against the changelog before upgrading | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Operations | VCF Operations 8.18.6 as a stepping stone | Effective now: don't take it | 9.0.x path | Go straight to 9.0.x. If already on it, wait for VCF 9.1 or Operations 9.0.3 or later | Check the version before planning the route | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Operations | vLCM baselines | Removed | 9.0 | vLCM images | Move clusters to images before upgrading from 5.2 | [9.0 vSphere notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsphere.html) |
+| Operations | Integrated Windows Authentication, `domain\username` logins | Removed | 9.0 | AD over LDAPS or Identity Federation; UPN format | Change identity sources and service accounts first | [9.0 vSphere notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsphere.html); [9.0 notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes.html) |
+| Operations | CIM, SFCB, WSMan and OpenSLP on ESX | Removed | 9.0 | Ask the CIM vendor | Find hardware monitoring that polls CIM | [9.0 vSphere notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsphere.html) |
+| Operations | vSphere Trust Authority, vShield Endpoint, six UI languages | Removed | 9.0 | Languages: Japanese, Spanish and French remain | Check any dependency before upgrading | [9.0 vSphere notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsphere.html) |
+| Operations | Cloud Builder, SDDC Manager Aria and precheck functions | Removed | 9.0 | VCF Installer and VCF Operations | Rewrite bring-up and lifecycle automation | [9.0 notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes.html) |
+| Operations | VCF Automation Pipelines, NSX-V cloud accounts, non-integrated instances | Removed; non-integrated: future release | 9.0 | Not stated. One Aria Automation instance can be imported | Decide which instance survives before the import | [9.0 Automation notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vcf-automation.html) |
+| Operations | XML as the default REST response, VCF Appliances Health | Effective now | 9.0 | JSON; VCF Health | Check API clients that assumed XML | [9.0 Operations notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vcf-ops.html) |
+| Operations | SDDC Manager UI, identity APIs, password and certificate APIs | Deprecated: future major for the UI and identity APIs | 9.0, with 21 more API operations in 9.1 | VCF Operations | Move daily tasks and scripts now | [9.0 notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes.html); [9.0 Installer notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-installer.html); [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Operations | Compliance feature in VCF Operations | Deprecated: replaced now | 9.1 | Security Posture Management | Move reports and audit evidence | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Operations | Protection and Recovery orchestrator plug-ins | Deprecated: last in 9.1 | 9.1 | REST API Gateway and DR REST plug-in | Rewrite workflows | [Protection and Recovery 9.1 notes, 20 Oct 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/protection-and-recovery/9-1/release-notes/protection-and-recovery-91-release-notes.html) |
+| Operations | Enhanced Linked Mode | Deprecated: future release | 9.0 | Grouping in VCF Operations | Design new estates without it | [9.0 notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes.html) |
+| Operations | Host Profiles, Auto Deploy, Image Builder in the vSphere Client | Deprecated: future release | 9.0 | Configuration Profiles; vLCM images | Stop building on them. Stateless estates need the longest plan | [9.0 vSphere notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsphere.html) |
+| Operations | Legacy vCenter upgrades: GUI installer and stage 2 API | Deprecated | 9.0 | Reduced Downtime Upgrade | Update upgrade runbooks | [9.0 vSphere notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsphere.html) |
+| Operations | vCenter solution users, ESX Agent Manager, vmkAPI 2.x, VLANCE and VMXNET2 | Deprecated: future release | 9.0 | VMXNET3 or E1000 for the adapters | Ask third-party agent vendors for their plans | [9.0 vSphere notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsphere.html) |
+| Operations | Legacy ESX log format, HTTP on port 80 | Deprecated: future release | 9.0 | New structured log format; HTTPS on 443 | Test log parsers, and move HTTP clients | [9.0 vSphere notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsphere.html) |
+| Operations | SHA1-based algorithms | Deprecated: future release | 9.1 | Not stated | Inventory certificates and integrations using SHA1 | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Operations | Suspend-to-RAM during ESX upgrades | Deprecated: future release | 9.1 | Suspend-resume, or vMotion in maintenance mode | Plan host upgrades without it | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Operations | Legacy cluster expansion in VCF Operations; Azure and AWS data sources for networks | Deprecated: no removal stated | 9.1 | Not stated | Stop adding new uses | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Operations | Python 3.7 and 3.8 for PowerCLI | Deprecated: next release, the nearest removal here | 9.1 | Python 3.9 or later | Move now | [9.1 notes, 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) |
+| Operations | vSphere 8 (ESXi, vCenter, vSAN) | End of general support **11 Oct 2027** | 8.x | 9.x | Plan the exit around this date | <KB id={459135} />, checked 6 Nov 2026 |
+| Operations | Aria Operations 8.18 | End of general support **11 Oct 2027** | 8.18 | VCF Operations 9.x | Plan it with the vSphere 8 exit | <KB id={422643} />, checked 6 Nov 2026 |
+| Operations | Aria Operations for Logs 8.18 | Deprecated: final release. VCF Operations 9.0 doesn't integrate with it, though it can still forward logs | 8.18 | Log management in VCF Operations | Plan the move | [9.0 Operations notes, 2 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vcf-ops.html) |
+| Storage (report) | vVols removed in 9.1 | Flagged by others: Dell, a vendor with its own migration to run | 9.1 | VMFS by Storage vMotion | Treat as a blocker until Broadcom confirms in writing for your build | [Dell KB, 7 Oct 2026](https://www.dell.com/support/kbdoc/en-us/000414330/dell-unity-vvols-support-ending-upgrade-and-migration-considerations) |
+| Storage (report) | vVols removed in 9.1 | Flagged by others: press | 9.1 | n/a | An older report of the same claim, from before 9.1 shipped | [TechTarget, 9 Jul 2025](https://www.techtarget.com/searchstorage/news/366627334/Broadcom-discontinues-vVols-storage-capability-for-VMware) |
+| Storage (report) | vVols still available in 9.1 | Flagged by others: practitioner | 9.1 | n/a | Agrees with Broadcom's 9.1 pages. Gives no Broadcom citation for it | [Mauro, 16 May 2026](https://vinfrastructure.it/2026/05/deprecated-and-removed-features-in-vcf-9-1/) |
+| Storage (report) | OSA hybrid goes in a major upcoming version | Flagged by others: Epping's expectation, on his own blog | Not named | None named | He works at Broadcom, and says no release is named. Plan on it, and don't quote it as a date | [Epping, 29 Sep 2026](https://www.yellow-bricks.com/2026/09/29/will-vsan-osa-hybrid-be-available-in-future-versions/) |
+| Hardware buyers (report) | Skylake and EPYC 7002 discontinued | Flagged by others: practitioner. Out of step with the KBs | 9.x | n/a | Use KB 428874 and KB 318697 for both | [Mauro, 16 May 2026](https://vinfrastructure.it/2026/05/deprecated-and-removed-features-in-vcf-9-1/) |
+
+The API row is a pointer. Broadcom's notes count the deleted and deprecated operations per API and link to a changelog for each, so run your own integrations against those.
+
+## Where the sources disagree
+
+**vVols.** [Dell](https://www.dell.com/support/kbdoc/en-us/000414330/dell-unity-vvols-support-ending-upgrade-and-migration-considerations) says "removal planned for 9.1", as [TechTarget](https://www.techtarget.com/searchstorage/news/366627334/Broadcom-discontinues-vVols-storage-capability-for-VMware) reported in July 2025. Broadcom's <KB id={401070} /> says only "future VCF/VVF releases". Broadcom's own 9.1 pages count against Dell's date: the [workload domain page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/deploy-a-vi-workload-domain-using-the-sddc-manager-ui.html) still offers a vVol-based domain, and the [import page](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/import-an-existing-vcenter-to-create-a-workload-domain.html) says the framework is deprecated and "not recommended", both dated 5 November 2026. Broadcom has also ended vVols certification for 9.0, and [Protection and Recovery 9.1](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/protection-and-recovery/9-1/release-notes/protection-and-recovery-91-release-notes.html) is the last release to support vVols.
+
+<Callout type="analysis" title="This site's reading of the vVols dispute">
+On the public record, removal in 9.1 looks unlikely. The advice in [the vSAN note](/vcf/library/architecture/vsan-esa-osa/) stands anyway: the migration is coming either way, and a broken datastore costs far more than moving early. Get written confirmation from Broadcom for your exact build if you plan to keep vVols through 9.1.
+</Callout>
+
+**Skylake-SP.** Table 2 of <KB id={318697} /> still lists it among discontinued CPUs, with a pointer to <KB id={428874} />, which extended it on 18 September 2026 to deprecated mode for all of 9.x. Follow the later KB. [Andrea Mauro's May write-up](https://vinfrastructure.it/2026/05/deprecated-and-removed-features-in-vcf-9-1/), a useful independent list, predates that and shows Skylake as discontinued. It also shows EPYC 7002 as discontinued, which KB 318697 doesn't: the KB has it as deprecated.
+
+**vCLS.** Three wordings exist. The [9.0 notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/release-notes/vmware-cloud-foundation-90-release-notes/platform-product-support-notes/product-support-notes-vsphere.html) call it deprecated, the vCenter section of the [9.1 notes](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/release-notes/vmware-cloud-foundation-9-1-0-0-release-notes/vcf-91-product-support-notes.html) says it is off and can't be re-activated, and the Installer section of the same page still says it "will be deprecated in a future release". Plan on the vCenter section. <KB id={316514} /> says vCLS can be disabled from vCenter 9.0 without affecting DRS or HA.
+
+**Port 514.** Broadcom's sentence covers syslog transfers "to vCenter". It doesn't say whether vCenter forwarding out to a collector on 514 is affected, so test that path before the upgrade. Port 1514 needs TLS, so a collector or sender with no certificate handling has work to do.
+
+**OSA hybrid.** [Duncan Epping](https://www.yellow-bricks.com/2026/09/29/will-vsan-osa-hybrid-be-available-in-future-versions/), a Chief Technologist at Broadcom writing on his own blog, says he has had the question three times in two weeks and expects hybrid to go in a major upcoming version. Read his post first if you run hybrid. Broadcom still names no release, and all-flash OSA carries no notice.

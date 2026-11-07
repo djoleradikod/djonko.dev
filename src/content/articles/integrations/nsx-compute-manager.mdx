@@ -1,6 +1,6 @@
 ---
 title: "NSX and vCenter in VCF 9: how to leave multi-NSX, and what the compute manager connection does"
-description: "VCF 9 does not support one vCenter registered with several NSX Managers: Broadcom documents multi-NSX as unsupported from 9.0, and the option dates from NSX 3.2.2. This note decides what an estate using it should do before upgrading, explains the compute manager connection and maps its errors to KBs."
+description: "VCF 9 does not support one vCenter registered with several NSX Managers: Broadcom documents multi-NSX as unsupported from 9.0. Before upgrading, delete a spare NSX registration, consolidate onto one NSX or give each NSX its own vCenter, and turn the flag off last."
 category: integrations
 order: 6
 versions: ["5.x", "9.0", "9.1", "9.1.1"]
@@ -10,6 +10,11 @@ updated: 2026-11-06
 reviewed: 2026-11-06
 kbs: [417789, 419414, 431174, 411878, 413969, 443265, 451344, 425164, 438505, 434074, 317794, 451125, 319050, 446711, 431963, 413178, 433425, 426389, 433085]
 sources:
+  - title: "Manage Unsupported Features (VCF 9.1 upgrade checklist)"
+    url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/updating-vcenter-and-nsx/checklist-for-upgrading-nsx/manage-deprecated-nsx-features.html"
+    by: "Broadcom TechDocs"
+    kind: broadcom
+    date: 2026-11-05
   - title: "Manage Unsupported Features (VCF 9.0 upgrade guide)"
     url: "https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/upgrading-nsx--to-version-9/manual-upgrade-to-nsx-9-by-using-upgrade-coordinator/manage-deprecated-nsx-features.html"
     by: "Broadcom TechDocs"
@@ -74,8 +79,12 @@ sources:
 ---
 
 <InShort>
-**In VCF 9 one vCenter registers with one NSX.** Broadcom documents multi-NSX as not supported from 9.0 (<KB id={417789} />, <AsOf date="2026-11-06" />). It was an opt-in NSX feature from 3.2.2 (<KB id={419414} />), so 9.0 is where it ends. Until 6 Nov 2026 this note had that backwards. One NSX serving several vCenters is a separate arrangement and still exists. If an estate runs several NSX on one vCenter today, the table below picks the exit. The exits range from a settings change to a new vCenter. Whichever applies, turn the flag off last, because a vCenter with the flag off can't take another NSX.
+**In VCF 9 one vCenter registers with one NSX.** Broadcom documents multi-NSX as not supported from 9.0 (<KB id={417789} />, <AsOf date="2026-11-06" />). It was an opt-in NSX feature from 3.2.2 (<KB id={419414} />), and 9.0 is where it ends. One NSX serving several vCenters is a separate arrangement and still exists. If an estate runs several NSX on one vCenter today, the table below picks the exit. The exits range from a settings change to a new vCenter. Whichever applies, turn the flag off last, because a vCenter with the flag off can't take another NSX.
 </InShort>
+
+<Callout type="note" title="Corrected on 6 November 2026">
+This note used to say several NSX Managers per vCenter was supported in 9.x and not in 5.x. It is the other way round.
+</Callout>
 
 ## Which exit fits the estate
 
@@ -105,17 +114,17 @@ This is this site's reasoning. Broadcom publishes no such test. Ask what the sec
 
 Splitting the vCenter adds two version constraints. New registration of NSX 4.2.x to vCenter 9.0.x fails with error 7059, and only pairs registered before the vCenter upgrade carry over (<KB id={451344} />). This site's reading is to register the new pair while vCenter is still on 8.x, or take that NSX to 9.0.2 or later first. The first route has a catch: <KB id={425164} /> reports the vCenter 8.x to 9.x precheck failing on NSX 4.2.2.1 with "Unsupported NSX version registered with vCenter", and limits that pairing to upgrade scenarios managed by SDDC Manager. NSX 4.x outside a VCF instance reaches 9.0.x only after import as a workload domain (same KB).
 
-Two gaps to close with Broadcom Support before committing. No source opened for this note describes a tool that merges one NSX's configuration into another, or a procedure for moving an NSX-prepared cluster to a different vCenter in this scenario. The rebuild in row three and the cluster move in row four are this site's inference from the host-move behaviour above.
+Close two gaps with Broadcom Support before committing. None of the sources cited here describes a tool that merges one NSX's configuration into another, or a procedure for moving an NSX-prepared cluster to a different vCenter in this scenario (checked 6 Nov 2026). The rebuild in row three and the cluster move in row four are this site's inference from the host-move behaviour above.
 
 ## Where the sources disagree
 
 - **The pre-check.** <KB id={417789} /> says the NSX Manager pre-check returns an error if the flag is still on when upgrading to 9.0 or later. <KB id={431174} /> reports an estate on NSX 9.0.1.0 with extra 4.2.3 managers on the same management vCenter, where all prechecks passed on the way to 9.0.2.0 and the job then cancelled with no error in the UI. The KB doesn't say whether the flag was on or how the estate got there. A green pre-check therefore doesn't prove the topology is clean, so run the audit yourself.
 - **Scoping the upgrade doesn't help.** Per <KB id={431174} /> the engine scans every compute manager registered in vCenter, so selecting only the 9.x NSX in Fleet Management still cancels.
 - **The workaround.** The same KB's fix is to run the upgrade from Upgrade Coordinator on the NSX Manager, then a full inventory sync. Broadcom calls this a workaround and "not the expected behavior". It gets a stuck upgrade moving, and none of its steps removes the older NSX, so this site's reading is that the exit above is still owed.
-- **"Deprecated" or "not supported".** <KB id={431174} /> says 9.0.x deprecates the topology. <KB id={417789} /> and the Manage Unsupported Features page both say not supported from 9.0. Plan on the stronger wording. That TechDocs page sits under the 9.0 path and no 9.1 upgrade counterpart was found, but the [VCF 9.1 import guide, updated 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/import-an-existing-vcenter-to-create-a-workload-domain.html) also lists "Multiple NSX Manager instances managing a single vCenter instance" as not supported for import.
+- **"Deprecated" or "not supported".** <KB id={431174} /> says 9.0.x deprecates the topology. <KB id={417789} /> and the Manage Unsupported Features page both say not supported from 9.0. Plan on the stronger wording. The [9.1 version of that page, updated 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/deployment/upgrading-cloud-foundation/upgrade-the-management-domain-to-vmware-cloud-foundation-5-2/updating-vcenter-and-nsx/checklist-for-upgrading-nsx/manage-deprecated-nsx-features.html) says the same, and the [VCF 9.1 import guide, updated 5 Nov 2026](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/building-your-private-cloud-infrastructure/working-with-workload-domains/import-an-existing-vcenter-to-create-a-workload-domain.html) also lists "Multiple NSX Manager instances managing a single vCenter instance" as not supported for import.
 - **The API still has the field.** `multi_nsx` remains in the [9.1 schema](https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/schemas_ComputeManager.html) and the [9.1.1 schema](https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/latest/schemas_ComputeManager.html), default `false`, with no deprecation text, so its presence says nothing about support.
 - **Old documentation.** The [NSX-T 3.0 page](https://techdocs.broadcom.com/us/en/vmware-cis/nsx/nsxt-dc/3-0/administration-guide/operations-and-management/add-a-compute-manager-1.html), still online, says a vCenter can't register with more than one NSX. That predates 3.2.2.
-- **VCF 5.x.** The 5.x column below reports NSX's position. No VCF 5.x document opened for this note says whether SDDC Manager supports the feature, so ask Broadcom if contractual support matters.
+- **VCF 5.x.** The 5.x column below reports NSX's position. No VCF 5.x document found says whether SDDC Manager supports the feature (checked 6 Nov 2026), so ask Broadcom if contractual support matters.
 
 ## What the connection does
 
@@ -124,7 +133,7 @@ Registering vCenter as a compute manager gives NSX a line into vCenter for four 
 - **Inventory.** NSX polls vCenter for cluster information (worded this way in the [NSX-T 3.0 guide](https://techdocs.broadcom.com/us/en/vmware-cis/nsx/nsxt-dc/3-0/administration-guide/operations-and-management/add-a-compute-manager-1.html); registration and inventory errors in current KBs land in `cm-inventory.log`).
 - **Extension.** NSX registers extension keys in vCenter, which is why a decommissioned NSX can block a new registration (<KB id={426389} />).
 - **Service account.** NSX creates an `nsxt_<id>` account whose password expires after 90 days by default and which NSX renews (<KB id={413178} />). The [9.1 schema](https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/9.1.0/schemas_ComputeManager.html) says features such as vLCM need it for vAPI authentication, and that it is mandatory from VCF 9.0. Without it the registration shows Registered with Error and vLCM can't be enabled on NSX clusters (<KB id={433425} />).
-- **OIDC trust.** `set_as_oidc_provider` is described as "specific to wcp feature", read here as Supervisor. It defaults to `true` in the 9.1 schema and `false` in the [4.2 schema](https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/4.2/schemas_ComputeManager.html).
+- **OIDC trust.** `set_as_oidc_provider` is described as "specific to wcp feature", which this site takes to mean Supervisor. It defaults to `true` in the 9.1 schema and `false` in the [4.2 schema](https://developer.broadcom.com/xapis/nsx-t-data-center-rest-api/4.2/schemas_ComputeManager.html).
 
 Multi-NSX added ownership on top. Each NSX stamps the managed objects it prepares, and another NSX can't take them until the first gives up ownership or it is forced across ([NSX 4.2 guide](https://techdocs.broadcom.com/us/en/vmware-cis/nsx/vmware-nsx/4-2/installation-guide/host-transport-nodes/multiple-nsx-managers-managing-a-single-vcenter-server.html)). The instances otherwise run independently, each with its own managers and edges (<KB id={417789} />). The same guide lists vLCM and vSphere with Tanzu as not interoperable with it, and the [Supervisor 8.0 install page](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere-supervisor/8-0/installing-and-configuring-vsphere-supervisor/networking-for-vsphere-with-tanzu/install-and-configure-nsx-and-nsx-advanced-load-balancer/deploy-and-configure-the-nsx-manager.html) says to leave the option unselected. This site infers that the vLCM conflict is why the feature couldn't survive 9.0's requirement for images. Broadcom doesn't state its reason.
 
@@ -174,4 +183,4 @@ When the status is **Down**, click it. The message maps to a KB (<KB id={317794}
 | 7061 | Registering with an SSO user who signs in through an external identity provider such as Okta. Use a local vCenter account (<KB id={433085} />). |
 | 7059 when registering vCenter 9.0.x into NSX 4.2 | Not supported for new registrations. Use NSX 9.0.2 or later (<KB id={451344} />). |
 
-Logs on NSX Manager: `/var/log/cm-inventory/cm-inventory.log` for registration and service account creation errors (<KB id={319050} />, <KB id={433425} />), and `/var/log/syslog` for service account password failures (<KB id={413178} />).
+On NSX Manager, look in `/var/log/cm-inventory/cm-inventory.log` for registration and service account creation errors (<KB id={319050} />, <KB id={433425} />), and in `/var/log/syslog` for service account password failures (<KB id={413178} />).

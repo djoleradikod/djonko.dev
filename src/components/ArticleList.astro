@@ -1,17 +1,25 @@
 ---
+// Rows of notes for the library and its area pages: title and one line, then versions, then the date the
+// sources were checked, if they have been. `searchable` adds what the library index's filters read.
 import type { CollectionEntry } from 'astro:content';
 import VersionBadges from './VersionBadges.astro';
 import { urlOf } from '../lib/articles';
-interface Props { items: CollectionEntry<'articles'>[] }
-const { items } = Astro.props;
+import { summaryLine } from '../data/decisions';
+interface Props { items: CollectionEntry<'articles'>[]; searchable?: boolean }
+const { items, searchable = false } = Astro.props;
+const short = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+const filterData = (a: CollectionEntry<'articles'>) => searchable
+  ? { 'data-v': a.data.versions.includes('5.x') ? 'both' : '9only', 'data-l': a.data.level ?? '', 'data-s': `${a.data.title} ${a.data.description}`.toLowerCase() }
+  : {};
 ---
-<ul class="list">
+<ul class:list={['note-rows', searchable && 'lib-list']}>
   {items.map((a) => (
-    <li data-versions={a.data.versions.join(' ')}>
+    <li data-versions={a.data.versions.join(' ')} {...filterData(a)}>
       <a href={urlOf(a)}>
-        <span class="t">{a.data.title}</span>
-        <VersionBadges versions={a.data.versions} level={a.data.level} />
-        <span class="d">{a.data.description}</span>
+        <span class="nr-t">{a.data.title}</span>
+        <span class="nr-d">{summaryLine(a.data.description)}</span>
+        <VersionBadges versions={a.data.versions} />
+        {a.data.reviewed && <span class="nr-c"><span class="nr-cl">Sources checked </span><time datetime={a.data.reviewed.toISOString().slice(0, 10)}>{short(a.data.reviewed)}</time></span>}
       </a>
     </li>
   ))}

@@ -1,6 +1,6 @@
 ---
 title: "What changed on 4 November 2026, and what it does to a design"
-description: "Five portfolio changes, checked against Broadcom's own pages. Express and the EEA dates are announced; Express price and eligibility are reseller reports. Native disaster recovery and VPC connectivity are planned for the next release. ACC and DSM holders have order lines to recheck."
+description: "No source says a running estate must change on the day. Broadcom has announced Express and the EEA dates; Express price and eligibility are reseller reports. Native disaster recovery and VPC connectivity are planned for the next release. ACC and DSM holders have order lines to recheck."
 category: licensing
 order: 11
 versions: ["9.1", "9.1.1"]
@@ -119,7 +119,7 @@ sources:
 ---
 
 <InShort>
-A cross-source synthesis of Broadcom's post, its documents and the press and channel reports around them, <AsOf date="2026-11-06" />. No source opened here says a running estate must change on the day. What moved is what you can order and which features are promised next.
+No source says a running estate must change on the day (<AsOf date="2026-11-06" />). What moved is what you can order and which features are promised next.
 
 - **Announced by Broadcom:** vSphere Express, the EEA dates for vSphere 8 Standard and Enterprise Plus, three Advanced Services, DSM moving to TrueSource.
 - **Only reported:** every Express price, the one-year term, the fixed 128-core pack and who qualifies.
@@ -141,7 +141,7 @@ This isn't advice to buy or renew, and it isn't legal or purchasing advice. Your
 
 ## vSphere Express
 
-**Broadcom says.** The [4 Nov post](https://blogs.vmware.com/cloud-foundation/2026/11/04/broadcom-vcf-portfolio-updates/) puts it on vSphere 9, available now in all regions, "for customers with 128 cores across all environments", and names five capabilities after "such as": vMotion, HA, Distributed Switch, vCenter Quick Patch, TPM 2.0 and vTPM 2.0.
+Broadcom's [4 Nov post](https://blogs.vmware.com/cloud-foundation/2026/11/04/broadcom-vcf-portfolio-updates/) puts it on vSphere 9, available now in all regions, "for customers with 128 cores across all environments", and names five capabilities after "such as": vMotion, HA, Distributed Switch, vCenter Quick Patch, TPM 2.0 and vTPM 2.0.
 
 The [TechDocs page](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-express.html) (2 Nov) has more design content than the post:
 
@@ -154,7 +154,7 @@ The [TechDocs page](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphe
 
 A spokesperson [told The Register](https://www.theregister.com/virtualization/2026/11/04/vmware-returns-to-low-end-server-virtualization-with-vsphere-express/5307466) it is a per-core subscription priced "significantly lower" than VVF or VCF, and declined to give a figure. Broadcom's Prashanth Shenoy told the same reporter that instances are discrete with no central management, and that releases will follow the VVF and VCF cadence.
 
-**Others report.** Each of these parties makes money from the answer.
+Channel sources fill in the rest, and each of these parties makes money from the answer.
 
 | Source and stake | Claim |
 |---|---|
@@ -164,12 +164,12 @@ A spokesperson [told The Register](https://www.theregister.com/virtualization/20
 
 The two channel sources disagree on existing customers. C4C says your reseller should request Broadcom's authorisation. Software Express says the selection is already fixed and can't be applied for ("eine Bewerbung ist nicht möglich"), and expects details in mid-November at the earliest.
 
-**Unconfirmed.** Price, term, pack size, exclusions and who qualifies. Also whether a customer holding VCF elsewhere can buy Express for a small site. The post's "across all environments" and TechDocs' "per customer" read against it, while "or site ID" leaves the question open.
+Still unconfirmed are the price, term, pack size, exclusions and who qualifies, along with whether a customer holding VCF elsewhere can buy Express for a small site. The post's "across all environments" and TechDocs' "per customer" read against it, while "or site ID" leaves the question open.
 
-**Touches.** vSphere 8 estates of 128 cores or fewer, and anyone drawing a small-site design. The 16-core minimum applies to "most products" per the [Licensing Model](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html), which doesn't say whether Express is one. C4C's Express checklist counts every CPU at a minimum of 16, but it gives that as Broadcom's general rule and doesn't say Broadcom applies it to Express.
+Express touches vSphere 8 estates of 128 cores or fewer, and anyone drawing a small-site design. The 16-core minimum applies to "most products" per the [Licensing Model](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/licensing/licensing-overview/licensing-model.html), which doesn't say whether Express is one. C4C's Express checklist counts every CPU at a minimum of 16, but it gives that as Broadcom's general rule and doesn't say Broadcom applies it to Express.
 
 <Callout type="analysis" title="What 128 cores buys: constructed example">
-Assumes the 16-core minimum applies, two sockets per host, and every host counts.
+This assumes that the 16-core minimum applies, that each host has two sockets and that every host counts.
 
 | CPU | Cores per host | Hosts that fit | Total |
 |---|---|---|---|
@@ -182,20 +182,20 @@ CPU choice sets the cluster size: on these hosts a third host for HA headroom is
 
 ## EEA terms for vSphere 8 Standard and Enterprise Plus
 
-**Broadcom says.** One sentence, at the end of the Express section: for customers in EEA countries, the two editions "will remain available for sale until October 31, 2027", with Extended Support in active subscriptions until the subscription ends or 31 Oct 2028, whichever is earlier. No reason is given.
+Broadcom gives this one sentence, at the end of the Express section: for customers in EEA countries, the two editions "will remain available for sale until October 31, 2027", with Extended Support in active subscriptions until the subscription ends or 31 Oct 2028, whichever is earlier. No reason is given.
 
-**Others report.** [The Register](https://www.theregister.com/virtualization/2026/11/05/vmware-quietly-offers-european-users-extended-sales-and-support-for-low-end-vsphere/5307732) (5 Nov) says the paragraph was missing from the version VMware sent it before publication, and reads the move as an apparent concession to European regulators. Independent analyst Michael Warrilow suggests "regulatory muscle" as the reason, and says he can find no detail on the level of support or the commitments required. The Register also says it often heard VMware seldom issued quotes for these editions, and that VMware's Paul Turner blamed channel incentives since fixed. C4C says the UK is outside the EEA and that resellers report end of sale elsewhere in October 2026. Broadcom's post doesn't state the position outside the EEA.
+[The Register](https://www.theregister.com/virtualization/2026/11/05/vmware-quietly-offers-european-users-extended-sales-and-support-for-low-end-vsphere/5307732) (5 Nov) says the paragraph was missing from the version VMware sent it before publication, and reads the move as an apparent concession to European regulators. Independent analyst Michael Warrilow suggests "regulatory muscle" as the reason, and says he can find no detail on the level of support or the commitments required. The Register also says it often heard VMware seldom issued quotes for these editions, and that VMware's Paul Turner blamed channel incentives since fixed. C4C says the UK is outside the EEA and that resellers report end of sale elsewhere in October 2026. Broadcom's post doesn't state the position outside the EEA.
 
-**Unconfirmed.**
+Three things remain unconfirmed:
 
 - What Extended Support includes. [KB 459135](https://knowledge.broadcom.com/external/article/459135/end-of-general-support-for-vsphere-80.html) gives 11 Oct 2027 for ESXi, vCenter and vSAN 8.x and doesn't mention this offer.
 - What makes a customer "in" the EEA: contracting entity or site of use.
 - What happens if a term runs past 31 Oct 2028. Support stops at that date under the wording, and the remaining months aren't addressed.
 
-**Touches.** Subscribers on those two editions in EEA countries. The sentence says nothing about perpetual licences, VVF or VCF 5.x.
+The terms reach subscribers on those two editions in EEA countries. The sentence says nothing about perpetual licences, VVF or VCF 5.x.
 
 <Callout type="analysis" title="This site's reading of the dates">
-Don't assume the whole design gets the extra year. The sentence names two vSphere editions only, and [Aria Operations 8.18](https://knowledge.broadcom.com/external/article/422643/end-of-general-support-for-vmware-aria-o.html) still ends on 11 Oct 2027. Backup, storage and hardware vendors have said nothing in the sources opened here. A plan that holds vSphere 8 past that date needs an answer for each component beside it. Express doesn't fill the same slot, since TechDocs says it has no version 8 keys.
+Don't assume the whole design gets the extra year. The sentence names two vSphere editions only, and [Aria Operations 8.18](https://knowledge.broadcom.com/external/article/422643/end-of-general-support-for-vmware-aria-o.html) still ends on 11 Oct 2027. None of these sources carries a statement from backup, storage or hardware vendors. A plan that holds vSphere 8 past that date needs an answer for each component beside it. Express doesn't fill the same slot, since TechDocs says it has no version 8 keys.
 </Callout>
 
 ## Advanced Services
@@ -209,29 +209,29 @@ All three are separate purchases under footnote 13 of the [Feature Comparison](h
 | Press adds | [Channel Dive](https://www.channeldive.com/news/broadcom-vmware-hypervisor-security-software-ai-attacks/833031/) (14 Oct): per-core through partners, GA expected in Q1FY27, no price | [StorageReview](https://www.storagereview.com/news/broadcom-vcf-portfolio-update-vsphere-express-live-recovery): replication across an air gap into a vSAN clean room | StorageReview: separate from the compliance feature planned inside VCF Operations |
 | Unconfirmed | Shipping status. The post lists it as available and gives no date; [TechDocs](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/vcf-advanced-services.html) (5 Nov) doesn't list it. VVF too: the post says VCF, the [13 Oct post](https://blogs.vmware.com/cloud-foundation/2026/10/13/proactive-hypervisor-defense-introducing-vmware-hyperarmor/) says VCF and VVF | Price. Whether order lines mean this or Protection and Recovery | Price, and any conversion for ACC holders |
 
-"New" needs reading with care. [KB 428834](https://knowledge.broadcom.com/external/article/428834), scoped to Live Recovery 9.0.x, says cyber recovery was sold under Advanced Cyber Compliance as of November 2025. The [FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) Q86 says ACC holders keep using it until their entitlement ends, then have "the option to purchase" Live Recovery and Compliance and Configuration Management. This note reads that as ACC splitting into two catalog entries, which is inference: no Broadcom page says so outright.
+Read "new" with care, because [KB 428834](https://knowledge.broadcom.com/external/article/428834), scoped to Live Recovery 9.0.x, says cyber recovery was sold under Advanced Cyber Compliance as of November 2025. The [FAQ](https://www.vmware.com/docs/vmware-cloud-foundation-9-1-general-faqs) Q86 says ACC holders keep using it until their entitlement ends, then have "the option to purchase" Live Recovery and Compliance and Configuration Management. This note reads that as ACC splitting into two catalog entries. That's inference, since no Broadcom page says so outright.
 
-**Touches.** ACC holders first, because a one-line renewal becomes two. Then anyone whose recovery design assumes a capability sits in the core. FAQ Q78 and Q79 draw that line: vSAN replication and vSphere Replication are in, EDR-backed cyber recovery and cloud DR are out. The matrix records [where those answers conflict](/vcf/library/value/using-what-vcf-includes/).
+ACC holders feel this first, because a one-line renewal becomes two. Anyone whose recovery design assumes a capability sits in the core comes next. FAQ Q78 and Q79 draw that line: vSAN replication and vSphere Replication are in, EDR-backed cyber recovery and cloud DR are out. The matrix records [where those answers conflict](/vcf/library/value/using-what-vcf-includes/).
 
 ## Data Services Manager to TrueSource
 
-**Broadcom says.** FAQ Q84 gives a date, 4 Nov 2026, and a location, "presented within TrueSource data services". The question asks whether DSM is included in VCF 9.1, and the answer doesn't say yes or no. Q85 says it deploys independently of the VCF installer. The Feature Comparison marks TrueSource Data Services for Edge and VCF, with no VVF mark. The 4 Nov post doesn't mention DSM, and no press report opened for this note covers the move.
+FAQ Q84 gives a date, 4 Nov 2026, and a location, "presented within TrueSource data services". The question asks whether DSM is included in VCF 9.1, and the answer doesn't say yes or no. Q85 says it deploys independently of the VCF installer. The Feature Comparison marks TrueSource Data Services for Edge and VCF, with no VVF mark. The 4 Nov post doesn't mention DSM, and the press reports checked on 6 Nov 2026 don't cover the move.
 
-**Conflict.** TechDocs still lists DSM as its own add-on (5 Nov), and Feature Comparison p10 names DSM among pre-bundled services, marked for Edge and VCF with no add-on footnote. The [31 Aug TrueSource release](https://mfn.se/all/a/broadcom/broadcom-strengthens-spring-security-and-adds-coverage-of-java-python-and-node-js-ecosystems-with-truesource-e37fa20b) describes Data Services as artifacts, support and deployment expertise for PostgreSQL, RabbitMQ, MySQL and Valkey, with "tiered site licensing options". It doesn't name DSM.
+Broadcom's own pages conflict on this. TechDocs still lists DSM as its own add-on (5 Nov), and Feature Comparison p10 names DSM among pre-bundled services, marked for Edge and VCF with no add-on footnote. The [31 Aug TrueSource release](https://mfn.se/all/a/broadcom/broadcom-strengthens-spring-security-and-adds-coverage-of-java-python-and-node-js-ecosystems-with-truesource-e37fa20b) describes Data Services as artifacts, support and deployment expertise for PostgreSQL, RabbitMQ, MySQL and Valkey, with "tiered site licensing options". It doesn't name DSM.
 
-**Unconfirmed.** Whether DSM's licence metric changes to that tiered model, what happens to a current DSM term, and which engines stay covered. Nothing opened here answers these.
+None of the sources checked on 6 Nov 2026 says whether DSM's licence metric changes to that tiered model, what happens to a current DSM term, or which engines stay covered.
 
-**Touches.** Anyone with DSM in a design or on a renewal. Compare your order document with the new name before the renewal quote arrives.
+If you have DSM in a design or on a renewal, compare your order document with the new name before the renewal quote arrives.
 
 ## The next release, Q1FY27
 
-**Broadcom says.** The release is unnamed, and the post hedges twice: "currently planned", "currently estimated". Five features are placed in it: AI Infrastructure Quickstart, vSAN native S3-compatible object storage, VCF infrastructure configuration management and compliance, VPC policy-based connectivity, and native disaster recovery in VCF and VVF.
+The post leaves the release unnamed and hedges twice, with "currently planned" and "currently estimated". It places five features in that release: AI Infrastructure Quickstart, vSAN native S3-compatible object storage, VCF infrastructure configuration management and compliance, VPC policy-based connectivity, and native disaster recovery in VCF and VVF.
 
-**The sources disagree on when.** StorageReview reads Q1FY27 as Broadcom's fiscal quarter, running through the start of February. The Register's 4 Nov piece gives calendar Q1 2027 for the S3 feature, which runs to 31 March, two months later. [Broadcom's 8-K](https://www.sec.gov/Archives/edgar/data/0001730168/000173016826000076/avgo-08022026x8kxex99.htm) ends fiscal Q4 2026 on 1 Nov 2026, so a 13-week quarter ends on 31 Jan 2027. That date is this site's arithmetic. The post doesn't define "Q1FY27".
+The sources disagree on when. StorageReview reads Q1FY27 as Broadcom's fiscal quarter, running through the start of February. The Register's 4 Nov piece gives calendar Q1 2027 for the S3 feature, which runs to 31 March, two months later. [Broadcom's 8-K](https://www.sec.gov/Archives/edgar/data/0001730168/000173016826000076/avgo-08022026x8kxex99.htm) ends fiscal Q4 2026 on 1 Nov 2026, so a 13-week quarter ends on 31 Jan 2027. That date is this site's arithmetic. The post doesn't define "Q1FY27".
 
-**The sources disagree on status.** The Register writes that VMware has added disaster recovery and policy-based VPC networking to VVF and VCF, previously sold as add-ons. The post calls both planned. The Feature Comparison, titled 9.1.1, already marks both rows (p6, p9), and marks object storage as tech preview for Edge and VCF only (p7). Follow the post on timing until release notes say otherwise.
+They also disagree on status. The Register writes that VMware has added disaster recovery and policy-based VPC networking to VVF and VCF, previously sold as add-ons. The post calls both planned. The Feature Comparison, titled 9.1.1, already marks both rows (p6, p9), and marks object storage as tech preview for Edge and VCF only (p7). Follow the post on timing until release notes say otherwise.
 
-**Touches.** VVF designs most, since native DR would change what a VVF site can do without add-ons. Also VCF designs that plan object storage or VPC policy.
+VVF designs have the most riding on this, since native DR would change what a VVF site can do without add-ons. VCF designs that plan object storage or VPC policy depend on it too.
 
 <Callout type="analysis" title="How to treat planned features in a design">
 A design written now should work without all five, and record each as a dependency with a review date. Recheck when the release notes and that release's Feature Comparison appear. The first thing to read is the RPO, RTO and scale of native DR: [StorageReview](https://www.storagereview.com/news/broadcom-vcf-portfolio-update-vsphere-express-live-recovery) notes Broadcom hasn't published targets. This note is due for review on 15 Feb 2027, after the fiscal reading of the window closes.
